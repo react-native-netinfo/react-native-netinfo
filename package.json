@@ -1,0 +1,40 @@
+{
+  "name": "@react-native-community/netinfo",
+  "version": "0.1.0",
+  "description": "React Native Network Info API for iOS & Android",
+  "main": "js/index.js",
+  "author": "Matt Oakes <hello@mattoakes.net>",
+  "contributors": [],
+  "homepage": "https://github.com/react-native-community/react-native-netinfo#readme",
+  "license": "MIT",
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start"
+  },
+  "keywords": [
+    "react-native",
+    "react native",
+    "netinfo",
+    "networking",
+    "network info"
+  ],
+  "peerDependencies": {
+    "react": "^16.0",
+    "react-native": "^0.57.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "24.1.0",
+    "babel-plugin-module-resolver": "^3.1.3",
+    "jest": "24.1.0",
+    "metro-react-native-babel-preset": "0.51.1",
+    "react": "16.6.3",
+    "react-native": "0.58.4",
+    "react-test-renderer": "16.6.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/react-native-community/react-native-netinfo.git"
+  }
+}
