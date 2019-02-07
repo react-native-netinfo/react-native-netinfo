@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.react.modules.netinfo;
+package com.reactnativecommunity.netinfo;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -24,7 +24,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
-import com.facebook.react.module.annotations.ReactModule;
 
 import static com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter;
 
@@ -32,7 +31,6 @@ import static com.facebook.react.modules.core.DeviceEventManagerModule.RCTDevice
  * Module that monitors and provides information about the connectivity state of the device.
  */
 @SuppressLint("MissingPermission")
-@ReactModule(name = NetInfoModule.NAME)
 public class NetInfoModule extends ReactContextBaseJavaModule
     implements LifecycleEventListener {
 
@@ -61,7 +59,7 @@ public class NetInfoModule extends ReactContextBaseJavaModule
       "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />";
 
   private static final String ERROR_MISSING_PERMISSION = "E_MISSING_PERMISSION";
-  public static final String NAME = "NetInfo";
+  public static final String NAME = "RNCNetInfo";
 
   private final ConnectivityManager mConnectivityManager;
   private final ConnectivityBroadcastReceiver mConnectivityBroadcastReceiver;

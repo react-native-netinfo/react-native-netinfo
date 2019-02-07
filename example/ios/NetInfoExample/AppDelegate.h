@@ -5,12 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <SystemConfiguration/SystemConfiguration.h>
+#import <UIKit/UIKit.h>
 
-#import <React/RCTEventEmitter.h>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-@interface RCTNetInfo : RCTEventEmitter
-
-- (instancetype)initWithHost:(NSString *)host;
+@property (nonatomic, strong) UIWindow *window;
 
 @end

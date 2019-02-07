@@ -10,12 +10,10 @@
 
 'use strict';
 
-const NativeEventEmitter = require('NativeEventEmitter');
-const NativeModules = require('NativeModules');
-const Platform = require('Platform');
-const RCTNetInfo = NativeModules.NetInfo;
+import { NativeEventEmitter, NativeModules, Platform } from "react-native";
 
-const NetInfoEventEmitter = new NativeEventEmitter(RCTNetInfo);
+const { RNCNetInfo } = NativeModules;
+const NetInfoEventEmitter = new NativeEventEmitter(RNCNetInfo);
 
 const DEVICE_CONNECTIVITY_EVENT = 'networkStatusDidChange';
 
@@ -178,14 +176,14 @@ const NetInfo = {
     console.warn(
       'NetInfo.fetch() is deprecated. Use NetInfo.getConnectionInfo() instead.',
     );
-    return RCTNetInfo.getCurrentConnectivity().then(resp => resp.network_info);
+    return RNCNetInfo.getCurrentConnectivity().then(resp => resp.network_info);
   },
 
   /**
    * See https://facebook.github.io/react-native/docs/netinfo.html#getconnectioninfo
    */
   getConnectionInfo(): Promise<any> {
-    return RCTNetInfo.getCurrentConnectivity().then(resp => {
+    return RNCNetInfo.getCurrentConnectivity().then(resp => {
       return {
         type: resp.connectionType,
         effectiveType: resp.effectiveConnectionType,
@@ -232,7 +230,7 @@ const NetInfo = {
 
   isConnectionExpensive(): Promise<boolean> {
     return Platform.OS === 'android'
-      ? RCTNetInfo.isConnectionMetered()
+      ? RNCNetInfo.isConnectionMetered()
       : Promise.reject(new Error('Currently not supported on iOS'));
   },
 };

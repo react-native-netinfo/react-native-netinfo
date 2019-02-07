@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "RCTNetInfo.h"
+#import "RNCNetInfo.h"
 
 #if !TARGET_OS_TV
   #import <CoreTelephony/CTTelephonyNetworkInfo.h>
@@ -16,25 +16,25 @@
 
 // Based on the ConnectionType enum described in the W3C Network Information API spec
 // (https://wicg.github.io/netinfo/).
-static NSString *const RCTConnectionTypeUnknown = @"unknown";
-static NSString *const RCTConnectionTypeNone = @"none";
-static NSString *const RCTConnectionTypeWifi = @"wifi";
-static NSString *const RCTConnectionTypeCellular = @"cellular";
+static NSString *const RNCConnectionTypeUnknown = @"unknown";
+static NSString *const RNCConnectionTypeNone = @"none";
+static NSString *const RNCConnectionTypeWifi = @"wifi";
+static NSString *const RNCConnectionTypeCellular = @"cellular";
 
 // Based on the EffectiveConnectionType enum described in the W3C Network Information API spec
 // (https://wicg.github.io/netinfo/).
-static NSString *const RCTEffectiveConnectionTypeUnknown = @"unknown";
-static NSString *const RCTEffectiveConnectionType2g = @"2g";
-static NSString *const RCTEffectiveConnectionType3g = @"3g";
-static NSString *const RCTEffectiveConnectionType4g = @"4g";
+static NSString *const RNCEffectiveConnectionTypeUnknown = @"unknown";
+static NSString *const RNCEffectiveConnectionType2g = @"2g";
+static NSString *const RNCEffectiveConnectionType3g = @"3g";
+static NSString *const RNCEffectiveConnectionType4g = @"4g";
 
-// The RCTReachabilityState* values are deprecated.
-static NSString *const RCTReachabilityStateUnknown = @"unknown";
-static NSString *const RCTReachabilityStateNone = @"none";
-static NSString *const RCTReachabilityStateWifi = @"wifi";
-static NSString *const RCTReachabilityStateCell = @"cell";
+// The RNCReachabilityState* values are deprecated.
+static NSString *const RNCReachabilityStateUnknown = @"unknown";
+static NSString *const RNCReachabilityStateNone = @"none";
+static NSString *const RNCReachabilityStateWifi = @"wifi";
+static NSString *const RNCReachabilityStateCell = @"cell";
 
-@implementation RCTNetInfo
+@implementation RNCNetInfo
 {
   SCNetworkReachabilityRef _firstTimeReachability;
   SCNetworkReachabilityRef _reachability;
@@ -48,14 +48,14 @@ static NSString *const RCTReachabilityStateCell = @"cell";
 
 RCT_EXPORT_MODULE()
 
-static void RCTReachabilityCallback(__unused SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info)
+static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info)
 {
-  RCTNetInfo *self = (__bridge id)info;
+  RNCNetInfo *self = (__bridge id)info;
   BOOL didSetReachabilityFlags = [self setReachabilityStatus:flags];
   
-  NSString *connectionType = self->_connectionType ?: RCTConnectionTypeUnknown;
-  NSString *effectiveConnectionType = self->_effectiveConnectionType ?: RCTEffectiveConnectionTypeUnknown;
-  NSString *networkInfo = self->_statusDeprecated ?: RCTReachabilityStateUnknown;
+  NSString *connectionType = self->_connectionType ?: RNCConnectionTypeUnknown;
+  NSString *effectiveConnectionType = self->_effectiveConnectionType ?: RNCEffectiveConnectionTypeUnknown;
+  NSString *networkInfo = self->_statusDeprecated ?: RNCReachabilityStateUnknown;
 
   if (self->_firstTimeReachability && self->_resolve) {
     SCNetworkReachabilityUnscheduleFromRunLoop(self->_firstTimeReachability, CFRunLoopGetMain(), kCFRunLoopCommonModes);
@@ -74,7 +74,7 @@ static void RCTReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
   }
 }
 
-// We need RCTReachabilityCallback's and module methods to be called on the same thread so that we can have
+// We need RNCReachabilityCallback's and module methods to be called on the same thread so that we can have
 // guarantees about when we mess with the reachability callbacks.
 - (dispatch_queue_t)methodQueue
 {
@@ -102,9 +102,9 @@ static void RCTReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 - (void)startObserving
 {
   _isObserving = YES;
-  _connectionType = RCTConnectionTypeUnknown;
-  _effectiveConnectionType = RCTEffectiveConnectionTypeUnknown;
-  _statusDeprecated = RCTReachabilityStateUnknown;
+  _connectionType = RNCConnectionTypeUnknown;
+  _effectiveConnectionType = RNCEffectiveConnectionTypeUnknown;
+  _statusDeprecated = RNCReachabilityStateUnknown;
   _reachability = [self getReachabilityRef];
 }
 
@@ -131,7 +131,7 @@ static void RCTReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 {
   SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, _host.UTF8String ?: "apple.com");
   SCNetworkReachabilityContext context = { 0, ( __bridge void *)self, NULL, NULL, NULL };
-  SCNetworkReachabilitySetCallback(reachability, RCTReachabilityCallback, &context);
+  SCNetworkReachabilitySetCallback(reachability, RNCReachabilityCallback, &context);
   SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetMain(), kCFRunLoopCommonModes);
     
   return reachability;
@@ -139,27 +139,27 @@ static void RCTReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 
 - (BOOL)setReachabilityStatus:(SCNetworkReachabilityFlags)flags
 {
-  NSString *connectionType = RCTConnectionTypeUnknown;
-  NSString *effectiveConnectionType = RCTEffectiveConnectionTypeUnknown;
-  NSString *status = RCTReachabilityStateUnknown;
+  NSString *connectionType = RNCConnectionTypeUnknown;
+  NSString *effectiveConnectionType = RNCEffectiveConnectionTypeUnknown;
+  NSString *status = RNCReachabilityStateUnknown;
   if ((flags & kSCNetworkReachabilityFlagsReachable) == 0 ||
       (flags & kSCNetworkReachabilityFlagsConnectionRequired) != 0) {
-    connectionType = RCTConnectionTypeNone;
-    status = RCTReachabilityStateNone;
+    connectionType = RNCConnectionTypeNone;
+    status = RNCReachabilityStateNone;
   }
   
 #if !TARGET_OS_TV
   
   else if ((flags & kSCNetworkReachabilityFlagsIsWWAN) != 0) {
-    connectionType = RCTConnectionTypeCellular;
-    status = RCTReachabilityStateCell;
+    connectionType = RNCConnectionTypeCellular;
+    status = RNCReachabilityStateCell;
     
     CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
     if (netinfo) {
       if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyGPRS] ||
           [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyEdge] ||
           [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMA1x]) {
-        effectiveConnectionType = RCTEffectiveConnectionType2g;
+        effectiveConnectionType = RNCEffectiveConnectionType2g;
       } else if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyWCDMA] ||
                  [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyHSDPA] ||
                  [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyHSUPA] ||
@@ -167,9 +167,9 @@ static void RCTReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
                  [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMAEVDORevA] ||
                  [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMAEVDORevB] ||
                  [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyeHRPD]) {
-        effectiveConnectionType = RCTEffectiveConnectionType3g;
+        effectiveConnectionType = RNCEffectiveConnectionType3g;
       } else if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyLTE]) {
-        effectiveConnectionType = RCTEffectiveConnectionType4g;
+        effectiveConnectionType = RNCEffectiveConnectionType4g;
       }
     }
   }
@@ -177,8 +177,8 @@ static void RCTReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 #endif
   
   else {
-    connectionType = RCTConnectionTypeWifi;
-    status = RCTReachabilityStateWifi;
+    connectionType = RNCConnectionTypeWifi;
+    status = RNCReachabilityStateWifi;
   }
   
   if (![connectionType isEqualToString:self->_connectionType] ||
