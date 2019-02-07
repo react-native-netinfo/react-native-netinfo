@@ -219,7 +219,7 @@ const NetInfo = {
 
     removeEventListener(eventName: ChangeEventName, handler: Function): void {
       const listener = _isConnectedSubscriptions.get(handler);
-      NetInfo.removeEventListener(eventName, listener);
+      listener && NetInfo.removeEventListener(eventName, listener);
       _isConnectedSubscriptions.delete(handler);
     },
 

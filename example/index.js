@@ -55,7 +55,7 @@ const EXAMPLES = [
   },
 ];
 
-class ExampleApp extends React.Component {
+class ExampleApp extends React.Component<{}> {
   render() {
     return (
       <ScrollView style={styles.container}>

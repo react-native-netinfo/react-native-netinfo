@@ -12,7 +12,7 @@ import React from 'react';
 import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 
-export default class IsConnectionExpensive extends React.Component {
+export default class IsConnectionExpensive extends React.Component<{}, $FlowFixMe> {
   state = {
     isConnectionExpensive: null,
   };

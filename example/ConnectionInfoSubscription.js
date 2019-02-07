@@ -12,7 +12,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 
-export default class ConnectionInfoSubscription extends React.Component {
+export default class ConnectionInfoSubscription extends React.Component<{}, $FlowFixMe> {
   state = {
     connectionInfoHistory: [],
   };
