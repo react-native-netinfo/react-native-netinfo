@@ -19,55 +19,33 @@ const DEVICE_CONNECTIVITY_EVENT = 'networkStatusDidChange';
 
 type ChangeEventName = $Enum<{
   connectionChange: string,
-  change: string,
 }>;
 
-type ReachabilityStateIOS = $Enum<{
-  cell: string,
-  none: string,
-  unknown: string,
-  wifi: string,
+type ConnectionType = $Enum<{
+  // iOS & Android
+  cell: 'cellular',
+  none: 'none',
+  unknown: 'unknown',
+  wifi: 'wifi',
+  // Android only
+  bluetooth: 'bluetooth',
+  ethernet: 'ethernet',
+  wimax: 'wimax',
 }>;
 
-type ConnectivityStateAndroid = $Enum<{
-  NONE: string,
-  MOBILE: string,
-  WIFI: string,
-  MOBILE_MMS: string,
-  MOBILE_SUPL: string,
-  MOBILE_DUN: string,
-  MOBILE_HIPRI: string,
-  WIMAX: string,
-  BLUETOOTH: string,
-  DUMMY: string,
-  ETHERNET: string,
-  MOBILE_FOTA: string,
-  MOBILE_IMS: string,
-  MOBILE_CBS: string,
-  WIFI_P2P: string,
-  MOBILE_IA: string,
-  MOBILE_EMERGENCY: string,
-  PROXY: string,
-  VPN: string,
-  UNKNOWN: string,
+type EffectiveConnectionType = $Enum<{
+  unknown: 'unknown',
+  '2g': '2g',
+  '3g': '3g',
+  '4g': '4g',
 }>;
+
+type ChangeHandler = ({
+  type: ConnectionType,
+  effectiveType: EffectiveConnectionType,
+}) => void;
 
 const _subscriptions = new Map();
-
-let _isConnectedDeprecated;
-if (Platform.OS === 'ios') {
-  _isConnectedDeprecated = function(
-    reachability: ReachabilityStateIOS,
-  ): boolean {
-    return reachability !== 'none' && reachability !== 'unknown';
-  };
-} else if (Platform.OS === 'android') {
-  _isConnectedDeprecated = function(
-    connectionType: ConnectivityStateAndroid,
-  ): boolean {
-    return connectionType !== 'NONE' && connectionType !== 'UNKNOWN';
-  };
-}
 
 function _isConnected(connection) {
   return connection.type !== 'none' && connection.type !== 'unknown';
@@ -88,7 +66,7 @@ const NetInfo = {
    */
   addEventListener(
     eventName: ChangeEventName,
-    handler: Function,
+    handler: ChangeHandler,
   ): {remove: () => void} {
     let listener;
     if (eventName === 'connectionChange') {
@@ -99,17 +77,6 @@ const NetInfo = {
             type: appStateData.connectionType,
             effectiveType: appStateData.effectiveConnectionType,
           });
-        },
-      );
-    } else if (eventName === 'change') {
-      console.warn(
-        'NetInfo\'s "change" event is deprecated. Listen to the "connectionChange" event instead.',
-      );
-
-      listener = NetInfoEventEmitter.addListener(
-        DEVICE_CONNECTIVITY_EVENT,
-        appStateData => {
-          handler(appStateData.network_info);
         },
       );
     } else {
@@ -130,53 +97,13 @@ const NetInfo = {
    *
    * See https://facebook.github.io/react-native/docs/netinfo.html#removeeventlistener
    */
-  removeEventListener(eventName: ChangeEventName, handler: Function): void {
+  removeEventListener(eventName: ChangeEventName, handler: ChangeHandler): void {
     const listener = _subscriptions.get(handler);
     if (!listener) {
       return;
     }
     listener.remove();
     _subscriptions.delete(handler);
-  },
-
-  /**
-   * This function is deprecated. Use `getConnectionInfo` instead.
-   * Returns a promise that resolves with one of the deprecated connectivity
-   * types:
-   *
-   * The following connectivity types are deprecated. They're used by the
-   * deprecated APIs `fetch` and the `change` event.
-   *
-   * iOS connectivity types (deprecated):
-   * - `none` - device is offline
-   * - `wifi` - device is online and connected via wifi, or is the iOS simulator
-   * - `cell` - device is connected via Edge, 3G, WiMax, or LTE
-   * - `unknown` - error case and the network status is unknown
-   *
-   * Android connectivity types (deprecated).
-   * - `NONE` - device is offline
-   * - `BLUETOOTH` - The Bluetooth data connection.
-   * - `DUMMY` -  Dummy data connection.
-   * - `ETHERNET` - The Ethernet data connection.
-   * - `MOBILE` - The Mobile data connection.
-   * - `MOBILE_DUN` - A DUN-specific Mobile data connection.
-   * - `MOBILE_HIPRI` - A High Priority Mobile data connection.
-   * - `MOBILE_MMS` - An MMS-specific Mobile data connection.
-   * - `MOBILE_SUPL` -  A SUPL-specific Mobile data connection.
-   * - `VPN` -  A virtual network using one or more native bearers. Requires
-   * API Level 21
-   * - `WIFI` - The WIFI data connection.
-   * - `WIMAX` -  The WiMAX data connection.
-   * - `UNKNOWN` - Unknown data connection.
-   *
-   * The rest of the connectivity types are hidden by the Android API, but can
-   * be used if necessary.
-   */
-  fetch(): Promise<any> {
-    console.warn(
-      'NetInfo.fetch() is deprecated. Use NetInfo.getConnectionInfo() instead.',
-    );
-    return RNCNetInfo.getCurrentConnectivity().then(resp => resp.network_info);
   },
 
   /**
@@ -200,12 +127,10 @@ const NetInfo = {
   isConnected: {
     addEventListener(
       eventName: ChangeEventName,
-      handler: Function,
+      handler: ChangeHandler,
     ): {remove: () => void} {
       const listener = connection => {
-        if (eventName === 'change') {
-          handler(_isConnectedDeprecated(connection));
-        } else if (eventName === 'connectionChange') {
+        if (eventName === 'connectionChange') {
           handler(_isConnected(connection));
         }
       };
@@ -217,7 +142,7 @@ const NetInfo = {
       };
     },
 
-    removeEventListener(eventName: ChangeEventName, handler: Function): void {
+    removeEventListener(eventName: ChangeEventName, handler: ChangeHandler): void {
       const listener = _isConnectedSubscriptions.get(handler);
       listener && NetInfo.removeEventListener(eventName, listener);
       _isConnectedSubscriptions.delete(handler);

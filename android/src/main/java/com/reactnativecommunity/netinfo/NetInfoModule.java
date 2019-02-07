@@ -51,9 +51,6 @@ public class NetInfoModule extends ReactContextBaseJavaModule
   private static final String EFFECTIVE_CONNECTION_TYPE_3G = "3g";
   private static final String EFFECTIVE_CONNECTION_TYPE_4G = "4g";
 
-  private static final String CONNECTION_TYPE_NONE_DEPRECATED = "NONE";
-  private static final String CONNECTION_TYPE_UNKNOWN_DEPRECATED = "UNKNOWN";
-
   private static final String MISSING_PERMISSION_MESSAGE =
       "To use NetInfo on Android, add the following to your AndroidManifest.xml:\n" +
       "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />";
@@ -65,7 +62,6 @@ public class NetInfoModule extends ReactContextBaseJavaModule
   private final ConnectivityBroadcastReceiver mConnectivityBroadcastReceiver;
   private boolean mNoNetworkPermission = false;
 
-  private String mConnectivityDeprecated = CONNECTION_TYPE_UNKNOWN_DEPRECATED;
   private String mConnectionType = CONNECTION_TYPE_UNKNOWN;
   private String mEffectiveConnectionType = EFFECTIVE_CONNECTION_TYPE_UNKNOWN;
 
@@ -171,32 +167,13 @@ public class NetInfoModule extends ReactContextBaseJavaModule
       connectionType = CONNECTION_TYPE_UNKNOWN;
     }
 
-    String currentConnectivity = getCurrentConnectionType();
     // It is possible to get multiple broadcasts for the same connectivity change, so we only
     // update and send an event when the connectivity has indeed changed.
     if (!connectionType.equalsIgnoreCase(mConnectionType) ||
-        !effectiveConnectionType.equalsIgnoreCase(mEffectiveConnectionType) ||
-        !currentConnectivity.equalsIgnoreCase(mConnectivityDeprecated)) {
+        !effectiveConnectionType.equalsIgnoreCase(mEffectiveConnectionType)) {
       mConnectionType = connectionType;
       mEffectiveConnectionType = effectiveConnectionType;
-      mConnectivityDeprecated = currentConnectivity;
       sendConnectivityChangedEvent();
-    }
-  }
-
-  private String getCurrentConnectionType() {
-    try {
-      NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
-      if (networkInfo == null || !networkInfo.isConnected()) {
-        return CONNECTION_TYPE_NONE_DEPRECATED;
-      } else if (ConnectivityManager.isNetworkTypeValid(networkInfo.getType())) {
-        return networkInfo.getTypeName().toUpperCase();
-      } else {
-        return CONNECTION_TYPE_UNKNOWN_DEPRECATED;
-      }
-    } catch (SecurityException e) {
-      mNoNetworkPermission = true;
-      return CONNECTION_TYPE_UNKNOWN_DEPRECATED;
     }
   }
 
@@ -233,7 +210,6 @@ public class NetInfoModule extends ReactContextBaseJavaModule
 
   private WritableMap createConnectivityEventMap() {
     WritableMap event = new WritableNativeMap();
-    event.putString("network_info", mConnectivityDeprecated);
     event.putString("connectionType", mConnectionType);
     event.putString("effectiveConnectionType", mEffectiveConnectionType);
     return event;
