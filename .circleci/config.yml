@@ -1,0 +1,106 @@
+# Based off the script from the react-native-firebase project. Licenced under the Apache 2.0 licence
+# Details: https://github.com/invertase/react-native-firebase
+
+# -------------------------
+#         ALIASES
+# -------------------------
+
+aliases:
+# -------------------------
+#          CACHE
+# -------------------------
+- &restore-yarn-cache
+  keys:
+  - yarn-cache-{{ arch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+  - yarn-cache-{{ arch }}
+
+- &save-yarn-cache
+  paths:
+  - ~/.cache/yarn
+  - ~/Library/Detox/ios
+  key: yarn-cache-{{ arch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+
+# -------------------------
+#       INSTALLATION
+# -------------------------
+- &yarn
+  name: Yarn Install
+  command: |
+    yarn install --network-concurrency 1 --non-interactive --cache-folder ~/.cache/yarn & wait
+
+# -------------------------
+#         ANALYSE
+# -------------------------
+
+- &flow
+  name: Flow Checks
+  command: yarn ci:test:flow
+
+- &javascript
+  name: Javascript Tests
+  command: yarn ci:test:js
+
+# -------------------------
+#        DEFAULTS
+# -------------------------
+defaults: &defaults
+  working_directory: ~/react-native-netinfo
+  environment:
+  - GIT_COMMIT_DESC: git log --format=oneline -n 1 $CIRCLE_SHA1
+
+# JAVASCRIPT
+js_defaults: &js_defaults
+  <<: *defaults
+  docker:
+  - image: circleci/node:8
+  environment:
+  - PATH: "/opt/yarn/yarn-v1.5.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# -------------------------
+#          JOBS
+# -------------------------
+version: 2
+jobs:
+  # Set up a Node environment for downstream jobs
+  checkout-code:
+    <<: *js_defaults
+    steps:
+    - checkout
+    - restore-cache: *restore-yarn-cache
+    - run: rm -rf node_modules
+    - run: yarn cache clean
+    - run: *yarn
+    - save-cache: *save-yarn-cache
+    - persist_to_workspace:
+        root: .
+        paths: .
+
+  flow:
+    <<: *js_defaults
+    steps:
+    - attach_workspace:
+        at: ~/react-native-netinfo
+    - run: *flow
+  
+  javascript:
+    <<: *js_defaults
+    steps:
+    - attach_workspace:
+        at: ~/react-native-netinfo
+    - run: *javascript
+
+
+# -------------------------
+#        WORK FLOWS
+# -------------------------
+workflows:
+  version: 2
+  Test:
+    jobs:
+    - checkout-code
+    - flow:
+        requires:
+        - checkout-code
+    - javascript:
+        requires:
+        - checkout-code
