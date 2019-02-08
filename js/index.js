@@ -45,6 +45,8 @@ type ChangeHandler = ({
   effectiveType: EffectiveConnectionType,
 }) => void;
 
+type IsConnectedHandler = (isConnected: boolean) => void;
+
 const _subscriptions = new Map();
 
 function _isConnected(connection) {
@@ -127,7 +129,7 @@ const NetInfo = {
   isConnected: {
     addEventListener(
       eventName: ChangeEventName,
-      handler: ChangeHandler,
+      handler: IsConnectedHandler,
     ): {remove: () => void} {
       const listener = connection => {
         if (eventName === 'connectionChange') {
@@ -142,7 +144,7 @@ const NetInfo = {
       };
     },
 
-    removeEventListener(eventName: ChangeEventName, handler: ChangeHandler): void {
+    removeEventListener(eventName: ChangeEventName, handler: IsConnectedHandler): void {
       const listener = _isConnectedSubscriptions.get(handler);
       listener && NetInfo.removeEventListener(eventName, listener);
       _isConnectedSubscriptions.delete(handler);
