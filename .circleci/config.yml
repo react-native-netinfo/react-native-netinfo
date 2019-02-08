@@ -2,45 +2,6 @@
 # Details: https://github.com/invertase/react-native-firebase
 
 # -------------------------
-#         ALIASES
-# -------------------------
-
-aliases:
-# -------------------------
-#          CACHE
-# -------------------------
-- &restore-yarn-cache
-  keys:
-  - yarn-cache-{{ arch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
-  - yarn-cache-{{ arch }}
-
-- &save-yarn-cache
-  paths:
-  - ~/.cache/yarn
-  - ~/Library/Detox/ios
-  key: yarn-cache-{{ arch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
-
-# -------------------------
-#       INSTALLATION
-# -------------------------
-- &yarn
-  name: Yarn Install
-  command: |
-    yarn install --network-concurrency 1 --non-interactive --cache-folder ~/.cache/yarn & wait
-
-# -------------------------
-#         ANALYSE
-# -------------------------
-
-- &flow
-  name: Flow Checks
-  command: yarn ci:test:flow
-
-- &javascript
-  name: Javascript Tests
-  command: yarn ci:test:js
-
-# -------------------------
 #        DEFAULTS
 # -------------------------
 defaults: &defaults
@@ -55,6 +16,51 @@ js_defaults: &js_defaults
   - image: circleci/node:8
   environment:
   - PATH: "/opt/yarn/yarn-v1.5.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# ANDROID
+android_defaults: &android_defaults
+  <<: *defaults
+  docker:
+  - image: circleci/android:api-27-node8-alpha
+  resource_class: "large"
+  environment:
+  - TERM: "dumb"
+  - ADB_INSTALL_TIMEOUT: 10
+  - _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+  - GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError"'
+  - BUILD_THREADS: 2
+
+# -------------------------
+#         ALIASES
+# -------------------------
+
+aliases:
+# CACHE
+- &restore-yarn-cache
+  keys:
+  - yarn-cache-{{ arch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+  - yarn-cache-{{ arch }}
+
+- &save-yarn-cache
+  paths:
+  - ~/.cache/yarn
+  - ~/Library/Detox/ios
+  key: yarn-cache-{{ arch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+
+# INSTALLATION
+- &yarn
+  name: Yarn Install
+  command: |
+    yarn install --network-concurrency 1 --non-interactive --cache-folder ~/.cache/yarn & wait
+
+# ANALYSE
+- &flow
+  name: Flow Checks
+  command: yarn ci:test:flow
+
+- &javascript
+  name: Javascript Tests
+  command: yarn ci:test:js
 
 # -------------------------
 #          JOBS
@@ -88,10 +94,26 @@ jobs:
     - attach_workspace:
         at: ~/react-native-netinfo
     - run: *javascript
+  
+  android-compile:
+    <<: *android_defaults
+    steps:
+    - attach_workspace:
+        at: ~/react-native-netinfo
+    - run:
+        name: Accept Android licences
+        command: |-
+          yes | sdkmanager --licenses || exit 0
+          yes | sdkmanager --update || exit 0
+    - run:
+        name: Build Android Example App and Library
+        command: |-
+          cd example/android
+          ./gradlew clean assembleDebug
 
 
 # -------------------------
-#        WORK FLOWS
+#        WORKFLOWS
 # -------------------------
 workflows:
   version: 2
@@ -102,5 +124,8 @@ workflows:
         requires:
         - checkout-code
     - javascript:
+        requires:
+        - checkout-code
+    - android-compile:
         requires:
         - checkout-code
