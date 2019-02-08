@@ -114,6 +114,7 @@ public class NetInfoModule extends ReactContextBaseJavaModule
     promise.resolve(ConnectivityManagerCompat.isActiveNetworkMetered(mConnectivityManager));
   }
 
+  @SuppressWarnings("deprecation")
   private void registerReceiver() {
     IntentFilter filter = new IntentFilter();
     filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -129,6 +130,7 @@ public class NetInfoModule extends ReactContextBaseJavaModule
     }
   }
 
+  @SuppressWarnings("deprecation")
   private void updateAndSendConnectionType() {
     String connectionType = CONNECTION_TYPE_UNKNOWN;
     String effectiveConnectionType = EFFECTIVE_CONNECTION_TYPE_UNKNOWN;
@@ -233,6 +235,7 @@ public class NetInfoModule extends ReactContextBaseJavaModule
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onReceive(Context context, Intent intent) {
       if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
         updateAndSendConnectionType();

@@ -29,6 +29,7 @@ public class NetInfoPackage implements ReactPackage {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
       return Collections.emptyList();
     }

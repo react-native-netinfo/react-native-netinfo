@@ -30,8 +30,15 @@ allprojects {
             url "$rootDir/../../node_modules/react-native/android"
         }
     }
-}
 
+    // Turn on all lint warnings and report them as errors
+    // This only affects the example project and not library users. We use this to catch warnings early
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:all" << "-Werror"
+        }
+    }
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.7'
