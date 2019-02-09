@@ -164,7 +164,8 @@ workflows:
     - android-compile:
         requires:
         - linux-checkout
-    - ios-checkout
-    - ios-compile:
-        requires:
-        - ios-checkout
+# Disabled until we have macOS containers enabled        
+#     - ios-checkout
+#     - ios-compile:
+#         requires:
+#         - ios-checkout
