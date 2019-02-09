@@ -46,3 +46,6 @@ buck-out/
 
 # Editor config
 .vscode
+
+# Outputs
+coverage

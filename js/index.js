@@ -10,10 +10,8 @@
 
 'use strict';
 
-import {NativeEventEmitter, NativeModules, Platform} from 'react-native';
-
-const {RNCNetInfo} = NativeModules;
-const NetInfoEventEmitter = new NativeEventEmitter(RNCNetInfo);
+import {Platform} from 'react-native';
+import {RNCNetInfo, NetInfoEventEmitter} from './nativeInterface';
 
 const DEVICE_CONNECTIVITY_EVENT = 'networkStatusDidChange';
 
@@ -53,6 +51,10 @@ const _isConnectedSubscriptions = new Map();
  * See https://facebook.github.io/react-native/docs/netinfo.html
  */
 const NetInfo = {
+  Events: {
+    NetworkStatusDidChange: DEVICE_CONNECTIVITY_EVENT,
+  },
+
   /**
    * Adds an event handler.
    *

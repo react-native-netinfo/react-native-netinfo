@@ -73,9 +73,9 @@ aliases:
   name: Flow Checks
   command: yarn test:flow
 
-- &javascript
-  name: Javascript Tests
-  command: yarn test:js
+- &jest
+  name: Jest Unit Tests
+  command: yarn test:jest
 
 # -------------------------
 #          JOBS
@@ -110,12 +110,12 @@ jobs:
         at: ~/react-native-netinfo
     - run: *flow
   
-  javascript:
+  jest:
     <<: *linux_defaults
     steps:
     - attach_workspace:
         at: ~/react-native-netinfo
-    - run: *javascript
+    - run: *jest
   
   android-compile:
     <<: *android_defaults
@@ -172,7 +172,7 @@ workflows:
     - flow:
         requires:
         - linux-checkout
-    - javascript:
+    - jest:
         requires:
         - linux-checkout
     - android-compile:
