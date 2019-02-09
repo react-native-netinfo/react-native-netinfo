@@ -1,6 +1,3 @@
-# Based off the script from the react-native-firebase project. Licenced under the Apache 2.0 licence
-# Details: https://github.com/invertase/react-native-firebase
-
 # -------------------------
 #        DEFAULTS
 # -------------------------
@@ -9,8 +6,8 @@ defaults: &defaults
   environment:
   - GIT_COMMIT_DESC: git log --format=oneline -n 1 $CIRCLE_SHA1
 
-# JAVASCRIPT
-js_defaults: &js_defaults
+# LINUX
+linux_defaults: &linux_defaults
   <<: *defaults
   docker:
   - image: circleci/node:8
@@ -29,6 +26,13 @@ android_defaults: &android_defaults
   - _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
   - GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError"'
   - BUILD_THREADS: 2
+
+# MACOS
+macos_defaults: &macos_defaults
+  <<: *defaults
+  resource_class: "large"
+  macos:
+    xcode: "10.1.0"
 
 # -------------------------
 #         ALIASES
@@ -74,9 +78,9 @@ aliases:
 # -------------------------
 version: 2
 jobs:
-  # Set up a Node environment for downstream jobs
-  checkout-code:
-    <<: *js_defaults
+  # Set up a Linux environment for downstream jobs
+  linux-checkout:
+    <<: *linux_defaults
     steps:
     - checkout
     - restore-cache: *restore-yarn-cache
@@ -89,14 +93,14 @@ jobs:
         paths: .
 
   flow:
-    <<: *js_defaults
+    <<: *linux_defaults
     steps:
     - attach_workspace:
         at: ~/react-native-netinfo
     - run: *flow
   
   javascript:
-    <<: *js_defaults
+    <<: *linux_defaults
     steps:
     - attach_workspace:
         at: ~/react-native-netinfo
@@ -119,7 +123,29 @@ jobs:
           cd example/android
           ./gradlew clean assembleDebug
     - save-cache: *save-gradle-cache
+  
+  ios-checkout:
+    <<: *macos_defaults
+    steps:
+    - checkout
+    - restore-cache: *restore-yarn-cache
+    - run: rm -rf node_modules
+    - run: yarn cache clean
+    - run: *yarn
+    - save-cache: *save-yarn-cache
+    - persist_to_workspace:
+        root: .
+        paths: .
 
+  ios-compile:
+    <<: *macos_defaults
+    steps:
+    - attach_workspace:
+        at: ~/react-native-netinfo
+    - run:
+        name: Build example app
+        command: |-
+          react-native run-ios --project-path example/ios
 
 # -------------------------
 #        WORKFLOWS
@@ -128,13 +154,17 @@ workflows:
   version: 2
   Test:
     jobs:
-    - checkout-code
+    - linux-checkout
     - flow:
         requires:
-        - checkout-code
+        - linux-checkout
     - javascript:
         requires:
-        - checkout-code
+        - linux-checkout
     - android-compile:
         requires:
-        - checkout-code
+        - linux-checkout
+    - ios-checkout
+    - ios-compile:
+        requires:
+        - ios-checkout
