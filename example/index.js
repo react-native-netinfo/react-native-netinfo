@@ -15,14 +15,14 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
 } from 'react-native';
 
 import ConnectionInfoSubscription from './ConnectionInfoSubscription';
 import ConnectionInfoCurrent from './ConnectionInfoCurrent';
 import IsConnected from './IsConnected';
 import IsConnectionExpensive from './IsConnectionExpensive';
-import { name as appName } from './app.json';
+import {name as appName} from './app.json';
 
 const EXAMPLES = [
   {
@@ -63,7 +63,9 @@ class ExampleApp extends React.Component<{}> {
           {EXAMPLES.map(example => (
             <View key={example.title} style={styles.exampleContainer}>
               <Text style={styles.exampleTitle}>{example.title}</Text>
-              <Text style={styles.exampleDescription}>{example.description}</Text>
+              <Text style={styles.exampleDescription}>
+                {example.description}
+              </Text>
               <View style={styles.exampleInnerContainer}>
                 {example.render()}
               </View>
@@ -71,7 +73,7 @@ class ExampleApp extends React.Component<{}> {
           ))}
         </SafeAreaView>
       </ScrollView>
-    )
+    );
   }
 }
 
@@ -83,7 +85,7 @@ const styles = StyleSheet.create({
   exampleContainer: {
     padding: 16,
     marginVertical: 16,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     borderColor: '#EEE',
     borderTopWidth: 1,
     borderBottomWidth: 1,
@@ -99,7 +101,7 @@ const styles = StyleSheet.create({
     borderColor: '#EEE',
     borderTopWidth: 1,
     paddingTop: 16,
-  }
+  },
 });
 
 AppRegistry.registerComponent(appName, () => ExampleApp);

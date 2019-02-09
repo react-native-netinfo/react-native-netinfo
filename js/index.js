@@ -10,9 +10,9 @@
 
 'use strict';
 
-import { NativeEventEmitter, NativeModules, Platform } from "react-native";
+import {NativeEventEmitter, NativeModules, Platform} from 'react-native';
 
-const { RNCNetInfo } = NativeModules;
+const {RNCNetInfo} = NativeModules;
 const NetInfoEventEmitter = new NativeEventEmitter(RNCNetInfo);
 
 const DEVICE_CONNECTIVITY_EVENT = 'networkStatusDidChange';
@@ -99,7 +99,10 @@ const NetInfo = {
    *
    * See https://facebook.github.io/react-native/docs/netinfo.html#removeeventlistener
    */
-  removeEventListener(eventName: ChangeEventName, handler: ChangeHandler): void {
+  removeEventListener(
+    eventName: ChangeEventName,
+    handler: ChangeHandler,
+  ): void {
     const listener = _subscriptions.get(handler);
     if (!listener) {
       return;
@@ -144,7 +147,10 @@ const NetInfo = {
       };
     },
 
-    removeEventListener(eventName: ChangeEventName, handler: IsConnectedHandler): void {
+    removeEventListener(
+      eventName: ChangeEventName,
+      handler: IsConnectedHandler,
+    ): void {
       const listener = _isConnectedSubscriptions.get(handler);
       listener && NetInfo.removeEventListener(eventName, listener);
       _isConnectedSubscriptions.delete(handler);

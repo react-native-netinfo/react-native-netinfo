@@ -9,20 +9,29 @@
  */
 
 import React from 'react';
-import { Text, View } from 'react-native';
+import {Text, View} from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 
-export default class ConnectionInfoSubscription extends React.Component<{}, $FlowFixMe> {
+export default class ConnectionInfoSubscription extends React.Component<
+  {},
+  $FlowFixMe,
+> {
   state = {
     connectionInfoHistory: [],
   };
 
   componentDidMount() {
-    NetInfo.addEventListener('connectionChange', this._handleConnectionInfoChange);
+    NetInfo.addEventListener(
+      'connectionChange',
+      this._handleConnectionInfoChange,
+    );
   }
 
   componentWillUnmount() {
-    NetInfo.removeEventListener('connectionChange', this._handleConnectionInfoChange);
+    NetInfo.removeEventListener(
+      'connectionChange',
+      this._handleConnectionInfoChange,
+    );
   }
 
   _handleConnectionInfoChange = connectionInfo => {

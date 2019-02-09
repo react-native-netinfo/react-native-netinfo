@@ -9,10 +9,13 @@
  */
 
 import React from 'react';
-import { Text, TouchableWithoutFeedback, View } from 'react-native';
+import {Text, TouchableWithoutFeedback, View} from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 
-export default class IsConnectionExpensive extends React.Component<{}, $FlowFixMe> {
+export default class IsConnectionExpensive extends React.Component<
+  {},
+  $FlowFixMe,
+> {
   state = {
     isConnectionExpensive: null,
   };
@@ -33,8 +36,8 @@ export default class IsConnectionExpensive extends React.Component<{}, $FlowFixM
               {this.state.isConnectionExpensive === true
                 ? 'Expensive'
                 : this.state.isConnectionExpensive === false
-                  ? 'Not expensive'
-                  : 'Unknown'}
+                ? 'Not expensive'
+                : 'Unknown'}
             </Text>
           </View>
         </TouchableWithoutFeedback>
