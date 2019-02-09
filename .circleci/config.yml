@@ -40,12 +40,19 @@ aliases:
   keys:
   - yarn-cache-{{ arch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
   - yarn-cache-{{ arch }}
-
 - &save-yarn-cache
   paths:
   - ~/.cache/yarn
   - ~/Library/Detox/ios
   key: yarn-cache-{{ arch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
+
+- &restore-gradle-cache
+  keys:
+  - gradle-cache-{{ checksum "android/build.gradle" }}-{{ checksum "example/android/build.gradle" }}-{{ checksum "example/android/app/build.gradle" }}
+- &save-gradle-cache
+  paths:
+  - ~/.gradle
+  key: gradle-cache-{{ checksum "android/build.gradle" }}-{{ checksum "example/android/build.gradle" }}-{{ checksum "example/android/app/build.gradle" }}
 
 # INSTALLATION
 - &yarn
@@ -100,6 +107,7 @@ jobs:
     steps:
     - attach_workspace:
         at: ~/react-native-netinfo
+    - restore-cache: *restore-gradle-cache
     - run:
         name: Accept Android licences
         command: |-
@@ -110,6 +118,7 @@ jobs:
         command: |-
           cd example/android
           ./gradlew clean assembleDebug
+    - save-cache: *save-gradle-cache
 
 
 # -------------------------
