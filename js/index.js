@@ -17,28 +17,20 @@ const NetInfoEventEmitter = new NativeEventEmitter(RNCNetInfo);
 
 const DEVICE_CONNECTIVITY_EVENT = 'networkStatusDidChange';
 
-type ChangeEventName = $Enum<{
-  connectionChange: string,
-}>;
+type ChangeEventName = 'connectionChange';
 
-type ConnectionType = $Enum<{
+export type ConnectionType =
   // iOS & Android
-  cell: 'cellular',
-  none: 'none',
-  unknown: 'unknown',
-  wifi: 'wifi',
+  | 'none'
+  | 'cellular'
+  | 'unknown'
+  | 'wifi'
   // Android only
-  bluetooth: 'bluetooth',
-  ethernet: 'ethernet',
-  wimax: 'wimax',
-}>;
+  | 'bluetooth'
+  | 'ethernet'
+  | 'wimax';
 
-type EffectiveConnectionType = $Enum<{
-  unknown: 'unknown',
-  '2g': '2g',
-  '3g': '3g',
-  '4g': '4g',
-}>;
+export type EffectiveConnectionType = 'unknown' | '2g' | '3g' | '4g';
 
 type ChangeHandler = ({
   type: ConnectionType,
