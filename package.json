@@ -1,6 +1,6 @@
 {
   "name": "@react-native-community/netinfo",
-  "version": "0.1.0",
+  "version": "1.0.0-rc.1",
   "description": "React Native Network Info API for iOS & Android",
   "main": "js/index.js",
   "typings": "typings/index.d.ts",
@@ -26,8 +26,7 @@
     "react": "^16.0",
     "react-native": "^0.57.0"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "babel-core": "^7.0.0-bridge.0",
@@ -52,7 +51,9 @@
   },
   "jest": {
     "preset": "react-native",
-    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.js"
+    ]
   },
   "repository": {
     "type": "git",
