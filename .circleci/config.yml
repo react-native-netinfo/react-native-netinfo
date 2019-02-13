@@ -158,6 +158,15 @@ jobs:
         command: |-
           react-native run-ios --project-path example/ios
 
+  publish:
+    <<: *linux_defaults
+    steps:
+      - attach_workspace:
+          at: ~/react-native-netinfo
+      - run:
+          name: Publish to NPM
+          command: yarn ci:publish
+
 # -------------------------
 #        WORKFLOWS
 # -------------------------
@@ -183,3 +192,12 @@ workflows:
 #     - ios-compile:
 #         requires:
 #         - ios-checkout
+    - publish:
+        requires:
+        - linux-checkout
+        - eslint
+        - flow
+        - jest
+        filters:
+          branches:
+            only: master

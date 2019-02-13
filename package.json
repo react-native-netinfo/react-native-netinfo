@@ -13,7 +13,9 @@
     "test": "yarn test:eslint && yarn test:flow && yarn test:jest",
     "test:eslint": "eslint 'js/**/*.js' 'example/**/*.js'",
     "test:flow": "flow check",
-    "test:jest": "jest"
+    "test:jest": "jest",
+    "ci:publish": "yarn semantic-release",
+    "semantic-release": "semantic-release"
   },
   "keywords": [
     "react-native",
@@ -29,6 +31,7 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.0.0",
+    "@semantic-release/git": "7.0.5",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.1.0",
@@ -47,7 +50,8 @@
     "prettier": "^1.16.4",
     "react": "16.6.3",
     "react-native": "0.58.4",
-    "react-test-renderer": "16.6.3"
+    "react-test-renderer": "16.6.3",
+    "semantic-release": "15.10.3"
   },
   "jest": {
     "preset": "react-native",
