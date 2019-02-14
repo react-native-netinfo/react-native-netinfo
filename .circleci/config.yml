@@ -198,6 +198,7 @@ workflows:
         - eslint
         - flow
         - jest
+        - android-compile
         filters:
           branches:
             only: master
