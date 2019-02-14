@@ -11,7 +11,6 @@
 
 import {NativeModules} from 'react-native';
 import NetInfo from '../index';
-import {NetInfoEventEmitter} from '../nativeInterface';
 
 describe('react-native-netinfo', () => {
   describe('Event listener management', () => {
