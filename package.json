@@ -41,8 +41,6 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@semantic-release/git": "7.0.5",
-    "a2a": "^0.2.0",
-    "axios": "^0.18.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.1.0",
