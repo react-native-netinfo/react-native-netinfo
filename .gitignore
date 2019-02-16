@@ -8,7 +8,7 @@
 node_modules/
 npm-debug.log
 yarn-error.log
-  
+
 
 # Xcode
 #
@@ -29,7 +29,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
-      
+
 
 # Android/IntelliJ
 #
@@ -49,3 +49,6 @@ buck-out/
 
 # Outputs
 coverage
+
+example/android-bundle.js
+example/ios-bundle.js
