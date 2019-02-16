@@ -9,15 +9,20 @@
   "homepage": "https://github.com/react-native-community/react-native-netinfo#readme",
   "license": "MIT",
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start": "react-native start",
     "test": "yarn test:eslint && yarn test:flow && yarn test:jest",
     "test:eslint": "eslint 'js/**/*.js' 'example/**/*.js'",
     "test:flow": "flow check",
     "test:jest": "jest js/",
-    "test:detox:android:build": "detox build -c android.emu.debug",
-    "test:detox:android:test": "detox test -c android.emu.debug",
-    "test:detox:ios:build": "detox build -c ios.sim.debug",
-    "test:detox:ios:test": "detox test -c ios.sim.debug",
+    "test:detox:android:test": "detox test -c android.emu.release",
+    "test:detox:android:build:debug": "detox build -c android.emu.debug",
+    "test:detox:android:build:release": "detox build -c android.emu.release",
+    "test:detox:android:bundle:release": "react-native bundle --max-workers 4 --platform android --dev false --entry-file example/index.js --bundle-output example/android-bundle.js",
+    "test:detox:ios:test": "detox test -c ios.sim.release",
+    "test:detox:ios:build:debug": "detox build -c ios.sim.debug",
+    "test:detox:ios:build:release": "detox build -c ios.sim.release",
+    "test:detox:ios:bundle:release": "react-native bundle --max-workers 4 --platform ios --dev false --entry-file example/index.js --bundle-output example/ios-bundle.js",
+    "test:detox:clean": "rimraf example/android/build && rimraf example/android/app/build && rimraf example/android/.gradle && rimraf example/ios/build",
     "ci:publish": "yarn semantic-release",
     "semantic-release": "semantic-release"
   },
@@ -36,6 +41,7 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@semantic-release/git": "7.0.5",
+    "a2a": "^0.2.0",
     "axios": "^0.18.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
@@ -57,6 +63,7 @@
     "react": "16.6.3",
     "react-native": "0.58.4",
     "react-test-renderer": "16.6.3",
+    "rimraf": "^2.6.3",
     "semantic-release": "15.10.3"
   },
   "jest": {
@@ -71,13 +78,25 @@
     "configurations": {
       "ios.sim.debug": {
         "binaryPath": "example/ios/build/Build/Products/Debug-iphonesimulator/NetInfoExample.app",
-        "build": "xcodebuild -project example/ios/NetInfoExample.xcodeproj -scheme NetInfoExample -configuration Debug -sdk iphonesimulator -derivedDataPath example/ios/build  -UseModernBuildSystem=NO",
+        "build": "export RCT_NO_LAUNCH_PACKAGER=true && xcodebuild -project example/ios/NetInfoExample.xcodeproj -destination 'platform=iOS Simulator,name=iPhone X' -scheme NetInfoExample -parallelizeTargets -configuration Debug -derivedDataPath example/ios/build  -UseModernBuildSystem=YES | xcpretty -k",
+        "type": "ios.simulator",
+        "name": "iPhone X"
+      },
+      "ios.sim.release": {
+        "binaryPath": "example/ios/build/Build/Products/Release-iphonesimulator/NetInfoExample.app",
+        "build": "export RCT_NO_LAUNCH_PACKAGER=true && xcodebuild -project example/ios/NetInfoExample.xcodeproj -destination 'platform=iOS Simulator,name=iPhone X' -scheme NetInfoExample -parallelizeTargets -configuration Release -derivedDataPath example/ios/build  -UseModernBuildSystem=YES | xcpretty -k",
         "type": "ios.simulator",
         "name": "iPhone X"
       },
       "android.emu.debug": {
         "binaryPath": "example/android/app/build/outputs/apk/debug/app-debug.apk",
-        "build": "cd example/android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && cd ../..",
+        "build": "export RCT_NO_LAUNCH_PACKAGER=true && pushd example/android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && popd",
+        "type": "android.emulator",
+        "name": "TestingAVD"
+      },
+      "android.emu.release": {
+        "binaryPath": "example/android/app/build/outputs/apk/release/app-release.apk",
+        "build": "export RCT_NO_LAUNCH_PACKAGER=true && pushd example/android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release && popd",
         "type": "android.emulator",
         "name": "TestingAVD"
       }
