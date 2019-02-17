@@ -405,7 +405,7 @@ jobs:
           name: Start Android Emulator (API 28) in background
           command: |
             /usr/local/share/android-sdk/emulator/emulator @TestingAVD -version
-            /usr/local/share/android-sdk/emulator/emulator @TestingAVD -skin 470x860 -cores 2 -gpu auto -accel on -memory 2048 -no-audio -no-snapshot -no-window -logcat *:W | grep -i 'ReactNative\|com.reactnativecommunity\|RNCNetInfo'
+            /usr/local/share/android-sdk/emulator/emulator @TestingAVD -skin 470x860 -cores 1 -gpu auto -accel on -memory 1024 -no-audio -no-snapshot -no-boot-anim -no-window -logcat *:W | grep -i 'ReactNative\|com.reactnativecommunity\|RNCNetInfo'
           background: true
 
       - run:

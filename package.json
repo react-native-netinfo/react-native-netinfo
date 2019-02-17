@@ -5,7 +5,9 @@
   "main": "js/index.js",
   "typings": "typings/index.d.ts",
   "author": "Matt Oakes <hello@mattoakes.net>",
-  "contributors": [],
+  "contributors": [
+    "Mike Diarmid (Salakar) <mike@invertase.io>"
+  ],
   "homepage": "https://github.com/react-native-community/react-native-netinfo#readme",
   "license": "MIT",
   "scripts": {
