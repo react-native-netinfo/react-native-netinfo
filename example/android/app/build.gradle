@@ -73,7 +73,9 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "example/index.js"
+    entryFile: "example/index.js",
+    nodeExecutableAndArgs: ["echo", "'Skipping bundling"],
+    bundleInRelease: false
 ]
 
 apply from: "../../../node_modules/react-native/react.gradle"
@@ -107,6 +109,16 @@ android {
         missingDimensionStrategy "minReactNative", "minReactNative46"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            if (project.hasProperty('EXAMPLE_APP_STORE_FILE')) {
+                storeFile file(EXAMPLE_APP_STORE_FILE)
+                storePassword EXAMPLE_APP_STORE_PASSWORD
+                keyAlias EXAMPLE_APP_KEY_ALIAS
+                keyPassword EXAMPLE_APP_KEY_PASSWORD
+            }
+        }
+    }
     splits {
         abi {
             reset()
@@ -117,6 +129,7 @@ android {
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
