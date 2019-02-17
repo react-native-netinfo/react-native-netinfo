@@ -1,288 +1,475 @@
+#
+# Copyright (c) 2016-present Invertase Limited & Contributors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this library except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+---
+aliases:
+  # -------------------------
+  #          CACHE
+  # -------------------------
+  - &restore-yarn-cache
+    key: v1-yarn-cache-{{ arch }}-{{ checksum "~/.tmp/checksumfiles/package.json" }}-{{ checksum "yarn.lock" }}
+
+  - &save-yarn-cache
+    paths:
+      - ~/.cache/yarn
+      - ~/Library/Detox
+    key: v1-yarn-cache-{{ arch }}-{{ checksum "~/.tmp/checksumfiles/package.json" }}-{{ checksum "yarn.lock" }}
+
+  # -------------------------
+  #            iOS
+  # -------------------------
+
+  - &save-ios-build-cache
+    paths:
+      - ~/react-native-netinfo/example/ios/build/Build
+    key: v1-ios-build-cache-{{ arch }}-{{ checksum "~/.tmp/checksumfiles/package.json" }}
+    when: always
+
+  - &restore-ios-build-cache
+    key: v1-ios-build-cache-{{ arch }}-{{ checksum "~/.tmp/checksumfiles/package.json" }}
+
+  # -------------------------
+  #         Android
+  # -------------------------
+  - &save-gradle-home-caches
+    name: Saving Gradle home cache
+    paths:
+      - ~/.gradle/caches/
+    key: v1-gradle-home-cache-{{ checksum "~/.tmp/checksumfiles/build.gradle" }}-{{ checksum "~/.tmp/checksumfiles/settings.gradle" }}
+
+  - &restore-gradle-home-caches
+    keys:
+      - v1-gradle-home-cache-{{ checksum "~/.tmp/checksumfiles/build.gradle" }}-{{ checksum "~/.tmp/checksumfiles/settings.gradle" }}
+      - v1-gradle-home-cache
+
+  - &save-gradle-wrapper-cache
+    name: Saving Gradle wrapper cache
+    paths:
+      - ~/.gradle/wrapper/
+    key: v1-gradle-wrapper-{{ checksum "example/android/gradle/wrapper/gradle-wrapper.properties" }}
+
+  - &restore-gradle-wrapper-cache
+    keys:
+      - v1-gradle-wrapper-{{ checksum "example/android/gradle/wrapper/gradle-wrapper.properties" }}
+
+  - &collect-gradle-build-caches
+    name: Collecting Gradle Build caches for saving
+    command: |
+      mkdir -p ~/gradle-build-caches
+      [ -d ~/.gradle/caches ] &&
+        [ -n "$(ls -Ad ~/.gradle/caches/build-cache-* 2>/dev/null)" ] &&
+        rm -rf ~/gradle-build-caches/* &&
+        mv ~/.gradle/caches/build-cache-* ~/gradle-build-caches || true
+    when: always
+
+  - &save-gradle-debug-build-cache
+    name: Saving Gradle Build caches
+    paths:
+      - ~/gradle-build-caches
+    key: v1-gradle-debug-build-cache-{{ .Revision }}
+    when: always
+
+  - &save-gradle-release-build-cache
+    name: Saving Gradle Build caches
+    paths:
+      - ~/gradle-build-caches
+    key: v1-gradle-release-build-cache-{{ .Revision }}
+    when: always
+
+  - &disperse-gradle-build-caches
+    name: Dispersing Gradle Build caches for restoring
+    command: |
+      [ -d ~/gradle-build-caches ] &&
+        [ -n "$(ls -A ~/gradle-build-caches)" ] &&
+        rm -rf ~/.gradle/caches/build-cache-* &&
+        mkdir -p ~/.gradle/caches/ &&
+        mv ~/gradle-build-caches/* ~/.gradle/caches/ || true
+
+  - &restore-gradle-debug-build-cache
+    name: Restoring Gradle Build caches
+    keys:
+      - v1-gradle-debug-build-cache-{{ .Revision }}
+      - v1-gradle-debug-build-cache
+
+  - &restore-gradle-release-build-cache
+    name: Restoring Gradle Build caches
+    keys:
+      - v1-gradle-release-build-cache-{{ .Revision }}
+      - v1-gradle-release-build-cache
+
+
+  # -------------------------
+  #          DETOX
+  # -------------------------
+
+  - &save-brew-cache
+    paths:
+      - /usr/local/Homebrew
+      - ~/Library/Caches/Homebrew
+    key: v1-brew-cache-{{ arch }}
+
+  - &restore-brew-cache
+    keys:
+      - v1-brew-cache-{{ arch }}
+
+
+  # -------------------------
+  #    SHARED RUN COMMANDS
+  # -------------------------
+
+  - &configure-ios-detox-environment
+    name: Configure Detox Environment
+    command: |
+      HOMEBREW_NO_AUTO_UPDATE=1 brew install node@8 >/dev/null
+      HOMEBREW_NO_AUTO_UPDATE=1 brew tap wix/brew >/dev/null
+      HOMEBREW_NO_AUTO_UPDATE=1 brew install applesimutils >/dev/null
+      touch .watchmanconfig
+      node -v
+
+  - &make-cache-check-files
+    name: Make Cache Checksum Files
+    command: |
+      mkdir -p ~/.tmp
+      mkdir -p ~/.tmp/checksumfiles
+      find . -type f -name 'build.gradle' -not -path "*node_modules*" -exec cat {} + >> ~/.tmp/checksumfiles/build.gradle
+      find . -type f -name 'settings.gradle' -not -path "*node_modules*" -exec cat {} + >> ~/.tmp/checksumfiles/settings.gradle
+      find . -type f -name 'package.json' -not -path "*node_modules*" -exec cat {} + >> ~/.tmp/checksumfiles/package.json
+
+  # -------------------------
+  #       INSTALLATION
+  # -------------------------
+  - &yarn
+    name: Yarn Install
+    command: |
+      yarn install --non-interactive --cache-folder ~/.cache/yarn
+
+  # -------------------------
+  #         ANALYSE
+  # -------------------------
+
+  # eslint
+  - &eslint
+    name: Lint JS Code (ESLint)
+    command: yarn run validate:eslint
+
+  # typescript
+  - &validate-typescript
+    name: Validate TypeScript Declarations
+    command: yarn run validate:typescript
+
+  # flow
+  - &validate-flow
+    name: Validate Flow Declarations
+    command: yarn run validate:flow
+
+  # Jest
+  - &jest-tests
+    name: Run Jest Tests
+    command: yarn run test:jest
+
+  # JS Bundle - iOS
+  - &js-bundle-ios
+    name: Build iOS JavaScript Bundle
+    command: yarn run test:detox:ios:bundle:release
+
+  # JS Bundle - iOS
+  - &js-bundle-android
+    name: Build Android JavaScript Bundle
+    command: yarn run test:detox:android:bundle:release
+
 # -------------------------
 #        DEFAULTS
 # -------------------------
+
 defaults: &defaults
   working_directory: ~/react-native-netinfo
   environment:
-  - GIT_COMMIT_DESC: git log --format=oneline -n 1 $CIRCLE_SHA1
+    - GIT_COMMIT_DESC: git log --format=oneline -n 1 $CIRCLE_SHA1
 
-# LINUX
-linux_defaults: &linux_defaults
+# JAVASCRIPT
+js_defaults: &js_defaults
   <<: *defaults
   docker:
-  - image: circleci/node:8
+    - image: circleci/node:8
   environment:
-  - PATH: "/opt/yarn/yarn-v1.5.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    - PATH: '/opt/yarn/yarn-v1.5.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 
 # ANDROID
 android_defaults: &android_defaults
   <<: *defaults
   docker:
-  - image: circleci/android:api-27-node8-alpha
+    - image: reactnativecommunity/react-native-android
+  resource_class: 'large'
+  working_directory: ~/react-native-netinfo
   environment:
-  - TERM: "dumb"
-  - ADB_INSTALL_TIMEOUT: 10
-  - _JAVA_OPTIONS: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
-  - GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError"'
-  - BUILD_THREADS: 2
+    - _JAVA_OPTIONS: '-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx2048m'
+    - GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError -Xmx2048m"'
+    - BUILD_THREADS: 2
 
-# MACOS
+
+# IOS
 macos_defaults: &macos_defaults
   <<: *defaults
+  resource_class: 'medium'
   macos:
-    xcode: "10.1.0"
-
-# -------------------------
-#         ALIASES
-# -------------------------
-
-aliases:
-# CACHE
-- &restore-yarn-cache
-  keys:
-  - yarn-cache-{{ arch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
-  - yarn-cache-{{ arch }}
-- &save-yarn-cache
-  paths:
-  - ~/.cache/yarn
-  - ~/Library/Detox/ios
-  key: yarn-cache-{{ arch }}-{{ checksum "package.json" }}-{{ checksum "yarn.lock" }}
-
-- &restore-gradle-cache
-  keys:
-  - gradle-cache-{{ checksum "android/build.gradle" }}-{{ checksum "example/android/build.gradle" }}-{{ checksum "example/android/app/build.gradle" }}
-- &save-gradle-cache
-  paths:
-  - ~/.gradle
-  key: gradle-cache-{{ checksum "android/build.gradle" }}-{{ checksum "example/android/build.gradle" }}-{{ checksum "example/android/app/build.gradle" }}
-
-- &restore-macos-gradle-cache
-  keys:
-  - macos-gradle-cache-{{ checksum "android/build.gradle" }}-{{ checksum "example/android/build.gradle" }}-{{ checksum "example/android/app/build.gradle" }}
-- &save-macos-gradle-cache
-  paths:
-  - ~/.gradle
-  key: macos-gradle-cache-{{ checksum "android/build.gradle" }}-{{ checksum "example/android/build.gradle" }}-{{ checksum "example/android/app/build.gradle" }}
-
-- &restore-homebrew-cache
-  keys:
-  - homebrew-cache-v1
-- &save-homebrew-cache
-  paths:
-  - ~/Library/Caches/Homebrew
-  - /usr/local/Homebrew
-  key: homebrew-cache-v1
-
-- &restore-ios-detox-cache
-  keys:
-  - ios-detox-cache-v1
-- &save-ios-detox-cache
-  paths:
-  - ~/react-native-netinfo/example/ios/build
-  key: ios-detox-cache-v1
-
-# INSTALLATION
-- &yarn
-  name: Yarn Install
-  command: yarn install --network-concurrency 1 --non-interactive --cache-folder ~/.cache/yarn & wait
-
-# ANALYSE
-- &eslint
-  name: ESLint Checks
-  command: yarn test:eslint
-
-- &flow
-  name: Flow Checks
-  command: yarn test:flow
-
-- &jest
-  name: Jest Unit Tests
-  command: yarn test:jest
-
-- &metro
-  name: Start React Native Packager (background)
-  background: true
-  command: yarn start || true
-- &metro-warmup
-  name: Warm up Packager
-  background: true
-  command: node .circleci/scripts/packager-warmup.js
+    xcode: '10.1.0'
 
 # -------------------------
 #          JOBS
 # -------------------------
 version: 2
 jobs:
-  # Set up a Linux environment for downstream jobs
-  linux-checkout:
-    <<: *linux_defaults
+  # Set up a Node environment for downstream jobs
+  checkout-code:
+    <<: *js_defaults
     steps:
-    - checkout
-    - restore-cache: *restore-yarn-cache
-    - run: rm -rf node_modules
-    - run: yarn cache clean
-    - run: *yarn
-    - save-cache: *save-yarn-cache
-    - persist_to_workspace:
-        root: .
-        paths: .
+      - checkout
+      - persist_to_workspace:
+          root: .
+          paths: .
 
-  eslint:
-    <<: *linux_defaults
+  analyse:
+    <<: *js_defaults
     steps:
-    - attach_workspace:
-        at: ~/react-native-netinfo
-    - run: *eslint
+      - attach_workspace:
+          at: ~/react-native-netinfo
+      - run: *make-cache-check-files
 
-  flow:
-    <<: *linux_defaults
-    steps:
-    - attach_workspace:
-        at: ~/react-native-netinfo
-    - run: *flow
-  
-  jest:
-    <<: *linux_defaults
-    steps:
-    - attach_workspace:
-        at: ~/react-native-netinfo
-    - run: *jest
+      - restore-cache: *restore-yarn-cache
+      - run: *yarn
+      - save-cache: *save-yarn-cache
+      - run: *eslint
+      - run: *validate-flow
+      - run: *validate-typescript
+      - run: *jest-tests
+      - run: *js-bundle-ios
+      - run: *js-bundle-android
+      - persist_to_workspace:
+          root: ~/react-native-netinfo
+          paths:
+            - .tmp
 
-  android-compile:
+  # -------------------------
+  #     ANDROID - BUILD
+  # -------------------------
+
+  android-build-debug:
     <<: *android_defaults
     steps:
-    - attach_workspace:
-        at: ~/react-native-netinfo
-    - restore-cache: *restore-gradle-cache
-    - run:
-        name: Accept Android licences
-        command: |-
-          yes | sdkmanager --licenses || exit 0
-          yes | sdkmanager --update || exit 0
-    - run:
-        name: Build Android Example App and Library
-        command: |-
-          cd example/android
-          ./gradlew clean assembleDebug
-    - save-cache: *save-gradle-cache
-  
-  android-detox:
+      - attach_workspace:
+          at: ~/react-native-netinfo
+
+      - restore-cache: *restore-yarn-cache
+      - run: *yarn
+      - save-cache: *save-yarn-cache
+
+      - restore-cache: *restore-gradle-wrapper-cache
+      - restore_cache: *restore-gradle-home-caches
+
+      - restore-cache: *restore-gradle-debug-build-cache
+      - run: *disperse-gradle-build-caches
+
+      # download and cache dependencies and Gradle
+      - run:
+          name: Downloading Gradle Dependencies
+          command: cd example/android && ./gradlew --max-workers 6 downloadDependencies
+
+      - save-cache: *save-gradle-wrapper-cache
+      - save-cache: *save-gradle-home-caches
+
+      - run:
+          name: Build Android Debug APK
+          command: cd example/android && chmod +x gradlew && ./gradlew --build-cache --max-workers 4 --continue assembleDebug assembleAndroidTest -DtestBuildType=debug --stacktrace
+
+      - run: *collect-gradle-build-caches
+      - save-cache: *save-gradle-debug-build-cache
+
+      - persist_to_workspace:
+          root: ~/react-native-netinfo
+          paths:
+            - example/android/app/build/outputs/apk
+
+  android-build-release:
+    <<: *android_defaults
+    steps:
+      - attach_workspace:
+          at: ~/react-native-netinfo
+
+      - restore-cache: *restore-yarn-cache
+      - run: *yarn
+      - save-cache: *save-yarn-cache
+
+      - restore-cache: *restore-gradle-wrapper-cache
+      - restore_cache: *restore-gradle-home-caches
+
+      - restore-cache: *restore-gradle-release-build-cache
+      - run: *disperse-gradle-build-caches
+
+      # download and cache dependencies and Gradle
+      - run:
+          name: Downloading Dependencies
+          command: cd example/android && ./gradlew --max-workers 6 downloadDependencies
+
+      - save-cache: *save-gradle-wrapper-cache
+      - save-cache: *save-gradle-home-caches
+
+      - run:
+          command: cp .tmp/android-bundle.js example/android/app/src/main/assets/index.android.bundle
+      - run:
+          name: Build Android Release APK
+          command: cd example/android && chmod +x gradlew && ./gradlew --build-cache --max-workers 4 --continue assembleRelease
+
+      - run: *collect-gradle-build-caches
+      - save-cache: *save-gradle-release-build-cache
+
+      - persist_to_workspace:
+          root: ~/react-native-netinfo
+          paths:
+            - example/android/app/build/outputs/apk
+
+  # -------------------------
+  #    ANDROID - TEST E2E
+  # -------------------------
+
+  android-test-e2e:
     <<: *macos_defaults
     steps:
-    # Setup
-    - checkout
-    - run:
-        name: Configure Environment Variables
-        command: |
-          echo 'export PATH="$PATH:/usr/local/opt/node@8/bin:~/.yarn/bin:~/react-native-firebase/node_modules/.bin:~/react-native-firebase/tests/node_modules/.bin"' >> $BASH_ENV
-          echo 'export ANDROID_HOME="/usr/local/share/android-sdk"' >> $BASH_ENV
-          echo 'export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"' >> $BASH_ENV
-          echo 'export PATH="$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/platform-tools:$PATH"' >> $BASH_ENV
-          echo 'export QEMU_AUDIO_DRV=none' >> $BASH_ENV
-          echo 'export JAVA_HOME=/Library/Java/Home' >> $BASH_ENV
-          source $BASH_ENV
-    
-    - restore-cache: *restore-homebrew-cache
-    - run:
-        name: Install Android SDK Tools
-        command: |
-          HOMEBREW_NO_AUTO_UPDATE=1 brew tap homebrew/cask >/dev/null
-          HOMEBREW_NO_AUTO_UPDATE=1 brew cask install android-sdk >/dev/null
-          HOMEBREW_NO_AUTO_UPDATE=1 brew cask install intel-haxm >/dev/null
-          HOMEBREW_NO_AUTO_UPDATE=1 brew install node@8 >/dev/null >/dev/null
-    - save-cache: *save-homebrew-cache
+      - attach_workspace:
+          at: ~/react-native-netinfo
 
-    - restore-cache: *restore-yarn-cache
-    - run: rm -rf node_modules
-    - run: *yarn
-    - save-cache: *save-yarn-cache
+      - run:
+          name: Configure Environment Variables
+          command: |
+            echo 'export PATH="$PATH:/usr/local/opt/node@8/bin:~/.yarn/bin:~/react-native-netinfo/node_modules/.bin:~/react-native-netinfo/example/node_modules/.bin"' >> $BASH_ENV
+            echo 'export ANDROID_HOME="/usr/local/share/android-sdk"' >> $BASH_ENV
+            echo 'export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"' >> $BASH_ENV
+            echo 'export PATH="$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/platform-tools:$PATH"' >> $BASH_ENV
+            echo 'export QEMU_AUDIO_DRV=none' >> $BASH_ENV
+            echo 'export JAVA_HOME=/Library/Java/Home' >> $BASH_ENV
+            source $BASH_ENV
 
-    - restore-cache: *restore-macos-gradle-cache
-    - run:
-        name: Accept Android licences
-        command: |-
-          yes | sdkmanager --licenses || exit 0
-          yes | sdkmanager --update || exit 0
-    - run:
-        name: Build app using Detox
-        command: yarn test:detox:android:build
-    - save-cache: *save-macos-gradle-cache
+      - run:
+          name: Install Android SDK Tools
+          command: |
+            HOMEBREW_NO_AUTO_UPDATE=1 brew tap homebrew/cask >/dev/null
+            HOMEBREW_NO_AUTO_UPDATE=1 brew cask install android-sdk >/dev/null
+            HOMEBREW_NO_AUTO_UPDATE=1 brew cask install intel-haxm >/dev/null
+            HOMEBREW_NO_AUTO_UPDATE=1 brew install node@8 >/dev/null >/dev/null
 
-    - run: *metro
-    - run: *metro-warmup
+      # Yarn install - to ensure detox post install builds
+      - restore-cache: *restore-yarn-cache
+      - run: *yarn
+      - save-cache: *save-yarn-cache
 
-    - run:
-        name: Install Android Emulator
-        shell: /bin/bash -e
-        command: |
-          yes | sdkmanager "platform-tools"  "tools" >/dev/null
-          yes | sdkmanager "platforms;android-28" "system-images;android-27;google_apis;x86" "system-images;android-28;google_apis;x86" >/dev/null
-          yes | sdkmanager "emulator" --channel=3 >/dev/null
-          yes | sdkmanager "build-tools;28.0.3" >/dev/null
-          yes | sdkmanager --licenses >/dev/null
-          yes | sdkmanager --list
-    # to force ssh key generation for emulators
-    - run:
-        name: ADB Start Stop
-        command: |
-          adb start-server
-          adb devices
-          adb kill-server
-          ls -la ~/.android
-    
-    - run:
-        name: Create Android Emulator (API 28)
-        command: avdmanager create avd --force -n TestingAVD -k "system-images;android-28;google_apis;x86" -g google_apis -d "Nexus 4"
-    - run:
-        name: Start Android Emulator (API 28) in background
-        command: |
-          /usr/local/share/android-sdk/emulator/emulator @TestingAVD -version
-          /usr/local/share/android-sdk/emulator/emulator @TestingAVD -skin 470x860 -cores 2 -gpu auto -accel on -memory 2048 -no-audio -no-snapshot -no-window -logcat *:W | grep -i 'ReactNative\|RNFB\|com.testing\|io.invertase\|firebase'
-        background: true
-    - run:
-        name: Wait for AVD to be ready (API 28)
-        no_output_timeout: "5m"
-        command: sh ./.circleci/scripts/wait-for-avd.sh
+      - run:
+          name: Install Android Emulator
+          shell: /bin/bash -e
+          command: |
+            yes | sdkmanager "platform-tools"  "tools" >/dev/null
+            yes | sdkmanager "platforms;android-28" "system-images;android-27;google_apis;x86" "system-images;android-28;google_apis;x86" >/dev/null
+            yes | sdkmanager "emulator" --channel=3 >/dev/null
+            yes | sdkmanager "build-tools;28.0.3" >/dev/null
+            yes | sdkmanager --licenses >/dev/null
+            yes | sdkmanager --list
 
-    - run:
-        name: Run detox tests
-        command: yarn test:detox:android:test
+      # to force ssh key generation for emulators
+      - run:
+          name: ADB Start Stop
+          command: |
+            adb start-server
+            adb devices
+            adb kill-server
+            ls -la ~/.android
 
-  ios-detox:
+      - run:
+          name: Create Android Emulator (API 28)
+          command: avdmanager create avd --force -n TestingAVD -k "system-images;android-28;google_apis;x86" -g google_apis -d "Nexus 4"
+
+      - run:
+          name: Start Android Emulator (API 28) in background
+          command: |
+            /usr/local/share/android-sdk/emulator/emulator @TestingAVD -version
+            /usr/local/share/android-sdk/emulator/emulator @TestingAVD -skin 470x860 -cores 2 -gpu auto -accel on -memory 2048 -no-audio -no-snapshot -no-window -logcat *:W | grep -i 'ReactNative\|RNFB\|com.reactnativecommunity\|RNCNetInfo'
+          background: true
+
+      - run:
+          name: Wait for AVD to be ready (API 28)
+          no_output_timeout: "5m"
+          command: sh ./.circleci/scripts/wait-for-avd.sh
+
+      - run:
+          name: Run Tests (API 28)
+          command: yarn run test:detox:android:test
+
+      - store_artifacts:
+          path: ~/detox-artifacts
+
+  # -------------------------
+  #      iOS - TEST E2E
+  # -------------------------
+
+  ios-test-e2e:
     <<: *macos_defaults
     steps:
-    - checkout
-    - restore-cache: *restore-yarn-cache
-    - run: rm -rf node_modules
-    - run: yarn cache clean
-    - run: *yarn
-    - save-cache: *save-yarn-cache
-    - restore-cache: *restore-homebrew-cache
-    - run:
-        name: Install AppleSimUtils
-        command: |-
-          brew tap wix/brew
-          brew install applesimutils
-    - save-cache: *save-homebrew-cache
-    - run:
-        name: Install React Native CLI
-        command: npm install -g react-native-cli
-    - run:
-        name: Install Detox CLI
-        command: npm install -g detox-cli
-    - run: *metro
-    - run: *metro-warmup
-    - restore-cache: *restore-ios-detox-cache
-    - run: 
-        name: Build app using Detox
-        command: yarn test:detox:ios:build
-    - save-cache: *save-ios-detox-cache
-    - run: 
-        name: Run detox tests
-        command: yarn test:detox:ios:test
+      - attach_workspace:
+          at: ~/react-native-netinfo
+
+      - run:
+          name: Start iPhone X simulator (background)
+          background: true
+          command: xcrun simctl boot "iPhone X" || true
+      - run:
+          name: Configure Environment Variables
+          command: |
+            echo 'export PATH="$PATH:/usr/local/opt/node@8/bin:~/.yarn/bin:~/react-native-netinfo/node_modules/.bin:~/react-native-netinfo/example/node_modules/.bin"' >> $BASH_ENV
+            source $BASH_ENV
+
+      # Brew
+      - restore-cache: *restore-brew-cache
+      - run: *configure-ios-detox-environment
+      - save-cache: *save-brew-cache
+
+      # Yarn install - to ensure detox post install builds
+      - restore-cache: *restore-yarn-cache
+      - run: *yarn
+      - save-cache: *save-yarn-cache
+
+      # XCode Build
+      - restore-cache: *restore-ios-build-cache
+      - run:
+          name: Build iOS Testing App
+          command: yarn run test:detox:ios:build:release
+      - save-cache: *save-ios-build-cache
+
+      - run: mkdir ~/detox-artifacts
+
+      # Now Test \o/
+      - run:
+          name: Run Jet Tests
+          command: yarn run test:detox:ios:test
+
+      - store_artifacts:
+          path: ~/detox-artifacts
+
+  # -------------------------
+  #      Publish
+  # -------------------------
 
   publish:
-    <<: *linux_defaults
+    <<: *js_defaults
     steps:
       - attach_workspace:
           at: ~/react-native-netinfo
@@ -291,36 +478,39 @@ jobs:
           command: yarn ci:publish
 
 # -------------------------
-#        WORKFLOWS
+#        WORK FLOWS
 # -------------------------
 workflows:
   version: 2
-  Test:
+
+  testing:
     jobs:
-    - linux-checkout
-    - eslint:
-        requires:
-        - linux-checkout
-    - flow:
-        requires:
-        - linux-checkout
-    - jest:
-        requires:
-        - linux-checkout
-    - android-compile:
-        requires:
-        - linux-checkout
-    - android-detox
-    - ios-detox
-    - publish:
-        requires:
-        - linux-checkout
-        - eslint
-        - flow
-        - jest
-        - android-compile
-        - android-detox
-        - ios-detox
-        filters:
-          branches:
-            only: master
+      - checkout-code
+      - analyse:
+          requires:
+            - checkout-code
+
+      - android-build-debug:
+          requires:
+            - analyse
+
+      - android-build-release:
+          requires:
+            - analyse
+
+      - android-test-e2e:
+          requires:
+            - android-build-release
+
+      - ios-test-e2e:
+          requires:
+            - analyse
+
+      - publish:
+          requires:
+            - analyse
+            - android-test-e2e
+            - ios-test-e2e
+          filters:
+            branches:
+              only: master
