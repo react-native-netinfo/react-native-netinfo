@@ -212,7 +212,7 @@ android_defaults: &android_defaults
   <<: *defaults
   docker:
     - image: reactnativecommunity/react-native-android
-  resource_class: 'large'
+  resource_class: 'medium'
   working_directory: ~/react-native-netinfo
   environment:
     - _JAVA_OPTIONS: '-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Xmx2048m'
@@ -332,7 +332,7 @@ jobs:
           command: cp .tmp/android-bundle.js example/android/app/src/main/assets/index.android.bundle
       - run:
           name: Build Android Release APK
-          command: cd example/android && chmod +x gradlew && ./gradlew --build-cache --max-workers 2 --continue assembleRelease
+          command: cd example/android && chmod +x gradlew && ./gradlew --build-cache --max-workers 2 --continue assembleRelease assembleAndroidTest
 
       - run: *collect-gradle-build-caches
       - save-cache: *save-gradle-release-build-cache
@@ -405,7 +405,7 @@ jobs:
           name: Start Android Emulator (API 28) in background
           command: |
             /usr/local/share/android-sdk/emulator/emulator @TestingAVD -version
-            /usr/local/share/android-sdk/emulator/emulator @TestingAVD -skin 470x860 -cores 2 -gpu auto -accel on -memory 2048 -no-audio -no-snapshot -no-window -logcat *:W | grep -i 'ReactNative\|RNFB\|com.reactnativecommunity\|RNCNetInfo'
+            /usr/local/share/android-sdk/emulator/emulator @TestingAVD -skin 470x860 -cores 2 -gpu auto -accel on -memory 2048 -no-audio -no-snapshot -no-window -logcat *:W | grep -i 'ReactNative\|com.reactnativecommunity\|RNCNetInfo'
           background: true
 
       - run:
