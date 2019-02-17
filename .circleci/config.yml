@@ -271,6 +271,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/react-native-netinfo
+      - run: *make-cache-check-files
 
       - restore-cache: *restore-yarn-cache
       - run: *yarn
@@ -285,14 +286,14 @@ jobs:
       # download and cache dependencies and Gradle
       - run:
           name: Downloading Gradle Dependencies
-          command: cd example/android && ./gradlew --max-workers 6 downloadDependencies
+          command: cd example/android && ./gradlew --max-workers 2 downloadDependencies
 
       - save-cache: *save-gradle-wrapper-cache
       - save-cache: *save-gradle-home-caches
 
       - run:
           name: Build Android Debug APK
-          command: cd example/android && chmod +x gradlew && ./gradlew --build-cache --max-workers 4 --continue assembleDebug assembleAndroidTest -DtestBuildType=debug --stacktrace
+          command: cd example/android && chmod +x gradlew && ./gradlew --build-cache --max-workers 2 --continue assembleDebug assembleAndroidTest -DtestBuildType=debug --stacktrace
 
       - run: *collect-gradle-build-caches
       - save-cache: *save-gradle-debug-build-cache
@@ -307,6 +308,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/react-native-netinfo
+      - run: *make-cache-check-files
 
       - restore-cache: *restore-yarn-cache
       - run: *yarn
@@ -321,7 +323,7 @@ jobs:
       # download and cache dependencies and Gradle
       - run:
           name: Downloading Dependencies
-          command: cd example/android && ./gradlew --max-workers 6 downloadDependencies
+          command: cd example/android && ./gradlew --max-workers 2 downloadDependencies
 
       - save-cache: *save-gradle-wrapper-cache
       - save-cache: *save-gradle-home-caches
@@ -330,7 +332,7 @@ jobs:
           command: cp .tmp/android-bundle.js example/android/app/src/main/assets/index.android.bundle
       - run:
           name: Build Android Release APK
-          command: cd example/android && chmod +x gradlew && ./gradlew --build-cache --max-workers 4 --continue assembleRelease
+          command: cd example/android && chmod +x gradlew && ./gradlew --build-cache --max-workers 2 --continue assembleRelease
 
       - run: *collect-gradle-build-caches
       - save-cache: *save-gradle-release-build-cache
@@ -349,6 +351,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/react-native-netinfo
+      - run: *make-cache-check-files
 
       - run:
           name: Configure Environment Variables
@@ -426,6 +429,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/react-native-netinfo
+      - run: *make-cache-check-files
 
       - run:
           name: Start iPhone X simulator (background)
@@ -458,7 +462,7 @@ jobs:
 
       # Now Test \o/
       - run:
-          name: Run Jet Tests
+          name: Run Detox Tests
           command: yarn run test:detox:ios:test
 
       - store_artifacts:
