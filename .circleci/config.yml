@@ -298,11 +298,6 @@ jobs:
       - run: *collect-gradle-build-caches
       - save-cache: *save-gradle-debug-build-cache
 
-      - persist_to_workspace:
-          root: ~/react-native-netinfo
-          paths:
-            - example/android/app/build/outputs/apk
-
   android-build-release:
     <<: *android_defaults
     steps:
