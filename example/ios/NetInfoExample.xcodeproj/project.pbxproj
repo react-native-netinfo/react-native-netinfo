@@ -23,7 +23,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
-		C923EDB9220B55EA00D3100F /* libRCTNetinfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C923EDB8220B55CB00D3100F /* libRCTNetinfo.a */; };
+		C923EDB9220B55EA00D3100F /* libRNCNetInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C923EDB8220B55CB00D3100F /* libRNCNetInfo.a */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 /* End PBXBuildFile section */
 
@@ -341,7 +341,7 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				C923EDB9220B55EA00D3100F /* libRCTNetinfo.a in Frameworks */,
+				C923EDB9220B55EA00D3100F /* libRNCNetInfo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,7 +537,7 @@
 		C923EDB4220B55CB00D3100F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C923EDB8220B55CB00D3100F /* libRCTNetinfo.a */,
+				C923EDB8220B55CB00D3100F /* libRNCNetInfo.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -904,10 +904,10 @@
 			remoteRef = C923ED73220B4E1100D3100F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C923EDB8220B55CB00D3100F /* libRCTNetinfo.a */ = {
+		C923EDB8220B55CB00D3100F /* libRNCNetInfo.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libRCTNetinfo.a;
+			path = libRNCNetInfo.a;
 			remoteRef = C923EDB7220B55CB00D3100F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -938,7 +938,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ]; then\n    echo \"Debug Configuration\"\n    export NODE_BINARY=node\n    ../../node_modules/react-native/scripts/react-native-xcode.sh\nelse\n    echo \"Tests: Release Configuration\"\n    RESOURCE_PATH=$SRCROOT/../../.tmp\n    FILENAME_IN_BUNDLE=main.jsbundle\n    BUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\n    cp $RESOURCE_PATH/ios-bundle.js $BUILD_APP_DIR/$FILENAME_IN_BUNDLE\necho \"Tests: Copied main.jsbundle from ./.tmp\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
