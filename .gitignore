@@ -8,7 +8,7 @@
 node_modules/
 npm-debug.log
 yarn-error.log
-  
+
 
 # Xcode
 #
@@ -29,7 +29,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
-      
+
 
 # Android/IntelliJ
 #
@@ -42,10 +42,16 @@ local.properties
 # BUCK
 buck-out/
 \.buckd/
-*.keystore
+debug.keystore
 
 # Editor config
 .vscode
 
 # Outputs
 coverage
+
+.tmp
+example/android-bundle.js
+example/ios-bundle.js
+index.android.bundle
+index.ios.bundle

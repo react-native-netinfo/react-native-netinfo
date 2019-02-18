@@ -83,3 +83,4 @@ bin/test.js
 codorials
 .vscode
 .nyc_output
+.tmp

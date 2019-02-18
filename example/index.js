@@ -26,6 +26,7 @@ import {name as appName} from './app.json';
 
 const EXAMPLES = [
   {
+    id: 'isConnected',
     title: 'NetInfo.isConnected',
     description: 'Asynchronously load and observe connectivity',
     render() {
@@ -33,20 +34,23 @@ const EXAMPLES = [
     },
   },
   {
-    title: 'NetInfo.update',
+    id: 'currentInfoSingle',
+    title: 'Current Info Single',
     description: 'Asynchronously load and observe connectionInfo',
     render() {
       return <ConnectionInfoCurrent />;
     },
   },
   {
-    title: 'NetInfo.updateHistory',
+    id: 'currentInfoHistory',
+    title: 'Current Info History',
     description: 'Observed updates to connectionInfo',
     render() {
       return <ConnectionInfoSubscription />;
     },
   },
   {
+    id: 'isConnectionExpensive',
     title: 'NetInfo.isConnectionExpensive (Android)',
     description: 'Asynchronously check isConnectionExpensive',
     render() {
@@ -58,10 +62,13 @@ const EXAMPLES = [
 class ExampleApp extends React.Component<{}> {
   render() {
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView testID="examples" style={styles.container}>
         <SafeAreaView>
           {EXAMPLES.map(example => (
-            <View key={example.title} style={styles.exampleContainer}>
+            <View
+              testID={`example-${example.id}`}
+              key={example.title}
+              style={styles.exampleContainer}>
               <Text style={styles.exampleTitle}>{example.title}</Text>
               <Text style={styles.exampleDescription}>
                 {example.description}

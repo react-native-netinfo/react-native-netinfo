@@ -16,7 +16,6 @@ jest.mock('Platform', () => {
 });
 
 import NetInfo from '../index';
-import {RNCNetInfo} from '../nativeInterface';
 
 describe('react-native-netinfo', () => {
   describe('isConnectionExpensive', () => {
