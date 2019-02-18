@@ -75,6 +75,7 @@ import com.android.build.OutputFile
 project.ext.react = [
     entryFile: "example/index.js",
     nodeExecutableAndArgs: ["echo", "'Skipping bundling"],
+    root: "../../../",
     bundleInRelease: false
 ]
 
