@@ -28,11 +28,24 @@ You then need to link the native parts of the library for the platforms you are 
 react-native link @react-native-community/netinfo
 ```
 
-If you can't or don't want to use the CLI tool, you can also manually link the library on iOS using the [intructions in the React Native documentation](https://facebook.github.io/react-native/docs/linking-libraries-ios#manual-linking). On Android you can make the following changes to link the library (click on the arrow to show them):
+If you can't or don't want to use the CLI tool, you can also manually link the library using the instructions below (click on the arrow to show them):
+
+<details>
+<summary>Manually link the library on iOS</summary>
+
+Either follow the [intructions in the React Native documentation](https://facebook.github.io/react-native/docs/linking-libraries-ios#manual-linking) to manually link the framework or link using [Cocoapods](https://cocoapods.org) by adding this to your `Podfile`:
+
+```ruby
+pod 'react-native-netinfo', path: '../node_modules/react-native-netinfo'
+```
+
+</details>
 
 <details>
 <summary>Manually link the library on Android</summary>
-   
+
+Make the following changes:
+
 #### `android/settings.gradle`
 ```groovy
 include ':@react-native-community/netinfo'
