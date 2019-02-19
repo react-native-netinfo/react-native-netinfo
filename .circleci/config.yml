@@ -456,6 +456,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/react-native-netinfo
+      - restore-cache: *restore-yarn-cache
+      - run: *yarn
+      - save-cache: *save-yarn-cache
       - run:
           name: Publish to NPM
           command: yarn ci:publish
