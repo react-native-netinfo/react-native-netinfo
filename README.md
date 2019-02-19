@@ -33,7 +33,7 @@ If you can't or don't want to use the CLI tool, you can also manually link the l
 <details>
 <summary>Manually link the library on iOS</summary>
 
-Either follow the [intructions in the React Native documentation](https://facebook.github.io/react-native/docs/linking-libraries-ios#manual-linking) to manually link the framework or link using [Cocoapods](https://cocoapods.org) by adding this to your `Podfile`:
+Either follow the [instructions in the React Native documentation](https://facebook.github.io/react-native/docs/linking-libraries-ios#manual-linking) to manually link the framework or link using [Cocoapods](https://cocoapods.org) by adding this to your `Podfile`:
 
 ```ruby
 pod 'react-native-netinfo', path: '../node_modules/react-native-netinfo'
