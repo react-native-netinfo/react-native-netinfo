@@ -195,5 +195,10 @@ NetInfo.isConnectionExpensive().then(isConnectionExpensive => {
 * [Matt Oakes](https://github.com/matt-oakes) - [Freelance React Native Developer](http://mattoakes.net)
 * [Mike Diarmid](https://github.com/salakar) - [Invertase](https://invertase.io)
 
+## Contributing
+
+Please see the [`contributing guide`](/CONTRIBUTING.md).
+
 ## License
-The library is released under the MIT licence. For more information see `LICENSE`.
+
+The library is released under the MIT licence. For more information see [`LICENSE`](/LICENSE).
