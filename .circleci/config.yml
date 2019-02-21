@@ -394,7 +394,7 @@ jobs:
 
       - run:
           name: Run Tests (API 28)
-          command: yarn run test:detox:android:test
+          command: yarn run test:detox:android:test:release
 
       - store_artifacts:
           path: ~/detox-artifacts
@@ -442,7 +442,7 @@ jobs:
       # Now Test \o/
       - run:
           name: Run Detox Tests
-          command: yarn run test:detox:ios:test
+          command: yarn run test:detox:ios:test:release
 
       - store_artifacts:
           path: ~/detox-artifacts
