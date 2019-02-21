@@ -11,6 +11,7 @@
 import React from 'react';
 import {
   AppRegistry,
+  Button,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -24,6 +25,7 @@ import IsConnected from './IsConnected';
 import IsConnectionExpensive from './IsConnectionExpensive';
 import {name as appName} from './app.json';
 
+// Examples which show the user how to correctly use the library
 const EXAMPLES = [
   {
     id: 'isConnected',
@@ -59,29 +61,68 @@ const EXAMPLES = [
   },
 ];
 
-class ExampleApp extends React.Component<{}> {
+// Test cases for the e2e tests. THESE ARE NOT EXAMPLES OF BEST PRACTICE
+import TEST_CASES from './testCases';
+
+type State = {
+  showExamples: boolean,
+};
+
+class ExampleApp extends React.Component<{}, State> {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showExamples: true,
+    };
+  }
+
+  _toggleMode = () => {
+    this.setState(state => ({showExamples: !state.showExamples}));
+  };
+
   render() {
+    const {showExamples} = this.state;
     return (
-      <ScrollView testID="examples" style={styles.container}>
+      <ScrollView style={styles.container}>
         <SafeAreaView>
-          {EXAMPLES.map(example => (
-            <View
-              testID={`example-${example.id}`}
-              key={example.title}
-              style={styles.exampleContainer}>
-              <Text style={styles.exampleTitle}>{example.title}</Text>
-              <Text style={styles.exampleDescription}>
-                {example.description}
+          <Button
+            testID="modeToggle"
+            onPress={this._toggleMode}
+            title={showExamples ? 'Switch to Test Cases' : 'Switch to Examples'}
+          />
+          {showExamples ? (
+            <>
+              <Text testID="examplesTitle" style={styles.sectionTitle}>
+                Examples
               </Text>
-              <View style={styles.exampleInnerContainer}>
-                {example.render()}
-              </View>
-            </View>
-          ))}
+              {EXAMPLES.map(this._renderExample)}
+            </>
+          ) : (
+            <>
+              <Text testID="testCasesTitle" style={styles.sectionTitle}>
+                Test Cases
+              </Text>
+              {TEST_CASES.map(this._renderExample)}
+            </>
+          )}
         </SafeAreaView>
       </ScrollView>
     );
   }
+
+  _renderExample = example => {
+    return (
+      <View
+        testID={`example-${example.id}`}
+        key={example.title}
+        style={styles.exampleContainer}>
+        <Text style={styles.exampleTitle}>{example.title}</Text>
+        <Text style={styles.exampleDescription}>{example.description}</Text>
+        <View style={styles.exampleInnerContainer}>{example.render()}</View>
+      </View>
+    );
+  };
 }
 
 const styles = StyleSheet.create({
@@ -89,9 +130,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F5FCFF',
   },
+  sectionTitle: {
+    fontSize: 24,
+    marginHorizontal: 8,
+    marginTop: 24,
+  },
   exampleContainer: {
     padding: 16,
-    marginVertical: 16,
+    marginVertical: 4,
     backgroundColor: '#FFF',
     borderColor: '#EEE',
     borderTopWidth: 1,

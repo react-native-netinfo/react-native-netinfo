@@ -36,7 +36,7 @@ static NSString *const RNCEffectiveConnectionType4g = @"4g";
   NSString *_effectiveConnectionType;
   NSString *_host;
   BOOL _isObserving;
-  RCTPromiseResolveBlock _resolve;
+  NSMutableSet<RCTPromiseResolveBlock> *_firstTimeReachabilityResolvers;
 }
 
 RCT_EXPORT_MODULE()
@@ -49,13 +49,14 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
   NSString *connectionType = self->_connectionType ?: RNCConnectionTypeUnknown;
   NSString *effectiveConnectionType = self->_effectiveConnectionType ?: RNCEffectiveConnectionTypeUnknown;
 
-  if (self->_firstTimeReachability && self->_resolve) {
-    SCNetworkReachabilityUnscheduleFromRunLoop(self->_firstTimeReachability, CFRunLoopGetMain(), kCFRunLoopCommonModes);
-    CFRelease(self->_firstTimeReachability);
-    self->_resolve(@{@"connectionType": connectionType,
-                     @"effectiveConnectionType": effectiveConnectionType});
-    self->_firstTimeReachability = nil;
-    self->_resolve = nil;
+  if (self->_firstTimeReachability) {
+    [self->_firstTimeReachabilityResolvers enumerateObjectsUsingBlock:^(RCTPromiseResolveBlock resolver, BOOL *stop) {
+      resolver(@{@"connectionType": connectionType,
+                 @"effectiveConnectionType": effectiveConnectionType});
+    }];
+
+    [self cleanUpFirstTimeReachability];
+    [self->_firstTimeReachabilityResolvers removeAllObjects];
   }
 
   if (didSetReachabilityFlags && self->_isObserving) {
@@ -108,12 +109,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 
 - (void)dealloc
 {
-  if (_firstTimeReachability) {
-    SCNetworkReachabilityUnscheduleFromRunLoop(self->_firstTimeReachability, CFRunLoopGetMain(), kCFRunLoopCommonModes);
-    CFRelease(self->_firstTimeReachability);
-    _firstTimeReachability = nil;
-    _resolve = nil;
-  }
+  [self cleanUpFirstTimeReachability];
 }
 
 - (SCNetworkReachabilityRef)getReachabilityRef
@@ -176,19 +172,30 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
   return NO;
 }
 
-#pragma mark - Public API
-
-RCT_EXPORT_METHOD(getCurrentConnectivity:(RCTPromiseResolveBlock)resolve
-                  reject:(__unused RCTPromiseRejectBlock)reject)
+- (void)cleanUpFirstTimeReachability
 {
   if (_firstTimeReachability) {
     SCNetworkReachabilityUnscheduleFromRunLoop(self->_firstTimeReachability, CFRunLoopGetMain(), kCFRunLoopCommonModes);
     CFRelease(self->_firstTimeReachability);
     _firstTimeReachability = nil;
-    _resolve = nil;
   }
-  _firstTimeReachability = [self getReachabilityRef];
-  _resolve = resolve;
+}
+
+#pragma mark - Public API
+
+RCT_EXPORT_METHOD(getCurrentConnectivity:(RCTPromiseResolveBlock)resolve
+                  reject:(__unused RCTPromiseRejectBlock)reject)
+{
+  // Setup the reacability listener if needed
+  if (!_firstTimeReachability) {
+    _firstTimeReachability = [self getReachabilityRef];
+  }
+
+  // Add our resolver to the set of those to be notified
+  if (!_firstTimeReachabilityResolvers) {
+    _firstTimeReachabilityResolvers = [NSMutableSet set];
+  }
+  [_firstTimeReachabilityResolvers addObject:resolve];
 }
 
 @end
