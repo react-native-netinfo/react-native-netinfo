@@ -96,3 +96,6 @@ export interface NetInfoStatic {
    */
   isConnectionExpensive: () => Promise<boolean>;
 }
+
+declare let NetInfo: NetInfoStatic;
+export default NetInfo;
