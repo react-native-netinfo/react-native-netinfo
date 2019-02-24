@@ -201,4 +201,4 @@ Please see the [`contributing guide`](/CONTRIBUTING.md).
 
 ## License
 
-The library is released under the MIT licence. For more information see [`LICENSE`](/LICENSE).
+The library is released under the MIT licence. For more information see [`LICENCE`](/LICENCE).
