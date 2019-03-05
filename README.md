@@ -48,15 +48,15 @@ Make the following changes:
 
 #### `android/settings.gradle`
 ```groovy
-include ':@react-native-community/netinfo'
-project(':@react-native-community/netinfo').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/netinfo/android')
+include ':react-native-community-netinfo'
+project(':react-native-community-netinfo').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/netinfo/android')
 ```
 
 #### `android/app/build.gradle`
 ```groovy
 dependencies {
    ...
-   implementation project(':@react-native-community/netinfo')
+   implementation project(':react-native-community-netinfo')
 }
 ```
 
