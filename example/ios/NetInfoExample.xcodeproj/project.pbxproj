@@ -23,6 +23,20 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
+		B56FE94822395C7E007F5A35 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
+		B56FE94922395C7E007F5A35 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		B56FE95A22395C7E007F5A35 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		B56FE98C22395CFB007F5A35 /* libRCTNetwork-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E8C1DF850E9000B6D8A /* libRCTNetwork-tvOS.a */; };
+		B56FE98D22395D0B007F5A35 /* libRCTImage-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E841DF850E9000B6D8A /* libRCTImage-tvOS.a */; };
+		B56FE98E22395D17007F5A35 /* libRCTLinking-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E881DF850E9000B6D8A /* libRCTLinking-tvOS.a */; };
+		B56FE98F22395D25007F5A35 /* libRCTText-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E941DF850E9000B6D8A /* libRCTText-tvOS.a */; };
+		B56FE99022395D2D007F5A35 /* libRCTWebSocket-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */; };
+		B56FE99122395D33007F5A35 /* libRCTSettings-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E901DF850E9000B6D8A /* libRCTSettings-tvOS.a */; };
+		B56FE99222395D68007F5A35 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157351DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		B56FE99322395D71007F5A35 /* libRCTBlob-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6721FA4F8DC00B85C8A /* libRCTBlob-tvOS.a */; };
+		B56FE9A422395E63007F5A35 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
+		B56FE9A522395E6C007F5A35 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56FE99422395DBA007F5A35 /* JavaScriptCore.framework */; };
+		B56FE9A622395E8B007F5A35 /* libRNCNetInfo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B56FE98A22395C7E007F5A35 /* libRNCNetInfo-tvOS.a */; };
 		C923EDB9220B55EA00D3100F /* libRNCNetInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C923EDB8220B55CB00D3100F /* libRNCNetInfo.a */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 /* End PBXBuildFile section */
@@ -259,6 +273,13 @@
 			remoteGlobalIDString = 358F4ED71D1E81A9004DF814;
 			remoteInfo = RCTBlob;
 		};
+		B56FE98922395C7E007F5A35 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C923EDB3220B55CB00D3100F /* RNCNetInfo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B5027B1B2237B30F00F1AABA;
+			remoteInfo = "RNCNetInfo-tvOS";
+		};
 		C923ED6D220B4E1100D3100F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -318,6 +339,9 @@
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
+		B56FE96022395C7E007F5A35 /* NetInfoExample-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NetInfoExample-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B56FE96122395C7E007F5A35 /* NetInfoExample copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "NetInfoExample copy-Info.plist"; path = "/Users/alain/Work/Telenet/react-native-netinfo/example/ios/NetInfoExample copy-Info.plist"; sourceTree = "<absolute>"; };
+		B56FE99422395DBA007F5A35 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.1.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		C923EDB3220B55CB00D3100F /* RNCNetInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCNetInfo.xcodeproj; path = ../../ios/RNCNetInfo.xcodeproj; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -342,6 +366,24 @@
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				C923EDB9220B55EA00D3100F /* libRNCNetInfo.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B56FE94A22395C7E007F5A35 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B56FE9A622395E8B007F5A35 /* libRNCNetInfo-tvOS.a in Frameworks */,
+				B56FE9A522395E6C007F5A35 /* JavaScriptCore.framework in Frameworks */,
+				B56FE9A422395E63007F5A35 /* libReact.a in Frameworks */,
+				B56FE99322395D71007F5A35 /* libRCTBlob-tvOS.a in Frameworks */,
+				B56FE99222395D68007F5A35 /* libRCTAnimation.a in Frameworks */,
+				B56FE99122395D33007F5A35 /* libRCTSettings-tvOS.a in Frameworks */,
+				B56FE99022395D2D007F5A35 /* libRCTWebSocket-tvOS.a in Frameworks */,
+				B56FE98F22395D25007F5A35 /* libRCTText-tvOS.a in Frameworks */,
+				B56FE98E22395D17007F5A35 /* libRCTLinking-tvOS.a in Frameworks */,
+				B56FE98D22395D0B007F5A35 /* libRCTImage-tvOS.a in Frameworks */,
+				B56FE98C22395CFB007F5A35 /* libRCTNetwork-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,6 +494,7 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
+				B56FE99422395DBA007F5A35 /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 			);
 			name = Frameworks;
@@ -511,6 +554,7 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
+				B56FE96122395C7E007F5A35 /* NetInfoExample copy-Info.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -521,6 +565,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* NetInfoExample.app */,
+				B56FE96022395C7E007F5A35 /* NetInfoExample-tvOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -538,6 +583,7 @@
 			isa = PBXGroup;
 			children = (
 				C923EDB8220B55CB00D3100F /* libRNCNetInfo.a */,
+				B56FE98A22395C7E007F5A35 /* libRNCNetInfo-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -561,6 +607,24 @@
 			name = NetInfoExample;
 			productName = "Hello World";
 			productReference = 13B07F961A680F5B00A75B9A /* NetInfoExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B56FE94622395C7E007F5A35 /* NetInfoExample-tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B56FE95D22395C7E007F5A35 /* Build configuration list for PBXNativeTarget "NetInfoExample-tvOS" */;
+			buildPhases = (
+				B56FE94722395C7E007F5A35 /* Sources */,
+				B56FE94A22395C7E007F5A35 /* Frameworks */,
+				B56FE95922395C7E007F5A35 /* Resources */,
+				B56FE95C22395C7E007F5A35 /* Bundle React Native code and images */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "NetInfoExample-tvOS";
+			productName = "Hello World";
+			productReference = B56FE96022395C7E007F5A35 /* NetInfoExample-tvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -640,6 +704,7 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* NetInfoExample */,
+				B56FE94622395C7E007F5A35 /* NetInfoExample-tvOS */,
 			);
 		};
 /* End PBXProject section */
@@ -876,6 +941,13 @@
 			remoteRef = ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		B56FE98A22395C7E007F5A35 /* libRNCNetInfo-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNCNetInfo-tvOS.a";
+			remoteRef = B56FE98922395C7E007F5A35 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		C923ED6E220B4E1100D3100F /* libjsi.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -923,10 +995,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B56FE95922395C7E007F5A35 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B56FE95A22395C7E007F5A35 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ]; then\n    echo \"Debug Configuration\"\n    export NODE_BINARY=node\n    ../../node_modules/react-native/scripts/react-native-xcode.sh\nelse\n    echo \"Tests: Release Configuration\"\n    RESOURCE_PATH=$SRCROOT/../../.tmp\n    FILENAME_IN_BUNDLE=main.jsbundle\n    BUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\n    cp $RESOURCE_PATH/ios-bundle.js $BUILD_APP_DIR/$FILENAME_IN_BUNDLE\necho \"Tests: Copied main.jsbundle from ./.tmp\"\nfi\n";
+		};
+		B56FE95C22395C7E007F5A35 /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -949,6 +1043,15 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B56FE94722395C7E007F5A35 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B56FE94822395C7E007F5A35 /* AppDelegate.m in Sources */,
+				B56FE94922395C7E007F5A35 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1103,6 +1206,45 @@
 			};
 			name = Release;
 		};
+		B56FE95E22395C7E007F5A35 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = NO;
+				INFOPLIST_FILE = "NetInfoExample-tvOS-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.reactnativecommunity.modules.netinfo.example;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		B56FE95F22395C7E007F5A35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = "NetInfoExample-tvOS-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.reactnativecommunity.modules.netinfo.example;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1120,6 +1262,15 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B56FE95D22395C7E007F5A35 /* Build configuration list for PBXNativeTarget "NetInfoExample-tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B56FE95E22395C7E007F5A35 /* Debug */,
+				B56FE95F22395C7E007F5A35 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
