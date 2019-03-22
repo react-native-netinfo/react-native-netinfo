@@ -10,9 +10,18 @@
 
 import React from 'react';
 
+import EmitOnListen from './EmitOnListen';
 import MultipleIsConnected from './MultipleIsConnected';
 
 export default [
+  {
+    id: 'emitOnListen',
+    title: 'NetInfo.addEventListener Emit on Listen',
+    description: 'Should emit when a new listener is added',
+    render() {
+      return <EmitOnListen />;
+    },
+  },
   {
     id: 'multipleIsConnected',
     title: 'NetInfo.isConnected.fetch Multiple Calls',
