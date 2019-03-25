@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  rn: react-native-community/react-native@dev:0.1.0-rc8
+  rn: react-native-community/react-native@dev:0.1.0-rc9
 
 jobs:
   checkout_code:
@@ -49,23 +49,6 @@ jobs:
       - rn/android_emulator_start
       - rn/detox_test:
           configuration: android.emu.release
-  test_ios_e2e:
-    executor: rn/macos
-    steps:
-      - attach_workspace:
-          at: .
-      - rn/setup_macos_executor
-      - rn/ios_simulator_start:
-          device: "iPhone X"
-      - rn/yarn_install
-      - rn/ios_build_project:
-          project_path: "example/ios/NetInfoExample.xcodeproj"
-          derived_data_path: "example/ios/build"
-          device: "iPhone X"
-          configuration: "Release"
-          scheme: "NetInfoExample"
-      - rn/detox_test:
-          configuration: ios.sim.release
   publish:
     executor: rn/linux_js
     steps:
@@ -98,14 +81,20 @@ workflows:
       - test_android_e2e:
           requires:
             - build_android_release
-      - test_ios_e2e:
+      - rn/ios_build_and_test:
+          project_path: "example/ios/NetInfoExample.xcodeproj"
+          derived_data_path: "example/ios/build"
+          device: "iPhone X"
+          build_configuration: "Release"
+          scheme: "NetInfoExample"
+          detox_configuration: "ios.sim.release"
           requires:
             - analyse
       - publish:
           requires:
             - analyse
             - test_android_e2e
-            - test_ios_e2e
+            - rn/ios_build_and_test
           filters:
             branches:
               only: master
