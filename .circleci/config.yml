@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  rn: react-native-community/react-native@dev:0.1.0-rc7
+  rn: react-native-community/react-native@dev:0.1.0-rc8
 
 jobs:
   checkout_code:
@@ -39,32 +39,6 @@ jobs:
           root: .
           paths:
             - .tmp
-  build_android_debug:
-    executor: rn/linux_android
-    steps:
-      - attach_workspace:
-          at: .
-      - rn/yarn_install
-      - rn/android_build:
-          project_path: "example/android"
-          build_type: debug
-      - persist_to_workspace:
-          root: .
-          paths:
-            - example/android/app/build/outputs/apk
-  build_android_release:
-    executor: rn/linux_android
-    steps:
-      - attach_workspace:
-          at: .
-      - rn/yarn_install
-      - rn/android_build:
-          project_path: "example/android"
-          build_type: release
-      - persist_to_workspace:
-          root: .
-          paths:
-            - example/android/app/build/outputs/apk
   test_android_e2e:
     executor: rn/macos
     steps:
@@ -109,10 +83,16 @@ workflows:
       - analyse:
           requires:
             - checkout_code
-      - build_android_debug:
+      - rn/android_build:
+          name: build_android_debug
+          project_path: "example/android"
+          build_type: debug
           requires:
             - analyse
-      - build_android_release:
+      - rn/android_build:
+          name: build_android_release
+          project_path: "example/android"
+          build_type: release
           requires:
             - analyse
       - test_android_e2e:
