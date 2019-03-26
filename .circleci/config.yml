@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  rn: react-native-community/react-native@dev:0.1.0-rc9
+  rn: react-native-community/react-native@dev:0.1.0-rc10
 
 jobs:
   checkout_code:
@@ -35,20 +35,6 @@ jobs:
       - run:
           name: Build iOS JavaScript Bundle
           command: yarn run test:detox:ios:bundle:release
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .tmp
-  test_android_e2e:
-    executor: rn/macos
-    steps:
-      - attach_workspace:
-          at: .
-      - rn/setup_macos_executor
-      - rn/yarn_install
-      - rn/android_emulator_start
-      - rn/detox_test:
-          configuration: android.emu.release
   publish:
     executor: rn/linux_js
     steps:
@@ -78,7 +64,8 @@ workflows:
           build_type: release
           requires:
             - analyse
-      - test_android_e2e:
+      - rn/android_test:
+          detox_configuration: "android.emu.release"
           requires:
             - build_android_release
       - rn/ios_build_and_test:
@@ -93,7 +80,7 @@ workflows:
       - publish:
           requires:
             - analyse
-            - test_android_e2e
+            - rn/android_test
             - rn/ios_build_and_test
           filters:
             branches:
