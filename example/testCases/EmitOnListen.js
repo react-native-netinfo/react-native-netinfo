@@ -27,13 +27,15 @@ export default class MultipleIsConnected extends Component<{}, State> {
     };
   }
 
+  componentWillUnmount() {
+    NetInfo.removeEventListener(
+      'connectionChange',
+      this._handleConnectionChange,
+    );
+  }
+
   _onPress = () => {
-    for (let i = 0; i < TEST_CASE_COUNT; i++) {
-      NetInfo.addEventListener(
-        'connectionChange',
-        this._handleConnectionChange,
-      );
-    }
+    NetInfo.addEventListener('connectionChange', this._handleConnectionChange);
   };
 
   _handleConnectionChange = info => {

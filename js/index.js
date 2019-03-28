@@ -30,20 +30,38 @@ export type ConnectionType =
 
 export type EffectiveConnectionType = 'unknown' | '2g' | '3g' | '4g';
 
-type ChangeHandler = ({
+export type NetInfoData = {
   type: ConnectionType,
   effectiveType: EffectiveConnectionType,
-}) => void;
+};
+
+type ChangeHandler = (data: NetInfoData) => void;
 
 type IsConnectedHandler = (isConnected: boolean) => void;
 
-const _subscriptions = new Map();
+const _subscriptions = new Set<ChangeHandler>();
+const _isConnectedSubscriptions = new Map();
+
+let _latestNetInfo = null;
+let _eventSubscription = null;
 
 function _isConnected(connection) {
   return connection.type !== 'none' && connection.type !== 'unknown';
 }
 
-const _isConnectedSubscriptions = new Map();
+function _transformResponse(appStateData) {
+  return {
+    type: appStateData.connectionType,
+    effectiveType: appStateData.effectiveConnectionType,
+  };
+}
+
+function _listenerHandler(appStateData) {
+  _latestNetInfo = _transformResponse(appStateData);
+  for (let handler of _subscriptions) {
+    handler(_latestNetInfo);
+  }
+}
 
 /**
  * NetInfo exposes info about online/offline status.
@@ -64,25 +82,31 @@ const NetInfo = {
     eventName: ChangeEventName,
     handler: ChangeHandler,
   ): {remove: () => void} {
-    let listener;
-    if (eventName === 'connectionChange') {
-      listener = NetInfoEventEmitter.addListener(
-        DEVICE_CONNECTIVITY_EVENT,
-        appStateData => {
-          handler({
-            type: appStateData.connectionType,
-            effectiveType: appStateData.effectiveConnectionType,
-          });
-        },
-      );
-    } else {
+    if (eventName !== 'connectionChange') {
       console.warn('Trying to subscribe to unknown event: "' + eventName + '"');
       return {
         remove: () => {},
       };
     }
 
-    _subscriptions.set(handler, listener);
+    _subscriptions.add(handler);
+
+    if (_latestNetInfo) {
+      handler(_latestNetInfo);
+    } else {
+      NetInfo.getConnectionInfo().then(netInfo => {
+        _latestNetInfo = netInfo;
+        handler(_latestNetInfo);
+      });
+    }
+
+    if (_subscriptions.size > 0 && !_eventSubscription) {
+      _eventSubscription = NetInfoEventEmitter.addListener(
+        DEVICE_CONNECTIVITY_EVENT,
+        _listenerHandler,
+      );
+    }
+
     return {
       remove: () => NetInfo.removeEventListener(eventName, handler),
     };
@@ -97,12 +121,12 @@ const NetInfo = {
     eventName: ChangeEventName,
     handler: ChangeHandler,
   ): void {
-    const listener = _subscriptions.get(handler);
-    if (!listener) {
-      return;
-    }
-    listener.remove();
     _subscriptions.delete(handler);
+
+    if (_subscriptions.size === 0 && _eventSubscription) {
+      _eventSubscription.remove();
+      _eventSubscription = null;
+    }
   },
 
   /**
