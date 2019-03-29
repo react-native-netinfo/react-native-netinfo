@@ -133,7 +133,7 @@ Cross platform values:
 * `unknown`
 
 ### Subscribe to connection info
-Subscribe to connection information. The callback is called whenever the connection status changes. The returned object shape is the same as `getConnectionInfo` above.
+Subscribe to connection information. The callback is called whenever the connection status changes. The returned object shape is the same as `getConnectionInfo` above. Your listener will be called with the latest information soon after you subscribe and then with any subsiquent changes afterwards. Due to platform differences, you should not assume that the listener is called in the same way across devices or platforms.
 
 ```javascript
 const listener = connectionInfo => {
@@ -180,6 +180,8 @@ subscription.remove();
 // Unsubscribe through event name
 NetInfo.isConnected.removeEventListener('connectionChange', listener);
 ```
+
+Your listener will be called with the latest information soon after you subscribe and then with any subsiquent changes afterwards. Due to platform differences, you should not assume that the listener is called in the same way across devices or platforms.
 
 ### Is connection expensive (Android only)
 Detect if the current active connection is metered or not. A network is classified as metered when the user is sensitive to heavy data usage on that connection due to monetary costs, data limitations or battery/performance issues.
