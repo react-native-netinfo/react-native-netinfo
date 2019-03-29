@@ -11,7 +11,7 @@
 
 import {NativeModules} from 'react-native';
 import NetInfo from '../index';
-import {NetInfoEventEmitter} from '../nativeInterface';
+import {RNCNetInfo, NetInfoEventEmitter} from '../nativeInterface';
 
 const CONNECTED_STATES = [
   {type: 'cellular', connected: true},
@@ -25,6 +25,15 @@ const CONNECTED_STATES = [
 
 describe('react-native-netinfo', () => {
   describe('isConnected', () => {
+    beforeEach(() => {
+      NetInfo.clearEventListeners();
+
+      RNCNetInfo.getCurrentConnectivity.mockResolvedValue({
+        connectionType: 'cellular',
+        effectiveConnectionType: '3g',
+      });
+    });
+
     describe('fetch', () => {
       CONNECTED_STATES.map(({type, connected}) => {
         it(`should resolve to ${connected.toString()} when the native module returns a ${type} state`, () => {
@@ -78,9 +87,35 @@ describe('react-native-netinfo', () => {
         subscription.remove();
         expect(NativeModules.RNCNetInfo.removeListeners).toBeCalled();
       });
+
+      it('should not remove the listener from the native module when calling remove on the returned subscription if there is another subscription', () => {
+        const listener1 = jest.fn();
+        const listener2 = jest.fn();
+        const subscription1 = NetInfo.isConnected.addEventListener(
+          'connectionChange',
+          listener1,
+        );
+        const subscription2 = NetInfo.isConnected.addEventListener(
+          'connectionChange',
+          listener2,
+        );
+
+        subscription1.remove();
+        expect(NativeModules.RNCNetInfo.removeListeners).not.toBeCalled();
+
+        subscription2.remove();
+        expect(NativeModules.RNCNetInfo.removeListeners).toBeCalled();
+      });
     });
 
     describe('Event listener callbacks', () => {
+      it('should call the listener when listening even if no event is emitted', () => {
+        const listener = jest.fn();
+        NetInfo.isConnected.addEventListener('connectionChange', listener);
+
+        expect(listener).toBeCalledWith(true);
+      });
+
       it('should call the listener when the native event is emmitted', () => {
         const listener = jest.fn();
         NetInfo.isConnected.addEventListener('connectionChange', listener);
@@ -106,7 +141,8 @@ describe('react-native-netinfo', () => {
           effectiveConnectionType: 'unknown',
         });
 
-        expect(listener).toBeCalledTimes(2);
+        // The additional time is from the call to "getCurrentConnectivity" on listening
+        expect(listener).toBeCalledTimes(3);
       });
 
       it('should call all listeners when the native event is emmitted', () => {
@@ -129,6 +165,9 @@ describe('react-native-netinfo', () => {
         NetInfo.isConnected.addEventListener('connectionChange', listener);
         NetInfo.isConnected.removeEventListener('connectionChange', listener);
 
+        // This clears the stats from the call which was made on listening
+        listener.mockClear();
+
         NetInfoEventEmitter.emit(NetInfo.Events.NetworkStatusDidChange, {
           connectionType: 'cellular',
           effectiveConnectionType: '3g',
@@ -144,6 +183,10 @@ describe('react-native-netinfo', () => {
         NetInfo.isConnected.addEventListener('connectionChange', listener2);
 
         NetInfo.isConnected.removeEventListener('connectionChange', listener1);
+
+        // This clears the stats from the call which was made on listening
+        listener1.mockClear();
+        listener2.mockClear();
 
         NetInfoEventEmitter.emit(NetInfo.Events.NetworkStatusDidChange, {
           connectionType: 'unknown',

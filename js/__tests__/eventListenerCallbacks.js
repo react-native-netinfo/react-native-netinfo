@@ -10,10 +10,29 @@
 /* eslint-env jest */
 
 import NetInfo from '../index';
-import {NetInfoEventEmitter} from '../nativeInterface';
+import {RNCNetInfo, NetInfoEventEmitter} from '../nativeInterface';
 
 describe('react-native-netinfo', () => {
   describe('Event listener callbacks', () => {
+    beforeEach(() => {
+      NetInfo.clearEventListeners();
+
+      RNCNetInfo.getCurrentConnectivity.mockResolvedValue({
+        connectionType: 'cellular',
+        effectiveConnectionType: '3g',
+      });
+    });
+
+    it('should call the listener on listening', done => {
+      const listener = jest.fn();
+      NetInfo.addEventListener('connectionChange', listener);
+
+      setImmediate(() => {
+        expect(listener).toBeCalled();
+        done();
+      });
+    });
+
     it('should call the listener when the native event is emmitted', () => {
       const listener = jest.fn();
       NetInfo.addEventListener('connectionChange', listener);
@@ -45,7 +64,8 @@ describe('react-native-netinfo', () => {
         effectiveConnectionType: 'unknown',
       });
 
-      expect(listener).toBeCalledTimes(2);
+      // The additional time is from the call on listen
+      expect(listener).toBeCalledTimes(3);
     });
 
     it('should call all listeners when the native event is emmitted', () => {
@@ -76,6 +96,9 @@ describe('react-native-netinfo', () => {
       NetInfo.addEventListener('connectionChange', listener);
       NetInfo.removeEventListener('connectionChange', listener);
 
+      // Clear the stats from the call on listen
+      listener.mockClear();
+
       NetInfoEventEmitter.emit(NetInfo.Events.NetworkStatusDidChange, {
         connectionType: 'cellular',
         effectiveConnectionType: '3g',
@@ -91,6 +114,9 @@ describe('react-native-netinfo', () => {
       NetInfo.addEventListener('connectionChange', listener2);
 
       NetInfo.removeEventListener('connectionChange', listener1);
+
+      // Clear the stats from the call on listen
+      listener1.mockClear();
 
       const expectedConnectionType = 'cellular';
       const expectedEffectiveConnectionType = '3g';

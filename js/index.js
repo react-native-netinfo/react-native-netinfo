@@ -130,9 +130,18 @@ const NetInfo = {
   },
 
   /**
+   * Removes all listeners.
+   */
+  clearEventListeners(): void {
+    for (let listener of _subscriptions) {
+      NetInfo.removeEventListener('connectionChange', listener);
+    }
+  },
+
+  /**
    * See https://facebook.github.io/react-native/docs/netinfo.html#getconnectioninfo
    */
-  getConnectionInfo(): Promise<any> {
+  getConnectionInfo(): Promise<NetInfoData> {
     return RNCNetInfo.getCurrentConnectivity().then(resp => {
       return {
         type: resp.connectionType,
