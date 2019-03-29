@@ -1018,7 +1018,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ]; then\n    echo \"Debug Configuration\"\n    export NODE_BINARY=node\n    ../../node_modules/react-native/scripts/react-native-xcode.sh\nelse\n    echo \"Tests: Release Configuration\"\n    RESOURCE_PATH=$SRCROOT/../../.tmp\n    FILENAME_IN_BUNDLE=main.jsbundle\n    BUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\n    cp $RESOURCE_PATH/ios-bundle.js $BUILD_APP_DIR/$FILENAME_IN_BUNDLE\necho \"Tests: Copied main.jsbundle from ./.tmp\"\nfi\n";
+			shellScript = "export NODE_BINARY=node\n../../node_modules/react-native/scripts/react-native-xcode.sh example/index.js\n";
 		};
 		B56FE95C22395C7E007F5A35 /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1032,7 +1032,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"$CONFIGURATION\" == \"Debug\" ]; then\n    echo \"Debug Configuration\"\n    export NODE_BINARY=node\n    ../../node_modules/react-native/scripts/react-native-xcode.sh\nelse\n    echo \"Tests: Release Configuration\"\n    RESOURCE_PATH=$SRCROOT/../../.tmp\n    FILENAME_IN_BUNDLE=main.jsbundle\n    BUILD_APP_DIR=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\n    cp $RESOURCE_PATH/ios-bundle.js $BUILD_APP_DIR/$FILENAME_IN_BUNDLE\necho \"Tests: Copied main.jsbundle from ./.tmp\"\nfi\n";
+			shellScript = "export NODE_BINARY=node\n../../node_modules/react-native/scripts/react-native-xcode.sh example/index.js\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
