@@ -16,8 +16,6 @@ type State = {
   triggered: boolean,
 };
 
-const TEST_CASE_COUNT = 5;
-
 export default class MultipleIsConnected extends Component<{}, State> {
   constructor(props: {}) {
     super(props);
