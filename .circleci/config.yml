@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  rn: react-native-community/react-native@dev:0.1.0-rc10
+  rn: react-native-community/react-native@dev:0.1.0-rc12
 
 jobs:
   checkout_code:
@@ -66,6 +66,7 @@ workflows:
             - analyse
       - rn/android_test:
           detox_configuration: "android.emu.release"
+          detox_loglevel: "trace"
           requires:
             - build_android_release
       - rn/ios_build_and_test:
@@ -75,6 +76,7 @@ workflows:
           build_configuration: "Release"
           scheme: "NetInfoExample"
           detox_configuration: "ios.sim.release"
+          detox_loglevel: "trace"
           requires:
             - analyse
       - publish:

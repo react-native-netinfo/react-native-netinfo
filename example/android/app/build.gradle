@@ -105,8 +105,7 @@ android {
         versionCode 1
         versionName "1.0"
         testBuildType System.getProperty('testBuildType', 'debug')
-        missingDimensionStrategy "minReactNative", "minReactNative46"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
         release {
@@ -156,8 +155,6 @@ dependencies {
 
     androidTestImplementation(project(path: ":detox"))
     androidTestImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test:rules:1.0.1'
 }
 
 // Run this once to be able to run the application with BUCK

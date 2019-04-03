@@ -14,6 +14,15 @@ import NetInfo from '../index';
 
 describe('react-native-netinfo', () => {
   describe('Event listener management', () => {
+    beforeEach(() => {
+      NetInfo.clearEventListeners();
+
+      NativeModules.RNCNetInfo.getCurrentConnectivity.mockResolvedValue({
+        connectionType: 'cellular',
+        effectiveConnectionType: '3g',
+      });
+    });
+
     it('should add the listener to the native module when passing the correct event name', () => {
       NetInfo.addEventListener('connectionChange', jest.fn());
       expect(NativeModules.RNCNetInfo.addListener).toBeCalledWith(
