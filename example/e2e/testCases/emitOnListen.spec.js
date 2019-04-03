@@ -23,11 +23,11 @@ describe('NetInfo', () => {
   });
 
   it('should start with all failures', async () => {
-    await expect(element(by.id(`emitOnListenResult`))).toHaveLabel('fail');
+    await expect(element(by.id('emitOnListenResult'))).toHaveLabel('fail');
   });
 
   it('should show all success after being tested', async () => {
     await element(by.id('emitOnListenTestButton')).tap();
-    await expect(element(by.id(`emitOnListenResult`))).toHaveLabel('pass');
+    await expect(element(by.id('emitOnListenResult'))).toHaveLabel('pass');
   });
 });

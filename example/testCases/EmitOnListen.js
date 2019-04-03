@@ -52,7 +52,7 @@ export default class MultipleIsConnected extends Component<{}, State> {
         />
         <View testID="emitOnListenResults" style={{flexDirection: 'row'}}>
           <Text
-            testID={`emitOnListenResult`}
+            testID={'emitOnListenResult'}
             accessibilityLabel={triggered ? 'pass' : 'fail'}>
             Triggered: {triggered ? '✅' : '❌'}
           </Text>
