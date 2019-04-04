@@ -192,6 +192,10 @@ NetInfo.isConnectionExpensive().then(isConnectionExpensive => {
 });
 ```
 
+## Known issues with the iOS simulator
+
+There is a [known](http://openradar.appspot.com/14585459) [issue](http://www.openradar.appspot.com/29913522) with the iOS Simulator which causes it to not receive network change notifications correctly when the host machine disconnects and then connects to Wifi. If you are having issues with iOS then please test on an actual device before reporting any bugs.
+
 ## Maintainers
 
 * [Matt Oakes](https://github.com/matt-oakes) - [Freelance React Native Developer](http://mattoakes.net)
