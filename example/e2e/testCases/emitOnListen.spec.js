@@ -6,10 +6,7 @@
  *
  * @format
  */
-/* eslint-env jest */
 /* global device, element, by */
-
-const TEST_CASE_COUNT = 5;
 
 describe('NetInfo', () => {
   beforeEach(async () => {

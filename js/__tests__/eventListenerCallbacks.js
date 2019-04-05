@@ -7,7 +7,6 @@
  * @format
  * @flow
  */
-/* eslint-env jest */
 
 import NetInfo from '../index';
 import {RNCNetInfo, NetInfoEventEmitter} from '../nativeInterface';

@@ -7,7 +7,6 @@
  * @format
  * @flow
  */
-/* eslint-env jest */
 
 jest.mock('Platform', () => {
   const Platform = jest.requireActual('Platform');
