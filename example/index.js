@@ -84,7 +84,7 @@ class ExampleApp extends React.Component<{}, State> {
   render() {
     const {showExamples} = this.state;
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView testID="scrollView" style={styles.container}>
         <SafeAreaView>
           <Button
             testID="modeToggle"

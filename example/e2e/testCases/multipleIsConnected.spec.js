@@ -15,6 +15,7 @@ describe('NetInfo', () => {
   beforeEach(async () => {
     await device.reloadReactNative();
     await element(by.id('modeToggle')).tap();
+    await element(by.id('scrollView')).scrollTo('bottom');
   });
 
   it('should have the correct elements to perform the test', async () => {
