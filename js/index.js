@@ -50,7 +50,7 @@ type IsConnectedHandler = (isConnected: boolean) => void;
 const _subscriptions = new Set<ChangeHandler>();
 const _isConnectedSubscriptions = new Map();
 
-let _latestNetInfo = null;
+let _latestNetInfo: NetInfoData | null = null;
 let _eventSubscription = null;
 
 function _isConnected(connection: NetInfoData): boolean {
@@ -59,9 +59,9 @@ function _isConnected(connection: NetInfoData): boolean {
 
 function _transformResponse(appStateData: NativeNetInfoData): NetInfoData {
   return {
-    ...appStateData,
     type: appStateData.connectionType,
     effectiveType: appStateData.effectiveConnectionType,
+    ...appStateData,
   };
 }
 
@@ -94,7 +94,7 @@ const NetInfo = {
     if (eventName !== CHANGE_EVENT_NAME) {
       console.warn(`Trying to subscribe to unknown event: "${eventName}"`);
       return {
-        remove: () => {},
+        remove() {},
       };
     }
 
@@ -117,7 +117,9 @@ const NetInfo = {
     }
 
     return {
-      remove: () => NetInfo.removeEventListener(eventName, handler),
+      remove() {
+        NetInfo.removeEventListener(eventName, handler);
+      },
     };
   },
 
@@ -151,52 +153,12 @@ const NetInfo = {
    * See https://facebook.github.io/react-native/docs/netinfo.html#getconnectioninfo
    */
   async getConnectionInfo(): Promise<NetInfoData> {
+    // TODO: Bacon: Wrap for platform support like `isConnectionExpensive`
     const connectivity = await RNCNetInfo.getCurrentConnectivity();
     return _transformResponse(connectivity);
   },
 
-  /**
-   * An object with the same methods as above but the listener receives a
-   * boolean which represents the internet connectivity.
-   *
-   * See https://facebook.github.io/react-native/docs/netinfo.html#isconnected
-   */
-  isConnected: {
-    addEventListener(
-      eventName: ChangeEventName,
-      handler: IsConnectedHandler,
-    ): EventHandle {
-      const listener = connection => {
-        if (eventName === CHANGE_EVENT_NAME) {
-          handler(_isConnected(connection));
-        }
-      };
-      _isConnectedSubscriptions.set(handler, listener);
-      NetInfo.addEventListener(eventName, listener);
-      return {
-        remove: () =>
-          NetInfo.isConnected.removeEventListener(eventName, handler),
-      };
-    },
-
-    removeEventListener(
-      eventName: ChangeEventName,
-      handler: IsConnectedHandler,
-    ): void {
-      const listener = _isConnectedSubscriptions.get(handler);
-      if (listener) {
-        NetInfo.removeEventListener(eventName, listener);
-      }
-      _isConnectedSubscriptions.delete(handler);
-    },
-
-    async fetch(): Promise<boolean> {
-      const connectionInfo = await NetInfo.getConnectionInfo();
-      return _isConnected(connectionInfo);
-    },
-  },
-
-  isConnectionExpensive(): Promise<boolean> {
+  async isConnectionExpensive(): Promise<boolean> {
     if (!RNCNetInfo.isConnectionMetered) {
       throw new Error(
         `The method NetInfo.isConnectionExpensive is not available on ${
@@ -204,7 +166,53 @@ const NetInfo = {
         }, are you sure you've linked all the native dependencies properly?`,
       );
     }
-    return RNCNetInfo.isConnectionMetered();
+    return await RNCNetInfo.isConnectionMetered();
+  },
+
+  get isConnected() {
+    return IsConnected;
+  },
+};
+
+/**
+ * An object with the same methods as above but the listener receives a
+ * boolean which represents the internet connectivity.
+ *
+ * See https://facebook.github.io/react-native/docs/netinfo.html#isconnected
+ */
+const IsConnected = {
+  addEventListener(
+    eventName: ChangeEventName,
+    handler: IsConnectedHandler,
+  ): EventHandle {
+    const listener = eventData => {
+      if (eventName === CHANGE_EVENT_NAME) {
+        handler(_isConnected(eventData));
+      }
+    };
+    _isConnectedSubscriptions.set(handler, listener);
+    NetInfo.addEventListener(eventName, listener);
+    return {
+      remove() {
+        IsConnected.removeEventListener(eventName, handler);
+      },
+    };
+  },
+
+  removeEventListener(
+    eventName: ChangeEventName,
+    handler: IsConnectedHandler,
+  ): void {
+    const listener = _isConnectedSubscriptions.get(handler);
+    if (listener) {
+      NetInfo.removeEventListener(eventName, listener);
+    }
+    _isConnectedSubscriptions.delete(handler);
+  },
+
+  async fetch(): Promise<boolean> {
+    const connectionInfo = await NetInfo.getConnectionInfo();
+    return _isConnected(connectionInfo);
   },
 };
 
