@@ -14,6 +14,7 @@ import {Platform} from 'react-native';
 import {RNCNetInfo, NetInfoEventEmitter} from './nativeInterface';
 
 const DEVICE_CONNECTIVITY_EVENT = 'networkStatusDidChange';
+const CHANGE_EVENT_NAME = 'connectionChange';
 
 type ChangeEventName = 'connectionChange';
 
@@ -35,7 +36,14 @@ export type NetInfoData = {
   effectiveType: EffectiveConnectionType,
 };
 
+export type NativeNetInfoData = {
+  connectionType: ConnectionType,
+  effectiveConnectionType: EffectiveConnectionType,
+};
+
 type ChangeHandler = (data: NetInfoData) => void;
+
+type EventHandle = {remove: () => void};
 
 type IsConnectedHandler = (isConnected: boolean) => void;
 
@@ -45,18 +53,19 @@ const _isConnectedSubscriptions = new Map();
 let _latestNetInfo = null;
 let _eventSubscription = null;
 
-function _isConnected(connection) {
+function _isConnected(connection: NetInfoData): boolean {
   return connection.type !== 'none' && connection.type !== 'unknown';
 }
 
-function _transformResponse(appStateData) {
+function _transformResponse(appStateData: NativeNetInfoData): NetInfoData {
   return {
+    ...appStateData,
     type: appStateData.connectionType,
     effectiveType: appStateData.effectiveConnectionType,
   };
 }
 
-function _listenerHandler(appStateData) {
+function _listenerHandler(appStateData: NativeNetInfoData): void {
   _latestNetInfo = _transformResponse(appStateData);
   for (let handler of _subscriptions) {
     handler(_latestNetInfo);
@@ -81,9 +90,9 @@ const NetInfo = {
   addEventListener(
     eventName: ChangeEventName,
     handler: ChangeHandler,
-  ): {remove: () => void} {
-    if (eventName !== 'connectionChange') {
-      console.warn('Trying to subscribe to unknown event: "' + eventName + '"');
+  ): EventHandle {
+    if (eventName !== CHANGE_EVENT_NAME) {
+      console.warn(`Trying to subscribe to unknown event: "${eventName}"`);
       return {
         remove: () => {},
       };
@@ -134,20 +143,16 @@ const NetInfo = {
    */
   clearEventListeners(): void {
     for (let listener of _subscriptions) {
-      NetInfo.removeEventListener('connectionChange', listener);
+      NetInfo.removeEventListener(CHANGE_EVENT_NAME, listener);
     }
   },
 
   /**
    * See https://facebook.github.io/react-native/docs/netinfo.html#getconnectioninfo
    */
-  getConnectionInfo(): Promise<NetInfoData> {
-    return RNCNetInfo.getCurrentConnectivity().then(resp => {
-      return {
-        type: resp.connectionType,
-        effectiveType: resp.effectiveConnectionType,
-      };
-    });
+  async getConnectionInfo(): Promise<NetInfoData> {
+    const connectivity = await RNCNetInfo.getCurrentConnectivity();
+    return _transformResponse(connectivity);
   },
 
   /**
@@ -160,9 +165,9 @@ const NetInfo = {
     addEventListener(
       eventName: ChangeEventName,
       handler: IsConnectedHandler,
-    ): {remove: () => void} {
+    ): EventHandle {
       const listener = connection => {
-        if (eventName === 'connectionChange') {
+        if (eventName === CHANGE_EVENT_NAME) {
           handler(_isConnected(connection));
         }
       };
@@ -179,19 +184,27 @@ const NetInfo = {
       handler: IsConnectedHandler,
     ): void {
       const listener = _isConnectedSubscriptions.get(handler);
-      listener && NetInfo.removeEventListener(eventName, listener);
+      if (listener) {
+        NetInfo.removeEventListener(eventName, listener);
+      }
       _isConnectedSubscriptions.delete(handler);
     },
 
-    fetch(): Promise<any> {
-      return NetInfo.getConnectionInfo().then(_isConnected);
+    async fetch(): Promise<boolean> {
+      const connectionInfo = await NetInfo.getConnectionInfo();
+      return _isConnected(connectionInfo);
     },
   },
 
   isConnectionExpensive(): Promise<boolean> {
-    return Platform.OS === 'android'
-      ? RNCNetInfo.isConnectionMetered()
-      : Promise.reject(new Error('Currently not supported on iOS'));
+    if (!RNCNetInfo.isConnectionMetered) {
+      throw new Error(
+        `The method NetInfo.isConnectionExpensive is not available on ${
+          Platform.OS
+        }, are you sure you've linked all the native dependencies properly?`,
+      );
+    }
+    return RNCNetInfo.isConnectionMetered();
   },
 };
 
