@@ -6,7 +6,6 @@
  *
  * @format
  */
-/* eslint-env jest */
 /* global device, element, by */
 
 describe('NetInfo', () => {

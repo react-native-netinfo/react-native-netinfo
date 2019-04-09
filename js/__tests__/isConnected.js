@@ -7,7 +7,6 @@
  * @format
  * @flow
  */
-/* eslint-env jest */
 
 import {NativeModules} from 'react-native';
 import NetInfo from '../index';

@@ -6,7 +6,6 @@
  *
  * @format
  */
-/* eslint-env jest */
 /* global device, element, by */
 
 const TEST_CASE_COUNT = 5;
