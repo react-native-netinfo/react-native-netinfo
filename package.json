@@ -42,7 +42,10 @@
     "react": "^16.0",
     "react-native": ">=0.57 <0.60"
   },
-  "dependencies": {},
+  "dependencies": {
+    "array-find-index": "^1.0.2",
+    "fbjs": "^1.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@semantic-release/git": "7.0.8",
