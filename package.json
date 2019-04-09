@@ -2,8 +2,15 @@
   "name": "@react-native-community/netinfo",
   "version": "2.0.0",
   "description": "React Native Network Info API for iOS & Android",
-  "main": "js/index.js",
-  "typings": "typings/index.d.ts",
+  "main": "lib/commonjs/index.js",
+  "react-native": "js/index.js",
+  "module": "lib/module/index.js",
+  "types": "typings/index.d.ts",
+  "files": [
+    "/js",
+    "/lib",
+    "/typings"
+  ],
   "author": "Matt Oakes <hello@mattoakes.net>",
   "contributors": [
     "Mike Diarmid (Salakar) <mike@invertase.io>"
@@ -29,7 +36,8 @@
     "test:detox:ios:bundle:release": "mkdir -p .tmp && react-native bundle --max-workers 4 --platform ios --dev false --entry-file example/index.js --bundle-output .tmp/ios-bundle.js",
     "test:detox:clean": "rimraf example/android/build && rimraf example/android/app/build && rimraf example/android/.gradle && rimraf example/ios/build",
     "ci:publish": "yarn semantic-release",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "prepare": "bob build"
   },
   "keywords": [
     "react-native",
@@ -45,6 +53,7 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.4.3",
+    "@react-native-community/bob": "^0.3.3",
     "@react-native-community/eslint-config": "^0.0.3",
     "@semantic-release/git": "7.0.8",
     "babel-core": "^7.0.0-bridge.0",
@@ -102,5 +111,18 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/react-native-community/react-native-netinfo.git"
+  },
+  "@react-native-community/bob": {
+    "source": "js",
+    "output": "lib",
+    "targets": [
+      [
+        "commonjs",
+        {
+          "flow": true
+        }
+      ],
+      "module"
+    ]
   }
 }

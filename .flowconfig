@@ -1,4 +1,7 @@
 [ignore]
+; Ignore the compiled files
+lib/.*
+
 ; This flowconfig is forked by platform - the only difference between them is which suffix is ignored.
 .*/*[.]android.js
 ;.*/*[.]ios.js
