@@ -187,12 +187,12 @@ NetInfo.getConnectionInfo().then(data => {
 #### `addEventListener()`
 **Platforms:** Android, iOS
 
-Subscribe to connection information. The callback is called a paramter of type [`NetInfoData`](README.md#NetInfoData) whenever the connection state changes. Your listener will be called with the latest information soon after you subscribe and then with any subsiquent changes afterwards. Due to platform differences, you should not assume that the listener is called in the same way across devices or platforms.
+Subscribe to connection information. The callback is called a paramter of type [`NetInfoData`](README.md#netinfodata) whenever the connection state changes. Your listener will be called with the latest information soon after you subscribe and then with any subsiquent changes afterwards. Due to platform differences, you should not assume that the listener is called in the same way across devices or platforms.
 
 | Parameter   | Type                                                        | Description                                                             |
 | ----------- | ----------------------------------------------------------- | ----------------------------------------------------------------------- |
 | `eventName` | `connectionChange`                                          | The event name is always `connectionChange`                             |
-| `listener`  | `(data: `[`NetInfoType`](README.md#NetInfoType))` => void` | The listener which will be called whenever the connection state changes |
+| `listener`  | `(data: `[`NetInfoData`](README.md#netinfodata))` => void` | The listener which will be called whenever the connection state changes |
 
 **Example:**
 ```javascript
