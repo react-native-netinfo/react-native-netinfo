@@ -5,7 +5,6 @@
 
 React Native Network Info API for Android & iOS. It allows you to get information on:
 
-* Online/offline status
 * Connection type
 * Connection quality
 
@@ -94,14 +93,49 @@ import NetInfo from "@react-native-community/netinfo";
 ```
 
 ## Usage
-Start by importing the library:
+Import the library:
 
 ```javascript
 import NetInfo from "@react-native-community/netinfo";
 ```
 
+Get the network state once:
+
+```javascript
+NetInfo.getConnectionInfo().then(data => {
+  console.log("Connection type", data.type);
+  console.log("Connection effective type", data.effectiveType);
+});
+```
+
+Subscribe to network updates:
+
+```javascript
+const listener = data => {
+  console.log("Connection type", data.type);
+  console.log("Connection effective type", data.effectiveType);
+};
+
+// Subscribe
+const subscription = NetInfo.addEventListener('connectionChange', listener);
+
+// Unsubscribe through remove
+subscription.remove();
+// Or, unsubscribe through event name
+NetInfo.removeEventListener('connectionChange', listener);
+```
+
 ## API
-TODO summary
+* **Types:**
+  * [`NetInfoData`](README.md#netinfodata)
+  * [`NetInfoType`](README.md#netinfotype)
+  * [`NetInfoEffectiveType`](README.md#netinfoeffectivetype)
+* **Methods:**
+  * [`getConnectionInfo()`](README.md#getconnectioninfo)
+  * [`addEventListener()`](README.md#addeventlistener)
+  * [`isConnected.fetch()`](README.md#isconnectedfetch)
+  * [`isConnected.addEventListener()`](README.md#isconnectedaddeventlistener)
+  * [`isConnectionExpensive()`](README.md#isconnectionexpensive)
 
 ### Types
 #### `NetInfoData`
@@ -109,8 +143,8 @@ Describes the current state of the network. It is an object with these propertie
 
 | Property        | Platform     | Type                                                     | Description                                                                                        |
 | --------------- | ------------ | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `type`          | Android, iOS | [`NetInfoType`](READMME.md#NetInfoType)                  | The type of the current connection.                                                                |
-| `effectiveType` | Android, iOS | [`NetInfoEffectiveType`](README.md#NetInfoEffectiveType) | The type of cellular connection (eg. 3g, 4g, etc.). Will be `unknown` unless `type` is `cellular`. |
+| `type`          | Android, iOS | [`NetInfoType`](README.md#netinfotype)                   | The type of the current connection.                                                                |
+| `effectiveType` | Android, iOS | [`NetInfoEffectiveType`](README.md#netinfoeffectivetype) | The type of cellular connection (eg. 3g, 4g, etc.). Will be `unknown` unless `type` is `cellular`. |
 
 #### `NetInfoType`
 Describes the current type of network connection. It is an enum with these possible values:
@@ -140,7 +174,7 @@ Describes the current type of the `cellular` connection. It is an enum with thes
 #### `getConnectionInfo()`
 **Platforms:** Android, iOS
 
-Returns a `Promise` that resolves to a [`NetInfoData`](README.md#NetInfoData) object.
+Returns a `Promise` that resolves to a [`NetInfoData`](README.md#netinfodata) object.
 
 **Example:**
 ```javascript
@@ -155,10 +189,10 @@ NetInfo.getConnectionInfo().then(data => {
 
 Subscribe to connection information. The callback is called a paramter of type [`NetInfoData`](README.md#NetInfoData) whenever the connection state changes. Your listener will be called with the latest information soon after you subscribe and then with any subsiquent changes afterwards. Due to platform differences, you should not assume that the listener is called in the same way across devices or platforms.
 
-| Parameter   | Type                                                    | Description                                                             |
-| ----------- | ------------------------------------------------------- | ----------------------------------------------------------------------- |
-| `eventName` | `connectionChange`                                      | The event name is always `connectionChange`                             |
-| `listener`  | (data: [`NetInfoType`](READMME.md#NetInfoType)) => void | The listener which will be called whenever the connection state changes |
+| Parameter   | Type                                                        | Description                                                             |
+| ----------- | ----------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `eventName` | `connectionChange`                                          | The event name is always `connectionChange`                             |
+| `listener`  | `(data: `[`NetInfoType`](READMME.md#NetInfoType))` => void` | The listener which will be called whenever the connection state changes |
 
 **Example:**
 ```javascript
@@ -199,10 +233,10 @@ Calls the listener with a `boolean` parameter whenever the connection state chan
 
 *Note: This only says if a device has an active connection, not that it is able to reach the internet.*
 
-| Parameter   | Type                            | Description                                                             |
-| ----------- | ------------------------------- | ----------------------------------------------------------------------- |
-| `eventName` | `connectionChange`              | The event name is always `connectionChange`                             |
-| `listener`  | (isConnection: boolean) => void | The listener which will be called whenever the connection state changes |
+| Parameter   | Type                              | Description                                                             |
+| ----------- | --------------------------------- | ----------------------------------------------------------------------- |
+| `eventName` | `connectionChange`                | The event name is always `connectionChange`                             |
+| `listener`  | `(isConnection: boolean) => void` | The listener which will be called whenever the connection state changes |
 
 **Example:**
 ```javascript
@@ -243,7 +277,7 @@ There is a [known](http://openradar.appspot.com/14585459) [issue](http://www.ope
 
 ## Contributing
 
-Please see the [`contributing guide`](/CONTRIBUTING.md).
+Please see the [contributing guide](/CONTRIBUTING.md).
 
 ## License
 
