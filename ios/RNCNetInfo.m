@@ -60,7 +60,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
   }
 
   if (didSetReachabilityFlags && self->_isObserving) {
-    [self sendEventWithName:@"networkStatusDidChange" body:@{@"type": connectionType,
+    [self sendEventWithName:@"netInfo.networkStatusDidChange" body:@{@"type": connectionType,
                                                              @"effectiveType": effectiveConnectionType}];
   }
 }
@@ -87,7 +87,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 
 - (NSArray<NSString *> *)supportedEvents
 {
-  return @[@"networkStatusDidChange"];
+  return @[@"netInfo.networkStatusDidChange"];
 }
 
 - (void)startObserving

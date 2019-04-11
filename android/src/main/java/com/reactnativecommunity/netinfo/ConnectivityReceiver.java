@@ -129,7 +129,7 @@ abstract class ConnectivityReceiver {
 
   private void sendConnectivityChangedEvent() {
     getReactContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-      .emit("networkStatusDidChange", createConnectivityEventMap());
+      .emit("netInfo.networkStatusDidChange", createConnectivityEventMap());
   }
 
   private WritableMap createConnectivityEventMap() {

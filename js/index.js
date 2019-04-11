@@ -22,14 +22,14 @@ export type NetInfoData = _NetInfoData;
 export type NetInfoType = _NetInfoType;
 export type NetInfoEffectiveType = _NetInfoEffectiveType;
 
-const DEVICE_CONNECTIVITY_EVENT = 'networkStatusDidChange';
+const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
 const CHANGE_EVENT_NAME = 'connectionChange';
 
 type ChangeEventName = 'connectionChange';
 
 type ChangeHandler = (data: NetInfoData) => void;
 type IsConnectedHandler = (isConnected: boolean) => void;
-// Ideally we would use the EmitterSubscription from react-native, but it is not publy exported
+// Ideally we would use the EmitterSubscription from react-native, but it is not publicly exported
 type Subscription = {remove: () => void};
 
 const _subscriptions = new Set<ChangeHandler>();
