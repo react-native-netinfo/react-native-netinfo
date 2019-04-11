@@ -9,8 +9,9 @@
  */
 
 import {NativeEventEmitter, NativeModules} from 'react-native';
+import {type NativeInterface} from './types';
 
-const {RNCNetInfo} = NativeModules;
+const RNCNetInfo: NativeInterface = NativeModules.RNCNetInfo;
 
 // Produce an error if we don't have the native module
 if (!RNCNetInfo) {

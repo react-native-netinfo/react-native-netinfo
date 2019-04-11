@@ -18,8 +18,8 @@ describe('react-native-netinfo', () => {
       const expectedEffectiveConnectionType = '3g';
 
       RNCNetInfo.getCurrentConnectivity.mockResolvedValue({
-        connectionType: expectedConnectionType,
-        effectiveConnectionType: expectedEffectiveConnectionType,
+        type: expectedConnectionType,
+        effectiveType: expectedEffectiveConnectionType,
       });
 
       return expect(NetInfo.getConnectionInfo()).resolves.toEqual({

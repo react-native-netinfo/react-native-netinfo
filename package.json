@@ -23,7 +23,7 @@
     "validate:eslint": "eslint 'js/**/*.js' 'example/**/*.js'",
     "validate:flow": "flow check",
     "validate:typescript": "tsc --project ./",
-    "test:jest": "jest js/",
+    "test:jest": "jest '/js/'",
     "test:detox:android:test:debug": "detox test -c android.emu.debug",
     "test:detox:android:test:release": "detox test -c android.emu.release",
     "test:detox:android:build:debug": "detox build -c android.emu.debug",

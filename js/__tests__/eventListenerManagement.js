@@ -17,8 +17,8 @@ describe('react-native-netinfo', () => {
       NetInfo.clearEventListeners();
 
       NativeModules.RNCNetInfo.getCurrentConnectivity.mockResolvedValue({
-        connectionType: 'cellular',
-        effectiveConnectionType: '3g',
+        type: 'cellular',
+        effectiveType: '3g',
       });
     });
 

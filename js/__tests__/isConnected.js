@@ -28,8 +28,8 @@ describe('react-native-netinfo', () => {
       NetInfo.clearEventListeners();
 
       RNCNetInfo.getCurrentConnectivity.mockResolvedValue({
-        connectionType: 'cellular',
-        effectiveConnectionType: '3g',
+        type: 'cellular',
+        effectiveType: '3g',
       });
     });
 
@@ -37,8 +37,8 @@ describe('react-native-netinfo', () => {
       CONNECTED_STATES.map(({type, connected}) => {
         it(`should resolve to ${connected.toString()} when the native module returns a ${type} state`, () => {
           NativeModules.RNCNetInfo.getCurrentConnectivity.mockResolvedValue({
-            connectionType: type,
-            effectiveConnectionType: 'unknown',
+            type: type,
+            effectiveType: 'unknown',
           });
 
           return expect(NetInfo.isConnected.fetch()).resolves.toBe(connected);
@@ -120,8 +120,8 @@ describe('react-native-netinfo', () => {
         NetInfo.isConnected.addEventListener('connectionChange', listener);
 
         NetInfoEventEmitter.emit(NetInfo.Events.NetworkStatusDidChange, {
-          connectionType: 'cellular',
-          effectiveConnectionType: '4g',
+          type: 'cellular',
+          effectiveType: '4g',
         });
 
         expect(listener).toBeCalledWith(true);
@@ -132,12 +132,12 @@ describe('react-native-netinfo', () => {
         NetInfo.isConnected.addEventListener('connectionChange', listener);
 
         NetInfoEventEmitter.emit(NetInfo.Events.NetworkStatusDidChange, {
-          connectionType: 'cellular',
-          effectiveConnectionType: '3g',
+          type: 'cellular',
+          effectiveType: '3g',
         });
         NetInfoEventEmitter.emit(NetInfo.Events.NetworkStatusDidChange, {
-          connectionType: 'wifi',
-          effectiveConnectionType: 'unknown',
+          type: 'wifi',
+          effectiveType: 'unknown',
         });
 
         // The additional time is from the call to "getCurrentConnectivity" on listening
@@ -151,8 +151,8 @@ describe('react-native-netinfo', () => {
         NetInfo.isConnected.addEventListener('connectionChange', listener2);
 
         NetInfoEventEmitter.emit(NetInfo.Events.NetworkStatusDidChange, {
-          connectionType: 'cellular',
-          effectiveConnectionType: '2g',
+          type: 'cellular',
+          effectiveType: '2g',
         });
 
         expect(listener1).toBeCalledWith(true);
@@ -168,8 +168,8 @@ describe('react-native-netinfo', () => {
         listener.mockClear();
 
         NetInfoEventEmitter.emit(NetInfo.Events.NetworkStatusDidChange, {
-          connectionType: 'cellular',
-          effectiveConnectionType: '3g',
+          type: 'cellular',
+          effectiveType: '3g',
         });
 
         expect(listener).not.toBeCalled();
@@ -188,8 +188,8 @@ describe('react-native-netinfo', () => {
         listener2.mockClear();
 
         NetInfoEventEmitter.emit(NetInfo.Events.NetworkStatusDidChange, {
-          connectionType: 'unknown',
-          effectiveConnectionType: 'unknown',
+          type: 'unknown',
+          effectiveType: 'unknown',
         });
 
         expect(listener1).not.toBeCalled();
