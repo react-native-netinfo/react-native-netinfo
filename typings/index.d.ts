@@ -29,12 +29,6 @@ export interface ConnectionInfo {
 
 export interface NetInfoStatic {
   /**
-   * This function is deprecated. Use `getConnectionInfo` instead. Returns a promise that
-   * resolves with one of the deprecated connectivity types listed above.
-   */
-  fetch: () => Promise<ConnectionType>;
-
-  /**
    * Adds an event handler. Supported events:
    *
    * - `connectionChange`: Fires when the network status changes. The argument to the event

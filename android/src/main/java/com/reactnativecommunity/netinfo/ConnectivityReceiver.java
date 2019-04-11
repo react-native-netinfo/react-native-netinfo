@@ -134,8 +134,8 @@ abstract class ConnectivityReceiver {
 
   private WritableMap createConnectivityEventMap() {
     WritableMap event = new WritableNativeMap();
-    event.putString("connectionType", mConnectionType);
-    event.putString("effectiveConnectionType", mEffectiveConnectionType);
+    event.putString("type", mConnectionType);
+    event.putString("effectiveType", mEffectiveConnectionType);
     return event;
   }
 }

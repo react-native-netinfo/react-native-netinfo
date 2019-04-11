@@ -12,52 +12,37 @@
 
 import {Platform} from 'react-native';
 import {RNCNetInfo, NetInfoEventEmitter} from './nativeInterface';
+import type {
+  NetInfoData as _NetInfoData,
+  NetInfoType as _NetInfoType,
+  NetInfoEffectiveType as _NetInfoEffectiveType,
+} from './types';
+
+export type NetInfoData = _NetInfoData;
+export type NetInfoType = _NetInfoType;
+export type NetInfoEffectiveType = _NetInfoEffectiveType;
 
 const DEVICE_CONNECTIVITY_EVENT = 'networkStatusDidChange';
+const CHANGE_EVENT_NAME = 'connectionChange';
 
 type ChangeEventName = 'connectionChange';
 
-export type ConnectionType =
-  // iOS & Android
-  | 'none'
-  | 'cellular'
-  | 'unknown'
-  | 'wifi'
-  // Android only
-  | 'bluetooth'
-  | 'ethernet'
-  | 'wimax';
-
-export type EffectiveConnectionType = 'unknown' | '2g' | '3g' | '4g';
-
-export type NetInfoData = {
-  type: ConnectionType,
-  effectiveType: EffectiveConnectionType,
-};
-
 type ChangeHandler = (data: NetInfoData) => void;
-
 type IsConnectedHandler = (isConnected: boolean) => void;
+// Ideally we would use the EmitterSubscription from react-native, but it is not publy exported
+type Subscription = {remove: () => void};
 
 const _subscriptions = new Set<ChangeHandler>();
 const _isConnectedSubscriptions = new Map();
+let _latestNetInfo: NetInfoData | null = null;
+let _eventSubscription: Subscription | null = null;
 
-let _latestNetInfo = null;
-let _eventSubscription = null;
-
-function _isConnected(connection) {
-  return connection.type !== 'none' && connection.type !== 'unknown';
+function _isConnected(netInfoData: NetInfoData): boolean {
+  return netInfoData.type !== 'none' && netInfoData.type !== 'unknown';
 }
 
-function _transformResponse(appStateData) {
-  return {
-    type: appStateData.connectionType,
-    effectiveType: appStateData.effectiveConnectionType,
-  };
-}
-
-function _listenerHandler(appStateData) {
-  _latestNetInfo = _transformResponse(appStateData);
+function _listenerHandler(netInfoData: NetInfoData) {
+  _latestNetInfo = netInfoData;
   for (let handler of _subscriptions) {
     handler(_latestNetInfo);
   }
@@ -65,8 +50,6 @@ function _listenerHandler(appStateData) {
 
 /**
  * NetInfo exposes info about online/offline status.
- *
- * See https://facebook.github.io/react-native/docs/netinfo.html
  */
 const NetInfo = {
   Events: {
@@ -75,14 +58,12 @@ const NetInfo = {
 
   /**
    * Adds an event handler.
-   *
-   * See https://facebook.github.io/react-native/docs/netinfo.html#addeventlistener
    */
   addEventListener(
     eventName: ChangeEventName,
     handler: ChangeHandler,
   ): {remove: () => void} {
-    if (eventName !== 'connectionChange') {
+    if (eventName !== CHANGE_EVENT_NAME) {
       console.warn('Trying to subscribe to unknown event: "' + eventName + '"');
       return {
         remove: () => {},
@@ -101,6 +82,9 @@ const NetInfo = {
     }
 
     if (_subscriptions.size > 0 && !_eventSubscription) {
+      // The EmitterSubscription type is slightly different than the one we use. Ideally we would
+      // use it directly, but it is not public.
+      // $FlowExpectedError
       _eventSubscription = NetInfoEventEmitter.addListener(
         DEVICE_CONNECTIVITY_EVENT,
         _listenerHandler,
@@ -114,8 +98,6 @@ const NetInfo = {
 
   /**
    * Removes the listener for network status changes.
-   *
-   * See https://facebook.github.io/react-native/docs/netinfo.html#removeeventlistener
    */
   removeEventListener(
     eventName: ChangeEventName,
@@ -134,20 +116,15 @@ const NetInfo = {
    */
   clearEventListeners(): void {
     for (let listener of _subscriptions) {
-      NetInfo.removeEventListener('connectionChange', listener);
+      NetInfo.removeEventListener(CHANGE_EVENT_NAME, listener);
     }
   },
 
   /**
-   * See https://facebook.github.io/react-native/docs/netinfo.html#getconnectioninfo
+   * Get the current connection info.
    */
   getConnectionInfo(): Promise<NetInfoData> {
-    return RNCNetInfo.getCurrentConnectivity().then(resp => {
-      return {
-        type: resp.connectionType,
-        effectiveType: resp.effectiveConnectionType,
-      };
-    });
+    return RNCNetInfo.getCurrentConnectivity();
   },
 
   /**
@@ -162,7 +139,7 @@ const NetInfo = {
       handler: IsConnectedHandler,
     ): {remove: () => void} {
       const listener = connection => {
-        if (eventName === 'connectionChange') {
+        if (eventName === CHANGE_EVENT_NAME) {
           handler(_isConnected(connection));
         }
       };
