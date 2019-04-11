@@ -192,7 +192,7 @@ Subscribe to connection information. The callback is called a paramter of type [
 | Parameter   | Type                                                        | Description                                                             |
 | ----------- | ----------------------------------------------------------- | ----------------------------------------------------------------------- |
 | `eventName` | `connectionChange`                                          | The event name is always `connectionChange`                             |
-| `listener`  | `(data: `[`NetInfoType`](READMME.md#NetInfoType))` => void` | The listener which will be called whenever the connection state changes |
+| `listener`  | `(data: `[`NetInfoType`](README.md#NetInfoType))` => void` | The listener which will be called whenever the connection state changes |
 
 **Example:**
 ```javascript
