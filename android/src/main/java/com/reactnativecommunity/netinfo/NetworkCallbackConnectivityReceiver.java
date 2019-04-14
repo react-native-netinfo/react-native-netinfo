@@ -79,12 +79,14 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     @Override
     public void onAvailable(Network network) {
       mNetwork = network;
+      mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
       updateAndSend();
     }
 
     @Override
     public void onLosing(Network network, int maxMsToLive) {
       mNetwork = network;
+      mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
       updateAndSend();
     }
 
@@ -112,6 +114,7 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     @Override
     public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
       mNetwork = network;
+      mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
       updateAndSend();
     }
   }
