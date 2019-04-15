@@ -7,9 +7,13 @@
   "module": "lib/module/index.js",
   "types": "typings/index.d.ts",
   "files": [
+    "/android",
+    "!/android/build",
+    "/ios",
     "/js",
     "/lib",
-    "/typings"
+    "/typings",
+    "/*.podspec"
   ],
   "author": "Matt Oakes <hello@mattoakes.net>",
   "contributors": [
