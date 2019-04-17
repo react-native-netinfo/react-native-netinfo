@@ -91,6 +91,10 @@ abstract class ConnectivityReceiver {
   }
 
   String getEffectiveConnectionType(NetworkInfo networkInfo) {
+    if (networkInfo == null) {
+      return EFFECTIVE_CONNECTION_TYPE_UNKNOWN;
+    }
+
     switch (networkInfo.getSubtype()) {
       case TelephonyManager.NETWORK_TYPE_1xRTT:
       case TelephonyManager.NETWORK_TYPE_CDMA:
