@@ -92,4 +92,4 @@ export interface NetInfoStatic {
 }
 
 declare let NetInfo: NetInfoStatic;
-export default NetInfo;
+export = NetInfo;
