@@ -9,25 +9,7 @@
 
 type ChangeEventName = 'connectionChange';
 
-export type ConnectionType =
-  // iOS & Android
-  | 'none'
-  | 'cellular'
-  | 'unknown'
-  | 'wifi'
-  // Android only
-  | 'bluetooth'
-  | 'ethernet'
-  | 'wimax';
-
-export type EffectiveConnectionType = 'unknown' | '2g' | '3g' | '4g';
-
-export interface ConnectionInfo {
-  type: ConnectionType;
-  effectiveType: EffectiveConnectionType;
-}
-
-export interface NetInfoStatic {
+declare let NetInfo: {
   /**
    * Adds an event handler. Supported events:
    *
@@ -91,5 +73,24 @@ export interface NetInfoStatic {
   isConnectionExpensive: () => Promise<boolean>;
 }
 
-declare let NetInfo: NetInfoStatic;
+namespace NetInfo {
+  export type ConnectionType =
+    // iOS & Android
+    | 'none'
+    | 'cellular'
+    | 'unknown'
+    | 'wifi'
+    // Android only
+    | 'bluetooth'
+    | 'ethernet'
+    | 'wimax';
+
+  export type EffectiveConnectionType = 'unknown' | '2g' | '3g' | '4g';
+
+  export interface ConnectionInfo {
+    type: ConnectionType;
+    effectiveType: EffectiveConnectionType;
+  }
+}
+
 export = NetInfo;
