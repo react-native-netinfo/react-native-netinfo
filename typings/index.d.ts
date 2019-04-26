@@ -9,7 +9,7 @@
 
 type ChangeEventName = 'connectionChange';
 
-export type ConnectionType =
+export type NetInfoType =
   // iOS & Android
   | 'none'
   | 'cellular'
@@ -20,11 +20,11 @@ export type ConnectionType =
   | 'ethernet'
   | 'wimax';
 
-export type EffectiveConnectionType = 'unknown' | '2g' | '3g' | '4g';
+export type NetInfoEffectiveType = 'unknown' | '2g' | '3g' | '4g';
 
-export interface ConnectionInfo {
-  type: ConnectionType;
-  effectiveType: EffectiveConnectionType;
+export interface NetInfoData {
+  type: NetInfoType;
+  effectiveType: NetInfoEffectiveType;
 }
 
 export interface NetInfoStatic {
@@ -38,15 +38,15 @@ export interface NetInfoStatic {
    */
   addEventListener: (
     eventName: ChangeEventName,
-    listener: (result: ConnectionInfo) => void,
-  ) => void;
+    listener: (result: NetInfoData) => void,
+  ) => {remove: () => void};
 
   /**
    * Removes the listener for network status changes.
    */
   removeEventListener: (
     eventName: ChangeEventName,
-    listener: (result: ConnectionInfo) => void,
+    listener: (result: NetInfoData) => void,
   ) => void;
 
   /**
@@ -54,7 +54,7 @@ export interface NetInfoStatic {
    * whose values are a `ConnectionType` and an `EffectiveConnectionType`, (described above),
    * respectively.
    */
-  getConnectionInfo: () => Promise<ConnectionInfo>;
+  getConnectionInfo: () => Promise<NetInfoData>;
 
   /**
    * An object with the same methods as above but the listener receives a
@@ -63,7 +63,7 @@ export interface NetInfoStatic {
    * connectivity.
    */
   isConnected: {
-    fetch: () => Promise<boolean>,
+    fetch: () => Promise<any>,
 
     /**
      * eventName is expected to be `change`(deprecated) or `connectionChange`
@@ -71,7 +71,7 @@ export interface NetInfoStatic {
     addEventListener: (
       eventName: ChangeEventName,
       listener: (result: boolean) => void,
-    ) => void,
+    ) => {remove: () => void},
 
     /**
      * eventName is expected to be `change`(deprecated) or `connectionChange`
