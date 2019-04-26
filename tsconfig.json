@@ -1,21 +1,14 @@
 {
-  "include": ["typings/**/*.d.ts"],
+  "include": ["js/**/*.ts"],
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "declaration": true,
-    "importHelpers": true,
-    "jsx": "react",
-    "sourceMap": true,
+    "target": "es6",
+    "module": "es6",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "downlevelIteration": true,
     "lib": ["es2015", "es2016", "esnext", "dom"]
   },
   "exclude": [

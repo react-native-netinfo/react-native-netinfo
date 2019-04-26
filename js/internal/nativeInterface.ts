@@ -5,13 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow
  */
 
 import {NativeEventEmitter, NativeModules} from 'react-native';
-import {type NativeInterface} from './types';
+import {NetInfoNativeModule} from './privateTypes';
 
-const RNCNetInfo: NativeInterface = NativeModules.RNCNetInfo;
+const RNCNetInfo: NetInfoNativeModule | undefined = NativeModules.RNCNetInfo;
 
 // Produce an error if we don't have the native module
 if (!RNCNetInfo) {
@@ -28,10 +27,10 @@ If none of these fix the issue, please open an issue on the Github repository: h
  * We export the native interface in this way to give easy shared access to it between the
  * JavaScript code and the tests
  */
-let nativeEventEmitter = null;
-module.exports = {
-  RNCNetInfo,
-  get NetInfoEventEmitter() {
+let nativeEventEmitter: NativeEventEmitter | null = null;
+export default {
+  ...RNCNetInfo,
+  get eventEmitter(): NativeEventEmitter {
     if (!nativeEventEmitter) {
       nativeEventEmitter = new NativeEventEmitter(RNCNetInfo);
     }
