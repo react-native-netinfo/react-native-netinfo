@@ -36,9 +36,7 @@ export interface NetInfoCellularState {
 export interface NetInfoWifiState {
   type: 'wifi';
   isConnected: true;
-  details: NetInfoConnectedDetails & {
-    ssid: string | null,
-  };
+  details: NetInfoConnectedDetails;
 }
 
 export interface NetInfoBluetoothState {
