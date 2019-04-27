@@ -32,8 +32,10 @@ export default {
   ...RNCNetInfo,
   get eventEmitter(): NativeEventEmitter {
     if (!nativeEventEmitter) {
+      /// @ts-ignore
       nativeEventEmitter = new NativeEventEmitter(RNCNetInfo);
     }
+    /// @ts-ignore
     return nativeEventEmitter;
   },
 };

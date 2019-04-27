@@ -7,6 +7,9 @@
  * @format
  */
 
+import DeprecatedUtils from './internal/deprecatedUtils';
+import DeprecatedSubscriptions from './internal/deprecatedSubscriptions';
+import * as DeprecatedTypes from './internal/deprecatedTypes';
 import Subscriptions from './internal/subscriptions';
 import * as Types from './internal/types';
 import NativeInterface from './internal/nativeInterface';
@@ -16,12 +19,49 @@ export function fetch(): Promise<Types.NetInfoState> {
 }
 
 export function addEventListener(
-  handler: Types.NetInfoChangeHandler,
-): Types.NetInfoSubscription {
-  Subscriptions.add(handler);
-  return (): void => {
-    Subscriptions.remove(handler);
-  };
+  handlerOrType: Types.NetInfoChangeHandler,
+): Types.NetInfoSubscription;
+export function addEventListener(
+  handlerOrType: string,
+  deprecatedHandler: DeprecatedTypes.ChangeHandler
+): DeprecatedTypes.Subscription;
+export function addEventListener(
+  handlerOrType: Types.NetInfoChangeHandler | string,
+  deprecatedHandler: DeprecatedTypes.ChangeHandler | undefined = undefined,
+): Types.NetInfoSubscription | DeprecatedTypes.Subscription {
+  if (typeof handlerOrType === 'string') {
+    if (handlerOrType === "connectionChange" && deprecatedHandler) {
+      DeprecatedSubscriptions.add(deprecatedHandler);
+      return {
+        remove: () => {
+          DeprecatedSubscriptions.remove(deprecatedHandler);
+        }
+      }
+    } else {
+      return {
+        remove: () => {}
+      }
+    }
+  } else {
+    const handler = handlerOrType;
+    Subscriptions.add(handler);
+    return (): void => {
+      Subscriptions.remove(handler);
+    };
+  }
+}
+
+export function removeEventListener(
+  type: string,
+  handler: DeprecatedTypes.ChangeHandler,
+): void {
+  if (type === "connectionChange") {
+    DeprecatedSubscriptions.remove(handler);
+  }
+}
+
+export function getConnectionInfo(): Promise<DeprecatedTypes.NetInfoData> {
+  return NativeInterface.getCurrentState().then(DeprecatedUtils.convertState);
 }
 
 export * from './internal/types';
@@ -29,4 +69,6 @@ export * from './internal/types';
 export default {
   fetch,
   addEventListener,
+  removeEventListener,
+  getConnectionInfo,
 };

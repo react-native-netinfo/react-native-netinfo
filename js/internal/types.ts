@@ -7,39 +7,35 @@
  * @format
  */
 
+export type NetInfoCellularGeneration = '2g' | '3g' | '4g';
+
 export interface NetInfoConnectedDetails {
   isConnectionExpensive: boolean;
-  externalIp: string | null;
-  externalIpv6: string | null;
 }
 
 export interface NetInfoUnknownState {
   type: 'unknown';
   isConnected: false;
-  isInternetReachable: false;
   details: null;
 }
 
 export interface NetInfoNoConnectionState {
   type: 'none';
   isConnected: false;
-  isInternetReachable: false;
   details: null;
 }
 
 export interface NetInfoCellularState {
   type: 'cellular';
   isConnected: true;
-  isInternetReachable: boolean;
   details: NetInfoConnectedDetails & {
-    cellularGeneration: '2g' | '3g' | '4g' | null,
+    cellularGeneration: NetInfoCellularGeneration | null,
   };
 }
 
 export interface NetInfoWifiState {
   type: 'wifi';
   isConnected: true;
-  isInternetReachable: boolean;
   details: NetInfoConnectedDetails & {
     ssid: string | null,
   };
@@ -48,21 +44,18 @@ export interface NetInfoWifiState {
 export interface NetInfoBluetoothState {
   type: 'bluetooth';
   isConnected: true;
-  isInternetReachable: boolean;
   details: NetInfoConnectedDetails;
 }
 
 export interface NetInfoEthernetState {
   type: 'ethernet';
   isConnected: true;
-  isInternetReachable: boolean;
   details: NetInfoConnectedDetails;
 }
 
 export interface NetInfoWimaxState {
   type: 'wimax';
   isConnected: true;
-  isInternetReachable: boolean;
   details: NetInfoConnectedDetails;
 }
 

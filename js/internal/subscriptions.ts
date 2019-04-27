@@ -25,20 +25,25 @@ function _listenerHandler(state: Types.NetInfoState): void {
   }
 }
 
-export function add(handler: Types.NetInfoChangeHandler): void {
+export function add(
+  handler: Types.NetInfoChangeHandler,
+  latestOnListen: boolean = true,
+): void {
   // Add the subscription handler to our set
   _subscriptions.add(handler);
 
   // Send it the latest data we have
-  if (_latestState) {
-    handler(_latestState);
-  } else {
-    NativeInterface.getCurrentState().then(
-      (state): void => {
-        _latestState = state;
-        handler(_latestState);
-      },
-    );
+  if (latestOnListen) {
+    if (_latestState) {
+      handler(_latestState);
+    } else {
+      NativeInterface.getCurrentState().then(
+        (state): void => {
+          _latestState = state;
+          handler(_latestState);
+        },
+      );
+    }
   }
 
   // Subscribe to native events, if we aren't already
@@ -59,7 +64,17 @@ export function remove(handler: Types.NetInfoChangeHandler): void {
   }
 }
 
+export function clear(): void {
+  _subscriptions.clear();
+
+  if (_nativeEventSubscription) {
+    _nativeEventSubscription.remove();
+    _nativeEventSubscription = null;
+  }
+}
+
 export default {
   add,
   remove,
+  clear,
 };

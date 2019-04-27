@@ -59,6 +59,7 @@
     "@react-native-community/bob": "^0.3.4",
     "@react-native-community/eslint-config": "^0.0.3",
     "@semantic-release/git": "7.0.8",
+    "@types/jest": "^24.0.11",
     "@types/react-native": "^0.57.50",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
@@ -77,13 +78,8 @@
     "react-test-renderer": "16.6.3",
     "rimraf": "^2.6.3",
     "semantic-release": "15.13.3",
+    "ts-jest": "^24.0.2",
     "typescript": "^3.4.1"
-  },
-  "jest": {
-    "preset": "react-native",
-    "setupFilesAfterEnv": [
-      "<rootDir>/jest.setup.js"
-    ]
   },
   "detox": {
     "test-runner": "jest",
