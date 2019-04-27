@@ -9,7 +9,8 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "downlevelIteration": true,
-    "lib": ["es2015", "es2016", "esnext", "dom"]
+    "moduleResolution": "node",
+    "lib": ["es2015", "es2016", "esnext"]
   },
   "exclude": [
     "node_modules",

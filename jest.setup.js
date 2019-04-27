@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow
  */
 /* eslint-env jest */
 
@@ -13,8 +12,7 @@ import {NativeModules} from 'react-native';
 
 // Mock the RNCNetInfo native module to allow us to unit test the JavaScript code
 NativeModules.RNCNetInfo = {
-  getCurrentConnectivity: jest.fn(),
-  isConnectionMetered: jest.fn(),
+  getCurrentState: jest.fn(),
   addListener: jest.fn(),
   removeListeners: jest.fn(),
 };

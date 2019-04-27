@@ -7,9 +7,10 @@
  * @format
  */
 
-import {EventSubscriptionVendor} from 'react-native';
 import {NetInfoState} from './types';
 
-export interface NetInfoNativeModule extends EventSubscriptionVendor {
+export interface NetInfoNativeModule {
   getCurrentState: () => Promise<NetInfoState>;
+  addListener: (type: string, handler: Function) => void;
+  removeListeners: (type: string, handler: Function) => void;
 }

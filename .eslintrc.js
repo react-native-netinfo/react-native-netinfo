@@ -44,6 +44,12 @@ module.exports = {
         "@typescript-eslint/prefer-interface": "error",
         "@typescript-eslint/prefer-namespace-keyword": "error",
       }
+    },
+    {
+      files: ["**/__tests__/**/*.ts", "**/*.spec.ts"],
+      env: {
+        jest: true
+      }
     }
-  ]
+  ],
 };
