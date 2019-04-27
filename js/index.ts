@@ -64,6 +64,10 @@ export function getConnectionInfo(): Promise<DeprecatedTypes.NetInfoData> {
   return NativeInterface.getCurrentState().then(DeprecatedUtils.convertState);
 }
 
+export function isConnectionExpensive(): Promise<boolean> {
+  return NativeInterface.getCurrentState().then(DeprecatedUtils.isConnectionExpensive);
+}
+
 export * from './internal/types';
 
 export default {
@@ -71,4 +75,5 @@ export default {
   addEventListener,
   removeEventListener,
   getConnectionInfo,
+  isConnectionExpensive
 };

@@ -7,6 +7,7 @@
  * @format
  */
 
+import {Platform} from 'react-native';
 import * as DeprecatedTypes from './deprecatedTypes';
 import * as Types from './types';
 
@@ -24,6 +25,19 @@ export function convertState(
   };
 }
 
+export function isConnectionExpensive(input: Types.NetInfoState): boolean {
+  if (Platform.OS === 'android') {
+    if (input.type !== 'none' && input.type !== 'unknown') {
+      return input.details.isConnectionExpensive;
+    } else {
+      return false;
+    }
+  } else {
+    throw new Error('Currently not supported on iOS');
+  }
+}
+
 export default {
   convertState,
+  isConnectionExpensive,
 };
