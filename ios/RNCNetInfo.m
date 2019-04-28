@@ -33,6 +33,7 @@ static NSString *const RNCEffectiveConnectionType4g = @"4g";
   SCNetworkReachabilityRef _firstTimeReachability;
   SCNetworkReachabilityRef _reachability;
   NSString *_connectionType;
+  BOOL _connectionExpensive;
   NSString *_effectiveConnectionType;
   NSString *_host;
   BOOL _isObserving;
@@ -120,6 +121,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 - (BOOL)setReachabilityStatus:(SCNetworkReachabilityFlags)flags
 {
   NSString *connectionType = RNCConnectionTypeUnknown;
+  bool connectionExpensive = false;
   NSString *effectiveConnectionType = RNCEffectiveConnectionTypeUnknown;
   if ((flags & kSCNetworkReachabilityFlagsReachable) == 0 ||
       (flags & kSCNetworkReachabilityFlagsConnectionRequired) != 0) {
@@ -130,6 +132,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
   
   else if ((flags & kSCNetworkReachabilityFlagsIsWWAN) != 0) {
     connectionType = RNCConnectionTypeCellular;
+    connectionExpensive = true;
     
     CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
     if (netinfo) {
@@ -160,6 +163,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
   if (![connectionType isEqualToString:self->_connectionType] ||
       ![effectiveConnectionType isEqualToString:self->_effectiveConnectionType]) {
     self->_connectionType = connectionType;
+    self->_connectionExpensive = connectionExpensive;
     self->_effectiveConnectionType = effectiveConnectionType;
     return YES;
   }
@@ -181,14 +185,17 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
   NSString *connectionType = self->_connectionType ?: RNCConnectionTypeUnknown;
   NSString *effectiveConnectionType = self->_effectiveConnectionType;
   
-  id details = nil;
-  if ([connectionType isEqualToString:RNCConnectionTypeCellular]) {
-    details = @{
-                @"cellularGeneration": effectiveConnectionType
-                };
-  }
-  
   BOOL isConnected = ![connectionType isEqualToString:RNCConnectionTypeNone] && ![connectionType isEqualToString:RNCConnectionTypeUnknown];
+  
+  NSMutableDictionary *details = nil;
+  if (isConnected) {
+    details = [NSMutableDictionary new];
+    details[@"isConnectionExpensive"] = @(self->_connectionExpensive ?: false);
+
+    if ([connectionType isEqualToString:RNCConnectionTypeCellular]) {
+      details[@"cellularGeneration"] = effectiveConnectionType;
+    }
+  }
   
   return @{
            @"type": connectionType,
