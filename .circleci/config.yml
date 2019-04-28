@@ -21,9 +21,6 @@ jobs:
           name: Lint JS Code (ESLint)
           command: yarn run validate:eslint
       - run:
-          name: Flow
-          command: yarn run validate:flow
-      - run:
           name: TypeScript
           command: yarn run validate:typescript
       - run:
