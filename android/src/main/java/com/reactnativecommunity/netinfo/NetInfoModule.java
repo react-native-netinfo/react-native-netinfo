@@ -9,7 +9,6 @@ package com.reactnativecommunity.netinfo;
 
 import android.os.Build;
 
-import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -49,12 +48,7 @@ public class NetInfoModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void getCurrentConnectivity(Promise promise) {
-    mConnectivityReceiver.getCurrentConnectivity(promise);
-  }
-
-  @ReactMethod
-  public void isConnectionMetered(Promise promise) {
-    mConnectivityReceiver.isConnectionMetered(promise);
+  public void getCurrentState(Promise promise) {
+    mConnectivityReceiver.getCurrentState(promise);
   }
 }
