@@ -61,21 +61,12 @@ abstract class ConnectivityReceiver {
   abstract void register();
   abstract void unregister();
 
-  public void getCurrentConnectivity(Promise promise) {
+  public void getCurrentState(Promise promise) {
     if (mNoNetworkPermission) {
       promise.reject(ERROR_MISSING_PERMISSION, MISSING_PERMISSION_MESSAGE);
       return;
     }
     promise.resolve(createConnectivityEventMap());
-  }
-
-  @SuppressLint("MissingPermission")
-  public void isConnectionMetered(Promise promise) {
-    if (mNoNetworkPermission) {
-      promise.reject(ERROR_MISSING_PERMISSION, MISSING_PERMISSION_MESSAGE);
-      return;
-    }
-    promise.resolve(ConnectivityManagerCompat.isActiveNetworkMetered(getConnectivityManager()));
   }
 
   public ReactApplicationContext getReactContext() {
@@ -138,8 +129,28 @@ abstract class ConnectivityReceiver {
 
   private WritableMap createConnectivityEventMap() {
     WritableMap event = new WritableNativeMap();
+
+    // Add the connection type information
     event.putString("type", mConnectionType);
-    event.putString("effectiveType", mEffectiveConnectionType);
+
+    // Add the connection state information
+    boolean isConnected = !mConnectionType.equals(CONNECTION_TYPE_NONE) && !mConnectionType.equals(CONNECTION_TYPE_UNKNOWN);
+    event.putBoolean("isConnected", isConnected);
+
+    // Add the details, if there are any
+    WritableMap details = null;
+    if (isConnected) {
+      details = new WritableNativeMap();
+
+      boolean isConnectionExpensive = ConnectivityManagerCompat.isActiveNetworkMetered(getConnectivityManager());
+      details.putBoolean("isConnectionExpensive", isConnectionExpensive);
+
+      if (mConnectionType.equals(CONNECTION_TYPE_CELLULAR)) {
+        details.putString("cellularGeneration", mEffectiveConnectionType);
+      }
+    }
+    event.putMap("details", details);
+
     return event;
   }
 }
