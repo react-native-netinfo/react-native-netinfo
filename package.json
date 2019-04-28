@@ -22,10 +22,9 @@
   "license": "MIT",
   "scripts": {
     "start": "react-native start",
-    "test": "yarn validate:eslint && yarn validate:flow && yarn validate:typescript && yarn test:jest",
+    "test": "yarn validate:eslint && yarn validate:typescript && yarn test:jest",
     "validate:eslint": "eslint 'js/**/*.{js,ts,tsx}' 'example/**/*.{js,ts,tsx}'",
-    "validate:flow": "flow check",
-    "validate:typescript": "tsc --project ./",
+    "validate:typescript": "tsc --project ./ --noEmit",
     "test:jest": "jest '/js/'",
     "test:detox:android:test:debug": "detox test -c android.emu.debug",
     "test:detox:android:test:release": "detox test -c android.emu.release",
