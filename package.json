@@ -70,6 +70,7 @@
     "eslint": "^5.16.0",
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-config-prettier": "^4.2.0",
+    "eslint-plugin-prettier": "2.6.2",
     "flow-bin": "^0.86.0",
     "jest": "^24.8.0",
     "metro-react-native-babel-preset": "0.51.1",

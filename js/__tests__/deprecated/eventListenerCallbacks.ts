@@ -12,7 +12,9 @@ import NetInfo from '../../index';
 import NativeInterface from '../../internal/nativeInterface';
 import DeprecatedSubscriptions from '../../internal/deprecatedSubscriptions';
 
-const MockNativeInterface: jest.Mocked<typeof NativeInterface> = NativeInterface as any;
+type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
+/// @ts-ignore
+const MockNativeInterface: JestMockNativeInterface = NativeInterface;
 
 const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
 
@@ -22,11 +24,11 @@ describe('Deprecated', () => {
       DeprecatedSubscriptions.clear();
 
       MockNativeInterface.getCurrentState.mockResolvedValue({
-        type: "cellular",
+        type: 'cellular',
         isConnected: true,
         details: {
           isConnectionExpensive: true,
-          cellularGeneration: "3g"
+          cellularGeneration: '3g',
         },
       });
     });
@@ -66,7 +68,7 @@ describe('Deprecated', () => {
         isConnected: true,
         details: {
           isConnectionExpensive: true,
-          cellularGeneration: expectedEffectiveConnectionType
+          cellularGeneration: expectedEffectiveConnectionType,
         },
       });
 
@@ -81,19 +83,19 @@ describe('Deprecated', () => {
       NetInfo.addEventListener('connectionChange', listener);
 
       NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
-        type: "cellular",
+        type: 'cellular',
         isConnected: true,
         details: {
           isConnectionExpensive: true,
-          cellularGeneration: "3g"
+          cellularGeneration: '3g',
         },
       });
       NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
-        type: "wifi",
+        type: 'wifi',
         isConnected: true,
         details: {
           isConnectionExpensive: true,
-          cellularGeneration: "unknown"
+          cellularGeneration: 'unknown',
         },
       });
 
@@ -115,7 +117,7 @@ describe('Deprecated', () => {
         isConnected: true,
         details: {
           isConnectionExpensive: true,
-          cellularGeneration: expectedEffectiveConnectionType
+          cellularGeneration: expectedEffectiveConnectionType,
         },
       });
 
@@ -137,11 +139,11 @@ describe('Deprecated', () => {
       listener.mockClear();
 
       NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
-        type: "cellular",
+        type: 'cellular',
         isConnected: true,
         details: {
           isConnectionExpensive: true,
-          cellularGeneration: "3g"
+          cellularGeneration: '3g',
         },
       });
 
@@ -167,7 +169,7 @@ describe('Deprecated', () => {
         isConnected: true,
         details: {
           isConnectionExpensive: true,
-          cellularGeneration: expectedEffectiveConnectionType
+          cellularGeneration: expectedEffectiveConnectionType,
         },
       });
 

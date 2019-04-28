@@ -14,6 +14,14 @@ import Subscriptions from './internal/subscriptions';
 import * as Types from './internal/types';
 import NativeInterface from './internal/nativeInterface';
 
+const DEPRECATED_CHANGE_EVENT_NAME = 'connectionChange';
+
+const _isConnectedListeners = new Map<
+  DeprecatedTypes.IsConnectedHandler,
+  /// @ts-ignore Typescript des not like the trailing comma that Prettier insists upon
+  Types.NetInfoChangeHandler,
+>();
+
 export function fetch(): Promise<Types.NetInfoState> {
   return NativeInterface.getCurrentState();
 }
@@ -23,24 +31,24 @@ export function addEventListener(
 ): Types.NetInfoSubscription;
 export function addEventListener(
   handlerOrType: string,
-  deprecatedHandler: DeprecatedTypes.ChangeHandler
+  deprecatedHandler: DeprecatedTypes.ChangeHandler,
 ): DeprecatedTypes.Subscription;
 export function addEventListener(
   handlerOrType: Types.NetInfoChangeHandler | string,
   deprecatedHandler: DeprecatedTypes.ChangeHandler | undefined = undefined,
 ): Types.NetInfoSubscription | DeprecatedTypes.Subscription {
   if (typeof handlerOrType === 'string') {
-    if (handlerOrType === "connectionChange" && deprecatedHandler) {
+    if (handlerOrType === DEPRECATED_CHANGE_EVENT_NAME && deprecatedHandler) {
       DeprecatedSubscriptions.add(deprecatedHandler);
       return {
-        remove: () => {
+        remove: (): void => {
           DeprecatedSubscriptions.remove(deprecatedHandler);
-        }
-      }
+        },
+      };
     } else {
       return {
-        remove: () => {}
-      }
+        remove: (): void => {},
+      };
     }
   } else {
     const handler = handlerOrType;
@@ -55,7 +63,7 @@ export function removeEventListener(
   type: string,
   handler: DeprecatedTypes.ChangeHandler,
 ): void {
-  if (type === "connectionChange") {
+  if (type === DEPRECATED_CHANGE_EVENT_NAME) {
     DeprecatedSubscriptions.remove(handler);
   }
 }
@@ -65,8 +73,47 @@ export function getConnectionInfo(): Promise<DeprecatedTypes.NetInfoData> {
 }
 
 export function isConnectionExpensive(): Promise<boolean> {
-  return NativeInterface.getCurrentState().then(DeprecatedUtils.isConnectionExpensive);
+  return NativeInterface.getCurrentState().then(
+    DeprecatedUtils.isConnectionExpensive,
+  );
 }
+
+export const isConnected = {
+  addEventListener: (
+    eventName: string,
+    handler: DeprecatedTypes.IsConnectedHandler,
+  ): DeprecatedTypes.Subscription => {
+    if (eventName !== DEPRECATED_CHANGE_EVENT_NAME) {
+      return {remove: (): void => {}};
+    }
+
+    const listener = (state: Types.NetInfoState): void => {
+      handler(DeprecatedUtils.isConnected(state));
+    };
+
+    _isConnectedListeners.set(handler, listener);
+    Subscriptions.add(listener);
+
+    return {
+      remove: (): void => {
+        Subscriptions.remove(listener);
+      },
+    };
+  },
+
+  removeEventListener: (
+    _eventName: string,
+    handler: DeprecatedTypes.IsConnectedHandler,
+  ): void => {
+    const listener = _isConnectedListeners.get(handler);
+    listener && Subscriptions.remove(listener);
+    _isConnectedListeners.delete(handler);
+  },
+
+  fetch: (): Promise<boolean> => {
+    return NativeInterface.getCurrentState().then(DeprecatedUtils.isConnected);
+  },
+};
 
 export * from './internal/types';
 
@@ -75,5 +122,6 @@ export default {
   addEventListener,
   removeEventListener,
   getConnectionInfo,
-  isConnectionExpensive
+  isConnectionExpensive,
+  isConnected,
 };

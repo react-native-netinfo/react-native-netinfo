@@ -4,16 +4,11 @@
     "target": "es6",
     "module": "es6",
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
     "downlevelIteration": true,
     "moduleResolution": "node",
     "lib": ["es2015", "es2016", "esnext"]
   },
   "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
+    "node_modules"
   ]
 }

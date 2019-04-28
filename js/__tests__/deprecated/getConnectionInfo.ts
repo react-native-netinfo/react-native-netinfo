@@ -10,7 +10,9 @@
 import NetInfo from '../../index';
 import NativeInterface from '../../internal/nativeInterface';
 
-const MockNativeInterface: jest.Mocked<typeof NativeInterface> = NativeInterface as any;
+type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
+/// @ts-ignore
+const MockNativeInterface: JestMockNativeInterface = NativeInterface;
 
 describe('Deprecated', () => {
   describe('getConnectionInfo', () => {
@@ -23,7 +25,7 @@ describe('Deprecated', () => {
         isConnected: true,
         details: {
           isConnectionExpensive: true,
-          cellularGeneration: expectedEffectiveConnectionType
+          cellularGeneration: expectedEffectiveConnectionType,
         },
       });
 

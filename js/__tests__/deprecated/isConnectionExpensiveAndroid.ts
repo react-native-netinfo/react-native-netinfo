@@ -16,35 +16,33 @@ jest.mock('Platform', () => {
 import NetInfo from '../../index';
 import NativeInterface from '../../internal/nativeInterface';
 
-const MockNativeInterface: jest.Mocked<typeof NativeInterface> = NativeInterface as any;
+type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
+/// @ts-ignore
+const MockNativeInterface: JestMockNativeInterface = NativeInterface;
 
 describe('Deprecated', () => {
   describe('isConnectionExpensive', () => {
     describe('Android', () => {
       it('should pass the value through when false', () => {
         MockNativeInterface.getCurrentState.mockResolvedValue({
-          type: "wifi",
+          type: 'wifi',
           isConnected: true,
           details: {
-            isConnectionExpensive: false
+            isConnectionExpensive: false,
           },
         });
-        return expect(NetInfo.isConnectionExpensive()).resolves.toBe(
-          false
-        );
+        return expect(NetInfo.isConnectionExpensive()).resolves.toBe(false);
       });
 
       it('should pass the value through when true', () => {
         MockNativeInterface.getCurrentState.mockResolvedValue({
-          type: "wifi",
+          type: 'wifi',
           isConnected: true,
           details: {
-            isConnectionExpensive: true
+            isConnectionExpensive: true,
           },
         });
-        return expect(NetInfo.isConnectionExpensive()).resolves.toBe(
-          true
-        );
+        return expect(NetInfo.isConnectionExpensive()).resolves.toBe(true);
       });
     });
   });
