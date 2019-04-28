@@ -29,7 +29,7 @@ export interface NetInfoCellularState {
   type: 'cellular';
   isConnected: true;
   details: NetInfoConnectedDetails & {
-    cellularGeneration: NetInfoCellularGeneration | null,
+    cellularGeneration: NetInfoCellularGeneration | null;
   };
 }
 

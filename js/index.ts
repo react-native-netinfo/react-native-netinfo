@@ -19,7 +19,7 @@ const DEPRECATED_CHANGE_EVENT_NAME = 'connectionChange';
 const _isConnectedListeners = new Map<
   DeprecatedTypes.IsConnectedHandler,
   /// @ts-ignore Typescript des not like the trailing comma that Prettier insists upon
-  Types.NetInfoChangeHandler,
+  Types.NetInfoChangeHandler
 >();
 
 export function fetch(): Promise<Types.NetInfoState> {
