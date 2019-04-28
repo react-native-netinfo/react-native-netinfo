@@ -45,14 +45,10 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 {
   RNCNetInfo *self = (__bridge id)info;
   BOOL didSetReachabilityFlags = [self setReachabilityStatus:flags];
-  
-  NSString *connectionType = self->_connectionType ?: RNCConnectionTypeUnknown;
-  NSString *effectiveConnectionType = self->_effectiveConnectionType ?: RNCEffectiveConnectionTypeUnknown;
 
   if (self->_firstTimeReachability) {
     [self->_firstTimeReachabilityResolvers enumerateObjectsUsingBlock:^(RCTPromiseResolveBlock resolver, BOOL *stop) {
-      resolver(@{@"type": connectionType,
-                 @"effectiveType": effectiveConnectionType});
+      resolver([self currentState]);
     }];
 
     [self cleanUpFirstTimeReachability];
@@ -60,8 +56,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
   }
 
   if (didSetReachabilityFlags && self->_isObserving) {
-    [self sendEventWithName:@"netInfo.networkStatusDidChange" body:@{@"type": connectionType,
-                                                             @"effectiveType": effectiveConnectionType}];
+    [self sendEventWithName:@"netInfo.networkStatusDidChange" body:[self currentState]];
   }
 }
 
@@ -181,9 +176,30 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
   }
 }
 
+- (id)currentState
+{
+  NSString *connectionType = self->_connectionType ?: RNCConnectionTypeUnknown;
+  NSString *effectiveConnectionType = self->_effectiveConnectionType;
+  
+  id details = nil;
+  if ([connectionType isEqualToString:RNCConnectionTypeCellular]) {
+    details = @{
+                @"cellularGeneration": effectiveConnectionType
+                };
+  }
+  
+  BOOL isConnected = ![connectionType isEqualToString:RNCConnectionTypeNone] && ![connectionType isEqualToString:RNCConnectionTypeUnknown];
+  
+  return @{
+           @"type": connectionType,
+           @"isConnected": @(isConnected),
+           @"details": details ?: [NSNull null]
+           };
+}
+
 #pragma mark - Public API
 
-RCT_EXPORT_METHOD(getCurrentConnectivity:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(getCurrentState:(RCTPromiseResolveBlock)resolve
                   reject:(__unused RCTPromiseRejectBlock)reject)
 {
   // Setup the reacability listener if needed
