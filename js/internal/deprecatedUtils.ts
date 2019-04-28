@@ -37,7 +37,12 @@ export function isConnectionExpensive(input: Types.NetInfoState): boolean {
   }
 }
 
+export function isConnected(input: Types.NetInfoState): boolean {
+  return input.isConnected;
+}
+
 export default {
   convertState,
   isConnectionExpensive,
+  isConnected,
 };

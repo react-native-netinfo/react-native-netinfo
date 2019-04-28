@@ -3,9 +3,6 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 6,
     sourceType: "module",
-    ecmaFeatures: {
-      modules: true
-    },
     project: "./tsconfig.json"
   },
   extends: ["@react-native-community"],
@@ -49,6 +46,9 @@ module.exports = {
       files: ["**/__tests__/**/*.ts", "**/*.spec.ts"],
       env: {
         jest: true
+      },
+      rules: {
+        "@typescript-eslint/explicit-function-return-type": "off"
       }
     }
   ],

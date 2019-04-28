@@ -11,7 +11,9 @@ import NetInfo from '../../index';
 import NativeInterface from '../../internal/nativeInterface';
 import DeprecatedSubscriptions from '../../internal/deprecatedSubscriptions';
 
-const MockNativeInterface: jest.Mocked<typeof NativeInterface> = NativeInterface as any;
+type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
+/// @ts-ignore
+const MockNativeInterface: JestMockNativeInterface = NativeInterface;
 
 const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
 
@@ -19,9 +21,9 @@ describe('Deprecated', () => {
   describe('Event listener management', () => {
     beforeEach(() => {
       DeprecatedSubscriptions.clear();
-      
+
       MockNativeInterface.getCurrentState.mockResolvedValue({
-        type: "none",
+        type: 'none',
         isConnected: false,
         details: null,
       });
