@@ -20,7 +20,7 @@ declare let NetInfo: {
    */
   addEventListener: (
     eventName: ChangeEventName,
-    listener: (result: ConnectionInfo) => void,
+    listener: (result: NetInfo.ConnectionInfo) => void,
   ) => void;
 
   /**
@@ -28,7 +28,7 @@ declare let NetInfo: {
    */
   removeEventListener: (
     eventName: ChangeEventName,
-    listener: (result: ConnectionInfo) => void,
+    listener: (result: NetInfo.ConnectionInfo) => void,
   ) => void;
 
   /**
@@ -36,7 +36,7 @@ declare let NetInfo: {
    * whose values are a `ConnectionType` and an `EffectiveConnectionType`, (described above),
    * respectively.
    */
-  getConnectionInfo: () => Promise<ConnectionInfo>;
+  getConnectionInfo: () => Promise<NetInfo.ConnectionInfo>;
 
   /**
    * An object with the same methods as above but the listener receives a
@@ -73,7 +73,7 @@ declare let NetInfo: {
   isConnectionExpensive: () => Promise<boolean>;
 }
 
-namespace NetInfo {
+declare namespace NetInfo {
   export type ConnectionType =
     // iOS & Android
     | 'none'
