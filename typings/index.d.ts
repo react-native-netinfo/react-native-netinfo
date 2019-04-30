@@ -45,7 +45,7 @@ declare let NetInfo: {
    * connectivity.
    */
   isConnected: {
-    fetch: () => Promise<any>,
+    fetch: () => Promise<boolean>,
 
     /**
      * eventName is expected to be `change`(deprecated) or `connectionChange`
