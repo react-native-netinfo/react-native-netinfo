@@ -51,7 +51,7 @@ export interface NetInfoStatic {
 
   /**
    * Returns a promise that resolves to an object with `type` and `effectiveType` keys
-   * whose values are a `ConnectionType` and an `EffectiveConnectionType`, (described above),
+   * whose values are a `NetInfoType` and an `NetInfoEffectiveType`, (described above),
    * respectively.
    */
   getConnectionInfo: () => Promise<NetInfoData>;
