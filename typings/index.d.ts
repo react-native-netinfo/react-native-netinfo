@@ -20,23 +20,23 @@ declare let NetInfo: {
    */
   addEventListener: (
     eventName: ChangeEventName,
-    listener: (result: NetInfo.ConnectionInfo) => void,
-  ) => void;
+    listener: (result: NetInfo.NetInfoData) => void,
+  ) => {remove: () => void};
 
   /**
    * Removes the listener for network status changes.
    */
   removeEventListener: (
     eventName: ChangeEventName,
-    listener: (result: NetInfo.ConnectionInfo) => void,
+    listener: (result: NetInfo.NetInfoData) => void,
   ) => void;
 
   /**
    * Returns a promise that resolves to an object with `type` and `effectiveType` keys
-   * whose values are a `ConnectionType` and an `EffectiveConnectionType`, (described above),
+   * whose values are a `NetInfoType` and an `NetInfoEffectiveType`, (described above),
    * respectively.
    */
-  getConnectionInfo: () => Promise<NetInfo.ConnectionInfo>;
+  getConnectionInfo: () => Promise<NetInfo.NetInfoData>;
 
   /**
    * An object with the same methods as above but the listener receives a
@@ -53,7 +53,7 @@ declare let NetInfo: {
     addEventListener: (
       eventName: ChangeEventName,
       listener: (result: boolean) => void,
-    ) => void,
+    ) => {remove: () => void},
 
     /**
      * eventName is expected to be `change`(deprecated) or `connectionChange`
@@ -74,7 +74,7 @@ declare let NetInfo: {
 }
 
 declare namespace NetInfo {
-  export type ConnectionType =
+  export type NetInfoType =
     // iOS & Android
     | 'none'
     | 'cellular'
@@ -85,9 +85,9 @@ declare namespace NetInfo {
     | 'ethernet'
     | 'wimax';
 
-  export type EffectiveConnectionType = 'unknown' | '2g' | '3g' | '4g';
+  export type NetInfoEffectiveType = 'unknown' | '2g' | '3g' | '4g';
 
-  export interface ConnectionInfo {
+  export interface NetInfoData {
     type: ConnectionType;
     effectiveType: EffectiveConnectionType;
   }
