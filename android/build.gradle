@@ -28,6 +28,9 @@ android {
     minSdkVersion getExtOrIntegerDefault('minSdkVersion')
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
   }
+  lintOptions{
+    abortOnError false
+  }
 }
 
 repositories {

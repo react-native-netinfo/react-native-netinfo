@@ -9,25 +9,7 @@
 
 type ChangeEventName = 'connectionChange';
 
-export type NetInfoType =
-  // iOS & Android
-  | 'none'
-  | 'cellular'
-  | 'unknown'
-  | 'wifi'
-  // Android only
-  | 'bluetooth'
-  | 'ethernet'
-  | 'wimax';
-
-export type NetInfoEffectiveType = 'unknown' | '2g' | '3g' | '4g';
-
-export interface NetInfoData {
-  type: NetInfoType;
-  effectiveType: NetInfoEffectiveType;
-}
-
-export interface NetInfoStatic {
+declare let NetInfo: {
   /**
    * Adds an event handler. Supported events:
    *
@@ -38,7 +20,7 @@ export interface NetInfoStatic {
    */
   addEventListener: (
     eventName: ChangeEventName,
-    listener: (result: NetInfoData) => void,
+    listener: (result: NetInfo.NetInfoData) => void,
   ) => {remove: () => void};
 
   /**
@@ -46,7 +28,7 @@ export interface NetInfoStatic {
    */
   removeEventListener: (
     eventName: ChangeEventName,
-    listener: (result: NetInfoData) => void,
+    listener: (result: NetInfo.NetInfoData) => void,
   ) => void;
 
   /**
@@ -54,7 +36,7 @@ export interface NetInfoStatic {
    * whose values are a `NetInfoType` and an `NetInfoEffectiveType`, (described above),
    * respectively.
    */
-  getConnectionInfo: () => Promise<NetInfoData>;
+  getConnectionInfo: () => Promise<NetInfo.NetInfoData>;
 
   /**
    * An object with the same methods as above but the listener receives a
@@ -91,5 +73,24 @@ export interface NetInfoStatic {
   isConnectionExpensive: () => Promise<boolean>;
 }
 
-declare let NetInfo: NetInfoStatic;
-export default NetInfo;
+declare namespace NetInfo {
+  export type NetInfoType =
+    // iOS & Android
+    | 'none'
+    | 'cellular'
+    | 'unknown'
+    | 'wifi'
+    // Android only
+    | 'bluetooth'
+    | 'ethernet'
+    | 'wimax';
+
+  export type NetInfoEffectiveType = 'unknown' | '2g' | '3g' | '4g';
+
+  export interface NetInfoData {
+    type: ConnectionType;
+    effectiveType: EffectiveConnectionType;
+  }
+}
+
+export = NetInfo;
