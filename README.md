@@ -66,7 +66,7 @@ On top, where imports are:
 import com.reactnativecommunity.netinfo.NetInfoPackage;
 ```
 
-Add the `RNLocationPackage` class to your list of exported packages.
+Add the `NetInfoPackage` class to your list of exported packages.
 
 ```java
 @Override
