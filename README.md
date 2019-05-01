@@ -92,6 +92,8 @@ to:
 import NetInfo from "@react-native-community/netinfo";
 ```
 
+Note that the API was updated after it was extracted from NetInfo to support some new features, however, the previous API is still available and works with no updates to your code.
+
 ## Usage
 Import the library:
 
@@ -102,51 +104,69 @@ import NetInfo from "@react-native-community/netinfo";
 Get the network state once:
 
 ```javascript
-NetInfo.getConnectionInfo().then(data => {
-  console.log("Connection type", data.type);
-  console.log("Connection effective type", data.effectiveType);
+NetInfo.fetch().then(state => {
+  console.log("Connection type", state.type);
+  console.log("Is connected?", state.isConnected);
 });
 ```
 
-Subscribe to network updates:
+Subscribe to network state updates:
 
 ```javascript
-const listener = data => {
-  console.log("Connection type", data.type);
-  console.log("Connection effective type", data.effectiveType);
-};
-
 // Subscribe
-const subscription = NetInfo.addEventListener('connectionChange', listener);
+const subscription = NetInfo.addEventListener(state => {
+  console.log("Connection type", state.type);
+  console.log("Is connected?", state.isConnected);
+});
 
-// Unsubscribe through remove
-subscription.remove();
-// Or, unsubscribe through event name
-NetInfo.removeEventListener('connectionChange', listener);
+// Unsubscribe
+subscription();
 ```
 
 ## API
 * **Types:**
-  * [`NetInfoData`](README.md#netinfodata)
-  * [`NetInfoType`](README.md#netinfotype)
-  * [`NetInfoEffectiveType`](README.md#netinfoeffectivetype)
+  * [`NetInfoState`](README.md#netinfostate)
+  * [`NetInfoStateType`](README.md#netinfostatetype)
+  * [`NetInfoCellularGeneration`](README.md#netinfocellulargeneration)
 * **Methods:**
-  * [`getConnectionInfo()`](README.md#getconnectioninfo)
+  * [`fetch()`](README.md#fetch)
   * [`addEventListener()`](README.md#addeventlistener)
-  * [`isConnected.fetch()`](README.md#isconnectedfetch)
-  * [`isConnected.addEventListener()`](README.md#isconnectedaddeventlistener)
-  * [`isConnectionExpensive()`](README.md#isconnectionexpensive)
 
 ### Types
-#### `NetInfoData`
+
+#### `NetInfoState`
 Describes the current state of the network. It is an object with these properties:
 
-| Property        | Platform     | Type                                                     | Description                                                                                        |
-| --------------- | ------------ | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `type`          | Android, iOS | [`NetInfoType`](README.md#netinfotype)                   | The type of the current connection.                                                                |
-| `effectiveType` | Android, iOS | [`NetInfoEffectiveType`](README.md#netinfoeffectivetype) | The type of cellular connection (eg. 3g, 4g, etc.). Will be `unknown` unless `type` is `cellular`. |
+| Property        | Type                                             | Description                                                                                        |
+| --------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| `type`          | [`NetInfoStateType`](README.md#netinfostatetype) | The type of the current connection.                                                                |
+| `isConnected`   | `boolean`                                        | If there is an active network connection. Note that this DOES NOT mean that internet is reachable. |
+| `details`       |                                                  | The value depends on the `type` value. See below.                                                  |
 
-#### `NetInfoType`
+The `details` value depends on the `type` value.
+
+##### `type` is `none` or `unknown`
+
+`details` is `null`.
+
+##### `type` is `wifi`, `blueeooth`, `ethernet`, or `wimax`
+
+`details` has these properties:
+
+| Property                | Type      | Description                                                                                           |
+| ----------------------- | --------- | ----------------------------------------------------------------------------------------------------- |
+| `isConnectionExpensive` | `boolean` | If the network connection is considered "expensive". This could be in either energy or monetry terms. |
+
+##### `type` is `cellular`
+
+`details` has these properties:
+
+| Property                | Type                                                               | Description                                                                                                           |
+| ----------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `isConnectionExpensive` | `boolean`                                                          | If the network connection is considered "expensive". This could be in either energy or monetry terms.                 |
+| `cellularGeneration`    | [`NetInfoCellularGeneration`](README.md#netinfocellulargeneration) | The generation of the cell network the user is connected to. This can give an indication of speed, but no guarantees. |
+
+#### `NetInfoStateType`
 Describes the current type of network connection. It is an enum with these possible values:
 
 | Value       | Platform     | Description                                         |
@@ -159,111 +179,48 @@ Describes the current type of network connection. It is an enum with these possi
 | `ethernet`  | Android      | The active network over a wired ethernet connection |
 | `wimax`     | Android      | The active network over a WiMax connection          |
 
-#### `NetInfoEffectiveType`
-Describes the current type of the `cellular` connection. It is an enum with these possible values:
+#### `NetInfoCellularGeneration`
+Describes the current generation of the `cellular` connection. It is an enum with these possible values:
 
-| Value     | Platform     | Description                                                                                                              |
-| --------- | ------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| `unknown` | Android, iOS | Either we are not currently connected to a cellular network or type could not be determined                              |
-| `2g`      | Android, iOS | We are currently connected to a 2G cellular network. Includes CDMA, EDGE, GPRS, and IDEN type connections                |
-| `3g`      | Android, iOS | We are currently connected to a 3G cellular network. Includes EHRPD, EVDO, HSPA, HSUPA, HSDPA, and UTMS type connections |
-| `4g`      | Android, iOS | We are currently connected to a 4G cellular network. Includes HSPAP and LTE type connections                             |
+| Value     | Description                                                                                                              |
+| --------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `unknown` | Either we are not currently connected to a cellular network or type could not be determined                              |
+| `2g`      | We are currently connected to a 2G cellular network. Includes CDMA, EDGE, GPRS, and IDEN type connections                |
+| `3g`      | We are currently connected to a 3G cellular network. Includes EHRPD, EVDO, HSPA, HSUPA, HSDPA, and UTMS type connections |
+| `4g`      | We are currently connected to a 4G cellular network. Includes HSPAP and LTE type connections                             |
 
 ### Methods
 
-#### `getConnectionInfo()`
-**Platforms:** Android, iOS
+#### `fetch()`
 
-Returns a `Promise` that resolves to a [`NetInfoData`](README.md#netinfodata) object.
+Returns a `Promise` that resolves to a [`NetInfoState`](README.md#netinfostate) object.
 
 **Example:**
 ```javascript
-NetInfo.getConnectionInfo().then(data => {
-  console.log("Connection type", data.type);
-  console.log("Connection effective type", data.effectiveType);
+NetInfo.fetch().then(state => {
+  console.log("Connection type", state.type);
+  console.log("Is connected?", state.isConnected);
 });
 ```
 
 #### `addEventListener()`
-**Platforms:** Android, iOS
 
-Subscribe to connection information. The callback is called a paramter of type [`NetInfoData`](README.md#netinfodata) whenever the connection state changes. Your listener will be called with the latest information soon after you subscribe and then with any subsiquent changes afterwards. Due to platform differences, you should not assume that the listener is called in the same way across devices or platforms.
+Subscribe to connection information. The callback is called a paramter of type [`NetInfoState`](README.md#netinfostate) whenever the connection state changes. Your listener will be called with the latest information soon after you subscribe and then with any subsiquent changes afterwards. Due to platform differences, you should not assume that the listener is called in the same way across devices or platforms.
 
-| Parameter   | Type                                                        | Description                                                             |
-| ----------- | ----------------------------------------------------------- | ----------------------------------------------------------------------- |
-| `eventName` | `connectionChange`                                          | The event name is always `connectionChange`                             |
-| `listener`  | `(data: `[`NetInfoData`](README.md#netinfodata))` => void` | The listener which will be called whenever the connection state changes |
+| Parameter   | Type                                                          | Description                                                             |
+| ----------- | ------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `listener`  | `(state: `[`NetInfoState`](README.md#netinfostate))` => void` | The listener which will be called whenever the connection state changes |
 
 **Example:**
 ```javascript
-const listener = data => {
-  console.log("Connection type", data.type);
-  console.log("Connection effective type", data.effectiveType);
-};
-
 // Subscribe
-const subscription = NetInfo.addEventListener('connectionChange', listener);
-
-// Unsubscribe through remove
-subscription.remove();
-// Or, unsubscribe through event name
-NetInfo.removeEventListener('connectionChange', listener);
-```
-
-#### `isConnected.fetch()`
-**Platforms:** Android, iOS
-
-Returns a `Promise` that resolves to a `boolean` which says if there is an active connection.
-
-*Note: This only says if a device has an active connection, not that it is able to reach the internet.*
-
-Getting the connection status once:
-
-**Example:**
-```javascript
-NetInfo.isConnected.fetch().then(isConnected => {
-  console.log("Is connected", isConnected);
+const subscription = NetInfo.addEventListener(state => {
+  console.log("Connection type", state.type);
+  console.log("Is connected?", state.isConnected);
 });
-```
 
-#### `isConnected.addEventListener()`
-**Platforms:** Android, iOS
-
-Calls the listener with a `boolean` parameter whenever the connection state change which says if there is an active connection. Your listener will be called with the latest information soon after you subscribe and then with any subsiquent changes afterwards. Due to platform differences, you should not assume that the listener is called in the same way across devices or platforms.
-
-*Note: This only says if a device has an active connection, not that it is able to reach the internet.*
-
-| Parameter   | Type                              | Description                                                             |
-| ----------- | --------------------------------- | ----------------------------------------------------------------------- |
-| `eventName` | `connectionChange`                | The event name is always `connectionChange`                             |
-| `listener`  | `(isConnection: boolean) => void` | The listener which will be called whenever the connection state changes |
-
-**Example:**
-```javascript
-const listener = isConnected => {
-  console.log("Is connected", isConnected);
-};
-
-// Subscribe
-const subscription = NetInfo.isConnected.addEventListener('connectionChange', listener);
-
-// Unsubscribe through remove
+// Unsubscribe
 subscription.remove();
-
-// Unsubscribe through event name
-NetInfo.isConnected.removeEventListener('connectionChange', listener);
-```
-
-#### `isConnectionExpensive()`
-**Platforms:** Android
-
-Returns a `Promise` which resolves to a `boolean` which says if the current active connection is metered or not. A network is classified as metered when the user is sensitive to heavy data usage on that connection due to monetary costs, data limitations, or battery/performance issues.
-
-**Example:**
-```javascript
-NetInfo.isConnectionExpensive().then(isConnectionExpensive => {
-  console.log("Is connection expensive", isConnectionExpensive);
-});
 ```
 
 ## Known issues with the iOS simulator
