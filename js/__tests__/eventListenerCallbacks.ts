@@ -7,9 +7,9 @@
  * @format
  */
 
-import NetInfo from '../../index';
-import NativeInterface from '../../internal/nativeInterface';
-import DeprecatedSubscriptions from '../../internal/deprecatedSubscriptions';
+import NetInfo from '../index';
+import NativeInterface from '../internal/nativeInterface';
+import Subscriptions from '../internal/subscriptions';
 
 type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
 /// @ts-ignore
@@ -17,10 +17,10 @@ const MockNativeInterface: JestMockNativeInterface = NativeInterface;
 
 const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
 
-describe('Deprecated', () => {
+describe('react-native-community/netinfo', () => {
   describe('Event listener callbacks', () => {
     beforeEach(() => {
-      DeprecatedSubscriptions.clear();
+      Subscriptions.clear();
 
       MockNativeInterface.getCurrentState.mockResolvedValue({
         type: 'cellular',
@@ -34,7 +34,7 @@ describe('Deprecated', () => {
 
     it('should call the listener on listening', done => {
       const listener = jest.fn();
-      NetInfo.addEventListener('connectionChange', listener);
+      NetInfo.addEventListener(listener);
 
       setImmediate(() => {
         expect(listener).toBeCalled();
@@ -45,8 +45,8 @@ describe('Deprecated', () => {
     it('should call the listener on listening with multiple listeners', done => {
       const listener1 = jest.fn();
       const listener2 = jest.fn();
-      NetInfo.addEventListener('connectionChange', listener1);
-      NetInfo.addEventListener('connectionChange', listener2);
+      NetInfo.addEventListener(listener1);
+      NetInfo.addEventListener(listener2);
 
       setImmediate(() => {
         expect(listener1).toBeCalled();
@@ -57,29 +57,30 @@ describe('Deprecated', () => {
 
     it('should call the listener when the native event is emmitted', () => {
       const listener = jest.fn();
-      NetInfo.addEventListener('connectionChange', listener);
+      NetInfo.addEventListener(listener);
 
       const expectedConnectionType = 'wifi';
       const expectedEffectiveConnectionType = 'unknown';
-
-      NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
+      const expectedConnectionInfo = {
         type: expectedConnectionType,
         isConnected: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: expectedEffectiveConnectionType,
         },
-      });
+      };
 
-      expect(listener).toBeCalledWith({
-        type: expectedConnectionType,
-        effectiveType: expectedEffectiveConnectionType,
-      });
+      NativeInterface.eventEmitter.emit(
+        DEVICE_CONNECTIVITY_EVENT,
+        expectedConnectionInfo,
+      );
+
+      expect(listener).toBeCalledWith(expectedConnectionInfo);
     });
 
     it('should call the listener multiple times when multiple native events are emmitted', () => {
       const listener = jest.fn();
-      NetInfo.addEventListener('connectionChange', listener);
+      NetInfo.addEventListener(listener);
 
       NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
         type: 'cellular',
@@ -105,34 +106,34 @@ describe('Deprecated', () => {
     it('should call all listeners when the native event is emmitted', () => {
       const listener1 = jest.fn();
       const listener2 = jest.fn();
-      NetInfo.addEventListener('connectionChange', listener1);
-      NetInfo.addEventListener('connectionChange', listener2);
+      NetInfo.addEventListener(listener1);
+      NetInfo.addEventListener(listener2);
 
       const expectedConnectionType = 'wifi';
       const expectedEffectiveConnectionType = 'unknown';
 
-      NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
+      const expectedConnectionInfo = {
         type: expectedConnectionType,
         isConnected: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: expectedEffectiveConnectionType,
         },
-      });
-
-      const expectedResults = {
-        type: expectedConnectionType,
-        effectiveType: expectedEffectiveConnectionType,
       };
 
-      expect(listener1).toBeCalledWith(expectedResults);
-      expect(listener2).toBeCalledWith(expectedResults);
+      NativeInterface.eventEmitter.emit(
+        DEVICE_CONNECTIVITY_EVENT,
+        expectedConnectionInfo,
+      );
+
+      expect(listener1).toBeCalledWith(expectedConnectionInfo);
+      expect(listener2).toBeCalledWith(expectedConnectionInfo);
     });
 
     it('should not call the listener after being removed', () => {
       const listener = jest.fn();
-      NetInfo.addEventListener('connectionChange', listener);
-      NetInfo.removeEventListener('connectionChange', listener);
+      const unsubscribe = NetInfo.addEventListener(listener);
+      unsubscribe();
 
       // Clear the stats from the call on listen
       listener.mockClear();
@@ -152,10 +153,10 @@ describe('Deprecated', () => {
     it('should call the remaining listeners when one has been removed', () => {
       const listener1 = jest.fn();
       const listener2 = jest.fn();
-      NetInfo.addEventListener('connectionChange', listener1);
-      NetInfo.addEventListener('connectionChange', listener2);
+      const unsubscribe1 = NetInfo.addEventListener(listener1);
+      NetInfo.addEventListener(listener2);
 
-      NetInfo.removeEventListener('connectionChange', listener1);
+      unsubscribe1();
 
       // Clear the stats from the call on listen
       listener1.mockClear();
@@ -163,20 +164,22 @@ describe('Deprecated', () => {
       const expectedConnectionType = 'wifi';
       const expectedEffectiveConnectionType = 'unknown';
 
-      NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
+      const expectedConnectionInfo = {
         type: expectedConnectionType,
         isConnected: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: expectedEffectiveConnectionType,
         },
-      });
+      };
+
+      NativeInterface.eventEmitter.emit(
+        DEVICE_CONNECTIVITY_EVENT,
+        expectedConnectionInfo,
+      );
 
       expect(listener1).not.toBeCalled();
-      expect(listener2).toBeCalledWith({
-        type: expectedConnectionType,
-        effectiveType: expectedEffectiveConnectionType,
-      });
+      expect(listener2).toBeCalledWith(expectedConnectionInfo);
     });
   });
 });
