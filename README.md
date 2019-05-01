@@ -205,7 +205,7 @@ NetInfo.fetch().then(state => {
 
 #### `addEventListener()`
 
-Subscribe to connection information. The callback is called a paramter of type [`NetInfoState`](README.md#netinfostate) whenever the connection state changes. Your listener will be called with the latest information soon after you subscribe and then with any subsiquent changes afterwards. Due to platform differences, you should not assume that the listener is called in the same way across devices or platforms.
+Subscribe to connection information. The callback is called a paramter of type [`NetInfoState`](README.md#netinfostate) whenever the connection state changes. Your listener will be called with the latest information soon after you subscribe and then with any subsequent changes afterwards. Due to platform differences, you should not assume that the listener is called in the same way across devices or platforms.
 
 | Parameter   | Type                                                          | Description                                                             |
 | ----------- | ------------------------------------------------------------- | ----------------------------------------------------------------------- |

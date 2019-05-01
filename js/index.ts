@@ -23,25 +23,55 @@ const _isConnectedListeners = new Map<
   Types.NetInfoChangeHandler
 >();
 
+/**
+ * Returns a `Promise` that resolves to a `NetInfoState` object.
+ *
+ * @returns A Promise which contains the current connection state.
+ */
 export function fetch(): Promise<Types.NetInfoState> {
   return NativeInterface.getCurrentState();
 }
 
+/**
+ * Subscribe to connection information. The callback is called a paramter of type
+ * [`NetInfoState`](README.md#netinfostate) whenever the connection state changes. Your listener
+ * will be called with the latest information soon after you subscribe and then with any
+ * subsequent changes afterwards. Due to platform differences, you should not assume that the
+ * listener is called in the same way across devices or platforms.
+ *
+ * @param listener The listener which is called when the network state changes.
+ *
+ * @returns An ofunction which can be called to unsubscribe.
+ */
 export function addEventListener(
-  handlerOrType: Types.NetInfoChangeHandler,
+  listener: Types.NetInfoChangeHandler,
 ): Types.NetInfoSubscription;
+
+/**
+ * Deprecated network state listener. You should remove the event name and change you handler to
+ * use the new state shape.
+ *
+ * @deprecated
+ *
+ * @param type The vent type.
+ * @param deprecatedHandler The listener.
+ *
+ * @returns An oject with a remove function which can be called to unsubscribe.
+ */
 export function addEventListener(
-  handlerOrType: string,
+  type: string,
   deprecatedHandler: DeprecatedTypes.ChangeHandler,
 ): DeprecatedTypes.Subscription;
+
+// Implementation of the overloaded methods above
 export function addEventListener(
-  handlerOrType: Types.NetInfoChangeHandler | string,
+  listenerOrType: Types.NetInfoChangeHandler | string,
   deprecatedHandler: DeprecatedTypes.ChangeHandler | undefined = undefined,
 ): Types.NetInfoSubscription | DeprecatedTypes.Subscription {
-  if (typeof handlerOrType === 'string') {
+  if (typeof listenerOrType === 'string') {
     DeprecatedUtils.warnOnce();
 
-    if (handlerOrType === DEPRECATED_CHANGE_EVENT_NAME && deprecatedHandler) {
+    if (listenerOrType === DEPRECATED_CHANGE_EVENT_NAME && deprecatedHandler) {
       DeprecatedSubscriptions.add(deprecatedHandler);
       return {
         remove: (): void => {
@@ -54,14 +84,19 @@ export function addEventListener(
       };
     }
   } else {
-    const handler = handlerOrType;
-    Subscriptions.add(handler);
+    const listener = listenerOrType;
+    Subscriptions.add(listener);
     return (): void => {
-      Subscriptions.remove(handler);
+      Subscriptions.remove(listener);
     };
   }
 }
 
+/**
+ * A React Hook which updates when the connection state changes.
+ *
+ * @returns The connection state.
+ */
 export function useNetInfo(): Types.NetInfoState {
   const [netInfo, setNetInfo] = useState<Types.NetInfoState>({
     type: 'unknown',
@@ -76,6 +111,14 @@ export function useNetInfo(): Types.NetInfoState {
   return netInfo;
 }
 
+/**
+ * Deprecated method to remove the listener. You should upgrade to the new API.
+ *
+ * @deprecated
+ *
+ * @param type The event type.
+ * @param handler The event listener.
+ */
 export function removeEventListener(
   type: string,
   handler: DeprecatedTypes.ChangeHandler,
@@ -87,18 +130,37 @@ export function removeEventListener(
   }
 }
 
+/**
+ * Deprecated method to get the current state. You should upgrade to the new `fetch` method and
+ * handle the new state type.
+ *
+ * @deprecated
+ */
 export function getConnectionInfo(): Promise<DeprecatedTypes.NetInfoData> {
   DeprecatedUtils.warnOnce();
   return NativeInterface.getCurrentState().then(DeprecatedUtils.convertState);
 }
 
+/**
+ * Deprecated method to tell if the current connection is "expensive". Only available on iOS. You
+ * should now call the `fetch` method and look at the `details.isConnectionExpensive` property.
+ *
+ * @deprecated
+ */
 export function isConnectionExpensive(): Promise<boolean> {
+  DeprecatedUtils.warnOnce();
   return NativeInterface.getCurrentState().then(
     DeprecatedUtils.isConnectionExpensive,
   );
 }
 
 export const isConnected = {
+  /**
+   * Deprecated method to listen for changes to the connected boolean. You should now use the
+   * normal `addEventListener` method and look at the `isConnected` property.
+   *
+   * @deprecated
+   */
   addEventListener: (
     eventName: string,
     handler: DeprecatedTypes.IsConnectedHandler,
@@ -121,6 +183,12 @@ export const isConnected = {
     };
   },
 
+  /**
+   * Deprecated method to stop listening for changes to the connected boolean. You should now use
+   * the normal `addEventListener` method and look at the `isConnected` property.
+   *
+   * @deprecated
+   */
   removeEventListener: (
     _eventName: string,
     handler: DeprecatedTypes.IsConnectedHandler,
@@ -130,6 +198,12 @@ export const isConnected = {
     _isConnectedListeners.delete(handler);
   },
 
+  /**
+   * Deprecated method to get the current is connected boolean. You should now use the normal
+   * `fetch` method and look at the `isConnected` property.
+   *
+   * @deprecated
+   */
   fetch: (): Promise<boolean> => {
     return NativeInterface.getCurrentState().then(DeprecatedUtils.isConnected);
   },
