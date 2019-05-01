@@ -7,7 +7,6 @@
 
 package com.reactnativecommunity.netinfo;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -33,10 +32,9 @@ abstract class ConnectivityReceiver {
 
   // Based on the EffectiveConnectionType enum described in the W3C Network Information API spec
   // (https://wicg.github.io/netinfo/).
-  static final String EFFECTIVE_CONNECTION_TYPE_UNKNOWN = "unknown";
-  static final String EFFECTIVE_CONNECTION_TYPE_2G = "2g";
-  static final String EFFECTIVE_CONNECTION_TYPE_3G = "3g";
-  static final String EFFECTIVE_CONNECTION_TYPE_4G = "4g";
+  static final String CELLULAR_GENERATION_2G = "2g";
+  static final String CELLULAR_GENERATION_3G = "3g";
+  static final String CELLULAR_GENERATION_4G = "4g";
 
 
   static final String MISSING_PERMISSION_MESSAGE =
@@ -50,7 +48,7 @@ abstract class ConnectivityReceiver {
 
   private boolean mNoNetworkPermission = false;
   private String mConnectionType = CONNECTION_TYPE_UNKNOWN;
-  private String mEffectiveConnectionType = EFFECTIVE_CONNECTION_TYPE_UNKNOWN;
+  private String mCellularGeneration = null;
 
   ConnectivityReceiver(ReactApplicationContext reactContext) {
     mReactContext = reactContext;
@@ -83,7 +81,7 @@ abstract class ConnectivityReceiver {
 
   String getEffectiveConnectionType(NetworkInfo networkInfo) {
     if (networkInfo == null) {
-      return EFFECTIVE_CONNECTION_TYPE_UNKNOWN;
+      return null;
     }
 
     switch (networkInfo.getSubtype()) {
@@ -92,7 +90,7 @@ abstract class ConnectivityReceiver {
       case TelephonyManager.NETWORK_TYPE_EDGE:
       case TelephonyManager.NETWORK_TYPE_GPRS:
       case TelephonyManager.NETWORK_TYPE_IDEN:
-        return EFFECTIVE_CONNECTION_TYPE_2G;
+        return CELLULAR_GENERATION_2G;
       case TelephonyManager.NETWORK_TYPE_EHRPD:
       case TelephonyManager.NETWORK_TYPE_EVDO_0:
       case TelephonyManager.NETWORK_TYPE_EVDO_A:
@@ -101,23 +99,23 @@ abstract class ConnectivityReceiver {
       case TelephonyManager.NETWORK_TYPE_HSPA:
       case TelephonyManager.NETWORK_TYPE_HSUPA:
       case TelephonyManager.NETWORK_TYPE_UMTS:
-        return EFFECTIVE_CONNECTION_TYPE_3G;
+        return CELLULAR_GENERATION_3G;
       case TelephonyManager.NETWORK_TYPE_HSPAP:
       case TelephonyManager.NETWORK_TYPE_LTE:
-        return EFFECTIVE_CONNECTION_TYPE_4G;
+        return CELLULAR_GENERATION_4G;
       case TelephonyManager.NETWORK_TYPE_UNKNOWN:
       default:
-        return EFFECTIVE_CONNECTION_TYPE_UNKNOWN;
+        return null;
     }
   }
 
-  void updateConnectivity(String connectionType, String effectiveConnectionType) {
+  void updateConnectivity(String connectionType, String cellularGeneration) {
     // It is possible to get multiple broadcasts for the same connectivity change, so we only
     // update and send an event when the connectivity has indeed changed.
     if (!connectionType.equalsIgnoreCase(mConnectionType) ||
-      !effectiveConnectionType.equalsIgnoreCase(mEffectiveConnectionType)) {
+      !cellularGeneration.equalsIgnoreCase(mCellularGeneration)) {
       mConnectionType = connectionType;
-      mEffectiveConnectionType = effectiveConnectionType;
+      mCellularGeneration = cellularGeneration;
       sendConnectivityChangedEvent();
     }
   }
@@ -146,7 +144,7 @@ abstract class ConnectivityReceiver {
       details.putBoolean("isConnectionExpensive", isConnectionExpensive);
 
       if (mConnectionType.equals(CONNECTION_TYPE_CELLULAR)) {
-        details.putString("cellularGeneration", mEffectiveConnectionType);
+        details.putString("cellularGeneration", mCellularGeneration);
       }
     }
     event.putMap("details", details);
