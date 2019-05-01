@@ -58,19 +58,17 @@ export function isConnected(input: Types.NetInfoState): boolean {
 
 /**
  * Prints a warning message once per session.
- *
- * @param key The key used to ensure the message is printed once.
- *            This should be unique to the callsite.
- * @param message The message to print.
  */
-const warnedKeys: {[string: string]: boolean} = {};
-export function warnOnce(key: string, message: string): void {
-  if (warnedKeys[key]) {
+let warned = false;
+export function warnOnce(): void {
+  if (warned) {
     return;
   }
 
-  console.warn(message);
-  warnedKeys[key] = true;
+  console.warn(
+    'Warning: RNCNetInfo - You are using the deprecated API. It will still work, but you must upgrade to the new API to receive the new features. The old API will be removed in the future',
+  );
+  warned = true;
 }
 
 export default {

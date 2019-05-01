@@ -38,6 +38,8 @@ export function addEventListener(
   deprecatedHandler: DeprecatedTypes.ChangeHandler | undefined = undefined,
 ): Types.NetInfoSubscription | DeprecatedTypes.Subscription {
   if (typeof handlerOrType === 'string') {
+    DeprecatedUtils.warnOnce();
+
     if (handlerOrType === DEPRECATED_CHANGE_EVENT_NAME && deprecatedHandler) {
       DeprecatedSubscriptions.add(deprecatedHandler);
       return {
@@ -63,12 +65,15 @@ export function removeEventListener(
   type: string,
   handler: DeprecatedTypes.ChangeHandler,
 ): void {
+  DeprecatedUtils.warnOnce();
+
   if (type === DEPRECATED_CHANGE_EVENT_NAME) {
     DeprecatedSubscriptions.remove(handler);
   }
 }
 
 export function getConnectionInfo(): Promise<DeprecatedTypes.NetInfoData> {
+  DeprecatedUtils.warnOnce();
   return NativeInterface.getCurrentState().then(DeprecatedUtils.convertState);
 }
 

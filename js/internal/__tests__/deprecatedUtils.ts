@@ -200,10 +200,12 @@ describe('Deprecated utils', () => {
     it('logs warning messages to the console exactly once', () => {
       console.warn = jest.fn();
 
-      warnOnce('test-message', 'This is a log message');
-      warnOnce('test-message', 'This is a second log message');
+      warnOnce();
+      warnOnce();
 
-      expect(console.warn).toHaveBeenCalledWith('This is a log message');
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('Warning:'),
+      );
       expect(console.warn).toHaveBeenCalledTimes(1);
     });
   });
