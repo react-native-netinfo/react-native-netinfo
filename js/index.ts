@@ -138,10 +138,28 @@ export const isConnected = {
 export * from './internal/types';
 export * from './internal/deprecatedTypes';
 
+export const StateType = {
+  unknown: 'unknown',
+  none: 'none',
+  cellular: 'cellular',
+  wifi: 'wifi',
+  bluetooth: 'bluetooth',
+  ethernet: 'ethernet',
+  wimax: 'wimax',
+};
+
+export const CellularGeneration = {
+  '2g': '2g',
+  '3g': '3g',
+  '4g': '4g',
+};
+
 export default {
   fetch,
   addEventListener,
   useNetInfo,
+  StateType,
+  CellularGeneration,
   removeEventListener,
   getConnectionInfo,
   isConnectionExpensive,

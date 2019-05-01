@@ -7,6 +7,15 @@
  * @format
  */
 
+export type NetInfoStateType =
+  | 'unknown'
+  | 'none'
+  | 'cellular'
+  | 'wifi'
+  | 'bluetooth'
+  | 'ethernet'
+  | 'wimax';
+
 export type NetInfoCellularGeneration = '2g' | '3g' | '4g';
 
 export interface NetInfoConnectedDetails {
