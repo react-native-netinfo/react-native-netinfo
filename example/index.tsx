@@ -21,8 +21,8 @@ import {
 
 import ConnectionInfoSubscription from './ConnectionInfoSubscription';
 import ConnectionInfoCurrent from './ConnectionInfoCurrent';
+import NetInfoHook from './NetInfoHook';
 import IsConnected from './IsConnected';
-import IsConnectionExpensive from './IsConnectionExpensive';
 
 // Examples which show the user how to correctly use the library
 interface Example {
@@ -47,6 +47,15 @@ const EXAMPLES: Example[] = [
     description: 'Asynchronously load and observe connectionInfo',
     render() {
       return <ConnectionInfoCurrent />;
+    },
+  },
+  {
+    id: 'currentInfoHook',
+    title: 'Current Info Hook',
+    description:
+      'Asynchronously load and observe connectionInfo using a React Hook',
+    render() {
+      return <NetInfoHook />;
     },
   },
   {

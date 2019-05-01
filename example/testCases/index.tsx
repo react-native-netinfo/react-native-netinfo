@@ -14,6 +14,7 @@ import DeprecatedMultipleGetConnectionInfo from './DeprecatedMultipleGetConnecti
 import DeprecatedMultipleIsConnectedFetch from './DeprecatedMultipleIsConnectedFetch';
 import EmitOnListen from './EmitOnListen';
 import Fetch from './Fetch';
+import HookInitialValue from './HookInitialValue';
 
 export default [
   {
@@ -49,11 +50,19 @@ export default [
     },
   },
   {
-    id: 'Fetch',
+    id: 'fetch',
     title: 'NetInfo.fetch',
     description: 'Should return when called',
     render() {
       return <Fetch />;
+    },
+  },
+  {
+    id: 'hookInitialValue',
+    title: 'useNetInfo initial value',
+    description: 'Should have an initial value for the hook',
+    render() {
+      return <HookInitialValue />;
     },
   },
 ];

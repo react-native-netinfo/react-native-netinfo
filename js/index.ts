@@ -7,6 +7,7 @@
  * @format
  */
 
+import {useState, useEffect} from 'react';
 import DeprecatedUtils from './internal/deprecatedUtils';
 import DeprecatedSubscriptions from './internal/deprecatedSubscriptions';
 import * as DeprecatedTypes from './internal/deprecatedTypes';
@@ -59,6 +60,20 @@ export function addEventListener(
       Subscriptions.remove(handler);
     };
   }
+}
+
+export function useNetInfo(): Types.NetInfoState {
+  const [netInfo, setNetInfo] = useState<Types.NetInfoState>({
+    type: 'unknown',
+    isConnected: false,
+    details: null,
+  });
+
+  useEffect((): (() => void) => {
+    return addEventListener(setNetInfo);
+  }, []);
+
+  return netInfo;
 }
 
 export function removeEventListener(
@@ -126,6 +141,7 @@ export * from './internal/deprecatedTypes';
 export default {
   fetch,
   addEventListener,
+  useNetInfo,
   removeEventListener,
   getConnectionInfo,
   isConnectionExpensive,
