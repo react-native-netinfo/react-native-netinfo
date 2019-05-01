@@ -5,16 +5,19 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow
  */
 
-import React from 'react';
+import * as React from 'react';
 import {Text, View} from 'react-native';
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo, {NetInfoData} from '../js';
+
+interface State {
+  connectionInfoHistory: NetInfoData[];
+}
 
 export default class ConnectionInfoSubscription extends React.Component<
   {},
-  $FlowFixMe,
+  State
 > {
   state = {
     connectionInfoHistory: [],
@@ -34,12 +37,10 @@ export default class ConnectionInfoSubscription extends React.Component<
     );
   }
 
-  _handleConnectionInfoChange = connectionInfo => {
-    const connectionInfoHistory = this.state.connectionInfoHistory.slice();
-    connectionInfoHistory.push(connectionInfo);
-    this.setState({
-      connectionInfoHistory,
-    });
+  _handleConnectionInfoChange = (connectionInfo: NetInfoData) => {
+    this.setState(({connectionInfoHistory}) => ({
+      connectionInfoHistory: [...connectionInfoHistory, connectionInfo],
+    }));
   };
 
   render() {

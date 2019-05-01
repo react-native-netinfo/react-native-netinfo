@@ -5,20 +5,19 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow
  */
 
-import React, {Component} from 'react';
+import * as React from 'react';
 import {Button, Text, View} from 'react-native';
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo from '../../js';
 
-type State = {
-  results: boolean[],
-};
+interface State {
+  results: boolean[];
+}
 
 const TEST_CASE_COUNT = 5;
 
-export default class MultipleIsConnected extends Component<{}, State> {
+export default class MultipleIsConnected extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props);
 
@@ -32,7 +31,7 @@ export default class MultipleIsConnected extends Component<{}, State> {
 
   _onPress = () => {
     for (let i = 0; i < TEST_CASE_COUNT; i++) {
-      NetInfo.isConnected.fetch().then(isConnected => {
+      NetInfo.isConnected.fetch().then(() => {
         this.setState(state => {
           const results = state.results.map((result, index) =>
             index === i ? true : result,

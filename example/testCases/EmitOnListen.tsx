@@ -5,18 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow
  */
 
-import React, {Component} from 'react';
+import * as React from 'react';
 import {Button, Text, View} from 'react-native';
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo from '../../js';
 
-type State = {
-  triggered: boolean,
-};
+interface State {
+  triggered: boolean;
+}
 
-export default class MultipleIsConnected extends Component<{}, State> {
+export default class MultipleIsConnected extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props);
 
@@ -36,7 +35,7 @@ export default class MultipleIsConnected extends Component<{}, State> {
     NetInfo.addEventListener('connectionChange', this._handleConnectionChange);
   };
 
-  _handleConnectionChange = info => {
+  _handleConnectionChange = () => {
     this.setState({triggered: true});
   };
 

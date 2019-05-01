@@ -8,7 +8,7 @@
  * @flow
  */
 
-import React from 'react';
+import * as React from 'react';
 import {
   AppRegistry,
   Button,
@@ -23,10 +23,15 @@ import ConnectionInfoSubscription from './ConnectionInfoSubscription';
 import ConnectionInfoCurrent from './ConnectionInfoCurrent';
 import IsConnected from './IsConnected';
 import IsConnectionExpensive from './IsConnectionExpensive';
-import {name as appName} from './app.json';
 
 // Examples which show the user how to correctly use the library
-const EXAMPLES = [
+interface Example {
+  id: string;
+  title: string;
+  description: string;
+  render(): React.ReactNode;
+}
+const EXAMPLES: Example[] = [
   {
     id: 'isConnected',
     title: 'NetInfo.isConnected',
@@ -61,15 +66,47 @@ const EXAMPLES = [
   },
 ];
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F5FCFF',
+  },
+  sectionTitle: {
+    fontSize: 24,
+    marginHorizontal: 8,
+    marginTop: 24,
+  },
+  exampleContainer: {
+    padding: 16,
+    marginVertical: 4,
+    backgroundColor: '#FFF',
+    borderColor: '#EEE',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+  },
+  exampleTitle: {
+    fontSize: 18,
+  },
+  exampleDescription: {
+    color: '#333333',
+    marginBottom: 16,
+  },
+  exampleInnerContainer: {
+    borderColor: '#EEE',
+    borderTopWidth: 1,
+    paddingTop: 16,
+  },
+});
+
 // Test cases for the e2e tests. THESE ARE NOT EXAMPLES OF BEST PRACTICE
 import TEST_CASES from './testCases';
 
-type State = {
-  showExamples: boolean,
-};
+interface State {
+  showExamples: boolean;
+}
 
 class ExampleApp extends React.Component<{}, State> {
-  constructor(props) {
+  constructor(props: {}) {
     super(props);
 
     this.state = {
@@ -111,7 +148,7 @@ class ExampleApp extends React.Component<{}, State> {
     );
   }
 
-  _renderExample = example => {
+  _renderExample = (example: Example) => {
     return (
       <View
         testID={`example-${example.id}`}
@@ -125,36 +162,4 @@ class ExampleApp extends React.Component<{}, State> {
   };
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5FCFF',
-  },
-  sectionTitle: {
-    fontSize: 24,
-    marginHorizontal: 8,
-    marginTop: 24,
-  },
-  exampleContainer: {
-    padding: 16,
-    marginVertical: 4,
-    backgroundColor: '#FFF',
-    borderColor: '#EEE',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-  },
-  exampleTitle: {
-    fontSize: 18,
-  },
-  exampleDescription: {
-    color: '#333333',
-    marginBottom: 16,
-  },
-  exampleInnerContainer: {
-    borderColor: '#EEE',
-    borderTopWidth: 1,
-    paddingTop: 16,
-  },
-});
-
-AppRegistry.registerComponent(appName, () => ExampleApp);
+AppRegistry.registerComponent('NetInfoExample', () => ExampleApp);

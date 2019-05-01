@@ -5,23 +5,23 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow
  */
 
-import React from 'react';
+import * as React from 'react';
 import {Text, TouchableWithoutFeedback, View} from 'react-native';
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo from '../js';
 
-export default class IsConnectionExpensive extends React.Component<
-  {},
-  $FlowFixMe,
-> {
+interface State {
+  isConnectionExpensive: boolean | null;
+}
+
+export default class IsConnectionExpensive extends React.Component<{}, State> {
   state = {
     isConnectionExpensive: null,
   };
 
   _checkIfExpensive = () => {
-    NetInfo.isConnectionExpensive().then(isConnectionExpensive => {
+    NetInfo.isConnectionExpensive().then((isConnectionExpensive: boolean) => {
       this.setState({isConnectionExpensive});
     });
   };

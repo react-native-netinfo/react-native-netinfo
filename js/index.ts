@@ -116,6 +116,7 @@ export const isConnected = {
 };
 
 export * from './internal/types';
+export * from './internal/deprecatedTypes';
 
 export default {
   fetch,

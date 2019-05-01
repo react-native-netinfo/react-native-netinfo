@@ -5,14 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow
  */
 
-import React from 'react';
+import * as React from 'react';
 import {Text, View} from 'react-native';
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo from '../js';
 
-export default class IsConnected extends React.Component<{}, $FlowFixMe> {
+interface State {
+  isConnected: boolean | null;
+}
+
+export default class IsConnected extends React.Component<{}, State> {
   state = {
     isConnected: null,
   };
@@ -22,9 +25,6 @@ export default class IsConnected extends React.Component<{}, $FlowFixMe> {
       'connectionChange',
       this._handleConnectivityChange,
     );
-    NetInfo.isConnected.fetch().done(isConnected => {
-      this.setState({isConnected});
-    });
   }
 
   componentWillUnmount() {
@@ -34,7 +34,7 @@ export default class IsConnected extends React.Component<{}, $FlowFixMe> {
     );
   }
 
-  _handleConnectivityChange = isConnected => {
+  _handleConnectivityChange = (isConnected: boolean) => {
     this.setState({
       isConnected,
     });

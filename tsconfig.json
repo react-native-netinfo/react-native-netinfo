@@ -1,14 +1,13 @@
 {
-  "include": ["js/**/*.ts"],
+  "include": ["js/**/*.ts", "example/**/*.ts", "example/**/*.tsx"],
   "compilerOptions": {
     "target": "es6",
     "module": "es6",
     "strict": true,
     "downlevelIteration": true,
     "moduleResolution": "node",
-    "lib": ["es2015", "es2016", "esnext"]
+    "lib": ["es2015", "es2016", "esnext"],
+    "jsx": "react-native"
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

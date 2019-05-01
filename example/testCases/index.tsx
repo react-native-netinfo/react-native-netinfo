@@ -5,10 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow
  */
 
-import React from 'react';
+import * as React from 'react';
 
 import EmitOnListen from './EmitOnListen';
 import MultipleIsConnected from './MultipleIsConnected';

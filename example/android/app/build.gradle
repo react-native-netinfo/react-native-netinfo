@@ -73,7 +73,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "example/index.js",
+    entryFile: "example/index.tsx",
     root: "../../../"
 ]
 
