@@ -15,19 +15,19 @@ export interface NetInfoConnectedDetails {
 
 export interface NetInfoUnknownState {
   type: 'unknown';
-  isConnected: boolean;
+  isConnected: false;
   details: null;
 }
 
 export interface NetInfoNoConnectionState {
   type: 'none';
-  isConnected: boolean;
+  isConnected: false;
   details: null;
 }
 
 export interface NetInfoCellularState {
   type: 'cellular';
-  isConnected: boolean;
+  isConnected: true;
   details: NetInfoConnectedDetails & {
     cellularGeneration: NetInfoCellularGeneration | null;
   };
@@ -35,25 +35,25 @@ export interface NetInfoCellularState {
 
 export interface NetInfoWifiState {
   type: 'wifi';
-  isConnected: boolean;
+  isConnected: true;
   details: NetInfoConnectedDetails;
 }
 
 export interface NetInfoBluetoothState {
   type: 'bluetooth';
-  isConnected: boolean;
+  isConnected: true;
   details: NetInfoConnectedDetails;
 }
 
 export interface NetInfoEthernetState {
   type: 'ethernet';
-  isConnected: boolean;
+  isConnected: true;
   details: NetInfoConnectedDetails;
 }
 
 export interface NetInfoWimaxState {
   type: 'wimax';
-  isConnected: boolean;
+  isConnected: true;
   details: NetInfoConnectedDetails;
 }
 

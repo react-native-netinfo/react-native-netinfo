@@ -11,6 +11,11 @@ import {Platform} from 'react-native';
 import * as DeprecatedTypes from './deprecatedTypes';
 import * as Types from './types';
 
+/**
+ * Convert the NetInfoState to the deprecated NetInfoData type.
+ *
+ * @param input The current NetInfoState to convert.
+ */
 export function convertState(
   input: Types.NetInfoState,
 ): DeprecatedTypes.NetInfoData {
@@ -25,6 +30,11 @@ export function convertState(
   };
 }
 
+/**
+ * Decide the the given NetInfoState describes an expensive connection.
+ *
+ * @param input The current NetInfoState to decide if the connection is expensive.
+ */
 export function isConnectionExpensive(input: Types.NetInfoState): boolean {
   if (Platform.OS === 'android') {
     if (input.type !== 'none' && input.type !== 'unknown') {
@@ -37,12 +47,35 @@ export function isConnectionExpensive(input: Types.NetInfoState): boolean {
   }
 }
 
+/**
+ * Decide the the given NetInfoState describes an active connection.
+ *
+ * @param input The current NetInfoState to decide if the connection is active.
+ */
 export function isConnected(input: Types.NetInfoState): boolean {
   return input.isConnected;
+}
+
+/**
+ * Prints a warning message once per session.
+ *
+ * @param key The key used to ensure the message is printed once.
+ *            This should be unique to the callsite.
+ * @param message The message to print.
+ */
+const warnedKeys: {[string: string]: boolean} = {};
+export function warnOnce(key: string, message: string): void {
+  if (warnedKeys[key]) {
+    return;
+  }
+
+  console.warn(message);
+  warnedKeys[key] = true;
 }
 
 export default {
   convertState,
   isConnectionExpensive,
   isConnected,
+  warnOnce,
 };
