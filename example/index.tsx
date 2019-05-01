@@ -57,14 +57,6 @@ const EXAMPLES: Example[] = [
       return <ConnectionInfoSubscription />;
     },
   },
-  {
-    id: 'isConnectionExpensive',
-    title: 'NetInfo.isConnectionExpensive (Android)',
-    description: 'Asynchronously check isConnectionExpensive',
-    render() {
-      return <IsConnectionExpensive />;
-    },
-  },
 ];
 
 const styles = StyleSheet.create({

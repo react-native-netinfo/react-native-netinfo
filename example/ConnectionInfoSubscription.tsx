@@ -9,35 +9,33 @@
 
 import * as React from 'react';
 import {Text, View} from 'react-native';
-import NetInfo, {NetInfoData} from '../js';
+import NetInfo, {NetInfoState, NetInfoSubscription} from '../js';
 
 interface State {
-  connectionInfoHistory: NetInfoData[];
+  connectionInfoHistory: NetInfoState[];
 }
 
 export default class ConnectionInfoSubscription extends React.Component<
   {},
   State
 > {
+  _subscription: NetInfoSubscription | null = null;
+
   state = {
     connectionInfoHistory: [],
   };
 
   componentDidMount() {
-    NetInfo.addEventListener(
-      'connectionChange',
+    this._subscription = NetInfo.addEventListener(
       this._handleConnectionInfoChange,
     );
   }
 
   componentWillUnmount() {
-    NetInfo.removeEventListener(
-      'connectionChange',
-      this._handleConnectionInfoChange,
-    );
+    this._subscription && this._subscription();
   }
 
-  _handleConnectionInfoChange = (connectionInfo: NetInfoData) => {
+  _handleConnectionInfoChange = (connectionInfo: NetInfoState) => {
     this.setState(({connectionInfoHistory}) => ({
       connectionInfoHistory: [...connectionInfoHistory, connectionInfo],
     }));
