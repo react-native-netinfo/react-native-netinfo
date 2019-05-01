@@ -29,6 +29,7 @@ module.exports = {
       rules: {
         // Turn off rules which are useless and annoying for the example files files
         '@typescript-eslint/explicit-function-return-type': 'off',
+        'react-native/no-inline-styles': 'off',
       },
     },
     {

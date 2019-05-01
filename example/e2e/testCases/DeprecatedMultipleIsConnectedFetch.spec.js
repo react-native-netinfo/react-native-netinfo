@@ -6,13 +6,16 @@
  *
  * @format
  */
+/* global device, element, by */
 
-const {device, expect, element, by} = require('detox');
+const TEST_CASE_COUNT = 5;
 
-describe('EmitOnListen', () => {
+describe('DeprecatedMultipleIsConnectedFetch', () => {
   beforeEach(async () => {
     await device.reloadReactNative();
-    await device.openURL({url: 'netinfoexample://emitOnListen'});
+    await device.openURL({
+      url: 'netinfoexample://deprecatedMultipleIsConnectedFetch',
+    });
   });
 
   it('should have the correct elements to perform the test', async () => {
@@ -20,12 +23,18 @@ describe('EmitOnListen', () => {
     await expect(element(by.id('testButton'))).toExist();
   });
 
+  const testAllResultsAre = async value => {
+    for (let i = 0; i < TEST_CASE_COUNT; i++) {
+      await expect(element(by.id(`result${i}`))).toHaveLabel(value);
+    }
+  };
+
   it('should start with all failures', async () => {
-    await expect(element(by.id('result'))).toHaveLabel('fail');
+    await testAllResultsAre('fail');
   });
 
   it('should show all success after being tested', async () => {
     await element(by.id('testButton')).tap();
-    await expect(element(by.id('result'))).toHaveLabel('pass');
+    await testAllResultsAre('pass');
   });
 });

@@ -6,13 +6,12 @@
  *
  * @format
  */
+/* global device, element, by */
 
-const {device, expect, element, by} = require('detox');
-
-describe('EmitOnListen', () => {
+describe('deprecatedEmitOnListen', () => {
   beforeEach(async () => {
     await device.reloadReactNative();
-    await device.openURL({url: 'netinfoexample://emitOnListen'});
+    await device.openURL({url: 'netinfoexample://deprecatedEmitOnListen'});
   });
 
   it('should have the correct elements to perform the test', async () => {

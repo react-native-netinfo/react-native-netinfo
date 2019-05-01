@@ -17,7 +17,10 @@ interface State {
 
 const TEST_CASE_COUNT = 5;
 
-export default class MultipleIsConnected extends React.Component<{}, State> {
+export default class DeprecatedMultipleIsConnectedFetch extends React.Component<
+  {},
+  State
+> {
   constructor(props: {}) {
     super(props);
 
@@ -45,18 +48,12 @@ export default class MultipleIsConnected extends React.Component<{}, State> {
   render() {
     return (
       <View>
-        <Button
-          testID="multipleIsConnectedTestButton"
-          onPress={this._onPress}
-          title="Reproduce 🕷"
-        />
-        <View
-          testID="multipleIsConnectedResults"
-          style={{flexDirection: 'row'}}>
+        <Button testID="testButton" onPress={this._onPress} title="Trigger" />
+        <View testID="results" style={{flexDirection: 'row'}}>
           {this.state.results.map((result, index) => (
             <Text
               key={index}
-              testID={`multipleIsConnectedResult${index}`}
+              testID={`result${index}`}
               accessibilityLabel={result ? 'pass' : 'fail'}>
               {result ? '✅' : '❌'}
             </Text>

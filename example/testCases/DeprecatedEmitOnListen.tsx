@@ -9,15 +9,13 @@
 
 import * as React from 'react';
 import {Button, Text, View} from 'react-native';
-import NetInfo, {NetInfoSubscription} from '../../js';
+import NetInfo from '../../js';
 
 interface State {
   triggered: boolean;
 }
 
-export default class EmitOnListen extends React.Component<{}, State> {
-  _subscription: NetInfoSubscription | null = null;
-
+export default class DeprecatedEmitOnListen extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props);
 
@@ -27,11 +25,14 @@ export default class EmitOnListen extends React.Component<{}, State> {
   }
 
   componentWillUnmount() {
-    this._subscription && this._subscription();
+    NetInfo.removeEventListener(
+      'connectionChange',
+      this._handleConnectionChange,
+    );
   }
 
   _onPress = () => {
-    this._subscription = NetInfo.addEventListener(this._handleConnectionChange);
+    NetInfo.addEventListener('connectionChange', this._handleConnectionChange);
   };
 
   _handleConnectionChange = () => {

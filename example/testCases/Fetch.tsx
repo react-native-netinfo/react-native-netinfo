@@ -9,37 +9,28 @@
 
 import * as React from 'react';
 import {Button, Text, View} from 'react-native';
-import NetInfo, {NetInfoSubscription} from '../../js';
+import NetInfo, {NetInfoState} from '../../js';
 
 interface State {
-  triggered: boolean;
+  netInfoState: NetInfoState | null;
 }
 
-export default class EmitOnListen extends React.Component<{}, State> {
-  _subscription: NetInfoSubscription | null = null;
-
+export default class Fetch extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props);
 
     this.state = {
-      triggered: false,
+      netInfoState: null,
     };
   }
 
-  componentWillUnmount() {
-    this._subscription && this._subscription();
-  }
-
-  _onPress = () => {
-    this._subscription = NetInfo.addEventListener(this._handleConnectionChange);
-  };
-
-  _handleConnectionChange = () => {
-    this.setState({triggered: true});
+  _onPress = async () => {
+    const netInfoState = await NetInfo.fetch();
+    this.setState({netInfoState});
   };
 
   render() {
-    const {triggered} = this.state;
+    const {netInfoState} = this.state;
 
     return (
       <View>
@@ -47,8 +38,8 @@ export default class EmitOnListen extends React.Component<{}, State> {
         <View testID="results" style={{flexDirection: 'row'}}>
           <Text
             testID="result"
-            accessibilityLabel={triggered ? 'pass' : 'fail'}>
-            Triggered: {triggered ? '✅' : '❌'}
+            accessibilityLabel={netInfoState ? 'pass' : 'fail'}>
+            Triggered: {netInfoState ? '✅' : '❌'}
           </Text>
         </View>
       </View>

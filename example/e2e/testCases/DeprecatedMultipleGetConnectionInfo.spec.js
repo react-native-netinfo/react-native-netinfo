@@ -11,22 +11,22 @@ const {device, expect, element, by} = require('detox');
 
 const TEST_CASE_COUNT = 5;
 
-describe('NetInfo', () => {
+describe('DeprecatedMultipleGetConnectionInfo', () => {
   beforeEach(async () => {
     await device.reloadReactNative();
-    await device.openURL({url: 'netinfoexample://multipleIsConnected'});
+    await device.openURL({
+      url: 'netinfoexample://deprecatedMultipleGetConnectionInfo',
+    });
   });
 
   it('should have the correct elements to perform the test', async () => {
-    await expect(element(by.id('multipleIsConnectedResults'))).toExist();
-    await expect(element(by.id('multipleIsConnectedTestButton'))).toExist();
+    await expect(element(by.id('results'))).toExist();
+    await expect(element(by.id('testButton'))).toExist();
   });
 
   const testAllResultsAre = async value => {
     for (let i = 0; i < TEST_CASE_COUNT; i++) {
-      await expect(element(by.id(`multipleIsConnectedResult${i}`))).toHaveLabel(
-        value,
-      );
+      await expect(element(by.id(`result${i}`))).toHaveLabel(value);
     }
   };
 
@@ -35,7 +35,7 @@ describe('NetInfo', () => {
   });
 
   it('should show all success after being tested', async () => {
-    await element(by.id('multipleIsConnectedTestButton')).tap();
+    await element(by.id('testButton')).tap();
     await testAllResultsAre('pass');
   });
 });

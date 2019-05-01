@@ -16,10 +16,6 @@ describe('NetInfo', () => {
 
   it('should load example app with no errors and show all the examples by default', async () => {
     await expect(element(by.id('examplesTitle'))).toExist();
-    await expect(element(by.id('example-isConnected'))).toExist();
-    await expect(element(by.id('example-currentInfoSingle'))).toExist();
-    await expect(element(by.id('example-currentInfoHistory'))).toExist();
-    await expect(element(by.id('example-isConnectionExpensive'))).toExist();
   });
 
   it('should show the test case when opening a URL', async () => {
