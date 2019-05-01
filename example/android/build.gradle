@@ -5,7 +5,7 @@ buildscript {
     buildToolsVersion = "28.0.3"
     minSdkVersion = 18
     compileSdkVersion = 28
-    targetSdkVersion = 27
+    targetSdkVersion = 28
     supportLibVersion = "28.0.0"
 
     // e2e
@@ -16,7 +16,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.2.1'
+    classpath 'com.android.tools.build:gradle:3.3.1'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
     // NOTE: Do not place your application dependencies here; they belong
@@ -50,11 +50,6 @@ allprojects {
       url "$rootDir/../../node_modules/detox/Detox-android"
     }
   }
-}
-
-task wrapper(type: Wrapper) {
-  gradleVersion = '4.7'
-  distributionUrl = distributionUrl.replace("bin", "all")
 }
 
 subprojects {
