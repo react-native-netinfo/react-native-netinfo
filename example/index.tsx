@@ -11,7 +11,7 @@
 import * as React from 'react';
 import {
   AppRegistry,
-  Button,
+  Linking,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -31,6 +31,7 @@ interface Example {
   description: string;
   render(): React.ReactNode;
 }
+
 const EXAMPLES: Example[] = [
   {
     id: 'isConnected',
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
 import TEST_CASES from './testCases';
 
 interface State {
-  showExamples: boolean;
+  activeTestCase: Example | null;
 }
 
 class ExampleApp extends React.Component<{}, State> {
@@ -110,37 +111,63 @@ class ExampleApp extends React.Component<{}, State> {
     super(props);
 
     this.state = {
-      showExamples: true,
+      activeTestCase: null,
     };
   }
 
-  _toggleMode = () => {
-    this.setState(state => ({showExamples: !state.showExamples}));
+  componentDidMount() {
+    Linking.getInitialURL().then(this._handleOpenURLString);
+    Linking.addEventListener('url', this._handleOpenURL);
+  }
+
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this._handleOpenURL);
+  }
+
+  // Receives commands from the test runner when it opens the app with a given URL
+  // We use this to decide which test case to show
+  _handleOpenURL = ({url}: {url: string}) => {
+    this._handleOpenURLString(url);
+  };
+  _handleOpenURLString = (url: string | null) => {
+    if (!url) {
+      return;
+    }
+
+    const splitUrl = url.split('://');
+    const command = splitUrl.length === 2 ? splitUrl[1].toLowerCase() : null;
+
+    if (command !== 'clear') {
+      const foundTestCase = TEST_CASES.find(
+        tc => tc.id.toLowerCase() === command,
+      );
+      if (foundTestCase) {
+        this.setState({activeTestCase: foundTestCase});
+        return;
+      }
+    }
+
+    this.setState({activeTestCase: null});
   };
 
   render() {
-    const {showExamples} = this.state;
+    const {activeTestCase} = this.state;
     return (
       <ScrollView testID="scrollView" style={styles.container}>
         <SafeAreaView>
-          <Button
-            testID="modeToggle"
-            onPress={this._toggleMode}
-            title={showExamples ? 'Switch to Test Cases' : 'Switch to Examples'}
-          />
-          {showExamples ? (
+          {activeTestCase ? (
+            <>
+              <Text testID="testCasesTitle" style={styles.sectionTitle}>
+                Test Case
+              </Text>
+              {this._renderExample(activeTestCase)}
+            </>
+          ) : (
             <>
               <Text testID="examplesTitle" style={styles.sectionTitle}>
                 Examples
               </Text>
               {EXAMPLES.map(this._renderExample)}
-            </>
-          ) : (
-            <>
-              <Text testID="testCasesTitle" style={styles.sectionTitle}>
-                Test Cases
-              </Text>
-              {TEST_CASES.map(this._renderExample)}
             </>
           )}
         </SafeAreaView>

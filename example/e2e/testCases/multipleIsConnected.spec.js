@@ -14,8 +14,7 @@ const TEST_CASE_COUNT = 5;
 describe('NetInfo', () => {
   beforeEach(async () => {
     await device.reloadReactNative();
-    await element(by.id('modeToggle')).tap();
-    await element(by.id('scrollView')).scrollTo('bottom');
+    await device.openURL({url: 'netinfoexample://multipleIsConnected'});
   });
 
   it('should have the correct elements to perform the test', async () => {

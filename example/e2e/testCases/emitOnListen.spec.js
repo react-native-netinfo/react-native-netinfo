@@ -12,7 +12,7 @@ const {device, expect, element, by} = require('detox');
 describe('NetInfo', () => {
   beforeEach(async () => {
     await device.reloadReactNative();
-    await element(by.id('modeToggle')).tap();
+    await device.openURL({url: 'netinfoexample://emitOnListen'});
   });
 
   it('should have the correct elements to perform the test', async () => {

@@ -22,15 +22,15 @@ describe('NetInfo', () => {
     await expect(element(by.id('example-isConnectionExpensive'))).toExist();
   });
 
-  it('should show the test cases when the button is toggled', async () => {
-    await element(by.id('modeToggle')).tap();
+  it('should show the test case when opening a URL', async () => {
+    await device.openURL({url: 'netinfoexample://emitOnListen'});
 
     await expect(element(by.id('testCasesTitle'))).toExist();
   });
 
-  it('should show the examples again when the button is toggled twice', async () => {
-    await element(by.id('modeToggle')).tap();
-    await element(by.id('modeToggle')).tap();
+  it('should clear the test case when asked to', async () => {
+    await device.openURL({url: 'netinfoexample://emitOnListen'});
+    await device.openURL({url: 'netinfoexample://clear'});
 
     await expect(element(by.id('examplesTitle'))).toExist();
   });
