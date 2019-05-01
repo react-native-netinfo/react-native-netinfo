@@ -23,10 +23,9 @@ static NSString *const RNCConnectionTypeCellular = @"cellular";
 
 // Based on the EffectiveConnectionType enum described in the W3C Network Information API spec
 // (https://wicg.github.io/netinfo/).
-static NSString *const RNCEffectiveConnectionTypeUnknown = @"unknown";
-static NSString *const RNCEffectiveConnectionType2g = @"2g";
-static NSString *const RNCEffectiveConnectionType3g = @"3g";
-static NSString *const RNCEffectiveConnectionType4g = @"4g";
+static NSString *const RNCCellularGeneration2g = @"2g";
+static NSString *const RNCCellularGeneration3g = @"3g";
+static NSString *const RNCCellularGeneration4g = @"4g";
 
 @implementation RNCNetInfo
 {
@@ -35,7 +34,6 @@ static NSString *const RNCEffectiveConnectionType4g = @"4g";
   NSString *_connectionType;
   BOOL _connectionExpensive;
   NSString *_effectiveConnectionType;
-  NSString *_host;
   BOOL _isObserving;
   NSMutableSet<RCTPromiseResolveBlock> *_firstTimeReachabilityResolvers;
 }
@@ -70,18 +68,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 
 #pragma mark - Lifecycle
 
-- (instancetype)initWithHost:(NSString *)host
-{
-  RCTAssertParam(host);
-  RCTAssert(![host hasPrefix:@"http"], @"Host value should just contain the domain, not the URL scheme.");
-
-  if ((self = [self init])) {
-    _host = [host copy];
-  }
-  return self;
-}
-
-- (NSArray<NSString *> *)supportedEvents
+- (NSArray *)supportedEvents
 {
   return @[@"netInfo.networkStatusDidChange"];
 }
@@ -90,7 +77,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 {
   _isObserving = YES;
   _connectionType = RNCConnectionTypeUnknown;
-  _effectiveConnectionType = RNCEffectiveConnectionTypeUnknown;
+  _effectiveConnectionType = nil;
   _reachability = [self getReachabilityRef];
 }
 
@@ -110,7 +97,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 
 - (SCNetworkReachabilityRef)getReachabilityRef
 {
-  SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, _host.UTF8String ?: "apple.com");
+  SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "apple.com");
   SCNetworkReachabilityContext context = { 0, ( __bridge void *)self, NULL, NULL, NULL };
   SCNetworkReachabilitySetCallback(reachability, RNCReachabilityCallback, &context);
   SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetMain(), kCFRunLoopCommonModes);
@@ -122,7 +109,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 {
   NSString *connectionType = RNCConnectionTypeUnknown;
   bool connectionExpensive = false;
-  NSString *effectiveConnectionType = RNCEffectiveConnectionTypeUnknown;
+  NSString *effectiveConnectionType = nil;
   if ((flags & kSCNetworkReachabilityFlagsReachable) == 0 ||
       (flags & kSCNetworkReachabilityFlagsConnectionRequired) != 0) {
     connectionType = RNCConnectionTypeNone;
@@ -139,7 +126,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
       if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyGPRS] ||
           [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyEdge] ||
           [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMA1x]) {
-        effectiveConnectionType = RNCEffectiveConnectionType2g;
+        effectiveConnectionType = RNCCellularGeneration2g;
       } else if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyWCDMA] ||
                  [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyHSDPA] ||
                  [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyHSUPA] ||
@@ -147,9 +134,9 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
                  [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMAEVDORevA] ||
                  [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMAEVDORevB] ||
                  [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyeHRPD]) {
-        effectiveConnectionType = RNCEffectiveConnectionType3g;
+        effectiveConnectionType = RNCCellularGeneration3g;
       } else if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyLTE]) {
-        effectiveConnectionType = RNCEffectiveConnectionType4g;
+        effectiveConnectionType = RNCCellularGeneration4g;
       }
     }
   }
@@ -193,7 +180,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
     details[@"isConnectionExpensive"] = @(self->_connectionExpensive ?: false);
 
     if ([connectionType isEqualToString:RNCConnectionTypeCellular]) {
-      details[@"cellularGeneration"] = effectiveConnectionType;
+      details[@"cellularGeneration"] = effectiveConnectionType ?: [NSNull null];
     }
   }
   
