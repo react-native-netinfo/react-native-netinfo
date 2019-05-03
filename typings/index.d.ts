@@ -88,8 +88,8 @@ declare namespace NetInfo {
   export type NetInfoEffectiveType = 'unknown' | '2g' | '3g' | '4g';
 
   export interface NetInfoData {
-    type: ConnectionType;
-    effectiveType: EffectiveConnectionType;
+    type: NetInfoType;
+    effectiveType: NetInfoEffectiveType;
   }
 }
 
