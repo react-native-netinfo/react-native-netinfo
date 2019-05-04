@@ -47,6 +47,8 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
       getConnectivityManager().unregisterNetworkCallback(mNetworkCallback);
     } catch (SecurityException e) {
       setNoNetworkPermission();
+    } catch (IllegalArgumentException e) {
+      // ignore this, it is expected when the callback was not registered successfully
     }
   }
 
