@@ -150,7 +150,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation project(':react-native-netinfo')
-    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation "androidx.appcompat:appcompat:${rootProject.ext.appcompatVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     androidTestImplementation(project(path: ":detox"))
