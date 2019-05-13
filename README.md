@@ -131,6 +131,7 @@ subscription();
 * **Methods:**
   * [`fetch()`](README.md#fetch)
   * [`addEventListener()`](README.md#addeventlistener)
+  * [`useNetInfo()`](README.md#usenetinfo)
 
 ### Types
 
@@ -221,6 +222,26 @@ const subscription = NetInfo.addEventListener(state => {
 
 // Unsubscribe
 subscription.remove();
+```
+
+#### `useNetInfo()`
+
+A [React Hook](https://reactjs.org/docs/hooks-intro.html) which can be used to get access to the latest state. It returns a hook with the [`NetInfoState`](README.md#netinfostate) type.
+
+**Example:**
+```jsx
+import {useNetInfo} from "@react-native-community/netinfo";
+
+const YourComplement = () => {
+  const netInfo = useNetInfo();
+
+  return (
+    <View>
+      <Text>Type: {netInfo.type}</Text>
+      <Text>Is Connected? {netInfo.isConnected}</Text>
+    </View>
+  );
+};
 ```
 
 ## Known issues with the iOS simulator
