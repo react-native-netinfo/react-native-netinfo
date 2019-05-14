@@ -6,7 +6,8 @@
  *
  * @format
  */
-/* global device, element, by */
+
+const {device, expect, element, by} = require('detox');
 
 const TEST_CASE_COUNT = 5;
 
