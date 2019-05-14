@@ -8,6 +8,7 @@ module.exports = {
     ...tsjPreset.transform,
     '\\.js$': '<rootDir>/node_modules/react-native/jest/preprocessor.js',
   },
+  testPathIgnorePatterns: ['<rootDir>/lib/', '<rootDir>/node_modules/'],
   globals: {
     'ts-jest': {
       babelConfig: true,
