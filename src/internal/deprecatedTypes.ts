@@ -25,6 +25,7 @@ export interface NetInfoData {
   effectiveType: NetInfoEffectiveType;
 }
 
+export const CHANGE_EVENT_NAME = 'connectionChange';
 export type ChangeEventName = 'connectionChange';
 
 export type ChangeHandler = (data: NetInfoData) => void;

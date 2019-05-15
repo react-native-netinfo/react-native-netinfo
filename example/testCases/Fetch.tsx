@@ -9,7 +9,7 @@
 
 import * as React from 'react';
 import {Button, Text, View} from 'react-native';
-import NetInfo, {NetInfoState} from '../../js';
+import NetInfo, {NetInfoState} from '../../src';
 
 interface State {
   netInfoState: NetInfoState | null;

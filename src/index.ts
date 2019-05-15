@@ -15,8 +15,6 @@ import Subscriptions from './internal/subscriptions';
 import * as Types from './internal/types';
 import NativeInterface from './internal/nativeInterface';
 
-const DEPRECATED_CHANGE_EVENT_NAME = 'connectionChange';
-
 const _isConnectedListeners = new Map<
   DeprecatedTypes.IsConnectedHandler,
   /// @ts-ignore Typescript des not like the trailing comma that Prettier insists upon
@@ -33,11 +31,11 @@ export function fetch(): Promise<Types.NetInfoState> {
 }
 
 /**
- * Subscribe to connection information. The callback is called a paramter of type
+ * Subscribe to connection information. The callback is called with a parameter of type
  * [`NetInfoState`](README.md#netinfostate) whenever the connection state changes. Your listener
  * will be called with the latest information soon after you subscribe and then with any
- * subsequent changes afterwards. Due to platform differences, you should not assume that the
- * listener is called in the same way across devices or platforms.
+ * subsequent changes afterwards. You should not assume that the listener is called in the same
+ * way across devices or platforms.
  *
  * @param listener The listener which is called when the network state changes.
  *
@@ -48,15 +46,15 @@ export function addEventListener(
 ): Types.NetInfoSubscription;
 
 /**
- * Deprecated network state listener. You should remove the event name and change you handler to
+ * Deprecated network state listener. You should remove the event name and change your handler to
  * use the new state shape.
  *
  * @deprecated
  *
- * @param type The vent type.
+ * @param type The event type.
  * @param deprecatedHandler The listener.
  *
- * @returns An oject with a remove function which can be called to unsubscribe.
+ * @returns An object with a remove function which can be called to unsubscribe.
  */
 export function addEventListener(
   type: string,
@@ -71,7 +69,10 @@ export function addEventListener(
   if (typeof listenerOrType === 'string') {
     DeprecatedUtils.warnOnce();
 
-    if (listenerOrType === DEPRECATED_CHANGE_EVENT_NAME && deprecatedHandler) {
+    if (
+      listenerOrType === DeprecatedTypes.CHANGE_EVENT_NAME &&
+      deprecatedHandler
+    ) {
       DeprecatedSubscriptions.add(deprecatedHandler);
       return {
         remove: (): void => {
@@ -125,7 +126,7 @@ export function removeEventListener(
 ): void {
   DeprecatedUtils.warnOnce();
 
-  if (type === DEPRECATED_CHANGE_EVENT_NAME) {
+  if (type === DeprecatedTypes.CHANGE_EVENT_NAME) {
     DeprecatedSubscriptions.remove(handler);
   }
 }
@@ -142,8 +143,8 @@ export function getConnectionInfo(): Promise<DeprecatedTypes.NetInfoData> {
 }
 
 /**
- * Deprecated method to tell if the current connection is "expensive". Only available on iOS. You
- * should now call the `fetch` method and look at the `details.isConnectionExpensive` property.
+ * Deprecated method to tell if the current connection is "expensive". Only available on Android.
+ * You should now call the `fetch` method and look at the `details.isConnectionExpensive` property.
  *
  * @deprecated
  */
@@ -165,7 +166,7 @@ export const isConnected = {
     eventName: string,
     handler: DeprecatedTypes.IsConnectedHandler,
   ): DeprecatedTypes.Subscription => {
-    if (eventName !== DEPRECATED_CHANGE_EVENT_NAME) {
+    if (eventName !== DeprecatedTypes.CHANGE_EVENT_NAME) {
       return {remove: (): void => {}};
     }
 
@@ -212,21 +213,8 @@ export const isConnected = {
 export * from './internal/types';
 export * from './internal/deprecatedTypes';
 
-export const StateType = {
-  unknown: 'unknown',
-  none: 'none',
-  cellular: 'cellular',
-  wifi: 'wifi',
-  bluetooth: 'bluetooth',
-  ethernet: 'ethernet',
-  wimax: 'wimax',
-};
-
-export const CellularGeneration = {
-  '2g': '2g',
-  '3g': '3g',
-  '4g': '4g',
-};
+export const StateType = Types.StateType;
+export const CellularGeneration = Types.CellularGeneration;
 
 export default {
   fetch,

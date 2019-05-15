@@ -9,7 +9,7 @@
 
 import * as React from 'react';
 import {Text, View} from 'react-native';
-import {useNetInfo} from '../../js';
+import {useNetInfo} from '../../src';
 
 interface State {
   triggered: boolean;

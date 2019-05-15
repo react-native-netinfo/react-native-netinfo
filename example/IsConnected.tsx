@@ -9,7 +9,7 @@
 
 import * as React from 'react';
 import {Text, View} from 'react-native';
-import NetInfo, {NetInfoSubscription, NetInfoState} from '../js';
+import NetInfo, {NetInfoSubscription, NetInfoState} from '../src';
 
 interface State {
   isConnected: boolean | null;

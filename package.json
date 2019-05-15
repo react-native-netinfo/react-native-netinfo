@@ -3,14 +3,14 @@
   "version": "2.0.10",
   "description": "React Native Network Info API for iOS & Android",
   "main": "lib/commonjs/index.js",
-  "react-native": "js/index.ts",
+  "react-native": "src/index.ts",
   "module": "lib/module/index.js",
   "types": "lib/typescript/index.d.ts",
   "files": [
     "/android",
     "!/android/build",
     "/ios",
-    "/js",
+    "/src",
     "/lib",
     "/*.podspec"
   ],
@@ -23,9 +23,9 @@
   "scripts": {
     "start": "react-native start",
     "test": "yarn validate:eslint && yarn validate:typescript && yarn test:jest",
-    "validate:eslint": "eslint 'js/**/*.{js,ts,tsx}' 'example/**/*.{js,ts,tsx}'",
+    "validate:eslint": "eslint 'src/**/*.{js,ts,tsx}' 'example/**/*.{js,ts,tsx}'",
     "validate:typescript": "tsc --project ./ --noEmit",
-    "test:jest": "jest '/js/'",
+    "test:jest": "jest '/src/'",
     "test:detox:android:test:debug": "detox test -c android.emu.debug",
     "test:detox:android:test:release": "detox test -c android.emu.release",
     "test:detox:android:build:debug": "detox build -c android.emu.debug",
@@ -111,7 +111,7 @@
     "url": "https://github.com/react-native-community/react-native-netinfo.git"
   },
   "@react-native-community/bob": {
-    "source": "js",
+    "source": "src",
     "output": "lib",
     "targets": [
       "commonjs",
