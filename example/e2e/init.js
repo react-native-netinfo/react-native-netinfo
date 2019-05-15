@@ -22,7 +22,10 @@ jasmine.getEnv().addReporter(adapter);
 jasmine.getEnv().addReporter(specReporter);
 
 beforeAll(async () => {
-  await detox.init(config, {initGlobals: false});
+  await detox.init(config, {
+    initGlobals: false,
+    launchApp: false,
+  });
 });
 
 beforeEach(async () => {

@@ -5,8 +5,4 @@ project(':react-native-netinfo').projectDir = new File(rootProject.projectDir, '
 // For your application the line above will most likely be:
 // project(':react-native-netinfo').projectDir = new File(rootProject.projectDir, '../node_modules/!react-native-community/netinfo/android')
 
-// e2e tests
-include ':detox'
-project(':detox').projectDir = new File(rootProject.projectDir, '../../node_modules/detox/android/detox')
-
 include ':app'

@@ -8,11 +8,13 @@
 package com.reactnativecommunity.netinfo;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.net.ConnectivityManager;
 import android.net.LinkProperties;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.os.Build;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 
@@ -21,6 +23,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
  * method was added into Android from API level 24 (N) and we use it for all devices which support
  * it.
  */
+@TargetApi(Build.VERSION_CODES.N)
 class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
   private final ConnectivityNetworkCallback mNetworkCallback;
   private Network mNetwork = null;
@@ -55,7 +58,7 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
   @SuppressLint("MissingPermission")
   private void updateAndSend() {
     String connectionType = CONNECTION_TYPE_UNKNOWN;
-    String effectiveConnectionType = EFFECTIVE_CONNECTION_TYPE_UNKNOWN;
+    String cellularGeneration = null;
 
     if (mNetworkCapabilities != null) {
       if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) {
@@ -65,7 +68,7 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
 
         if (mNetwork != null) {
           NetworkInfo networkInfo = getConnectivityManager().getNetworkInfo(mNetwork);
-          effectiveConnectionType = getEffectiveConnectionType(networkInfo);
+          cellularGeneration = getEffectiveConnectionType(networkInfo);
         }
       } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
         connectionType = CONNECTION_TYPE_ETHERNET;
@@ -76,7 +79,7 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
       connectionType = CONNECTION_TYPE_NONE;
     }
 
-    updateConnectivity(connectionType, effectiveConnectionType);
+    updateConnectivity(connectionType, cellularGeneration);
   }
 
   private class ConnectivityNetworkCallback extends ConnectivityManager.NetworkCallback {

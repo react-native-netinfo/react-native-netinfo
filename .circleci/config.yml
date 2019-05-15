@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  rn: react-native-community/react-native@1.0.0
+  rn: react-native-community/react-native@1.2.0
 
 jobs:
   checkout_code:
@@ -21,20 +21,11 @@ jobs:
           name: Lint JS Code (ESLint)
           command: yarn run validate:eslint
       - run:
-          name: Flow
-          command: yarn run validate:flow
-      - run:
           name: TypeScript
           command: yarn run validate:typescript
       - run:
           name: Jest
           command: yarn run test:jest
-      - run:
-          name: Build Android JavaScript Bundle
-          command: yarn run test:detox:android:bundle:release
-      - run:
-          name: Build iOS JavaScript Bundle
-          command: yarn run test:detox:ios:bundle:release
   publish:
     executor: rn/linux_js
     steps:
@@ -58,17 +49,19 @@ workflows:
           build_type: debug
           requires:
             - analyse
-      - rn/android_build:
-          name: build_android_release
-          project_path: "example/android"
-          build_type: release
-          requires:
-            - analyse
+      # Disabled until we can get a handle on the memory issues
+      # - rn/android_build:
+      #     name: build_android_release
+      #     project_path: "example/android"
+      #     build_type: release
+      #     requires:
+      #       - analyse
       - rn/android_test:
-          detox_configuration: "android.emu.release"
+          start_metro: true
+          detox_configuration: "android.emu.debug"
           detox_loglevel: "trace"
           requires:
-            - build_android_release
+            - build_android_debug
       - rn/ios_build_and_test:
           project_path: "example/ios/NetInfoExample.xcodeproj"
           derived_data_path: "example/ios/build"

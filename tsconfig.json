@@ -1,25 +1,13 @@
 {
-  "include": ["typings/**/*.d.ts"],
+  "include": ["src/**/*.ts", "example/**/*.ts", "example/**/*.tsx"],
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "declaration": true,
-    "importHelpers": true,
-    "jsx": "react",
-    "sourceMap": true,
+    "target": "es6",
+    "module": "es6",
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
+    "downlevelIteration": true,
     "moduleResolution": "node",
-    "skipLibCheck": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "lib": ["es2015", "es2016", "esnext", "dom"]
+    "lib": ["es2015", "es2016", "esnext"],
+    "jsx": "react-native"
   },
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ]
+  "exclude": ["node_modules"]
 }

@@ -9,23 +9,23 @@
 
 const {device, expect, element, by} = require('detox');
 
-describe('NetInfo', () => {
+describe('EmitOnListen', () => {
   beforeEach(async () => {
-    await device.reloadReactNative();
-    await element(by.id('modeToggle')).tap();
+    const url = 'netinfoexample://emitOnListen';
+    await device.launchApp({url: url, newInstance: true});
   });
 
   it('should have the correct elements to perform the test', async () => {
-    await expect(element(by.id('emitOnListenResults'))).toExist();
-    await expect(element(by.id('emitOnListenTestButton'))).toExist();
+    await expect(element(by.id('results'))).toExist();
+    await expect(element(by.id('testButton'))).toExist();
   });
 
   it('should start with all failures', async () => {
-    await expect(element(by.id('emitOnListenResult'))).toHaveLabel('fail');
+    await expect(element(by.id('result'))).toHaveLabel('fail');
   });
 
   it('should show all success after being tested', async () => {
-    await element(by.id('emitOnListenTestButton')).tap();
-    await expect(element(by.id('emitOnListenResult'))).toHaveLabel('pass');
+    await element(by.id('testButton')).tap();
+    await expect(element(by.id('result'))).toHaveLabel('pass');
   });
 });

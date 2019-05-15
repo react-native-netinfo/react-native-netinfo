@@ -54,7 +54,7 @@ public class BroadcastReceiverConnectivityReceiver extends ConnectivityReceiver 
   @SuppressLint("MissingPermission")
   private void updateAndSendConnectionType() {
     String connectionType = CONNECTION_TYPE_UNKNOWN;
-    String effectiveConnectionType = EFFECTIVE_CONNECTION_TYPE_UNKNOWN;
+    String cellularGeneration = null;
 
     try {
       NetworkInfo networkInfo = getConnectivityManager().getActiveNetworkInfo();
@@ -72,7 +72,7 @@ public class BroadcastReceiverConnectivityReceiver extends ConnectivityReceiver 
           case ConnectivityManager.TYPE_MOBILE:
           case ConnectivityManager.TYPE_MOBILE_DUN:
             connectionType = CONNECTION_TYPE_CELLULAR;
-            effectiveConnectionType = getEffectiveConnectionType(networkInfo);
+            cellularGeneration = getEffectiveConnectionType(networkInfo);
             break;
           case ConnectivityManager.TYPE_WIFI:
             connectionType = CONNECTION_TYPE_WIFI;
@@ -87,7 +87,7 @@ public class BroadcastReceiverConnectivityReceiver extends ConnectivityReceiver 
       connectionType = CONNECTION_TYPE_UNKNOWN;
     }
 
-    updateConnectivity(connectionType, effectiveConnectionType);
+    updateConnectivity(connectionType, cellularGeneration);
   }
 
   /**

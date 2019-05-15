@@ -2,17 +2,16 @@
   "name": "@react-native-community/netinfo",
   "version": "2.0.10",
   "description": "React Native Network Info API for iOS & Android",
+  "react-native": "src/index.ts",
+  "types": "src/index.ts",
   "main": "lib/commonjs/index.js",
-  "react-native": "js/index.js",
   "module": "lib/module/index.js",
-  "types": "typings/index.d.ts",
   "files": [
     "/android",
     "!/android/build",
     "/ios",
-    "/js",
+    "/src",
     "/lib",
-    "/typings",
     "/*.podspec"
   ],
   "author": "Matt Oakes <hello@mattoakes.net>",
@@ -23,21 +22,18 @@
   "license": "MIT",
   "scripts": {
     "start": "react-native start",
-    "test": "yarn validate:eslint && yarn validate:flow && yarn validate:typescript && yarn test:jest",
-    "validate:eslint": "eslint 'js/**/*.js' 'example/**/*.js'",
-    "validate:flow": "flow check",
-    "validate:typescript": "tsc --project ./",
-    "test:jest": "jest '/js/'",
+    "test": "yarn validate:eslint && yarn validate:typescript && yarn test:jest",
+    "validate:eslint": "eslint 'src/**/*.{js,ts,tsx}' 'example/**/*.{js,ts,tsx}'",
+    "validate:typescript": "tsc --project ./ --noEmit",
+    "test:jest": "jest '/src/'",
     "test:detox:android:test:debug": "detox test -c android.emu.debug",
     "test:detox:android:test:release": "detox test -c android.emu.release",
     "test:detox:android:build:debug": "detox build -c android.emu.debug",
     "test:detox:android:build:release": "detox build -c android.emu.release",
-    "test:detox:android:bundle:release": "mkdir -p .tmp && react-native bundle --max-workers 4 --platform android --dev false --entry-file example/index.js --bundle-output .tmp/android-bundle.js",
     "test:detox:ios:test:debug": "detox test -c ios.sim.debug",
     "test:detox:ios:test:release": "detox test -c ios.sim.release",
     "test:detox:ios:build:debug": "detox build -c ios.sim.debug",
     "test:detox:ios:build:release": "detox build -c ios.sim.release",
-    "test:detox:ios:bundle:release": "mkdir -p .tmp && react-native bundle --max-workers 4 --platform ios --dev false --entry-file example/index.js --bundle-output .tmp/ios-bundle.js",
     "test:detox:clean": "rimraf example/android/build && rimraf example/android/app/build && rimraf example/android/.gradle && rimraf example/ios/build",
     "ci:publish": "yarn semantic-release",
     "semantic-release": "semantic-release",
@@ -51,38 +47,35 @@
     "network info"
   ],
   "peerDependencies": {
-    "react": "^16.0",
-    "react-native": ">=0.57 <0.60"
+    "react-native": ">=0.59"
   },
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.4.3",
-    "@react-native-community/bob": "^0.3.3",
+    "@babel/runtime": "^7.4.3",
+    "@react-native-community/bob": "^0.4.1",
     "@react-native-community/eslint-config": "^0.0.5",
     "@semantic-release/changelog": "^3.0.2",
     "@semantic-release/git": "7.0.8",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^24.7.0",
-    "babel-plugin-module-resolver": "^3.2.0",
+    "@types/jest": "^24.0.12",
+    "@types/react-native": "^0.57.51",
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
+    "babel-jest": "^24.7.1",
     "detox": "^12.8.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-prettier": "^3.0.1",
-    "flow-bin": "^0.86.0",
+    "eslint-config-prettier": "^4.2.0",
+    "eslint-plugin-prettier": "3.0.1",
+    "eslint": "5.16.0",
     "jest": "^24.8.0",
-    "metro-react-native-babel-preset": "0.51.1",
+    "metro-react-native-babel-preset": "^0.53.1",
     "prettier": "^1.17.0",
-    "react": "16.6.3",
-    "react-native": "0.58.4",
-    "react-test-renderer": "16.6.3",
+    "react-native": "0.59.5",
+    "react-test-renderer": "16.8.3",
+    "react": "16.8.3",
     "rimraf": "^2.6.3",
     "semantic-release": "15.13.3",
+    "ts-jest": "^24.0.2",
     "typescript": "^3.4.1"
-  },
-  "jest": {
-    "preset": "react-native",
-    "setupFilesAfterEnv": [
-      "<rootDir>/jest.setup.js"
-    ]
   },
   "detox": {
     "test-runner": "jest",
@@ -119,15 +112,10 @@
     "url": "https://github.com/react-native-community/react-native-netinfo.git"
   },
   "@react-native-community/bob": {
-    "source": "js",
+    "source": "src",
     "output": "lib",
     "targets": [
-      [
-        "commonjs",
-        {
-          "flow": true
-        }
-      ],
+      "commonjs",
       "module"
     ]
   }
