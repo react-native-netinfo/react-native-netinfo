@@ -13,10 +13,8 @@ const TEST_CASE_COUNT = 5;
 
 describe('DeprecatedMultipleGetConnectionInfo', () => {
   beforeEach(async () => {
-    await device.reloadReactNative();
-    await device.openURL({
-      url: 'netinfoexample://deprecatedMultipleGetConnectionInfo',
-    });
+    const url = 'netinfoexample://deprecatedMultipleGetConnectionInfo';
+    await device.launchApp({url: url, newInstance: true});
   });
 
   it('should have the correct elements to perform the test', async () => {

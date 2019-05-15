@@ -11,8 +11,8 @@ const {device, expect, element, by} = require('detox');
 
 describe('EmitOnListen', () => {
   beforeEach(async () => {
-    await device.reloadReactNative();
-    await device.openURL({url: 'netinfoexample://emitOnListen'});
+    const url = 'netinfoexample://emitOnListen';
+    await device.launchApp({url: url, newInstance: true});
   });
 
   it('should have the correct elements to perform the test', async () => {

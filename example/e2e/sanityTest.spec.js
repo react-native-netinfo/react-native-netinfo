@@ -11,7 +11,7 @@ const {device, expect, element, by} = require('detox');
 
 describe('NetInfo', () => {
   beforeEach(async () => {
-    await device.reloadReactNative();
+    await device.launchApp({newInstance: true});
   });
 
   it('should load example app with no errors and show all the examples by default', async () => {
