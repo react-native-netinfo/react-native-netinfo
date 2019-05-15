@@ -15,6 +15,7 @@ jest.mock('Platform', () => {
 
 import NetInfo from '../../index';
 import NativeInterface from '../../internal/nativeInterface';
+import {NetInfoStateType} from '../../internal/types';
 
 type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
 /// @ts-ignore
@@ -25,7 +26,7 @@ describe('Deprecated', () => {
     describe('Android', () => {
       it('should pass the value through when false', () => {
         MockNativeInterface.getCurrentState.mockResolvedValue({
-          type: 'wifi',
+          type: NetInfoStateType.wifi,
           isConnected: true,
           details: {
             isConnectionExpensive: false,
@@ -36,7 +37,7 @@ describe('Deprecated', () => {
 
       it('should pass the value through when true', () => {
         MockNativeInterface.getCurrentState.mockResolvedValue({
-          type: 'wifi',
+          type: NetInfoStateType.wifi,
           isConnected: true,
           details: {
             isConnectionExpensive: true,

@@ -7,59 +7,61 @@
  * @format
  */
 
-export const StateType = {
-  unknown: 'unknown',
-  none: 'none',
-  cellular: 'cellular',
-  wifi: 'wifi',
-  bluetooth: 'bluetooth',
-  ethernet: 'ethernet',
-  wimax: 'wimax',
-};
-export type NetInfoStateType =
-  | 'unknown'
-  | 'none'
-  | 'cellular'
-  | 'wifi'
-  | 'bluetooth'
-  | 'ethernet'
-  | 'wimax';
+export enum NetInfoStateType {
+  unknown = 'unknown',
+  none = 'none',
+  cellular = 'cellular',
+  wifi = 'wifi',
+  bluetooth = 'bluetooth',
+  ethernet = 'ethernet',
+  wimax = 'wimax',
+}
 
-export const CellularGeneration = {
-  '2g': '2g',
-  '3g': '3g',
-  '4g': '4g',
-};
-export type NetInfoCellularGeneration = '2g' | '3g' | '4g';
+export enum NetInfoCellularGeneration {
+  '2g' = '2g',
+  '3g' = '3g',
+  '4g' = '4g',
+}
 
 export interface NetInfoConnectedDetails {
   isConnectionExpensive: boolean;
 }
 
-interface NetInfoConnectedState<T extends string, D extends object = {}> {
+interface NetInfoConnectedState<
+  T extends NetInfoStateType,
+  D extends object = {}
+> {
   type: T;
   isConnected: true;
   details: D & NetInfoConnectedDetails;
 }
 
-interface NetInfoDisconnectedState<T extends string> {
+interface NetInfoDisconnectedState<T extends NetInfoStateType> {
   type: T;
   isConnected: false;
   details: null;
 }
 
-export type NetInfoUnknownState = NetInfoDisconnectedState<'unknown'>;
-export type NetInfoNoConnectionState = NetInfoDisconnectedState<'none'>;
+export type NetInfoUnknownState = NetInfoDisconnectedState<
+  NetInfoStateType.unknown
+>;
+export type NetInfoNoConnectionState = NetInfoDisconnectedState<
+  NetInfoStateType.none
+>;
 export type NetInfoCellularState = NetInfoConnectedState<
-  'cellular',
+  NetInfoStateType.cellular,
   {
     cellularGeneration: NetInfoCellularGeneration | null;
   }
 >;
-export type NetInfoWifiState = NetInfoConnectedState<'wifi'>;
-export type NetInfoBluetoothState = NetInfoConnectedState<'bluetooth'>;
-export type NetInfoEthernetState = NetInfoConnectedState<'ethernet'>;
-export type NetInfoWimaxState = NetInfoConnectedState<'wimax'>;
+export type NetInfoWifiState = NetInfoConnectedState<NetInfoStateType.wifi>;
+export type NetInfoBluetoothState = NetInfoConnectedState<
+  NetInfoStateType.bluetooth
+>;
+export type NetInfoEthernetState = NetInfoConnectedState<
+  NetInfoStateType.ethernet
+>;
+export type NetInfoWimaxState = NetInfoConnectedState<NetInfoStateType.wimax>;
 
 export type NetInfoState =
   | NetInfoUnknownState

@@ -13,7 +13,11 @@ import {
   isConnected,
   isConnectionExpensive,
 } from '../deprecatedUtils';
-import {NetInfoState} from '../types';
+import {
+  NetInfoState,
+  NetInfoStateType,
+  NetInfoCellularGeneration,
+} from '../types';
 import {NetInfoData} from '../deprecatedTypes';
 
 interface TestCase {
@@ -29,7 +33,7 @@ describe('Deprecated utils', () => {
     {
       title: 'None',
       input: {
-        type: 'none',
+        type: NetInfoStateType.none,
         isConnected: false,
         details: null,
       },
@@ -43,7 +47,7 @@ describe('Deprecated utils', () => {
     {
       title: 'Unknown',
       input: {
-        type: 'unknown',
+        type: NetInfoStateType.unknown,
         isConnected: false,
         details: null,
       },
@@ -57,7 +61,7 @@ describe('Deprecated utils', () => {
     {
       title: 'Wifi',
       input: {
-        type: 'wifi',
+        type: NetInfoStateType.wifi,
         isConnected: true,
         details: {
           isConnectionExpensive: false,
@@ -73,11 +77,11 @@ describe('Deprecated utils', () => {
     {
       title: 'Cellular with generation',
       input: {
-        type: 'cellular',
+        type: NetInfoStateType.cellular,
         isConnected: true,
         details: {
           isConnectionExpensive: true,
-          cellularGeneration: '3g',
+          cellularGeneration: NetInfoCellularGeneration['3g'],
         },
       },
       isConnected: true,
@@ -90,7 +94,7 @@ describe('Deprecated utils', () => {
     {
       title: 'Cellular without generation',
       input: {
-        type: 'cellular',
+        type: NetInfoStateType.cellular,
         isConnected: true,
         details: {
           isConnectionExpensive: true,
@@ -107,7 +111,7 @@ describe('Deprecated utils', () => {
     {
       title: 'Bluetooth',
       input: {
-        type: 'bluetooth',
+        type: NetInfoStateType.bluetooth,
         isConnected: true,
         details: {
           isConnectionExpensive: false,
@@ -123,7 +127,7 @@ describe('Deprecated utils', () => {
     {
       title: 'Ethernet',
       input: {
-        type: 'ethernet',
+        type: NetInfoStateType.ethernet,
         isConnected: true,
         details: {
           isConnectionExpensive: false,
@@ -139,7 +143,7 @@ describe('Deprecated utils', () => {
     {
       title: 'Wimax',
       input: {
-        type: 'wimax',
+        type: NetInfoStateType.wimax,
         isConnected: true,
         details: {
           isConnectionExpensive: false,

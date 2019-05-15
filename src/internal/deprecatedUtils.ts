@@ -37,7 +37,10 @@ export function convertState(
  */
 export function isConnectionExpensive(input: Types.NetInfoState): boolean {
   if (Platform.OS === 'android') {
-    if (input.type !== 'none' && input.type !== 'unknown') {
+    if (
+      input.type !== Types.NetInfoStateType.none &&
+      input.type !== Types.NetInfoStateType.unknown
+    ) {
       return input.details.isConnectionExpensive;
     } else {
       return false;

@@ -10,6 +10,7 @@
 import NetInfo from '../../index';
 import NativeInterface from '../../internal/nativeInterface';
 import DeprecatedSubscriptions from '../../internal/deprecatedSubscriptions';
+import {NetInfoStateType} from '../../internal/types';
 
 type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
 /// @ts-ignore
@@ -23,7 +24,7 @@ describe('Deprecated', () => {
       DeprecatedSubscriptions.clear();
 
       MockNativeInterface.getCurrentState.mockResolvedValue({
-        type: 'none',
+        type: NetInfoStateType.none,
         isConnected: false,
         details: null,
       });

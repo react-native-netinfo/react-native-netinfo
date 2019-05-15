@@ -11,6 +11,10 @@ import NetInfo from '../../index';
 import Subscriptions from '../../internal/subscriptions';
 import DeprecatedSubscriptions from '../../internal/deprecatedSubscriptions';
 import NativeInterface from '../../internal/nativeInterface';
+import {
+  NetInfoStateType,
+  NetInfoCellularGeneration,
+} from '../../internal/types';
 
 type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
 /// @ts-ignore
@@ -25,11 +29,11 @@ describe('Deprecated', () => {
       DeprecatedSubscriptions.clear();
 
       MockNativeInterface.getCurrentState.mockResolvedValue({
-        type: 'cellular',
+        type: NetInfoStateType.cellular,
         isConnected: true,
         details: {
           isConnectionExpensive: true,
-          cellularGeneration: '3g',
+          cellularGeneration: NetInfoCellularGeneration['3g'],
         },
       });
     });
@@ -37,11 +41,11 @@ describe('Deprecated', () => {
     describe('fetch', () => {
       it('should resolve to true when the native module returns a connected state', () => {
         MockNativeInterface.getCurrentState.mockResolvedValue({
-          type: 'cellular',
+          type: NetInfoStateType.cellular,
           isConnected: true,
           details: {
             isConnectionExpensive: true,
-            cellularGeneration: '3g',
+            cellularGeneration: NetInfoCellularGeneration['3g'],
           },
         });
 
@@ -50,7 +54,7 @@ describe('Deprecated', () => {
 
       it('should resolve to true when the native module returns a not connected state', () => {
         MockNativeInterface.getCurrentState.mockResolvedValue({
-          type: 'unknown',
+          type: NetInfoStateType.unknown,
           isConnected: false,
           details: null,
         });

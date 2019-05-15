@@ -9,6 +9,10 @@
 
 import NetInfo from '../../index';
 import NativeInterface from '../../internal/nativeInterface';
+import {
+  NetInfoStateType,
+  NetInfoCellularGeneration,
+} from '../../internal/types';
 
 type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
 /// @ts-ignore
@@ -17,8 +21,8 @@ const MockNativeInterface: JestMockNativeInterface = NativeInterface;
 describe('Deprecated', () => {
   describe('getConnectionInfo', () => {
     it('should pass on the responses when the library promise returns', () => {
-      const expectedConnectionType = 'cellular';
-      const expectedEffectiveConnectionType = '3g';
+      const expectedConnectionType = NetInfoStateType.cellular;
+      const expectedEffectiveConnectionType = NetInfoCellularGeneration['3g'];
 
       MockNativeInterface.getCurrentState.mockResolvedValue({
         type: expectedConnectionType,

@@ -100,7 +100,7 @@ export function addEventListener(
  */
 export function useNetInfo(): Types.NetInfoState {
   const [netInfo, setNetInfo] = useState<Types.NetInfoState>({
-    type: 'unknown',
+    type: Types.NetInfoStateType.unknown,
     isConnected: false,
     details: null,
   });
@@ -213,15 +213,10 @@ export const isConnected = {
 export * from './internal/types';
 export * from './internal/deprecatedTypes';
 
-export const StateType = Types.StateType;
-export const CellularGeneration = Types.CellularGeneration;
-
 export default {
   fetch,
   addEventListener,
   useNetInfo,
-  StateType,
-  CellularGeneration,
   removeEventListener,
   getConnectionInfo,
   isConnectionExpensive,

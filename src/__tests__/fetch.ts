@@ -9,7 +9,11 @@
 
 import NetInfo from '../index';
 import NativeInterface from '../internal/nativeInterface';
-import {NetInfoState} from '../internal/types';
+import {
+  NetInfoState,
+  NetInfoStateType,
+  NetInfoCellularGeneration,
+} from '../internal/types';
 
 type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
 /// @ts-ignore
@@ -19,11 +23,11 @@ describe('@react-native-community/netinfo', () => {
   describe('fetch', () => {
     it('should pass on the responses when the library promise returns', () => {
       const expectedConnectionInfo: NetInfoState = {
-        type: 'cellular',
+        type: NetInfoStateType.cellular,
         isConnected: true,
         details: {
           isConnectionExpensive: true,
-          cellularGeneration: '3g',
+          cellularGeneration: NetInfoCellularGeneration['3g'],
         },
       };
 
