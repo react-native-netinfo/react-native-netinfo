@@ -59,6 +59,7 @@
     "@babel/core": "^7.4.3",
     "@react-native-community/bob": "^0.3.3",
     "@react-native-community/eslint-config": "^0.0.5",
+    "@semantic-release/changelog": "^3.0.2",
     "@semantic-release/git": "7.0.8",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^24.7.0",

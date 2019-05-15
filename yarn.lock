@@ -1023,6 +1023,16 @@
     eslint-plugin-react-native "3.6.0"
     prettier "1.16.4"
 
+"@semantic-release/changelog@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@semantic-release/changelog/-/changelog-3.0.2.tgz#b09a8e0d072ef54d2bc7a5c82f6112dc3c8ae85d"
+  integrity sha512-pDUaBNAuPAqQ+ArHwvR160RG2LbfyIVz9EJXgxH0V547rlx/hCs0Sp7L4Rtzi5Z+d6CHcv9g2ynxplE1xAzp2g==
+  dependencies:
+    "@semantic-release/error" "^2.1.0"
+    aggregate-error "^2.0.0"
+    fs-extra "^7.0.0"
+    lodash "^4.17.4"
+
 "@semantic-release/commit-analyzer@^6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@semantic-release/commit-analyzer/-/commit-analyzer-6.1.0.tgz#32bbe3c23da86e23edf072fbb276fa2f383fcb17"
