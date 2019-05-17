@@ -112,8 +112,8 @@ abstract class ConnectivityReceiver {
   void updateConnectivity(String connectionType, String cellularGeneration) {
     // It is possible to get multiple broadcasts for the same connectivity change, so we only
     // update and send an event when the connectivity has indeed changed.
-    boolean connectionTypeChanged = (connectionType == null && mConnectionType != null) || (connectionType != null && connectionType.equalsIgnoreCase(mConnectionType));
-    boolean cellularGenerationChanged = (cellularGeneration == null && mCellularGeneration != null) || (cellularGeneration != null && cellularGeneration.equalsIgnoreCase(mCellularGeneration));
+    boolean connectionTypeChanged = (connectionType == null && mConnectionType != null) || (connectionType != null && !connectionType.equalsIgnoreCase(mConnectionType));
+    boolean cellularGenerationChanged = (cellularGeneration == null && mCellularGeneration != null) || (cellularGeneration != null && !cellularGeneration.equalsIgnoreCase(mCellularGeneration));
     if (connectionTypeChanged || cellularGenerationChanged) {
       mConnectionType = connectionType;
       mCellularGeneration = cellularGeneration;
