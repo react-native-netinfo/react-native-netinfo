@@ -24,8 +24,15 @@ export function convertState(
     effectiveType = input.details.cellularGeneration || 'unknown';
   }
 
+  // Ensure we don't sent types that the old meethods did not support. Set them to "unknown"
+  const type: DeprecatedTypes.NetInfoType =
+    input.type === Types.NetInfoStateType.vpn ||
+    input.type === Types.NetInfoStateType.other
+      ? 'unknown'
+      : input.type;
+
   return {
-    type: input.type,
+    type,
     effectiveType,
   };
 }

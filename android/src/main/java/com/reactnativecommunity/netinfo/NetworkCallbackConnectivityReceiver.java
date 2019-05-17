@@ -57,7 +57,7 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
 
   @SuppressLint("MissingPermission")
   private void updateAndSend() {
-    String connectionType = CONNECTION_TYPE_UNKNOWN;
+    String connectionType = CONNECTION_TYPE_OTHER;
     String cellularGeneration = null;
 
     if (mNetworkCapabilities != null) {
@@ -74,6 +74,8 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
         connectionType = CONNECTION_TYPE_ETHERNET;
       } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
         connectionType = CONNECTION_TYPE_WIFI;
+      } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+        connectionType = CONNECTION_TYPE_VPN;
       }
     } else {
       connectionType = CONNECTION_TYPE_NONE;

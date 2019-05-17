@@ -150,7 +150,7 @@ The `details` value depends on the `type` value.
 
 `details` is `null`.
 
-##### `type` is `wifi`, `bluetooth`, `ethernet`, or `wimax`
+##### `type` is `wifi`, `bluetooth`, `ethernet`, `wimax`, `vpn`, or `other`
 
 `details` has these properties:
 
@@ -170,15 +170,17 @@ The `details` value depends on the `type` value.
 #### `NetInfoStateType`
 Describes the current type of network connection. It is an enum with these possible values:
 
-| Value       | Platform     | Description                                         |
-| ----------- | ------------ | --------------------------------------------------- |
-| `none`      | Android, iOS | No network connection is active                     |
-| `unknown`   | Android, iOS | The network state could not be determined           |
-| `cellular`  | Android, iOS | The active network is a cellular connection         |
-| `wifi`      | Android, iOS | The active network is a Wifi connection             |
-| `bluetooth` | Android      | The active network over Bluetooth                   |
-| `ethernet`  | Android      | The active network over a wired ethernet connection |
-| `wimax`     | Android      | The active network over a WiMax connection          |
+| Value       | Platform     | Description                                                |
+| ----------- | ------------ | ---------------------------------------------------------- |
+| `none`      | Android, iOS | No network connection is active                            |
+| `unknown`   | Android, iOS | The network state could not or has yet to be be determined |
+| `cellular`  | Android, iOS | The active network is a cellular connection                |
+| `wifi`      | Android, iOS | The active network is a Wifi connection                    |
+| `bluetooth` | Android      | The active network over Bluetooth                          |
+| `ethernet`  | Android      | The active network over a wired ethernet connection        |
+| `wimax`     | Android      | The active network over a WiMax connection                 |
+| `vpn`       | Android      | The active network over a VPN connection                   |
+| `other`     | Android, iOS | The active network over another type of network            |
 
 #### `NetInfoCellularGeneration`
 Describes the current generation of the `cellular` connection. It is an enum with these possible values:

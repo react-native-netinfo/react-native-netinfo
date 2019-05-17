@@ -53,7 +53,7 @@ public class BroadcastReceiverConnectivityReceiver extends ConnectivityReceiver 
 
   @SuppressLint("MissingPermission")
   private void updateAndSendConnectionType() {
-    String connectionType = CONNECTION_TYPE_UNKNOWN;
+    String connectionType = CONNECTION_TYPE_OTHER;
     String cellularGeneration = null;
 
     try {
@@ -80,6 +80,8 @@ public class BroadcastReceiverConnectivityReceiver extends ConnectivityReceiver 
           case ConnectivityManager.TYPE_WIMAX:
             connectionType = CONNECTION_TYPE_WIMAX;
             break;
+          case ConnectivityManager.TYPE_VPN:
+            connectionType = CONNECTION_TYPE_VPN;
         }
       }
     } catch (SecurityException e) {

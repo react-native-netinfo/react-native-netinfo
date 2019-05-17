@@ -29,6 +29,8 @@ abstract class ConnectivityReceiver {
   static final String CONNECTION_TYPE_UNKNOWN = "unknown";
   static final String CONNECTION_TYPE_WIFI = "wifi";
   static final String CONNECTION_TYPE_WIMAX = "wimax";
+  static final String CONNECTION_TYPE_VPN = "vpn";
+  static final String CONNECTION_TYPE_OTHER = "other";
 
   // Based on the EffectiveConnectionType enum described in the W3C Network Information API spec
   // (https://wicg.github.io/netinfo/).
