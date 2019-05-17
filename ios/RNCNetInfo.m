@@ -187,6 +187,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
   return @{
            @"type": connectionType,
            @"isConnected": @(isConnected),
+           @"isInternetReachable": @(isConnected),
            @"details": details ?: [NSNull null]
            };
 }
