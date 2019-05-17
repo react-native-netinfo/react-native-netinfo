@@ -43,25 +43,25 @@ workflows:
       - analyse:
           requires:
             - checkout_code
-      - rn/android_build:
-          name: build_android_debug
-          project_path: "example/android"
-          build_type: debug
-          requires:
-            - analyse
-      # Disabled until we can get a handle on the memory issues
+      # Disabled until we can get Detox to work correctly on Android
+      # - rn/android_build:
+      #     name: build_android_debug
+      #     project_path: "example/android"
+      #     build_type: debug
+      #     requires:
+      #       - analyse
       # - rn/android_build:
       #     name: build_android_release
       #     project_path: "example/android"
       #     build_type: release
       #     requires:
       #       - analyse
-      - rn/android_test:
-          start_metro: true
-          detox_configuration: "android.emu.debug"
-          detox_loglevel: "trace"
-          requires:
-            - build_android_debug
+      # - rn/android_test:
+      #     start_metro: true
+      #     detox_configuration: "android.emu.debug"
+      #     detox_loglevel: "trace"
+      #     requires:
+      #       - build_android_debug
       - rn/ios_build_and_test:
           project_path: "example/ios/NetInfoExample.xcodeproj"
           derived_data_path: "example/ios/build"
@@ -75,8 +75,8 @@ workflows:
       - publish:
           requires:
             - analyse
-            - rn/android_test
             - rn/ios_build_and_test
+            # - rn/android_test
           filters:
             branches:
               only: master
