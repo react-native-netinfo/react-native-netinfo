@@ -244,7 +244,13 @@ const YourComplement = () => {
 };
 ```
 
-## Known issues with the iOS simulator
+## Troubleshooting
+
+### Errors while running Jest tests
+
+Follow the [guide to integrate with Jest](/docs/Jest-Integration.md).
+
+### Issues with the iOS simulator
 
 There is a [known](http://openradar.appspot.com/14585459) [issue](http://www.openradar.appspot.com/29913522) with the iOS Simulator which causes it to not receive network change notifications correctly when the host machine disconnects and then connects to Wifi. If you are having issues with iOS then please test on an actual device before reporting any bugs.
 
