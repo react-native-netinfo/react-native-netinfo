@@ -150,7 +150,7 @@ The `details` value depends on the `type` value.
 
 `details` is `null`.
 
-##### `type` is `wifi`, `blueeooth`, `ethernet`, or `wimax`
+##### `type` is `wifi`, `bluetooth`, `ethernet`, or `wimax`
 
 `details` has these properties:
 
