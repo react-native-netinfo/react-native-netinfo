@@ -75,6 +75,41 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
                 connectionType = ConnectionType.VPN;
             }
 
+            isInternetReachable =
+                    mNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                            && mNetworkCapabilities.hasCapability(
+                                    NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+
+            // Get the cellular network type
+            if (mNetwork != null && connectionType == ConnectionType.CELLULAR) {
+                NetworkInfo networkInfo = getConnectivityManager().getNetworkInfo(mNetwork);
+                cellularGeneration = CellularGeneration.fromNetworkInfo(networkInfo);
+            }
+        } else {
+            connectionType = ConnectionType.NONE;
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void updateAndSend() {
+        ConnectionType connectionType = ConnectionType.UNKNOWN;
+        CellularGeneration cellularGeneration = null;
+        boolean isInternetReachable = false;
+
+        if (mNetworkCapabilities != null) {
+            // Get the connection type
+            if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) {
+                connectionType = ConnectionType.BLUETOOTH;
+            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                connectionType = ConnectionType.CELLULAR;
+            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                connectionType = ConnectionType.ETHERNET;
+            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                connectionType = ConnectionType.WIFI;
+            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                connectionType = ConnectionType.VPN;
+            }
+
             // Get the network information
             if (mNetwork != null) {
                 NetworkInfo networkInfo = getConnectivityManager().getNetworkInfo(mNetwork);

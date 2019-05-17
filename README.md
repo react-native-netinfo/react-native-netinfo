@@ -170,11 +170,12 @@ unsubscribe();
 #### `NetInfoState`
 Describes the current state of the network. It is an object with these properties:
 
-| Property        | Type                                             | Description                                                                                        |
-| --------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| `type`          | [`NetInfoStateType`](#netinfostatetype)          | The type of the current connection.                                                                |
-| `isConnected`   | `boolean`                                        | If there is an active network connection. Note that this DOES NOT mean that internet is reachable. |
-| `details`       |                                                  | The value depends on the `type` value. See below.                                                  |
+| Property              | Type                                    | Description                                                                                        |
+| --------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `type`                | [`NetInfoStateType`](#netinfostatetype) | The type of the current connection.                                                                |
+| `isConnected`         | `boolean`                               | If there is an active network connection. Note that this DOES NOT mean that internet is reachable. |
+| `isInternetReachable` | `boolean`                               | If the internet is reachable with the currently active network connection.                         |
+| `details`             |                                         | The value depends on the `type` value. See below.                                                  |
 
 The `details` value depends on the `type` value.
 
