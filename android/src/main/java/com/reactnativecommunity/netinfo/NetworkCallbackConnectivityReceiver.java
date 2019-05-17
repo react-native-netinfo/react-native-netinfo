@@ -39,6 +39,12 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
   void register() {
     try {
       getConnectivityManager().registerDefaultNetworkCallback(mNetworkCallback);
+
+      // If we currently have no active network, we are not going to get a callback below, so we
+      // should manually send a "none" event
+      if (getConnectivityManager().getActiveNetwork() == null) {
+        updateAndSend();
+      }
     } catch (SecurityException e) {
       setNoNetworkPermission();
     }
