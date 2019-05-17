@@ -15,6 +15,8 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.reactnativecommunity.netinfo.types.CellularGeneration;
+import com.reactnativecommunity.netinfo.types.ConnectionType;
 
 /**
  * This gets the connectivity status using a NetworkCallback on the system default network. This
@@ -37,15 +39,8 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     void register() {
         try {
             getConnectivityManager().registerDefaultNetworkCallback(mNetworkCallback);
-
-            // If we currently have no active network, we are not going to get a callback below, so
-            // we
-            // should manually send a "none" event
-            if (getConnectivityManager().getActiveNetwork() == null) {
-                updateAndSend();
-            }
         } catch (SecurityException e) {
-            setNoNetworkPermission();
+            // TODO: Display a yellow box about this
         }
     }
 
@@ -54,7 +49,7 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
         try {
             getConnectivityManager().unregisterNetworkCallback(mNetworkCallback);
         } catch (SecurityException e) {
-            setNoNetworkPermission();
+            // TODO: Display a yellow box about this
         } catch (IllegalArgumentException e) {
             // ignore this, it is expected when the callback was not registered successfully
         }
@@ -62,31 +57,39 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
 
     @SuppressLint("MissingPermission")
     private void updateAndSend() {
-        String connectionType = CONNECTION_TYPE_OTHER;
-        String cellularGeneration = null;
+        ConnectionType connectionType = ConnectionType.UNKNOWN;
+        CellularGeneration cellularGeneration = null;
+        boolean isInternetReachable = false;
 
         if (mNetworkCapabilities != null) {
+            // Get the connection type
             if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) {
-                connectionType = CONNECTION_TYPE_BLUETOOTH;
+                connectionType = ConnectionType.BLUETOOTH;
             } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                connectionType = CONNECTION_TYPE_CELLULAR;
-
-                if (mNetwork != null) {
-                    NetworkInfo networkInfo = getConnectivityManager().getNetworkInfo(mNetwork);
-                    cellularGeneration = getEffectiveConnectionType(networkInfo);
-                }
+                connectionType = ConnectionType.CELLULAR;
             } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                connectionType = CONNECTION_TYPE_ETHERNET;
+                connectionType = ConnectionType.ETHERNET;
             } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                connectionType = CONNECTION_TYPE_WIFI;
+                connectionType = ConnectionType.WIFI;
             } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
-                connectionType = CONNECTION_TYPE_VPN;
+                connectionType = ConnectionType.VPN;
+            }
+
+            // Get the network information
+            if (mNetwork != null) {
+                NetworkInfo networkInfo = getConnectivityManager().getNetworkInfo(mNetwork);
+
+                isInternetReachable = networkInfo.isConnected();
+
+                if (connectionType == ConnectionType.CELLULAR) {
+                    cellularGeneration = CellularGeneration.fromNetworkInfo(networkInfo);
+                }
             }
         } else {
-            connectionType = CONNECTION_TYPE_NONE;
+            connectionType = ConnectionType.NONE;
         }
 
-        updateConnectivity(connectionType, cellularGeneration);
+        updateConnectivity(connectionType, cellularGeneration, isInternetReachable);
     }
 
     private class ConnectivityNetworkCallback extends ConnectivityManager.NetworkCallback {
