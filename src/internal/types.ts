@@ -15,6 +15,8 @@ export enum NetInfoStateType {
   bluetooth = 'bluetooth',
   ethernet = 'ethernet',
   wimax = 'wimax',
+  vpn = 'vpn',
+  other = 'other',
 }
 
 export enum NetInfoCellularGeneration {
@@ -62,6 +64,8 @@ export type NetInfoEthernetState = NetInfoConnectedState<
   NetInfoStateType.ethernet
 >;
 export type NetInfoWimaxState = NetInfoConnectedState<NetInfoStateType.wimax>;
+export type NetInfoVpnState = NetInfoConnectedState<NetInfoStateType.vpn>;
+export type NetInfoOtherState = NetInfoConnectedState<NetInfoStateType.other>;
 
 export type NetInfoState =
   | NetInfoUnknownState
@@ -70,7 +74,9 @@ export type NetInfoState =
   | NetInfoWifiState
   | NetInfoBluetoothState
   | NetInfoEthernetState
-  | NetInfoWimaxState;
+  | NetInfoWimaxState
+  | NetInfoVpnState
+  | NetInfoOtherState;
 
 export type NetInfoChangeHandler = (state: NetInfoState) => void;
 export type NetInfoSubscription = () => void;

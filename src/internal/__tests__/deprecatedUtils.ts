@@ -156,6 +156,38 @@ describe('Deprecated utils', () => {
         effectiveType: 'unknown',
       },
     },
+    {
+      title: 'VPN',
+      input: {
+        type: NetInfoStateType.vpn,
+        isConnected: true,
+        details: {
+          isConnectionExpensive: false,
+        },
+      },
+      isConnected: true,
+      isExpensive: false,
+      depreacted: {
+        type: 'unknown',
+        effectiveType: 'unknown',
+      },
+    },
+    {
+      title: 'Other',
+      input: {
+        type: NetInfoStateType.other,
+        isConnected: true,
+        details: {
+          isConnectionExpensive: false,
+        },
+      },
+      isConnected: true,
+      isExpensive: false,
+      depreacted: {
+        type: 'unknown',
+        effectiveType: 'unknown',
+      },
+    },
   ];
 
   describe('convertState', () => {
