@@ -4,7 +4,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 package com.reactnativecommunity.netinfo;
 
 import android.annotation.SuppressLint;
@@ -15,7 +14,6 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
-
 import com.facebook.react.bridge.ReactApplicationContext;
 
 /**
@@ -25,112 +23,114 @@ import com.facebook.react.bridge.ReactApplicationContext;
  */
 @TargetApi(Build.VERSION_CODES.N)
 class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
-  private final ConnectivityNetworkCallback mNetworkCallback;
-  private Network mNetwork = null;
-  private NetworkCapabilities mNetworkCapabilities = null;
+    private final ConnectivityNetworkCallback mNetworkCallback;
+    private Network mNetwork = null;
+    private NetworkCapabilities mNetworkCapabilities = null;
 
-  public NetworkCallbackConnectivityReceiver(ReactApplicationContext reactContext) {
-    super(reactContext);
-    mNetworkCallback = new ConnectivityNetworkCallback();
-  }
-
-  @Override
-  @SuppressLint("MissingPermission")
-  void register() {
-    try {
-      getConnectivityManager().registerDefaultNetworkCallback(mNetworkCallback);
-
-      // If we currently have no active network, we are not going to get a callback below, so we
-      // should manually send a "none" event
-      if (getConnectivityManager().getActiveNetwork() == null) {
-        updateAndSend();
-      }
-    } catch (SecurityException e) {
-      setNoNetworkPermission();
+    public NetworkCallbackConnectivityReceiver(ReactApplicationContext reactContext) {
+        super(reactContext);
+        mNetworkCallback = new ConnectivityNetworkCallback();
     }
-  }
 
-  @Override
-  void unregister() {
-    try {
-      getConnectivityManager().unregisterNetworkCallback(mNetworkCallback);
-    } catch (SecurityException e) {
-      setNoNetworkPermission();
-    } catch (IllegalArgumentException e) {
-      // ignore this, it is expected when the callback was not registered successfully
-    }
-  }
+    @Override
+    @SuppressLint("MissingPermission")
+    void register() {
+        try {
+            getConnectivityManager().registerDefaultNetworkCallback(mNetworkCallback);
 
-  @SuppressLint("MissingPermission")
-  private void updateAndSend() {
-    String connectionType = CONNECTION_TYPE_OTHER;
-    String cellularGeneration = null;
-
-    if (mNetworkCapabilities != null) {
-      if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) {
-        connectionType = CONNECTION_TYPE_BLUETOOTH;
-      } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-        connectionType = CONNECTION_TYPE_CELLULAR;
-
-        if (mNetwork != null) {
-          NetworkInfo networkInfo = getConnectivityManager().getNetworkInfo(mNetwork);
-          cellularGeneration = getEffectiveConnectionType(networkInfo);
+            // If we currently have no active network, we are not going to get a callback below, so
+            // we
+            // should manually send a "none" event
+            if (getConnectivityManager().getActiveNetwork() == null) {
+                updateAndSend();
+            }
+        } catch (SecurityException e) {
+            setNoNetworkPermission();
         }
-      } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-        connectionType = CONNECTION_TYPE_ETHERNET;
-      } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-        connectionType = CONNECTION_TYPE_WIFI;
-      } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
-        connectionType = CONNECTION_TYPE_VPN;
-      }
-    } else {
-      connectionType = CONNECTION_TYPE_NONE;
-    }
-
-    updateConnectivity(connectionType, cellularGeneration);
-  }
-
-  private class ConnectivityNetworkCallback extends ConnectivityManager.NetworkCallback {
-    @Override
-    public void onAvailable(Network network) {
-      mNetwork = network;
-      mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
-      updateAndSend();
     }
 
     @Override
-    public void onLosing(Network network, int maxMsToLive) {
-      mNetwork = network;
-      mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
-      updateAndSend();
+    void unregister() {
+        try {
+            getConnectivityManager().unregisterNetworkCallback(mNetworkCallback);
+        } catch (SecurityException e) {
+            setNoNetworkPermission();
+        } catch (IllegalArgumentException e) {
+            // ignore this, it is expected when the callback was not registered successfully
+        }
     }
 
-    @Override
-    public void onLost(Network network) {
-      mNetwork = null;
-      mNetworkCapabilities = null;
-      updateAndSend();
+    @SuppressLint("MissingPermission")
+    private void updateAndSend() {
+        String connectionType = CONNECTION_TYPE_OTHER;
+        String cellularGeneration = null;
+
+        if (mNetworkCapabilities != null) {
+            if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) {
+                connectionType = CONNECTION_TYPE_BLUETOOTH;
+            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                connectionType = CONNECTION_TYPE_CELLULAR;
+
+                if (mNetwork != null) {
+                    NetworkInfo networkInfo = getConnectivityManager().getNetworkInfo(mNetwork);
+                    cellularGeneration = getEffectiveConnectionType(networkInfo);
+                }
+            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                connectionType = CONNECTION_TYPE_ETHERNET;
+            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                connectionType = CONNECTION_TYPE_WIFI;
+            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                connectionType = CONNECTION_TYPE_VPN;
+            }
+        } else {
+            connectionType = CONNECTION_TYPE_NONE;
+        }
+
+        updateConnectivity(connectionType, cellularGeneration);
     }
 
-    @Override
-    public void onUnavailable() {
-      mNetwork = null;
-      mNetworkCapabilities = null;
-      updateAndSend();
-    }
+    private class ConnectivityNetworkCallback extends ConnectivityManager.NetworkCallback {
+        @Override
+        public void onAvailable(Network network) {
+            mNetwork = network;
+            mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
+            updateAndSend();
+        }
 
-    @Override
-    public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
-      mNetwork = network;
-      mNetworkCapabilities = networkCapabilities;
-      updateAndSend();
-    }
+        @Override
+        public void onLosing(Network network, int maxMsToLive) {
+            mNetwork = network;
+            mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
+            updateAndSend();
+        }
 
-    @Override
-    public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
-      mNetwork = network;
-      mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
-      updateAndSend();
+        @Override
+        public void onLost(Network network) {
+            mNetwork = null;
+            mNetworkCapabilities = null;
+            updateAndSend();
+        }
+
+        @Override
+        public void onUnavailable() {
+            mNetwork = null;
+            mNetworkCapabilities = null;
+            updateAndSend();
+        }
+
+        @Override
+        public void onCapabilitiesChanged(
+                Network network, NetworkCapabilities networkCapabilities) {
+            mNetwork = network;
+            mNetworkCapabilities = networkCapabilities;
+            updateAndSend();
+        }
+
+        @Override
+        public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
+            mNetwork = network;
+            mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
+            updateAndSend();
+        }
     }
-  }
 }

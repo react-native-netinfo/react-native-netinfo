@@ -13,9 +13,9 @@ All work on React Native NetInfo happens directly on GitHub. Contributors send p
 Currently we use `flow` for typechecking, `eslint` with `prettier` for linting and formatting the code, and `jest` for unit testing. We also use `detox` for end-to-end testing. All of these are run on CircleCI for all opened pull requests, but you should use them locally when making changes.
 
 * `yarn test`: Run all tests and validations.
+* `yarn validate:android`: Run Spotless style checker on the Java code.
 * `yarn validate:eslint`: Run `eslint`.
 * `yarn validate:eslint --fix`: Run `eslint` and automatically fix issues. This is useful for correcting code formatting.
-* `yarn validate:flow`: Run `flow` typechecking.
 * `yarn validate:typescript`: Run `typescript` typechecking.
 * `yarn test:jest`: Run unit tests with `jest`.
 * `yarn test:detox:<android|ios>:build:<debug|release>`: Build the `debug` or `release` app for end-to-end tests with `detox` on either `android` or `ios`. You need to run this before running the test command and whenever you make changes to the native code.

@@ -22,7 +22,9 @@
   "license": "MIT",
   "scripts": {
     "start": "react-native start",
-    "test": "yarn validate:eslint && yarn validate:typescript && yarn test:jest",
+    "test": "yarn validate:eslint && yarn validate:android && yarn validate:typescript && yarn test:jest",
+    "validate:android": "cd android && ./gradlew spotlessCheck",
+    "validate:android:fix": "cd android && ./gradlew spotlessApply",
     "validate:eslint": "eslint 'src/**/*.{js,ts,tsx}' 'example/**/*.{js,ts,tsx}'",
     "validate:typescript": "tsc --project ./ --noEmit",
     "test:jest": "jest '/src/'",
@@ -63,15 +65,17 @@
     "@typescript-eslint/parser": "^1.7.0",
     "babel-jest": "^24.7.1",
     "detox": "^12.8.0",
+    "eslint": "5.16.0",
     "eslint-config-prettier": "^4.2.0",
     "eslint-plugin-prettier": "3.0.1",
-    "eslint": "5.16.0",
+    "husky": "^2.3.0",
     "jest": "^24.8.0",
+    "lint-staged": "^8.1.7",
     "metro-react-native-babel-preset": "^0.53.1",
     "prettier": "^1.17.0",
+    "react": "16.8.3",
     "react-native": "0.59.5",
     "react-test-renderer": "16.8.3",
-    "react": "16.8.3",
     "rimraf": "^2.6.3",
     "semantic-release": "15.13.3",
     "ts-jest": "^24.0.2",
@@ -117,6 +121,22 @@
     "targets": [
       "commonjs",
       "module"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn test"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "yarn eslint --fix",
+      "git add"
+    ],
+    "*.java": [
+      "cd android && ./graldew spotlessApply",
+      "git add"
     ]
   }
 }
