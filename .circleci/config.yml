@@ -18,6 +18,9 @@ jobs:
           at: .
       - rn/yarn_install
       - run:
+          name: Lint Android Code (Spotless)
+          command: yarn run validate:android
+      - run:
           name: Lint JS Code (ESLint)
           command: yarn run validate:eslint
       - run:
