@@ -114,13 +114,13 @@ Subscribe to network state updates:
 
 ```javascript
 // Subscribe
-const subscription = NetInfo.addEventListener(state => {
+const unsubscribe = NetInfo.addEventListener(state => {
   console.log("Connection type", state.type);
   console.log("Is connected?", state.isConnected);
 });
 
 // Unsubscribe
-subscription();
+unsubscribe();
 ```
 
 ## API
@@ -217,13 +217,13 @@ Subscribe to connection information. The callback is called with a parameter of 
 **Example:**
 ```javascript
 // Subscribe
-const subscription = NetInfo.addEventListener(state => {
+const unsubscribe = NetInfo.addEventListener(state => {
   console.log("Connection type", state.type);
   console.log("Is connected?", state.isConnected);
 });
 
 // Unsubscribe
-subscription.remove();
+unsubscribe();
 ```
 
 #### `useNetInfo()`
