@@ -26,6 +26,7 @@ describe('@react-native-community/netinfo', () => {
       MockNativeInterface.getCurrentState.mockResolvedValue({
         type: NetInfoStateType.none,
         isConnected: false,
+        isInternetReachable: false,
         details: null,
       });
     });

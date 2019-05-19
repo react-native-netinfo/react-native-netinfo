@@ -28,6 +28,7 @@ describe('Deprecated', () => {
         MockNativeInterface.getCurrentState.mockResolvedValue({
           type: NetInfoStateType.wifi,
           isConnected: true,
+          isInternetReachable: true,
           details: {
             isConnectionExpensive: false,
           },

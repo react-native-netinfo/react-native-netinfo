@@ -25,6 +25,7 @@ describe('@react-native-community/netinfo', () => {
       const expectedConnectionInfo: NetInfoState = {
         type: NetInfoStateType.cellular,
         isConnected: true,
+        isInternetReachable: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: NetInfoCellularGeneration['3g'],

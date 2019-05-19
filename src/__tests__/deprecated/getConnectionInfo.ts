@@ -27,6 +27,7 @@ describe('Deprecated', () => {
       MockNativeInterface.getCurrentState.mockResolvedValue({
         type: expectedConnectionType,
         isConnected: true,
+        isInternetReachable: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: expectedEffectiveConnectionType,

@@ -29,6 +29,7 @@ describe('Deprecated', () => {
       MockNativeInterface.getCurrentState.mockResolvedValue({
         type: NetInfoStateType.cellular,
         isConnected: true,
+        isInternetReachable: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: NetInfoCellularGeneration['3g'],
@@ -69,6 +70,7 @@ describe('Deprecated', () => {
       NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
         type: expectedConnectionType,
         isConnected: true,
+        isInternetReachable: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: expectedEffectiveConnectionType,
@@ -88,6 +90,7 @@ describe('Deprecated', () => {
       NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
         type: 'cellular',
         isConnected: true,
+        isInternetReachable: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: '3g',
@@ -96,6 +99,7 @@ describe('Deprecated', () => {
       NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
         type: 'wifi',
         isConnected: true,
+        isInternetReachable: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: 'unknown',
@@ -118,6 +122,7 @@ describe('Deprecated', () => {
       NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
         type: expectedConnectionType,
         isConnected: true,
+        isInternetReachable: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: expectedEffectiveConnectionType,
@@ -144,6 +149,7 @@ describe('Deprecated', () => {
       NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
         type: 'cellular',
         isConnected: true,
+        isInternetReachable: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: '3g',
@@ -170,6 +176,7 @@ describe('Deprecated', () => {
       NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
         type: expectedConnectionType,
         isConnected: true,
+        isInternetReachable: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: expectedEffectiveConnectionType,
