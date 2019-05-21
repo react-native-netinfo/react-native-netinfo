@@ -156,7 +156,7 @@ The `details` value depends on the `type` value.
 
 | Property                | Type      | Description                                                                                           |
 | ----------------------- | --------- | ----------------------------------------------------------------------------------------------------- |
-| `isConnectionExpensive` | `boolean` | If the network connection is considered "expensive". This could be in either energy or monetry terms. |
+| `isConnectionExpensive` | `boolean` | If the network connection is considered "expensive". This could be in either energy or monetary terms. |
 
 ##### `type` is `cellular`
 
@@ -164,7 +164,7 @@ The `details` value depends on the `type` value.
 
 | Property                | Type                                                               | Description                                                                                                           |
 | ----------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| `isConnectionExpensive` | `boolean`                                                          | If the network connection is considered "expensive". This could be in either energy or monetry terms.                 |
+| `isConnectionExpensive` | `boolean`                                                          | If the network connection is considered "expensive". This could be in either energy or monetary terms.                 |
 | `cellularGeneration`    | [`NetInfoCellularGeneration`](README.md#netinfocellulargeneration) | The generation of the cell network the user is connected to. This can give an indication of speed, but no guarantees. |
 
 #### `NetInfoStateType`
