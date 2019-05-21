@@ -125,13 +125,13 @@ unsubscribe();
 
 ## API
 * **Types:**
-  * [`NetInfoState`](README.md#netinfostate)
-  * [`NetInfoStateType`](README.md#netinfostatetype)
-  * [`NetInfoCellularGeneration`](README.md#netinfocellulargeneration)
+  * [`NetInfoState`](#netinfostate)
+  * [`NetInfoStateType`](#netinfostatetype)
+  * [`NetInfoCellularGeneration`](#netinfocellulargeneration)
 * **Methods:**
-  * [`fetch()`](README.md#fetch)
-  * [`addEventListener()`](README.md#addeventlistener)
-  * [`useNetInfo()`](README.md#usenetinfo)
+  * [`fetch()`](#fetch)
+  * [`addEventListener()`](#addeventlistener)
+  * [`useNetInfo()`](#usenetinfo)
 
 ### Types
 
@@ -140,7 +140,7 @@ Describes the current state of the network. It is an object with these propertie
 
 | Property        | Type                                             | Description                                                                                        |
 | --------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| `type`          | [`NetInfoStateType`](README.md#netinfostatetype) | The type of the current connection.                                                                |
+| `type`          | [`NetInfoStateType`](#netinfostatetype) | The type of the current connection.                                                                |
 | `isConnected`   | `boolean`                                        | If there is an active network connection. Note that this DOES NOT mean that internet is reachable. |
 | `details`       |                                                  | The value depends on the `type` value. See below.                                                  |
 
@@ -165,7 +165,7 @@ The `details` value depends on the `type` value.
 | Property                | Type                                                               | Description                                                                                                           |
 | ----------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
 | `isConnectionExpensive` | `boolean`                                                          | If the network connection is considered "expensive". This could be in either energy or monetry terms.                 |
-| `cellularGeneration`    | [`NetInfoCellularGeneration`](README.md#netinfocellulargeneration) | The generation of the cell network the user is connected to. This can give an indication of speed, but no guarantees. |
+| `cellularGeneration`    | [`NetInfoCellularGeneration`](#netinfocellulargeneration) | The generation of the cell network the user is connected to. This can give an indication of speed, but no guarantees. |
 
 #### `NetInfoStateType`
 Describes the current type of network connection. It is an enum with these possible values:
