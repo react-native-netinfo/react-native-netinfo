@@ -1,9 +1,9 @@
 
 # `@react-native-community/netinfo`
 
-[![CircleCI Status](https://img.shields.io/circleci/project/github/react-native-community/react-native-netinfo/master.svg)](https://circleci.com/gh/react-native-community/workflows/react-native-netinfo/tree/master) ![Supports Android and iOS](https://img.shields.io/badge/platforms-android%20|%20ios-lightgrey.svg) ![MIT License](https://img.shields.io/npm/l/@react-native-community/netinfo.svg)
+[![CircleCI Status](https://img.shields.io/circleci/project/github/react-native-community/react-native-netinfo/master.svg)](https://circleci.com/gh/react-native-community/workflows/react-native-netinfo/tree/master) ![Supports Android and iOS](https://img.shields.io/badge/platforms-android%20|%20ios%20|%20windows-lightgrey.svg) ![MIT License](https://img.shields.io/npm/l/@react-native-community/netinfo.svg)
 
-React Native Network Info API for Android & iOS. It allows you to get information on:
+React Native Network Info API for Android, iOS & Windows. It allows you to get information on:
 
 * Connection type
 * Connection quality
@@ -77,6 +77,28 @@ protected List<ReactPackage> getPackages() {
     );
 }
 ```
+</details>
+
+<details>
+<summary>Manually link the library on Windows</summary>
+
+* Open the solution in Visual Studio for your Windows apps
+* Right click in the Explorer and click Add > Existing Project...
+* Navigate to `./<app-name>/node_modules/@react-native-community/netinfo/windows/RNCNetInfo/` and add `RNCNetInfo.csproj`
+* This time right click on your React Native Windows app under your solutions directory and click Add > Reference...
+* Check the `RNCNetInfo` you just added and press ok
+* Open up `MainReactNativeHost.cs` for your app and edit the file like so:
+
+```diff
++ using ReactNativeCommunity.NetInfo;
+......
+        protected override List<IReactPackage> Packages => new List<IReactPackage>
+        {
+            new MainReactPackage(),
++           new RNCNetInfoPackage(),
+        };
+```
+
 </details>
 
 ## Migrating from the core `react-native` module
@@ -170,17 +192,17 @@ The `details` value depends on the `type` value.
 #### `NetInfoStateType`
 Describes the current type of network connection. It is an enum with these possible values:
 
-| Value       | Platform     | Description                                                |
-| ----------- | ------------ | ---------------------------------------------------------- |
-| `none`      | Android, iOS | No network connection is active                            |
-| `unknown`   | Android, iOS | The network state could not or has yet to be be determined |
-| `cellular`  | Android, iOS | Active network over cellular                               |
-| `wifi`      | Android, iOS | Active network over Wifi                                   |
-| `bluetooth` | Android      | Active network over Bluetooth                              |
-| `ethernet`  | Android      | Active network over wired ethernet                         |
-| `wimax`     | Android      | Active network over WiMax                                  |
-| `vpn`       | Android      | Active network over VPN                                    |
-| `other`     | Android, iOS | Active network over another type of network                |
+| Value       | Platform              | Description                                                |
+| ----------- | --------------------- | ---------------------------------------------------------- |
+| `none`      | Android, iOS, Windows | No network connection is active                            |
+| `unknown`   | Android, iOS, Windows | The network state could not or has yet to be be determined |
+| `cellular`  | Android, iOS, Windows | Active network over cellular                               |
+| `wifi`      | Android, iOS, Windows | Active network over Wifi                                   |
+| `bluetooth` | Android               | Active network over Bluetooth                              |
+| `ethernet`  | Android, Windows      | Active network over wired ethernet                         |
+| `wimax`     | Android               | Active network over WiMax                                  |
+| `vpn`       | Android               | Active network over VPN                                    |
+| `other`     | Android, iOS, Windows | Active network over another type of network                |
 
 #### `NetInfoCellularGeneration`
 Describes the current generation of the `cellular` connection. It is an enum with these possible values:
