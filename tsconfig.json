@@ -1,10 +1,9 @@
 {
   "include": ["src/**/*.ts", "example/**/*.ts", "example/**/*.tsx"],
   "compilerOptions": {
-    "target": "es6",
-    "module": "es6",
+    "target": "es5",
+    "module": "commonjs",
     "strict": true,
-    "downlevelIteration": true,
     "moduleResolution": "node",
     "lib": ["es2015", "es2016", "esnext"],
     "jsx": "react-native"

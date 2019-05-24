@@ -19,10 +19,9 @@ let _latestState: DeprecatedTypes.NetInfoData | null = null;
 let _isListening = false;
 
 function _listenerHandler(state: Types.NetInfoState): void {
-  _latestState = DeprecatedUtils.convertState(state);
-  for (let handler of _subscriptions) {
-    handler(_latestState);
-  }
+  const convertedState = DeprecatedUtils.convertState(state);
+  _latestState = convertedState;
+  _subscriptions.forEach((handler): void => handler(convertedState));
 }
 
 export function add(handler: DeprecatedTypes.ChangeHandler): void {
