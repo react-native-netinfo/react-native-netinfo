@@ -246,7 +246,30 @@ const YourComplement = () => {
 };
 ```
 
-## Known issues with the iOS simulator
+## Troubleshooting
+
+### Errors while running Jest tests
+
+If you do not have a Jest Setup file configured, you should add the following to your Jest settings and create the `jest.setup.js` file in project root:
+
+```js
+setupFiles: ['<rootDir>/jest.setup.js']
+```
+
+You should then add the following to your Jest setup file to mock the NetInfo Native Module:
+
+```js
+import { NativeModules } from 'react-native';
+
+NativeModules.RNCNetInfo = {
+  getCurrentConnectivity: jest.fn(),
+  isConnectionMetered: jest.fn(),
+  addListener: jest.fn(),
+  removeListeners: jest.fn()
+};
+```
+
+### Issues with the iOS simulator
 
 There is a [known](http://openradar.appspot.com/14585459) [issue](http://www.openradar.appspot.com/29913522) with the iOS Simulator which causes it to not receive network change notifications correctly when the host machine disconnects and then connects to Wifi. If you are having issues with iOS then please test on an actual device before reporting any bugs.
 
