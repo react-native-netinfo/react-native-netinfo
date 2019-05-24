@@ -20,9 +20,7 @@ let _nativeEventSubscription: NativeEventSubscription | null = null;
 
 function _listenerHandler(state: Types.NetInfoState): void {
   _latestState = state;
-  for (let handler of _subscriptions) {
-    handler(_latestState);
-  }
+  _subscriptions.forEach((handler): void => handler(state));
 }
 
 export function add(
