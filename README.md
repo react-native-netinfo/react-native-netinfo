@@ -140,7 +140,7 @@ Describes the current state of the network. It is an object with these propertie
 
 | Property        | Type                                             | Description                                                                                        |
 | --------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| `type`          | [`NetInfoStateType`](#netinfostatetype) | The type of the current connection.                                                                |
+| `type`          | [`NetInfoStateType`](#netinfostatetype)          | The type of the current connection.                                                                |
 | `isConnected`   | `boolean`                                        | If there is an active network connection. Note that this DOES NOT mean that internet is reachable. |
 | `details`       |                                                  | The value depends on the `type` value. See below.                                                  |
 
@@ -154,9 +154,9 @@ The `details` value depends on the `type` value.
 
 `details` has these properties:
 
-| Property                | Type      | Description                                                                                           |
-| ----------------------- | --------- | ----------------------------------------------------------------------------------------------------- |
-| `isConnectionExpensive` | `boolean` | If the network connection is considered "expensive". This could be in either energy or monetry terms. |
+| Property                | Type      | Description                                                                                            |
+| ----------------------- | --------- | ------------------------------------------------------------------------------------------------------ |
+| `isConnectionExpensive` | `boolean` | If the network connection is considered "expensive". This could be in either energy or monetary terms. |
 
 ##### `type` is `cellular`
 
@@ -164,8 +164,8 @@ The `details` value depends on the `type` value.
 
 | Property                | Type                                                               | Description                                                                                                           |
 | ----------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| `isConnectionExpensive` | `boolean`                                                          | If the network connection is considered "expensive". This could be in either energy or monetry terms.                 |
-| `cellularGeneration`    | [`NetInfoCellularGeneration`](#netinfocellulargeneration) | The generation of the cell network the user is connected to. This can give an indication of speed, but no guarantees. |
+| `isConnectionExpensive` | `boolean`                                                          | If the network connection is considered "expensive". This could be in either energy or monetary terms.                |
+| `cellularGeneration`    | [`NetInfoCellularGeneration`](#netinfocellulargeneration)          | The generation of the cell network the user is connected to. This can give an indication of speed, but no guarantees. |
 
 #### `NetInfoStateType`
 Describes the current type of network connection. It is an enum with these possible values:
