@@ -248,7 +248,24 @@ const YourComplement = () => {
 
 ### Errors while running Jest tests
 
-Follow the [guide to integrate with Jest](/docs/Jest-Integration.md).
+If you do not have a Jest Setup file configured, you should add the following to your Jest settings and create the `jest.setup.js` file in project root:
+
+```js
+setupFiles: ['<rootDir>/jest.setup.js']
+```
+
+You should then add the following to your Jest setup file to mock the NetInfo Native Module:
+
+```js
+import { NativeModules } from 'react-native';
+
+NativeModules.RNCNetInfo = {
+  getCurrentConnectivity: jest.fn(),
+  isConnectionMetered: jest.fn(),
+  addListener: jest.fn(),
+  removeListeners: jest.fn()
+};
+```
 
 ### Issues with the iOS simulator
 
