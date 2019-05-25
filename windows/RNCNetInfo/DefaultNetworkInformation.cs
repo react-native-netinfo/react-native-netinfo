@@ -61,11 +61,21 @@ namespace ReactNativeCommunity.NetInfo
                     {
                         return NetworkConnectionType.Cellular;
                     }
+
+                    var networkAdapter = _profile.NetworkAdapter;
+                    if (networkAdapter == null)
+                    {
+                        return NetworkConnectionType.Unknown;
+                    }
+
+                    // Possible values: https://www.iana.org/assignments/ianaiftype-mib/ianaiftype-mib
+                    if (networkAdapter.IanaInterfaceType == 6u)
+                    {
+                        return NetworkConnectionType.Ethernet;
+                    }
                     else
                     {
-                        // If we have a connection that is not a Wifi connection or a Cellular
-                        // connection, then let's fallback and assume it's an Ethernet connection
-                        return NetworkConnectionType.Ethernet;
+                        return NetworkConnectionType.Other;
                     }
                 }
             }

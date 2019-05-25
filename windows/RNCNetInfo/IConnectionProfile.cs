@@ -11,7 +11,8 @@ namespace ReactNativeCommunity.NetInfo
         None,
         Cellular,
         Ethernet,
-        Wifi
+        Wifi,
+        Other
     }
 
     public enum CellularGeneration

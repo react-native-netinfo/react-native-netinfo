@@ -22,6 +22,7 @@ namespace ReactNativeCommunity.NetInfo
         private const string CONNECTION_TYPE_NONE = "none";
         private const string CONNECTION_TYPE_UNKNOWN = "unknown";
         private const string CONNECTION_TYPE_WIFI = "wifi";
+        private const string CONNECTION_TYPE_OTHER = "other";
 
         private const string CELLULAR_GENERATION_2G = "2g";
         private const string CELLULAR_GENERATION_3G = "3g";
@@ -157,6 +158,8 @@ namespace ReactNativeCommunity.NetInfo
                     return CONNECTION_TYPE_ETHERNET;
                 case NetworkConnectionType.Wifi:
                     return CONNECTION_TYPE_WIFI;
+                case NetworkConnectionType.Other:
+                    return CONNECTION_TYPE_OTHER;
                 default:
                     return CONNECTION_TYPE_UNKNOWN;
             }
