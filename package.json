@@ -10,6 +10,7 @@
     "/android",
     "!/android/build",
     "/ios",
+    "/windows",
     "/src",
     "/lib",
     "/*.podspec"
