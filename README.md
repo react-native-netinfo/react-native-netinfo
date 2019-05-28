@@ -284,8 +284,7 @@ You should then add the following to your Jest setup file to mock the NetInfo Na
 import { NativeModules } from 'react-native';
 
 NativeModules.RNCNetInfo = {
-  getCurrentConnectivity: jest.fn(),
-  isConnectionMetered: jest.fn(),
+  getCurrentState: jest.fn(),
   addListener: jest.fn(),
   removeListeners: jest.fn()
 };
