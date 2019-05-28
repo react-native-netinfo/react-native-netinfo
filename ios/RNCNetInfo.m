@@ -6,64 +6,35 @@
  */
 
 #import "RNCNetInfo.h"
+#import "RNCConnectionStateWatcher.h"
 
-#if !TARGET_OS_TV
-  #import <CoreTelephony/CTTelephonyNetworkInfo.h>
-#endif
 #import <React/RCTAssert.h>
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
 
-// Based on the ConnectionType enum described in the W3C Network Information API spec
-// (https://wicg.github.io/netinfo/).
-static NSString *const RNCConnectionTypeUnknown = @"unknown";
-static NSString *const RNCConnectionTypeNone = @"none";
-static NSString *const RNCConnectionTypeWifi = @"wifi";
-static NSString *const RNCConnectionTypeCellular = @"cellular";
+@interface RNCNetInfo () <RNCConnectionStateWatcherDelegate>
 
-// Based on the EffectiveConnectionType enum described in the W3C Network Information API spec
-// (https://wicg.github.io/netinfo/).
-static NSString *const RNCCellularGeneration2g = @"2g";
-static NSString *const RNCCellularGeneration3g = @"3g";
-static NSString *const RNCCellularGeneration4g = @"4g";
+@property (nonatomic, strong) RNCConnectionStateWatcher *connectionStateWatcher;
+@property (nonatomic) BOOL isObserving;
+
+@end
 
 @implementation RNCNetInfo
-{
-  SCNetworkReachabilityRef _firstTimeReachability;
-  SCNetworkReachabilityRef _reachability;
-  NSString *_connectionType;
-  BOOL _connectionExpensive;
-  NSString *_effectiveConnectionType;
-  BOOL _isObserving;
-  NSMutableSet<RCTPromiseResolveBlock> *_firstTimeReachabilityResolvers;
-}
+
+#pragma mark - Module setup
 
 RCT_EXPORT_MODULE()
-
-static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info)
-{
-  RNCNetInfo *self = (__bridge id)info;
-  BOOL didSetReachabilityFlags = [self setReachabilityStatus:flags];
-
-  if (self->_firstTimeReachability) {
-    [self->_firstTimeReachabilityResolvers enumerateObjectsUsingBlock:^(RCTPromiseResolveBlock resolver, BOOL *stop) {
-      resolver([self currentState]);
-    }];
-
-    [self cleanUpFirstTimeReachability];
-    [self->_firstTimeReachabilityResolvers removeAllObjects];
-  }
-
-  if (didSetReachabilityFlags && self->_isObserving) {
-    [self sendEventWithName:@"netInfo.networkStatusDidChange" body:[self currentState]];
-  }
-}
 
 // We need RNCReachabilityCallback's and module methods to be called on the same thread so that we can have
 // guarantees about when we mess with the reachability callbacks.
 - (dispatch_queue_t)methodQueue
 {
   return dispatch_get_main_queue();
+}
+
++ (BOOL)requiresMainQueueSetup
+{
+  return YES;
 }
 
 #pragma mark - Lifecycle
@@ -75,121 +46,35 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 
 - (void)startObserving
 {
-  _isObserving = YES;
-  _connectionType = RNCConnectionTypeUnknown;
-  _effectiveConnectionType = nil;
-  _reachability = [self getReachabilityRef];
+  self.isObserving = YES;
 }
 
 - (void)stopObserving
 {
-  _isObserving = NO;
-  if (_reachability) {
-    SCNetworkReachabilityUnscheduleFromRunLoop(_reachability, CFRunLoopGetMain(), kCFRunLoopCommonModes);
-    CFRelease(_reachability);
+  self.isObserving = NO;
+}
+
+- (instancetype)init
+{
+  self = [super init];
+  if (self) {
+    _connectionStateWatcher = [[RNCConnectionStateWatcher alloc] initWithDelegate:self];
   }
+  return self;
 }
 
 - (void)dealloc
 {
-  [self cleanUpFirstTimeReachability];
+  self.connectionStateWatcher = nil;
 }
 
-- (SCNetworkReachabilityRef)getReachabilityRef
+- (void)connectionStateWatcher:(RNCConnectionStateWatcher *)connectionStateWatcher didUpdateState:(RNCConnectionState *)state
 {
-  SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "apple.com");
-  SCNetworkReachabilityContext context = { 0, ( __bridge void *)self, NULL, NULL, NULL };
-  SCNetworkReachabilitySetCallback(reachability, RNCReachabilityCallback, &context);
-  SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetMain(), kCFRunLoopCommonModes);
-    
-  return reachability;
-}
-
-- (BOOL)setReachabilityStatus:(SCNetworkReachabilityFlags)flags
-{
-  NSString *connectionType = RNCConnectionTypeUnknown;
-  bool connectionExpensive = false;
-  NSString *effectiveConnectionType = nil;
-  if ((flags & kSCNetworkReachabilityFlagsReachable) == 0 ||
-      (flags & kSCNetworkReachabilityFlagsConnectionRequired) != 0) {
-    connectionType = RNCConnectionTypeNone;
+  // TODO: Pass the new state to the internet reachability watcher so it can update its own state
+  
+  if (self.isObserving) {
+    [self sendEventWithName:@"netInfo.networkStatusDidChange" body:[self dictionaryFromConnectionState:state]];
   }
-  
-#if !TARGET_OS_TV
-  
-  else if ((flags & kSCNetworkReachabilityFlagsIsWWAN) != 0) {
-    connectionType = RNCConnectionTypeCellular;
-    connectionExpensive = true;
-    
-    CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
-    if (netinfo) {
-      if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyGPRS] ||
-          [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyEdge] ||
-          [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMA1x]) {
-        effectiveConnectionType = RNCCellularGeneration2g;
-      } else if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyWCDMA] ||
-                 [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyHSDPA] ||
-                 [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyHSUPA] ||
-                 [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMAEVDORev0] ||
-                 [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMAEVDORevA] ||
-                 [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMAEVDORevB] ||
-                 [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyeHRPD]) {
-        effectiveConnectionType = RNCCellularGeneration3g;
-      } else if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyLTE]) {
-        effectiveConnectionType = RNCCellularGeneration4g;
-      }
-    }
-  }
-  
-#endif
-  
-  else {
-    connectionType = RNCConnectionTypeWifi;
-  }
-  
-  if (![connectionType isEqualToString:self->_connectionType] ||
-      ![effectiveConnectionType isEqualToString:self->_effectiveConnectionType]) {
-    self->_connectionType = connectionType;
-    self->_connectionExpensive = connectionExpensive;
-    self->_effectiveConnectionType = effectiveConnectionType;
-    return YES;
-  }
-  
-  return NO;
-}
-
-- (void)cleanUpFirstTimeReachability
-{
-  if (_firstTimeReachability) {
-    SCNetworkReachabilityUnscheduleFromRunLoop(self->_firstTimeReachability, CFRunLoopGetMain(), kCFRunLoopCommonModes);
-    CFRelease(self->_firstTimeReachability);
-    _firstTimeReachability = nil;
-  }
-}
-
-- (id)currentState
-{
-  NSString *connectionType = self->_connectionType ?: RNCConnectionTypeUnknown;
-  NSString *effectiveConnectionType = self->_effectiveConnectionType;
-  
-  BOOL isConnected = ![connectionType isEqualToString:RNCConnectionTypeNone] && ![connectionType isEqualToString:RNCConnectionTypeUnknown];
-  
-  NSMutableDictionary *details = nil;
-  if (isConnected) {
-    details = [NSMutableDictionary new];
-    details[@"isConnectionExpensive"] = @(self->_connectionExpensive ?: false);
-
-    if ([connectionType isEqualToString:RNCConnectionTypeCellular]) {
-      details[@"cellularGeneration"] = effectiveConnectionType ?: [NSNull null];
-    }
-  }
-  
-  return @{
-           @"type": connectionType,
-           @"isConnected": @(isConnected),
-           @"isInternetReachable": @(isConnected),
-           @"details": details ?: [NSNull null]
-           };
 }
 
 #pragma mark - Public API
@@ -197,16 +82,33 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 RCT_EXPORT_METHOD(getCurrentState:(RCTPromiseResolveBlock)resolve
                   reject:(__unused RCTPromiseRejectBlock)reject)
 {
-  // Setup the reacability listener if needed
-  if (!_firstTimeReachability) {
-    _firstTimeReachability = [self getReachabilityRef];
-  }
+  RNCConnectionState *state = [self.connectionStateWatcher currentState];
+  resolve([self dictionaryFromConnectionState:state]);
+}
 
-  // Add our resolver to the set of those to be notified
-  if (!_firstTimeReachabilityResolvers) {
-    _firstTimeReachabilityResolvers = [NSMutableSet set];
+#pragma mark - Utilities
+
+// Converts the state into a dictionary to send over the bridge
+- (NSDictionary *)dictionaryFromConnectionState:(RNCConnectionState *)state
+{
+  BOOL isConnected = ![state.type isEqualToString:RNCConnectionTypeNone] && ![state.type isEqualToString:RNCConnectionTypeUnknown];
+  
+  NSMutableDictionary *details = nil;
+  if (isConnected) {
+    details = [NSMutableDictionary new];
+    details[@"isConnectionExpensive"] = @(state.expensive);
+    
+    if ([state.type isEqualToString:RNCConnectionTypeCellular]) {
+      details[@"cellularGeneration"] = state.cellularGeneration ?: [NSNull null];
+    }
   }
-  [_firstTimeReachabilityResolvers addObject:resolve];
+  
+  return @{
+           @"type": state.type,
+           @"isConnected": @(isConnected),
+           @"isInternetReachable": @(isConnected),
+           @"details": details ?: [NSNull null]
+           };
 }
 
 @end
