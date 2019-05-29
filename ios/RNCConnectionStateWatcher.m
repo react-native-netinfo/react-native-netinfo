@@ -11,7 +11,7 @@
 @interface RNCConnectionStateWatcher ()
 
 @property (nonatomic) SCNetworkReachabilityRef reachabilityRef;
-@property (weak, nonatomic) id<RNCConnectionStateWatcherDelegate> delegate;
+@property (nullable, weak, nonatomic) id<RNCConnectionStateWatcherDelegate> delegate;
 @property (nonatomic) SCNetworkReachabilityFlags lastFlags;
 @property (nonnull, strong, nonatomic) RNCConnectionState *state;
 
@@ -25,18 +25,21 @@
 {
     self = [self init];
     if (self) {
-        _reachabilityRef = [self createReachabilityRef];
         _delegate = delegate;
         _state = [[RNCConnectionState alloc] init];
+        _reachabilityRef = [self createReachabilityRef];
     }
     return self;
 }
 
 - (void)dealloc
 {
+    self.delegate = nil;
+
     if (self.reachabilityRef != NULL) {
         SCNetworkReachabilityUnscheduleFromRunLoop(self.reachabilityRef, CFRunLoopGetMain(), kCFRunLoopCommonModes);
         CFRelease(self.reachabilityRef);
+        self.reachabilityRef = nil;
     }
 }
 

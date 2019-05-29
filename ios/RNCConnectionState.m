@@ -77,4 +77,9 @@
             && self.expensive == otherState.expensive;
 }
 
+- (BOOL)connected
+{
+    return ![self.type isEqualToString:RNCConnectionTypeNone] && ![self.type isEqualToString:RNCConnectionTypeUnknown];
+}
+
 @end

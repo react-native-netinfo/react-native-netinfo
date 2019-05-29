@@ -7,13 +7,15 @@
 
 #import "RNCNetInfo.h"
 #import "RNCConnectionStateWatcher.h"
+#import "RNCInternetStateWatcher.h"
 
 #import <React/RCTAssert.h>
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
 
-@interface RNCNetInfo () <RNCConnectionStateWatcherDelegate>
+@interface RNCNetInfo () <RNCConnectionStateWatcherDelegate, RNCInternetStateWatcherDelegate>
 
+@property (nonatomic, strong) RNCInternetStateWatcher *internetStateWatcher;
 @property (nonatomic, strong) RNCConnectionStateWatcher *connectionStateWatcher;
 @property (nonatomic) BOOL isObserving;
 
@@ -58,6 +60,7 @@ RCT_EXPORT_MODULE()
 {
   self = [super init];
   if (self) {
+    _internetStateWatcher = [[RNCInternetStateWatcher alloc] initWithDelegate:self];
     _connectionStateWatcher = [[RNCConnectionStateWatcher alloc] initWithDelegate:self];
   }
   return self;
@@ -68,13 +71,20 @@ RCT_EXPORT_MODULE()
   self.connectionStateWatcher = nil;
 }
 
+#pragma mark - RNCConnectionStateWatcherDelegate
+
 - (void)connectionStateWatcher:(RNCConnectionStateWatcher *)connectionStateWatcher didUpdateState:(RNCConnectionState *)state
 {
-  // TODO: Pass the new state to the internet reachability watcher so it can update its own state
+  [self.internetStateWatcher updateWithConnectionState:state];
   
-  if (self.isObserving) {
-    [self sendEventWithName:@"netInfo.networkStatusDidChange" body:[self dictionaryFromConnectionState:state]];
-  }
+  [self sendEvent];
+}
+
+#pragma mark - RNCInternetStateWatcherDelegate
+
+- (void)internetStateWatcher:(RNCInternetStateWatcher *)internetStateWatcher didUpdateState:(BOOL)reachable
+{
+  [self sendEvent];
 }
 
 #pragma mark - Public API
@@ -82,32 +92,40 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_METHOD(getCurrentState:(RCTPromiseResolveBlock)resolve
                   reject:(__unused RCTPromiseRejectBlock)reject)
 {
-  RNCConnectionState *state = [self.connectionStateWatcher currentState];
-  resolve([self dictionaryFromConnectionState:state]);
+  resolve([self currentDictionary]);
 }
 
 #pragma mark - Utilities
 
-// Converts the state into a dictionary to send over the bridge
-- (NSDictionary *)dictionaryFromConnectionState:(RNCConnectionState *)state
+- (void)sendEvent
 {
-  BOOL isConnected = ![state.type isEqualToString:RNCConnectionTypeNone] && ![state.type isEqualToString:RNCConnectionTypeUnknown];
+  if (self.isObserving) {
+    NSDictionary *dictionary = [self currentDictionary];
+    [self sendEventWithName:@"netInfo.networkStatusDidChange" body:dictionary];
+  }
+}
+
+// Converts the state into a dictionary to send over the bridge
+- (NSDictionary *)currentDictionary
+{
+  RNCConnectionState *state = [self.connectionStateWatcher currentState];
+  BOOL internetReachable = [self.internetStateWatcher currentState];
   
   NSMutableDictionary *details = nil;
-  if (isConnected) {
+  if (state.connected) {
     details = [NSMutableDictionary new];
     details[@"isConnectionExpensive"] = @(state.expensive);
     
     if ([state.type isEqualToString:RNCConnectionTypeCellular]) {
-      details[@"cellularGeneration"] = state.cellularGeneration ?: [NSNull null];
+      details[@"cellularGeneration"] = state.cellularGeneration ?: NSNull.null;
     }
   }
   
   return @{
            @"type": state.type,
-           @"isConnected": @(isConnected),
-           @"isInternetReachable": @(isConnected),
-           @"details": details ?: [NSNull null]
+           @"isConnected": @(state.connected),
+           @"isInternetReachable": @(internetReachable),
+           @"details": details ?: NSNull.null
            };
 }
 

@@ -32,6 +32,7 @@ static NSString *const RNCCellularGeneration4g = @"4g";
 
 @property (nonnull, nonatomic, strong, readonly) NSString *type;
 @property (nullable, nonatomic, strong, readonly) NSString *cellularGeneration;
+@property (nonatomic, readonly) BOOL connected;
 @property (nonatomic, readonly) BOOL expensive;
 
 @end

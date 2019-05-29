@@ -15,6 +15,8 @@
 		C9B8547F229A6175003B9CCA /* RNCConnectionStateWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B8547D229A6175003B9CCA /* RNCConnectionStateWatcher.m */; };
 		C9B85482229A669E003B9CCA /* RNCConnectionState.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B85481229A669E003B9CCA /* RNCConnectionState.m */; };
 		C9B85483229A669E003B9CCA /* RNCConnectionState.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B85481229A669E003B9CCA /* RNCConnectionState.m */; };
+		C9B85486229E4AC8003B9CCA /* RNCInternetStateWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B85485229E4AC8003B9CCA /* RNCInternetStateWatcher.m */; };
+		C9B85487229E4AC8003B9CCA /* RNCInternetStateWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B85485229E4AC8003B9CCA /* RNCInternetStateWatcher.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -48,6 +50,8 @@
 		C9B8547D229A6175003B9CCA /* RNCConnectionStateWatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNCConnectionStateWatcher.m; sourceTree = "<group>"; };
 		C9B85480229A669E003B9CCA /* RNCConnectionState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNCConnectionState.h; sourceTree = "<group>"; };
 		C9B85481229A669E003B9CCA /* RNCConnectionState.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNCConnectionState.m; sourceTree = "<group>"; };
+		C9B85484229E4AC8003B9CCA /* RNCInternetStateWatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNCInternetStateWatcher.h; sourceTree = "<group>"; };
+		C9B85485229E4AC8003B9CCA /* RNCInternetStateWatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNCInternetStateWatcher.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +91,8 @@
 				C9B8547D229A6175003B9CCA /* RNCConnectionStateWatcher.m */,
 				C9B85480229A669E003B9CCA /* RNCConnectionState.h */,
 				C9B85481229A669E003B9CCA /* RNCConnectionState.m */,
+				C9B85484229E4AC8003B9CCA /* RNCInternetStateWatcher.h */,
+				C9B85485229E4AC8003B9CCA /* RNCInternetStateWatcher.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 				C923EDBA220C2C1A00D3100F /* Frameworks */,
 				B5027B1B2237B30F00F1AABA /* libRNCNetInfo-tvOS.a */,
@@ -179,6 +185,7 @@
 				C9B8547E229A6175003B9CCA /* RNCConnectionStateWatcher.m in Sources */,
 				C9B85482229A669E003B9CCA /* RNCConnectionState.m in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* RNCNetInfo.m in Sources */,
+				C9B85486229E4AC8003B9CCA /* RNCInternetStateWatcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,6 +196,7 @@
 				C9B8547F229A6175003B9CCA /* RNCConnectionStateWatcher.m in Sources */,
 				C9B85483229A669E003B9CCA /* RNCConnectionState.m in Sources */,
 				B5027B142237B30F00F1AABA /* RNCNetInfo.m in Sources */,
+				C9B85487229E4AC8003B9CCA /* RNCInternetStateWatcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
