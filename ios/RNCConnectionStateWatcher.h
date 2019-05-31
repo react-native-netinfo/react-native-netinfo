@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol RNCConnectionStateWatcherDelegate
 
-- (void)connectionStateWatcher:(RNCConnectionStateWatcher *)connectionStateWatcher didUpdateState:(RNCConnectionState *)state;
+- (void)connectionStateWatcher:(RNCConnectionStateWatcher *)connectionStateWatcher didUpdateState:(RNCConnectionState *)state withInternetReachable:(BOOL)internetReachable;
 
 @end
 
@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithDelegate:(id<RNCConnectionStateWatcherDelegate>)delegate;
 - (RNCConnectionState *)currentState;
+- (BOOL)currentInternetReachable;
 
 @end
 

@@ -8,12 +8,17 @@
 #import "RNCConnectionStateWatcher.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 
-@interface RNCConnectionStateWatcher ()
+@interface RNCConnectionStateWatcher () <NSURLSessionDataDelegate>
 
+@property (nonnull, strong, nonatomic) NSURL *url;
+@property (nonnull, strong, nonatomic) NSURLSession *urlSession;
 @property (nonatomic) SCNetworkReachabilityRef reachabilityRef;
 @property (nullable, weak, nonatomic) id<RNCConnectionStateWatcherDelegate> delegate;
 @property (nonatomic) SCNetworkReachabilityFlags lastFlags;
 @property (nonnull, strong, nonatomic) RNCConnectionState *state;
+@property (nullable, strong, nonatomic) NSURLSessionDataTask *currentTask;
+@property (nonatomic) BOOL expectConnection;
+@property (nonatomic) BOOL reachable;
 
 @end
 
@@ -26,7 +31,15 @@
     self = [self init];
     if (self) {
         _delegate = delegate;
+        
+        _url = [[NSURL alloc] initWithString:@"http://clients3.google.com/generate_204"];
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        configuration.timeoutIntervalForRequest = 10;
+        configuration.timeoutIntervalForResource = 10;
+        _urlSession = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
+        
         _state = [[RNCConnectionState alloc] init];
+        
         _reachabilityRef = [self createReachabilityRef];
     }
     return self;
@@ -50,6 +63,11 @@
     return self.state;
 }
 
+- (BOOL)currentInternetReachable
+{
+    return self.reachable;
+}
+
 #pragma mark - Callback
 
 static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info)
@@ -62,12 +80,88 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 - (void)update:(SCNetworkReachabilityFlags)flags
 {
     self.lastFlags = flags;
+    self.state = [[RNCConnectionState alloc] initWithReachabilityFlags:flags];
+}
 
-    RNCConnectionState *newState = [[RNCConnectionState alloc] initWithReachabilityFlags:flags];
-    if (![newState isEqualToConnectionState:self.state]) {
-        self.state = newState;
-        [self.delegate connectionStateWatcher:self didUpdateState:self.state];
+#pragma mark - NSURLSessionDataDelegate
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
+{
+    if (error.code != -999) {
+        self.reachable = false;
     }
+}
+
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
+{
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+        self.reachable = ((NSHTTPURLResponse *) response).statusCode == 204;
+    }
+}
+
+#pragma mark - Setters
+
+- (void)setState:(RNCConnectionState *)state
+{
+    if (![state isEqualToConnectionState:_state]) {
+        _state = state;
+        
+        self.expectConnection = state.connected;
+        
+        if (self.expectConnection) {
+            // Start a new task to check if we can get to the internet
+            self.currentTask = [self.urlSession dataTaskWithURL:self.url];
+        } else {
+            // We can not be connected to the internet
+            // We set this directly to avoid calling the delegate twice
+            _reachable = false;
+            // Cancel any pending task, if there is one
+            self.currentTask = nil;
+        }
+        
+        [self updateDelegate];
+    }
+}
+
+- (void)setReachable:(BOOL)reachable
+{
+    if (reachable != _reachable) {
+        _reachable = reachable;
+        [self updateDelegate];
+    }
+    
+    // If we do not have a connection, but we expected to, retry after a delay
+    if (!reachable && self.expectConnection) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(retry) object:nil];
+        [self performSelector:@selector(retry) withObject:nil afterDelay:5];
+    }
+}
+
+// Cancels the previous task whenever a new one is set
+- (void)setCurrentTask:(NSURLSessionDataTask *)currentTask
+{
+    // Cancel any previous task
+    [_currentTask cancel];
+    // Cancel any pending retries
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(retry) object:nil];
+    // Keep a reference to the new current task
+    _currentTask = currentTask;
+    // Start the new task
+    [_currentTask resume];
+}
+
+#pragma mark - Utilities
+
+// TODO: Retrying does not work
+- (void)retry
+{
+    // Start a new task
+    self.currentTask = [self.urlSession dataTaskWithURL:self.url];
+}
+
+- (void)updateDelegate
+{
+    [self.delegate connectionStateWatcher:self didUpdateState:self.state withInternetReachable:self.reachable];
 }
 
 - (SCNetworkReachabilityRef)createReachabilityRef
