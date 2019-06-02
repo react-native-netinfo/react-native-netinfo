@@ -101,6 +101,15 @@ protected List<ReactPackage> getPackages() {
 
 </details>
 
+## React Native Compatibility
+To use this library you need to ensure you are using the correct version of React Native. If you are using a version of React Native that is lower than `0.57` you will need to upgrade that before attempting to use this library.
+
+| `@react-native-community/netinfo` version | Required React Native Version |
+| ----------------------------------------- | ----------------------------- |
+| `3.x.x`                                   | `>= 0.59`                     |
+| `2.x.x`                                   | `>= 0.57`                     |
+| `1.x.x`                                   | `>= 0.57`                     |
+
 ## Migrating from the core `react-native` module
 This module was created when the NetInfo was split out from the core of React Native. To migrate to this module you need to follow the installation instructions above and then change you imports from:
 
