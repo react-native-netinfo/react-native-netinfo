@@ -118,6 +118,10 @@ namespace ReactNativeCommunity.NetInfo
             var isConnected = GetIsConnected();
             eventMap.Add("isConnected", isConnected);
 
+            // Add the internet state information
+            var isInternetReachable = GetIsInternetReachable();
+            eventMap.Add("isInternetReachable", isInternetReachable);
+
             // Add the details, if there are any
             JObject details = null;
             if (isConnected)
@@ -194,6 +198,12 @@ namespace ReactNativeCommunity.NetInfo
         {
             var profile = _networkInfo.GetInternetConnectionProfile();
             return profile != null && profile.ConnectivityLevel != NetworkConnectivityLevel.None;
+        }
+
+        private bool GetIsInternetReachable()
+        {
+            var profile = _networkInfo.GetInternetConnectionProfile();
+            return profile != null && profile.ConnectivityLevel == NetworkConnectivityLevel.InternetAccess;
         }
 
         private bool GetIsConnectionExpensive()
