@@ -17,6 +17,7 @@
 @property (nonatomic) SCNetworkReachabilityFlags lastFlags;
 @property (nonnull, strong, nonatomic) RNCConnectionState *state;
 @property (nullable, strong, nonatomic) NSURLSessionDataTask *currentTask;
+@property (nullable, strong, nonatomic) NSTimer *connectionTestTimer;
 @property (nonatomic) BOOL expectConnection;
 @property (nonatomic) BOOL reachable;
 
@@ -109,8 +110,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
         self.expectConnection = state.connected;
         
         if (self.expectConnection) {
-            // Start a new task to check if we can get to the internet
-            self.currentTask = [self.urlSession dataTaskWithURL:self.url];
+            [self checkConnection];
         } else {
             // We can not be connected to the internet
             // We set this directly to avoid calling the delegate twice
@@ -125,15 +125,22 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 
 - (void)setReachable:(BOOL)reachable
 {
+    NSLog(@"Internet reachable: %@", @(reachable));
     if (reachable != _reachable) {
         _reachable = reachable;
         [self updateDelegate];
     }
     
-    // If we do not have a connection, but we expected to, retry after a delay
     if (!reachable && self.expectConnection) {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(retry) object:nil];
-        [self performSelector:@selector(retry) withObject:nil afterDelay:5];
+        NSLog(@"Retrying after short delay");
+        // If we do not have a connection, but we expected to, retry after a short delay
+        [self.connectionTestTimer invalidate];
+        self.connectionTestTimer = [NSTimer timerWithTimeInterval:5 target:self selector:@selector(checkConnection) userInfo:nil repeats:false];
+    } else if (reachable) {
+        NSLog(@"Retrying after long delay");
+        // If we do have a connection, retry after a longer delay to check that it has not gone down
+        [self.connectionTestTimer invalidate];
+        self.connectionTestTimer = [NSTimer timerWithTimeInterval:60 target:self selector:@selector(checkConnection) userInfo:nil repeats:false];
     }
 }
 
@@ -143,7 +150,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
     // Cancel any previous task
     [_currentTask cancel];
     // Cancel any pending retries
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(retry) object:nil];
+    [self.connectionTestTimer invalidate];
     // Keep a reference to the new current task
     _currentTask = currentTask;
     // Start the new task
@@ -152,8 +159,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 
 #pragma mark - Utilities
 
-// TODO: Retrying does not work
-- (void)retry
+- (void)checkConnection
 {
     // Start a new task
     self.currentTask = [self.urlSession dataTaskWithURL:self.url];
