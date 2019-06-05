@@ -55,7 +55,7 @@
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@babel/runtime": "^7.4.3",
-    "@react-native-community/bob": "^0.4.1",
+    "@mattoakes/bob": "0.5.0-rc.0",
     "@react-native-community/eslint-config": "^0.0.5",
     "@semantic-release/changelog": "^3.0.2",
     "@semantic-release/git": "7.0.8",
@@ -70,6 +70,7 @@
     "eslint-plugin-prettier": "3.0.1",
     "husky": "^2.3.0",
     "jest": "^24.8.0",
+    "jetifier": "^1.0.0-beta04.2",
     "lint-staged": "^8.1.7",
     "metro-react-native-babel-preset": "^0.53.1",
     "prettier": "^1.17.0",
@@ -115,10 +116,16 @@
     "type": "git",
     "url": "https://github.com/react-native-community/react-native-netinfo.git"
   },
-  "@react-native-community/bob": {
+  "@mattoakes/bob": {
     "source": "src",
     "output": "lib",
     "targets": [
+      [
+        "aar",
+        {
+          "reverseJetify": true
+        }
+      ],
       "commonjs",
       "module"
     ]
