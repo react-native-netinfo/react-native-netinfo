@@ -80,12 +80,12 @@ abstract class ConnectivityReceiver {
         WritableMap event = new WritableNativeMap();
 
         // Add the connection type information
-        event.putString("type", mConnectionType);
+        event.putString("type", mConnectionType.label);
 
         // Add the connection state information
         boolean isConnected =
-                !mConnectionType.equals(CONNECTION_TYPE_NONE)
-                        && !mConnectionType.equals(CONNECTION_TYPE_UNKNOWN);
+                !mConnectionType.equals(ConnectionType.NONE)
+                        && !mConnectionType.equals(ConnectionType.UNKNOWN);
         event.putBoolean("isConnected", isConnected);
 
         // Add the internet reachable information
@@ -100,8 +100,8 @@ abstract class ConnectivityReceiver {
                     ConnectivityManagerCompat.isActiveNetworkMetered(getConnectivityManager());
             details.putBoolean("isConnectionExpensive", isConnectionExpensive);
 
-            if (mConnectionType.equals(CONNECTION_TYPE_CELLULAR)) {
-                details.putString("cellularGeneration", mCellularGeneration);
+            if (mConnectionType.equals(ConnectionType.CELLULAR)) {
+                details.putString("cellularGeneration", mCellularGeneration.label);
             }
         }
         event.putMap("details", details);
