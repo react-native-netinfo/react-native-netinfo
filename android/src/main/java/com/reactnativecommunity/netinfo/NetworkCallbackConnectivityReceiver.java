@@ -88,6 +88,8 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
         } else {
             connectionType = ConnectionType.NONE;
         }
+
+        updateConnectivity(connectionType, cellularGeneration, isInternetReachable);
     }
 
     private class ConnectivityNetworkCallback extends ConnectivityManager.NetworkCallback {

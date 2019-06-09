@@ -8,10 +8,10 @@
  */
 
 import Subscriptions from './subscriptions';
-import NativeInterface from './nativeInterface';
 import * as DeprecatedTypes from './deprecatedTypes';
 import DeprecatedUtils from './deprecatedUtils';
 import * as Types from './types';
+import Utils from './utils';
 
 const _subscriptions = new Set<DeprecatedTypes.ChangeHandler>();
 let _latestState: DeprecatedTypes.NetInfoData | null = null;
@@ -32,7 +32,7 @@ export function add(handler: DeprecatedTypes.ChangeHandler): void {
   if (_latestState) {
     handler(_latestState);
   } else {
-    NativeInterface.getCurrentState().then(
+    Utils.currentState().then(
       (state): void => {
         _latestState = DeprecatedUtils.convertState(state);
         handler(_latestState);

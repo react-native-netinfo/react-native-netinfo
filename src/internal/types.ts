@@ -35,7 +35,7 @@ interface NetInfoConnectedState<
 > {
   type: T;
   isConnected: true;
-  isInternetReachable: boolean;
+  isInternetReachable: boolean | null;
   details: D & NetInfoConnectedDetails;
 }
 

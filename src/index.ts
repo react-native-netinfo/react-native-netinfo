@@ -13,7 +13,7 @@ import DeprecatedSubscriptions from './internal/deprecatedSubscriptions';
 import * as DeprecatedTypes from './internal/deprecatedTypes';
 import Subscriptions from './internal/subscriptions';
 import * as Types from './internal/types';
-import NativeInterface from './internal/nativeInterface';
+import Utils from './internal/utils';
 
 const _isConnectedListeners = new Map<
   DeprecatedTypes.IsConnectedHandler,
@@ -27,7 +27,7 @@ const _isConnectedListeners = new Map<
  * @returns A Promise which contains the current connection state.
  */
 export function fetch(): Promise<Types.NetInfoState> {
-  return NativeInterface.getCurrentState();
+  return Utils.currentState();
 }
 
 /**
@@ -140,7 +140,7 @@ export function removeEventListener(
  */
 export function getConnectionInfo(): Promise<DeprecatedTypes.NetInfoData> {
   DeprecatedUtils.warnOnce();
-  return NativeInterface.getCurrentState().then(DeprecatedUtils.convertState);
+  return Utils.currentState().then(DeprecatedUtils.convertState);
 }
 
 /**
@@ -151,9 +151,7 @@ export function getConnectionInfo(): Promise<DeprecatedTypes.NetInfoData> {
  */
 export function isConnectionExpensive(): Promise<boolean> {
   DeprecatedUtils.warnOnce();
-  return NativeInterface.getCurrentState().then(
-    DeprecatedUtils.isConnectionExpensive,
-  );
+  return Utils.currentState().then(DeprecatedUtils.isConnectionExpensive);
 }
 
 export const isConnected = {
@@ -207,7 +205,7 @@ export const isConnected = {
    * @deprecated
    */
   fetch: (): Promise<boolean> => {
-    return NativeInterface.getCurrentState().then(DeprecatedUtils.isConnected);
+    return Utils.currentState().then(DeprecatedUtils.isConnected);
   },
 };
 

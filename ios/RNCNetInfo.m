@@ -70,10 +70,10 @@ RCT_EXPORT_MODULE()
 
 #pragma mark - RNCConnectionStateWatcherDelegate
 
-- (void)connectionStateWatcher:(RNCConnectionStateWatcher *)connectionStateWatcher didUpdateState:(RNCConnectionState *)state withInternetReachable:(BOOL)internetReachable
+- (void)connectionStateWatcher:(RNCConnectionStateWatcher *)connectionStateWatcher didUpdateState:(RNCConnectionState *)state
 {
   if (self.isObserving) {
-    NSDictionary *dictionary = [self currentDictionaryFromUpdateState:state andInternetReachable:internetReachable];
+    NSDictionary *dictionary = [self currentDictionaryFromUpdateState:state];
     [self sendEventWithName:@"netInfo.networkStatusDidChange" body:dictionary];
   }
 }
@@ -84,14 +84,13 @@ RCT_EXPORT_METHOD(getCurrentState:(RCTPromiseResolveBlock)resolve
                   reject:(__unused RCTPromiseRejectBlock)reject)
 {
   RNCConnectionState *state = [self.connectionStateWatcher currentState];
-  BOOL internetReachable = [self.connectionStateWatcher currentInternetReachable];
-  resolve([self currentDictionaryFromUpdateState:state andInternetReachable:internetReachable]);
+  resolve([self currentDictionaryFromUpdateState:state]);
 }
 
 #pragma mark - Utilities
 
 // Converts the state into a dictionary to send over the bridge
-- (NSDictionary *)currentDictionaryFromUpdateState:(RNCConnectionState *)state andInternetReachable:(BOOL)internetReachable
+- (NSDictionary *)currentDictionaryFromUpdateState:(RNCConnectionState *)state
 {
   NSMutableDictionary *details = nil;
   if (state.connected) {
@@ -106,7 +105,6 @@ RCT_EXPORT_METHOD(getCurrentState:(RCTPromiseResolveBlock)resolve
   return @{
            @"type": state.type,
            @"isConnected": @(state.connected),
-           @"isInternetReachable": @(internetReachable),
            @"details": details ?: NSNull.null
            };
 }

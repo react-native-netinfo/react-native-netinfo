@@ -9,7 +9,10 @@
 
 import {NativeEventSubscription} from 'react-native';
 import NativeInterface from './nativeInterface';
+import InternetReachability from './internetReachability';
 import * as Types from './types';
+import * as PrivateTypes from './privateTypes';
+import Utils from './utils';
 
 const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
 
@@ -18,10 +21,32 @@ let _latestState: Types.NetInfoState | null = null;
 
 let _nativeEventSubscription: NativeEventSubscription | null = null;
 
-function _listenerHandler(state: Types.NetInfoState): void {
-  _latestState = state;
-  _subscriptions.forEach((handler): void => handler(state));
+function _listenerHandler(state: PrivateTypes.NetInfoNativeModuleState): void {
+  // Update the internet reachability module
+  InternetReachability.update(state);
+
+  // Convert the state from native to JS shape
+  const convertedState = Utils.convertState(state);
+
+  // Update the listeners
+  _latestState = convertedState;
+  _subscriptions.forEach((handler): void => handler(convertedState));
 }
+
+InternetReachability.addSubscription(
+  (isInternetReachable): void => {
+    if (!_latestState) {
+      return;
+    }
+
+    const nextState = {
+      ..._latestState,
+      isInternetReachable,
+    } as Types.NetInfoState;
+    _latestState = nextState;
+    _subscriptions.forEach((handler): void => handler(nextState));
+  },
+);
 
 export function add(
   handler: Types.NetInfoChangeHandler,
@@ -35,10 +60,10 @@ export function add(
     if (_latestState) {
       handler(_latestState);
     } else {
-      NativeInterface.getCurrentState().then(
+      Utils.currentState().then(
         (state): void => {
           _latestState = state;
-          handler(_latestState);
+          handler(state);
         },
       );
     }
@@ -69,6 +94,8 @@ export function clear(): void {
     _nativeEventSubscription.remove();
     _nativeEventSubscription = null;
   }
+
+  InternetReachability.clear();
 }
 
 export default {
