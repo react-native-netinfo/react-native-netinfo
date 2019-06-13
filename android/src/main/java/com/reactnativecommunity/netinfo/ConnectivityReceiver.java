@@ -9,11 +9,10 @@ package com.reactnativecommunity.netinfo;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.support.v4.net.ConnectivityManagerCompat;
 import android.telephony.TelephonyManager;
 import android.text.format.Formatter;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
@@ -58,8 +57,7 @@ abstract class ConnectivityReceiver {
         mReactContext = reactContext;
         mConnectivityManager =
                 (ConnectivityManager) reactContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        mWifiManager =
-                (WifiManager) reactContext.getSystemService(Context.WIFI_SERVICE);
+        mWifiManager = (WifiManager) reactContext.getSystemService(Context.WIFI_SERVICE);
         mTelephonyManager =
                 (TelephonyManager) reactContext.getSystemService(Context.TELEPHONY_SERVICE);
     }
