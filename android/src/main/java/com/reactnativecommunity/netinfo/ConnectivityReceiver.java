@@ -11,6 +11,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.net.ConnectivityManagerCompat;
 import android.telephony.TelephonyManager;
+import android.wifi.WifiInfo;
+import android.wifi.WifiManager;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
@@ -43,6 +45,7 @@ abstract class ConnectivityReceiver {
     static final String ERROR_MISSING_PERMISSION = "E_MISSING_PERMISSION";
 
     private final ConnectivityManager mConnectivityManager;
+    private final WifiManager mWifiManager;
     private final ReactApplicationContext mReactContext;
 
     private boolean mNoNetworkPermission = false;
@@ -53,6 +56,8 @@ abstract class ConnectivityReceiver {
         mReactContext = reactContext;
         mConnectivityManager =
                 (ConnectivityManager) reactContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        mWifiManager =
+                (WifiManager) reactContext.getSystemService(Context.WIFI_SERVICE);
     }
 
     abstract void register();
@@ -133,6 +138,16 @@ abstract class ConnectivityReceiver {
                 .emit("netInfo.networkStatusDidChange", createConnectivityEventMap());
     }
 
+    private void getSSID() {
+        WifiInfo info = mWifiManager.getConnectionInfo();
+
+        String ssid = info.getSSID();
+        if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+            ssid = ssid.substring(1, ssid.length() - 1);
+        }
+        return ssid;
+    }
+
     private WritableMap createConnectivityEventMap() {
         WritableMap event = new WritableNativeMap();
 
@@ -156,6 +171,11 @@ abstract class ConnectivityReceiver {
 
             if (mConnectionType.equals(CONNECTION_TYPE_CELLULAR)) {
                 details.putString("cellularGeneration", mCellularGeneration);
+            }
+
+            if (mConnectionType.equals(CONNECTION_TYPE_WIFI)) {
+                // Add the SSID
+                details.putString("SSID", getSSID());
             }
         }
         event.putMap("details", details);
