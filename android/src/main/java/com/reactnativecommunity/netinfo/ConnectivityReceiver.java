@@ -11,8 +11,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.net.ConnectivityManagerCompat;
 import android.telephony.TelephonyManager;
-import android.wifi.WifiInfo;
-import android.wifi.WifiManager;
+import android.text.format.Formatter;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
@@ -46,6 +47,7 @@ abstract class ConnectivityReceiver {
 
     private final ConnectivityManager mConnectivityManager;
     private final WifiManager mWifiManager;
+    private final TelephonyManager mTelephonyManager;
     private final ReactApplicationContext mReactContext;
 
     private boolean mNoNetworkPermission = false;
@@ -58,6 +60,8 @@ abstract class ConnectivityReceiver {
                 (ConnectivityManager) reactContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         mWifiManager =
                 (WifiManager) reactContext.getSystemService(Context.WIFI_SERVICE);
+        mTelephonyManager =
+                (TelephonyManager) reactContext.getSystemService(Context.TELEPHONY_SERVICE);
     }
 
     abstract void register();
@@ -138,14 +142,18 @@ abstract class ConnectivityReceiver {
                 .emit("netInfo.networkStatusDidChange", createConnectivityEventMap());
     }
 
-    private void getSSID() {
-        WifiInfo info = mWifiManager.getConnectionInfo();
-
-        String ssid = info.getSSID();
-        if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
-            ssid = ssid.substring(1, ssid.length() - 1);
+    // cast the wifi signal strength value as a readable string
+    private String formatSignalStrength(int strength) {
+        if (strength <= -50) {
+            return "great";
+        } else if (strength <= -50 && strength >= -60) {
+            return "good";
+        } else if (strength <= -60 && strength >= -70) {
+            return "fair";
+        } else if (strength <= -70) {
+            return "poor";
         }
-        return ssid;
+        return "unstable";
     }
 
     private WritableMap createConnectivityEventMap() {
@@ -169,13 +177,33 @@ abstract class ConnectivityReceiver {
                     ConnectivityManagerCompat.isActiveNetworkMetered(getConnectivityManager());
             details.putBoolean("isConnectionExpensive", isConnectionExpensive);
 
+            // Get the cell carrier
+            String carrier = mTelephonyManager.getNetworkOperatorName();
+
             if (mConnectionType.equals(CONNECTION_TYPE_CELLULAR)) {
                 details.putString("cellularGeneration", mCellularGeneration);
+                details.putString("carrier", carrier);
             }
+
+            // Get the SSID and strip the quotes
+            String initialSSID = mWifiManager.getConnectionInfo().getSSID();
+            String ssid = initialSSID.replace("\"", "");
+
+            // Get/parse the wifi signal strength
+            int initialSignalStrength = mWifiManager.getConnectionInfo().getRssi();
+            String signalStrength = formatSignalStrength(initialSignalStrength);
+
+            // Get the IP address
+            int ipAddress = mWifiManager.getConnectionInfo().getIpAddress();
+            String formattedIp = Formatter.formatIpAddress(ipAddress);
 
             if (mConnectionType.equals(CONNECTION_TYPE_WIFI)) {
                 // Add the SSID
-                details.putString("SSID", getSSID());
+                details.putString("ssid", ssid);
+                // Add the signal strength represented as string value
+                details.putString("strength", signalStrength);
+                // Add the IP address
+                details.putString("IP", formattedIp);
             }
         }
         event.putMap("details", details);
