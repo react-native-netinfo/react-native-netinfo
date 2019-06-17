@@ -201,7 +201,7 @@ abstract class ConnectivityReceiver {
                 // Add the signal strength represented as string value
                 details.putString("strength", signalStrength);
                 // Add the IP address
-                details.putString("IP", formattedIp);
+                details.putString("ip", formattedIp);
             }
         }
         event.putMap("details", details);
