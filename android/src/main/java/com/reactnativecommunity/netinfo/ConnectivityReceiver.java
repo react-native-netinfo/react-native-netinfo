@@ -142,7 +142,7 @@ abstract class ConnectivityReceiver {
 
     // cast the wifi signal strength value as a readable string
     private String formatSignalStrength(int strength) {
-        if (strength <= -50) {
+        if (strength >= -50) {
             return "great";
         } else if (strength <= -50 && strength >= -60) {
             return "good";
