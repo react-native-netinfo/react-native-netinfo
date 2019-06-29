@@ -131,8 +131,12 @@ export function currentState(): boolean | null {
 
 export function addSubscription(
   listener: PrivateTypes.NetInfoInternetReachabilityChangeListener,
-): void {
+): () => void {
   _subscriptions.add(listener);
+
+  return (): void => {
+    _subscriptions.delete(listener);
+  };
 }
 
 export default {

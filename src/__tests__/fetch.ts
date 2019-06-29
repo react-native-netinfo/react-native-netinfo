@@ -12,9 +12,7 @@ import NativeInterface from '../internal/nativeInterface';
 import {NetInfoStateType, NetInfoCellularGeneration} from '../internal/types';
 import {NetInfoNativeModuleState} from '../internal/privateTypes';
 
-type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
-/// @ts-ignore
-const MockNativeInterface: JestMockNativeInterface = NativeInterface;
+const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
 
 describe('@react-native-community/netinfo', () => {
   describe('fetch', () => {
@@ -29,19 +27,12 @@ describe('@react-native-community/netinfo', () => {
         },
       };
 
-      MockNativeInterface.getCurrentState.mockResolvedValue(
+      NativeInterface.eventEmitter.emit(
+        DEVICE_CONNECTIVITY_EVENT,
         expectedConnectionInfo,
       );
 
       return expect(NetInfo.fetch()).resolves.toEqual(expectedConnectionInfo);
-    });
-
-    it('should pass on errors through the promise chain', () => {
-      const expectedError = new Error('A test error');
-
-      MockNativeInterface.getCurrentState.mockRejectedValue(expectedError);
-
-      return expect(NetInfo.fetch()).rejects.toBe(expectedError);
     });
   });
 });

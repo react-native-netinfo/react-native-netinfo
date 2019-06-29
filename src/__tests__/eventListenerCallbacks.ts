@@ -9,31 +9,11 @@
 
 import NetInfo from '../index';
 import NativeInterface from '../internal/nativeInterface';
-import Subscriptions from '../internal/subscriptions';
-import {NetInfoStateType, NetInfoCellularGeneration} from '../internal/types';
-
-type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
-/// @ts-ignore
-const MockNativeInterface: JestMockNativeInterface = NativeInterface;
 
 const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
 
 describe('react-native-community/netinfo', () => {
   describe('Event listener callbacks', () => {
-    beforeEach(() => {
-      Subscriptions.clear();
-
-      MockNativeInterface.getCurrentState.mockResolvedValue({
-        type: NetInfoStateType.cellular,
-        isConnected: true,
-        isInternetReachable: true,
-        details: {
-          isConnectionExpensive: true,
-          cellularGeneration: NetInfoCellularGeneration['3g'],
-        },
-      });
-    });
-
     it('should call the listener on listening', done => {
       const listener = jest.fn();
       NetInfo.addEventListener(listener);

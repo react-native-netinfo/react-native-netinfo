@@ -9,11 +9,14 @@
 
 import {useState, useEffect} from 'react';
 import DeprecatedUtils from './internal/deprecatedUtils';
-import DeprecatedSubscriptions from './internal/deprecatedSubscriptions';
+import DeprecatedState from './internal/deprecatedState';
 import * as DeprecatedTypes from './internal/deprecatedTypes';
-import Subscriptions from './internal/subscriptions';
+import State from './internal/state';
 import * as Types from './internal/types';
-import Utils from './internal/utils';
+
+// Call the setup methods of the two state modules right away
+State.setup();
+DeprecatedState.setup();
 
 const _isConnectedListeners = new Map<
   DeprecatedTypes.IsConnectedHandler,
@@ -27,7 +30,7 @@ const _isConnectedListeners = new Map<
  * @returns A Promise which contains the current connection state.
  */
 export function fetch(): Promise<Types.NetInfoState> {
-  return Utils.currentState();
+  return State.latest();
 }
 
 /**
@@ -73,10 +76,10 @@ export function addEventListener(
       listenerOrType === DeprecatedTypes.CHANGE_EVENT_NAME &&
       deprecatedHandler
     ) {
-      DeprecatedSubscriptions.add(deprecatedHandler);
+      DeprecatedState.add(deprecatedHandler);
       return {
         remove: (): void => {
-          DeprecatedSubscriptions.remove(deprecatedHandler);
+          DeprecatedState.remove(deprecatedHandler);
         },
       };
     } else {
@@ -86,9 +89,9 @@ export function addEventListener(
     }
   } else {
     const listener = listenerOrType;
-    Subscriptions.add(listener);
+    State.add(listener);
     return (): void => {
-      Subscriptions.remove(listener);
+      State.remove(listener);
     };
   }
 }
@@ -128,7 +131,7 @@ export function removeEventListener(
   DeprecatedUtils.warnOnce();
 
   if (type === DeprecatedTypes.CHANGE_EVENT_NAME) {
-    DeprecatedSubscriptions.remove(handler);
+    DeprecatedState.remove(handler);
   }
 }
 
@@ -140,7 +143,7 @@ export function removeEventListener(
  */
 export function getConnectionInfo(): Promise<DeprecatedTypes.NetInfoData> {
   DeprecatedUtils.warnOnce();
-  return Utils.currentState().then(DeprecatedUtils.convertState);
+  return DeprecatedState.latest();
 }
 
 /**
@@ -151,7 +154,7 @@ export function getConnectionInfo(): Promise<DeprecatedTypes.NetInfoData> {
  */
 export function isConnectionExpensive(): Promise<boolean> {
   DeprecatedUtils.warnOnce();
-  return Utils.currentState().then(DeprecatedUtils.isConnectionExpensive);
+  return State.latest().then(DeprecatedUtils.isConnectionExpensive);
 }
 
 export const isConnected = {
@@ -174,11 +177,11 @@ export const isConnected = {
     };
 
     _isConnectedListeners.set(handler, listener);
-    Subscriptions.add(listener);
+    State.add(listener);
 
     return {
       remove: (): void => {
-        Subscriptions.remove(listener);
+        State.remove(listener);
       },
     };
   },
@@ -194,7 +197,7 @@ export const isConnected = {
     handler: DeprecatedTypes.IsConnectedHandler,
   ): void => {
     const listener = _isConnectedListeners.get(handler);
-    listener && Subscriptions.remove(listener);
+    listener && State.remove(listener);
     _isConnectedListeners.delete(handler);
   },
 
@@ -205,7 +208,7 @@ export const isConnected = {
    * @deprecated
    */
   fetch: (): Promise<boolean> => {
-    return Utils.currentState().then(DeprecatedUtils.isConnected);
+    return State.latest().then(DeprecatedUtils.isConnected);
   },
 };
 

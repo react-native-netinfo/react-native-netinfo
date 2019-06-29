@@ -9,34 +9,11 @@
 
 import NetInfo from '../../index';
 import NativeInterface from '../../internal/nativeInterface';
-import DeprecatedSubscriptions from '../../internal/deprecatedSubscriptions';
-import {
-  NetInfoStateType,
-  NetInfoCellularGeneration,
-} from '../../internal/types';
-
-type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
-/// @ts-ignore
-const MockNativeInterface: JestMockNativeInterface = NativeInterface;
 
 const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
 
 describe('Deprecated', () => {
   describe('Event listener callbacks', () => {
-    beforeEach(() => {
-      DeprecatedSubscriptions.clear();
-
-      MockNativeInterface.getCurrentState.mockResolvedValue({
-        type: NetInfoStateType.cellular,
-        isConnected: true,
-        isInternetReachable: true,
-        details: {
-          isConnectionExpensive: true,
-          cellularGeneration: NetInfoCellularGeneration['3g'],
-        },
-      });
-    });
-
     it('should call the listener on listening', done => {
       const listener = jest.fn();
       NetInfo.addEventListener('connectionChange', listener);
