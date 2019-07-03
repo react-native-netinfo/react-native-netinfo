@@ -25,8 +25,8 @@ export function convertState(
   }
 }
 
-export function currentState(): Promise<Types.NetInfoState> {
-  return NativeInterface.getCurrentState().then(convertState);
+export function currentState(): Promise<PrivateTypes.NetInfoNativeModuleState> {
+  return NativeInterface.getCurrentState();
 }
 
 export default {

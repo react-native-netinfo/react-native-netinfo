@@ -21,6 +21,20 @@ let _internetReachabilitySubscription: (() => void) | null = null;
 const _subscriptions = new Set<Types.NetInfoChangeHandler>();
 let _latestState: Types.NetInfoState | null = null;
 
+function fetchCurrentState(): Promise<Types.NetInfoState> {
+  return Utils.currentState().then(
+    (state): Types.NetInfoState => {
+      // Update the internet reachability module
+      InternetReachability.update(state);
+
+      // Convert and store the new state
+      const convertedState = Utils.convertState(state);
+      _latestState = convertedState;
+      return convertedState;
+    },
+  );
+}
+
 export function setup(): void {
   // Skip if we are already setup
   if (_isSetup) {
@@ -44,11 +58,7 @@ export function setup(): void {
   );
 
   // Fetch the current state from the native module
-  Utils.currentState().then(
-    (state): void => {
-      _latestState = state;
-    },
-  );
+  fetchCurrentState();
 
   // Add the listener to the internet connectivity events
   _internetReachabilitySubscription = InternetReachability.addSubscription(
@@ -93,12 +103,7 @@ export function latest(): Promise<Types.NetInfoState> {
   if (_latestState) {
     return Promise.resolve(_latestState);
   } else {
-    return Utils.currentState().then(
-      (state): Types.NetInfoState => {
-        _latestState = state;
-        return state;
-      },
-    );
+    return fetchCurrentState();
   }
 }
 
