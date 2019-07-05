@@ -151,7 +151,7 @@ const unsubscribe = NetInfo.addEventListener(state => {
 });
 
 // Unsubscribe
-unsubscribe();
+unsubscribe.remove();
 ```
 
 ## API
@@ -254,7 +254,7 @@ const unsubscribe = NetInfo.addEventListener(state => {
 });
 
 // Unsubscribe
-unsubscribe();
+unsubscribe.remove();
 ```
 
 #### `useNetInfo()`
