@@ -104,11 +104,12 @@ protected List<ReactPackage> getPackages() {
 ## React Native Compatibility
 To use this library you need to ensure you are using the correct version of React Native. If you are using a version of React Native that is lower than `0.57` you will need to upgrade that before attempting to use this library.
 
-| `@react-native-community/netinfo` version | Required React Native Version |
-| ----------------------------------------- | ----------------------------- |
-| `3.x.x`                                   | `>= 0.59`                     |
-| `2.x.x`                                   | `>= 0.57`                     |
-| `1.x.x`                                   | `>= 0.57`                     |
+| `@react-native-community/netinfo` version | Required React Native Version                                                     |
+| ----------------------------------------- | --------------------------------------------------------------------------------- |
+| `4.x.x`                                   | `>= 0.60` or `>= 0.59` if using [Jetifier](https://github.com/mikehardy/jetifier) |
+| `3.x.x`                                   | `>= 0.59`                                                                         |
+| `2.x.x`                                   | `>= 0.57`                                                                         |
+| `1.x.x`                                   | `>= 0.57`                                                                         |
 
 ## Migrating from the core `react-native` module
 This module was created when the NetInfo was split out from the core of React Native. To migrate to this module you need to follow the installation instructions above and then change you imports from:
@@ -278,6 +279,14 @@ const YourComplement = () => {
 ```
 
 ## Troubleshooting
+
+### Errors when building on Android
+
+This library was migrated from using the support library to AndroidX in version `4.0.0`. All of your depenencies must be using either the support library *or* AndroidX. Using a mixture of the two is not possible.
+
+From React Native 0.60 AndroidX is used by default.
+
+If you need to either convert this library back to the support library (to use an older React Native version) or convert other libraries forward to use AndroidX (if they have not been updated yet), you can use the [Jetifier](https://github.com/mikehardy/jetifier) tool.
 
 ### Errors while running Jest tests
 
