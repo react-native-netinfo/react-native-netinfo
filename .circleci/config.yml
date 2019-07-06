@@ -62,20 +62,20 @@ workflows:
       #     detox_loglevel: "trace"
       #     requires:
       #       - build_android_debug
-      - rn/ios_build_and_test:
-          project_path: "example/ios/NetInfoExample.xcodeproj"
-          derived_data_path: "example/ios/build"
-          device: "iPhone X"
-          build_configuration: "Release"
-          scheme: "NetInfoExample"
-          detox_configuration: "ios.sim.release"
-          detox_loglevel: "trace"
-          requires:
-            - analyse
+      # - rn/ios_build_and_test:
+      #     project_path: "example/ios/NetInfoExample.xcodeproj"
+      #     derived_data_path: "example/ios/build"
+      #     device: "iPhone X"
+      #     build_configuration: "Release"
+      #     scheme: "NetInfoExample"
+      #     detox_configuration: "ios.sim.release"
+      #     detox_loglevel: "trace"
+      #     requires:
+      #       - analyse
       - publish:
           requires:
             - analyse
-            - rn/ios_build_and_test
+            # - rn/ios_build_and_test
             # - rn/android_test
           filters:
             branches:
