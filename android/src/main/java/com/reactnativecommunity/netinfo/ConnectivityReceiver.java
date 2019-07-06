@@ -8,8 +8,6 @@ package com.reactnativecommunity.netinfo;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.telephony.TelephonyManager;
 import androidx.core.net.ConnectivityManagerCompat;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
