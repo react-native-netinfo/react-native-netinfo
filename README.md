@@ -144,6 +144,8 @@ NetInfo.fetch().then(state => {
 
 Subscribe to network state updates:
 
+**This methods are deprecated**
+
 ```javascript
 // Subscribe
 const unsubscribe = NetInfo.addEventListener(state => {
@@ -162,7 +164,7 @@ unsubscribe();
   * [`NetInfoCellularGeneration`](#netinfocellulargeneration)
 * **Methods:**
   * [`fetch()`](#fetch)
-  * [`addEventListener()`](#addeventlistener)
+  * [`addEventListener()`](#addeventlistener) `deprecated`
   * [`useNetInfo()`](#usenetinfo)
 
 ### Types
