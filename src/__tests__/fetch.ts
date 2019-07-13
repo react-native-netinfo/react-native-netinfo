@@ -9,41 +9,30 @@
 
 import NetInfo from '../index';
 import NativeInterface from '../internal/nativeInterface';
-import {
-  NetInfoState,
-  NetInfoStateType,
-  NetInfoCellularGeneration,
-} from '../internal/types';
+import {NetInfoStateType, NetInfoCellularGeneration} from '../internal/types';
+import {NetInfoNativeModuleState} from '../internal/privateTypes';
 
-type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
-/// @ts-ignore
-const MockNativeInterface: JestMockNativeInterface = NativeInterface;
+const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
 
 describe('@react-native-community/netinfo', () => {
   describe('fetch', () => {
     it('should pass on the responses when the library promise returns', () => {
-      const expectedConnectionInfo: NetInfoState = {
+      const expectedConnectionInfo: NetInfoNativeModuleState = {
         type: NetInfoStateType.cellular,
         isConnected: true,
+        isInternetReachable: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: NetInfoCellularGeneration['3g'],
         },
       };
 
-      MockNativeInterface.getCurrentState.mockResolvedValue(
+      NativeInterface.eventEmitter.emit(
+        DEVICE_CONNECTIVITY_EVENT,
         expectedConnectionInfo,
       );
 
       return expect(NetInfo.fetch()).resolves.toEqual(expectedConnectionInfo);
-    });
-
-    it('should pass on errors through the promise chain', () => {
-      const expectedError = new Error('A test error');
-
-      MockNativeInterface.getCurrentState.mockRejectedValue(expectedError);
-
-      return expect(NetInfo.fetch()).rejects.toBe(expectedError);
     });
   });
 });

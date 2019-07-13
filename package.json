@@ -140,5 +140,21 @@
       "cd android && ./graldew spotlessApply",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn test"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "yarn eslint --fix",
+      "git add"
+    ],
+    "*.java": [
+      "cd android && ./graldew spotlessApply",
+      "git add"
+    ]
   }
 }

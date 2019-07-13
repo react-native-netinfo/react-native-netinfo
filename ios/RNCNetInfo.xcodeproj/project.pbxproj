@@ -11,6 +11,10 @@
 		B5027B142237B30F00F1AABA /* RNCNetInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNCNetInfo.m */; };
 		B5027B162237B30F00F1AABA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C923EDBB220C2C1A00D3100F /* SystemConfiguration.framework */; };
 		C923EDBC220C2C1A00D3100F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C923EDBB220C2C1A00D3100F /* SystemConfiguration.framework */; };
+		C9B8547E229A6175003B9CCA /* RNCConnectionStateWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B8547D229A6175003B9CCA /* RNCConnectionStateWatcher.m */; };
+		C9B8547F229A6175003B9CCA /* RNCConnectionStateWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B8547D229A6175003B9CCA /* RNCConnectionStateWatcher.m */; };
+		C9B85482229A669E003B9CCA /* RNCConnectionState.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B85481229A669E003B9CCA /* RNCConnectionState.m */; };
+		C9B85483229A669E003B9CCA /* RNCConnectionState.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B85481229A669E003B9CCA /* RNCConnectionState.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,6 +44,10 @@
 		B3E7B5891CC2AC0600A0062D /* RNCNetInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = RNCNetInfo.m; sourceTree = "<group>"; tabWidth = 2; };
 		B5027B1B2237B30F00F1AABA /* libRNCNetInfo-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libRNCNetInfo-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C923EDBB220C2C1A00D3100F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		C9B8547C229A6175003B9CCA /* RNCConnectionStateWatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNCConnectionStateWatcher.h; sourceTree = "<group>"; };
+		C9B8547D229A6175003B9CCA /* RNCConnectionStateWatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNCConnectionStateWatcher.m; sourceTree = "<group>"; };
+		C9B85480229A669E003B9CCA /* RNCConnectionState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNCConnectionState.h; sourceTree = "<group>"; };
+		C9B85481229A669E003B9CCA /* RNCConnectionState.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNCConnectionState.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +83,10 @@
 			children = (
 				B3E7B5881CC2AC0600A0062D /* RNCNetInfo.h */,
 				B3E7B5891CC2AC0600A0062D /* RNCNetInfo.m */,
+				C9B8547C229A6175003B9CCA /* RNCConnectionStateWatcher.h */,
+				C9B8547D229A6175003B9CCA /* RNCConnectionStateWatcher.m */,
+				C9B85480229A669E003B9CCA /* RNCConnectionState.h */,
+				C9B85481229A669E003B9CCA /* RNCConnectionState.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 				C923EDBA220C2C1A00D3100F /* Frameworks */,
 				B5027B1B2237B30F00F1AABA /* libRNCNetInfo-tvOS.a */,
@@ -164,6 +176,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9B8547E229A6175003B9CCA /* RNCConnectionStateWatcher.m in Sources */,
+				C9B85482229A669E003B9CCA /* RNCConnectionState.m in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* RNCNetInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -172,6 +186,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9B8547F229A6175003B9CCA /* RNCConnectionStateWatcher.m in Sources */,
+				C9B85483229A669E003B9CCA /* RNCConnectionState.m in Sources */,
 				B5027B142237B30F00F1AABA /* RNCNetInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

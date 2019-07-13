@@ -14,9 +14,7 @@ import {
   NetInfoCellularGeneration,
 } from '../../internal/types';
 
-type JestMockNativeInterface = jest.Mocked<typeof NativeInterface>;
-/// @ts-ignore
-const MockNativeInterface: JestMockNativeInterface = NativeInterface;
+const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
 
 describe('Deprecated', () => {
   describe('getConnectionInfo', () => {
@@ -24,9 +22,10 @@ describe('Deprecated', () => {
       const expectedConnectionType = NetInfoStateType.cellular;
       const expectedEffectiveConnectionType = NetInfoCellularGeneration['3g'];
 
-      MockNativeInterface.getCurrentState.mockResolvedValue({
+      NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
         type: expectedConnectionType,
         isConnected: true,
+        isInternetReachable: true,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: expectedEffectiveConnectionType,
@@ -37,14 +36,6 @@ describe('Deprecated', () => {
         type: expectedConnectionType,
         effectiveType: expectedEffectiveConnectionType,
       });
-    });
-
-    it('should pass on errors through the promise chain', () => {
-      const expectedError = new Error('A test error');
-
-      MockNativeInterface.getCurrentState.mockRejectedValue(expectedError);
-
-      return expect(NetInfo.getConnectionInfo()).rejects.toBe(expectedError);
     });
   });
 });
