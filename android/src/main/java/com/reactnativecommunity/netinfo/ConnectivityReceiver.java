@@ -98,7 +98,7 @@ abstract class ConnectivityReceiver {
                     ConnectivityManagerCompat.isActiveNetworkMetered(getConnectivityManager());
             details.putBoolean("isConnectionExpensive", isConnectionExpensive);
 
-            if (mConnectionType.equals(ConnectionType.CELLULAR)) {
+            if (mConnectionType.equals(ConnectionType.CELLULAR) && mCellularGeneration != null) {
                 details.putString("cellularGeneration", mCellularGeneration.label);
             }
         }
