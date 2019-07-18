@@ -57,7 +57,6 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 {
     RNCConnectionStateWatcher *self = (__bridge id)info;
     [self update:flags];
-
 }
 
 - (void)update:(SCNetworkReachabilityFlags)flags
