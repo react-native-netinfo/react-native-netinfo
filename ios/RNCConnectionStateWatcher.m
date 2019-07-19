@@ -7,6 +7,7 @@
 
 #import "RNCConnectionStateWatcher.h"
 #import <SystemConfiguration/SystemConfiguration.h>
+#import <netinet/in.h>
 
 @interface RNCConnectionStateWatcher () <NSURLSessionDataDelegate>
 
@@ -56,7 +57,6 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 {
     RNCConnectionStateWatcher *self = (__bridge id)info;
     [self update:flags];
-    
 }
 
 - (void)update:(SCNetworkReachabilityFlags)flags
@@ -71,7 +71,7 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 {
     if (![state isEqualToConnectionState:_state]) {
         _state = state;
-        
+
         [self updateDelegate];
     }
 }
@@ -85,11 +85,22 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
 
 - (SCNetworkReachabilityRef)createReachabilityRef
 {
-    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "apple.com");
+    struct sockaddr_in zeroAddress;
+    bzero(&zeroAddress, sizeof(zeroAddress));
+    zeroAddress.sin_len = sizeof(zeroAddress);
+    zeroAddress.sin_family = AF_INET;
+
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr *) &zeroAddress);
     // Set the callback, setting our "self" as the info so we can get a reference in the callback
     SCNetworkReachabilityContext context = { 0, ( __bridge void *)self, NULL, NULL, NULL };
     SCNetworkReachabilitySetCallback(reachability, RNCReachabilityCallback, &context);
     SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetMain(), kCFRunLoopCommonModes);
+
+    // Set the state the first time
+    SCNetworkReachabilityFlags flags;
+    SCNetworkReachabilityGetFlags(reachability, &flags);
+    [self update:flags];
+
     return reachability;
 }
 
