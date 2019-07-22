@@ -11,6 +11,7 @@ import {useState, useEffect} from 'react';
 import DeprecatedUtils from './internal/deprecatedUtils';
 import DeprecatedState from './internal/deprecatedState';
 import * as DeprecatedTypes from './internal/deprecatedTypes';
+import InternetReachability from './internal/internetReachability';
 import State from './internal/state';
 import * as Types from './internal/types';
 
@@ -117,6 +118,24 @@ export function useNetInfo(): Types.NetInfoState {
 }
 
 /**
+ * Sets a custom URL and test for the internet reachability test. By default this will make a call
+ * to "https://clients3.google.com/generate_204" and check for a 204 response. Because this is a
+ * service hosted by Google it is not availabile in all locations. You use this method to implement
+ * your own custom reachability check.
+ *
+ * Note that this is only used for platforms which *don't* provide internet reachability information
+ * natively. Android does not use this check, but iOS and Windows does.
+ * @param url The URL you would like to use to check internet reachability.
+ * @param test A function which takes in the response from the network call and returns a boolean.
+ */
+export function setInternetReachabilityTest(
+  url: string,
+  test: Types.NetInfoInternetReachabilityTest,
+): void {
+  InternetReachability.setCustomTest(url, test);
+}
+
+/**
  * Deprecated method to remove the listener. You should upgrade to the new API.
  *
  * @deprecated
@@ -219,6 +238,7 @@ export default {
   fetch,
   addEventListener,
   useNetInfo,
+  setInternetReachabilityTest,
   removeEventListener,
   getConnectionInfo,
   isConnectionExpensive,

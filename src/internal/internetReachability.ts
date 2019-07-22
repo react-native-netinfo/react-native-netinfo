@@ -7,9 +7,14 @@
  * @format
  */
 
+import * as Types from './types';
 import * as PrivateTypes from './privateTypes';
 
-const REACHABILITY_URL = 'https://clients3.google.com/generate_204';
+let reachabilityUrl = 'https://clients3.google.com/generate_204';
+let reachabilityTest: Types.NetInfoInternetReachabilityTest = (
+  response,
+): boolean => response.status === 204;
+
 const LONG_TIMEOUT = 60 * 1000; // 60s
 const SHORT_TIMEOUT = 5 * 1000; // 5s
 
@@ -19,6 +24,7 @@ const _subscriptions = new Set<
 let _isInternetReachable: boolean | null = null;
 let _currentInternetReachabilityCheckHandler: InternetReachabilityCheckHandler | null = null;
 let _currentTimeoutHandle: number | null = null;
+let _lastState: PrivateTypes.NetInfoNativeModuleState | null = null;
 
 function setIsInternetReachable(isInternetReachable: boolean | null): void {
   if (_isInternetReachable === isInternetReachable) {
@@ -41,11 +47,12 @@ function checkInternetReachability(): InternetReachabilityCheckHandler {
   // We wraop the promise to allow us to cancel the pending request, if needed
   let hasCanceled = false;
 
-  const promise = fetch(REACHABILITY_URL)
+  const promise = fetch(reachabilityUrl)
     .then(
       (response): void => {
         if (!hasCanceled) {
-          setIsInternetReachable(response.status === 204);
+          const testResult = reachabilityTest(response);
+          setIsInternetReachable(testResult);
           const nextTimeoutInterval = _isInternetReachable
             ? LONG_TIMEOUT
             : SHORT_TIMEOUT;
@@ -118,6 +125,7 @@ export function clear(): void {
 }
 
 export function update(state: PrivateTypes.NetInfoNativeModuleState): void {
+  _lastState = state;
   if (typeof state.isInternetReachable === 'boolean') {
     setIsInternetReachable(state.isInternetReachable);
   } else {
@@ -139,9 +147,24 @@ export function addSubscription(
   };
 }
 
+export function setCustomTest(
+  url: string,
+  test: Types.NetInfoInternetReachabilityTest,
+): void {
+  // Set the new URL and test
+  reachabilityUrl = url;
+  reachabilityTest = test;
+
+  // If we have some state, call "update" with it again to trigger the new custom reachability check
+  if (_lastState) {
+    update(_lastState);
+  }
+}
+
 export default {
   update,
   currentState,
   clear,
   addSubscription,
+  setCustomTest,
 };

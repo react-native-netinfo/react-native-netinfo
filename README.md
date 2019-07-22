@@ -279,6 +279,19 @@ const YourComplement = () => {
 };
 ```
 
+#### `setInternetReachabilityTest()`
+
+Sets a custom URL and test for the internet reachability test. By default this will make a call to "https://clients3.google.com/generate_204" and check for a 204 response. Because this is a service hosted by Google it is not availabile in all locations. You use this method to implement your own custom reachability check.
+
+Note that this is only used for platforms which *don't* provide internet reachability information natively. Android does not use this check, but iOS and Windows does.
+
+**Example:**
+```jsx
+import {setInternetReachabilityTest} from "@react-native-community/netinfo";
+
+setInternetReachabilityTest('https://example.com', response => response.status === 200);
+```
+
 ## Troubleshooting
 
 ### Errors when building on Android

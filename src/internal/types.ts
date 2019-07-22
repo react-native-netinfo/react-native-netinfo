@@ -82,3 +82,5 @@ export type NetInfoState =
 
 export type NetInfoChangeHandler = (state: NetInfoState) => void;
 export type NetInfoSubscription = () => void;
+
+export type NetInfoInternetReachabilityTest = (response: Response) => boolean;
