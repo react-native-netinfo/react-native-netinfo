@@ -273,7 +273,7 @@ const YourComplement = () => {
   return (
     <View>
       <Text>Type: {netInfo.type}</Text>
-      <Text>Is Connected? {netInfo.isConnected}</Text>
+      <Text>Is Connected? {netInfo.isConnected.toString()}</Text>
     </View>
   );
 };
