@@ -8,10 +8,7 @@
  */
 
 import * as PrivateTypes from './privateTypes';
-
-const REACHABILITY_URL = 'https://clients3.google.com/generate_204';
-const LONG_TIMEOUT = 60 * 1000; // 60s
-const SHORT_TIMEOUT = 5 * 1000; // 5s
+import {netInfoConfig} from './netInfoConfig';
 
 const _subscriptions = new Set<
   PrivateTypes.NetInfoInternetReachabilityChangeListener
@@ -41,14 +38,14 @@ function checkInternetReachability(): InternetReachabilityCheckHandler {
   // We wraop the promise to allow us to cancel the pending request, if needed
   let hasCanceled = false;
 
-  const promise = fetch(REACHABILITY_URL)
+  const promise = fetch(netInfoConfig.reachabilityUrl)
     .then(
       (response): void => {
         if (!hasCanceled) {
           setIsInternetReachable(response.status === 204);
           const nextTimeoutInterval = _isInternetReachable
-            ? LONG_TIMEOUT
-            : SHORT_TIMEOUT;
+            ? netInfoConfig.reachabilityLongTimeout
+            : netInfoConfig.reachabilityShortTimeout;
           _currentTimeoutHandle = setTimeout(
             checkInternetReachability,
             nextTimeoutInterval,
@@ -61,7 +58,7 @@ function checkInternetReachability(): InternetReachabilityCheckHandler {
         setIsInternetReachable(false);
         _currentTimeoutHandle = setTimeout(
           checkInternetReachability,
-          SHORT_TIMEOUT,
+          netInfoConfig.reachabilityShortTimeout,
         );
       },
     );

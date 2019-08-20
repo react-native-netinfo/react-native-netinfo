@@ -25,6 +25,12 @@ export enum NetInfoCellularGeneration {
   '4g' = '4g',
 }
 
+export interface NetInfoConfig {
+  reachabilityUrl: string;
+  reachabilityLongTimeout: number;
+  reachabilityShortTimeout: number;
+}
+
 export interface NetInfoConnectedDetails {
   isConnectionExpensive: boolean;
 }

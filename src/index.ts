@@ -13,6 +13,7 @@ import DeprecatedState from './internal/deprecatedState';
 import * as DeprecatedTypes from './internal/deprecatedTypes';
 import State from './internal/state';
 import * as Types from './internal/types';
+import {netInfoConfig} from './internal/netInfoConfig';
 
 // Call the setup methods of the two state modules right away
 State.setup();
@@ -23,6 +24,19 @@ const _isConnectedListeners = new Map<
   /// @ts-ignore Typescript des not like the trailing comma that Prettier insists upon
   Types.NetInfoChangeHandler
 >();
+
+/**
+ * Sets configuration for NetInfo
+ */
+export function setNetInfoConfig(
+  newConfig: Partial<Types.NetInfoConfig>,
+): void {
+  Object.assign(netInfoConfig, newConfig);
+}
+
+export function getNetInfoConfig(): Types.NetInfoConfig {
+  return netInfoConfig;
+}
 
 /**
  * Returns a `Promise` that resolves to a `NetInfoState` object.
