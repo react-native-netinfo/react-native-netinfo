@@ -1,3 +1,10 @@
+# [4.2.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.1.5...v4.2.0) (2019-09-03)
+
+
+### Features
+
+* Add additional details for cellular and wifi connections ([#122](https://github.com/react-native-community/react-native-netinfo/issues/122) by [@gretzky](https://github.com/gretzky)) ([0aa2486](https://github.com/react-native-community/react-native-netinfo/commit/0aa2486))
+
 ## [4.1.5](https://github.com/react-native-community/react-native-netinfo/compare/v4.1.4...v4.1.5) (2019-08-17)
 
 
