@@ -8,10 +8,9 @@ package com.reactnativecommunity.netinfo;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
-import android.text.format.Formatter;
 import androidx.core.net.ConnectivityManagerCompat;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -20,6 +19,8 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.reactnativecommunity.netinfo.types.CellularGeneration;
 import com.reactnativecommunity.netinfo.types.ConnectionType;
+import java.math.BigInteger;
+import java.net.InetAddress;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -38,7 +39,9 @@ abstract class ConnectivityReceiver {
         mReactContext = reactContext;
         mConnectivityManager =
                 (ConnectivityManager) reactContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        mWifiManager = (WifiManager) reactContext.getSystemService(Context.WIFI_SERVICE);
+        mWifiManager =
+                (WifiManager)
+                        reactContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         mTelephonyManager =
                 (TelephonyManager) reactContext.getSystemService(Context.TELEPHONY_SERVICE);
     }
@@ -83,20 +86,6 @@ abstract class ConnectivityReceiver {
                 .emit("netInfo.networkStatusDidChange", createConnectivityEventMap());
     }
 
-    // cast the wifi signal strength value as a readable string
-    private String formatSignalStrength(int strength) {
-        if (strength >= -50) {
-            return "great";
-        } else if (strength <= -50 && strength >= -60) {
-            return "good";
-        } else if (strength <= -60 && strength >= -70) {
-            return "fair";
-        } else if (strength <= -70) {
-            return "poor";
-        }
-        return "unstable";
-    }
-
     private WritableMap createConnectivityEventMap() {
         WritableMap event = new WritableNativeMap();
 
@@ -121,35 +110,54 @@ abstract class ConnectivityReceiver {
                     ConnectivityManagerCompat.isActiveNetworkMetered(getConnectivityManager());
             details.putBoolean("isConnectionExpensive", isConnectionExpensive);
 
-            if (mConnectionType.equals(ConnectionType.CELLULAR) && mCellularGeneration != null) {
-                details.putString("cellularGeneration", mCellularGeneration.label);
-            }
+            if (mConnectionType.equals(ConnectionType.CELLULAR)) {
+                // Add the cellular generation, if we have one
+                if (mCellularGeneration != null) {
+                    details.putString("cellularGeneration", mCellularGeneration.label);
+                }
 
-            // Get the cell carrier
-            if (mConnectionType.equals(ConnectionType.CELLULAR) {
+                // Add the network operator name, if there is one
                 String carrier = mTelephonyManager.getNetworkOperatorName();
-                details.putString("carrier", carrier);
-            }
+                if (carrier != null) {
+                    details.putString("carrier", carrier);
+                }
+            } else if (mConnectionType.equals(ConnectionType.WIFI)) {
+                WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
 
-            // Get the SSID and strip the quotes
-            String initialSSID = mWifiManager.getConnectionInfo().getSSID();
-            String ssid = initialSSID.replace("\"", "");
+                if (wifiInfo != null) {
+                    // Get the SSID
+                    try {
+                        String initialSSID = wifiInfo.getSSID();
+                        if (initialSSID != null && !initialSSID.contains("<unknown ssid>")) {
+                            // Strip the quotes, if any
+                            String ssid = initialSSID.replace("\"", "");
+                            details.putString("ssid", ssid);
+                        }
+                    } catch (Exception e) {
+                        // Ignore errors
+                    }
 
-            // Get/parse the wifi signal strength
-            int initialSignalStrength = mWifiManager.getConnectionInfo().getRssi();
-            String signalStrength = formatSignalStrength(initialSignalStrength);
+                    // Get/parse the wifi signal strength
+                    try {
+                        int signalStrength =
+                                WifiManager.calculateSignalLevel(wifiInfo.getRssi(), 100);
+                        details.putInt("strength", signalStrength);
+                    } catch (Exception e) {
+                        // Ignore errors
+                    }
 
-            // Get the IP address
-            int ipAddress = mWifiManager.getConnectionInfo().getIpAddress();
-            String formattedIp = Formatter.formatIpAddress(ipAddress);
-
-            if (mConnectionType.equals(CONNECTION_TYPE_WIFI)) {
-                // Add the SSID
-                details.putString("ssid", ssid);
-                // Add the signal strength represented as string value
-                details.putString("strength", signalStrength);
-                // Add the IP address
-                details.putString("ip", formattedIp);
+                    // Get the IP address
+                    try {
+                        byte[] ipAddressByteArray =
+                                BigInteger.valueOf(wifiInfo.getIpAddress()).toByteArray();
+                        NetInfoUtils.reverseByteArray(ipAddressByteArray);
+                        InetAddress inetAddress = InetAddress.getByAddress(ipAddressByteArray);
+                        String ipAddress = inetAddress.getHostAddress();
+                        details.putString("ipAddress", ipAddress);
+                    } catch (Exception e) {
+                        // Ignore errors
+                    }
+                }
             }
         }
         event.putMap("details", details);
