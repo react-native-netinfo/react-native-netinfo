@@ -15,6 +15,7 @@
 		C9B8547F229A6175003B9CCA /* RNCConnectionStateWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B8547D229A6175003B9CCA /* RNCConnectionStateWatcher.m */; };
 		C9B85482229A669E003B9CCA /* RNCConnectionState.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B85481229A669E003B9CCA /* RNCConnectionState.m */; };
 		C9B85483229A669E003B9CCA /* RNCConnectionState.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B85481229A669E003B9CCA /* RNCConnectionState.m */; };
+		C9CB7A5A231E1CE8000393F8 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CB7A59231E1CE8000393F8 /* CoreTelephony.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -48,6 +49,7 @@
 		C9B8547D229A6175003B9CCA /* RNCConnectionStateWatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNCConnectionStateWatcher.m; sourceTree = "<group>"; };
 		C9B85480229A669E003B9CCA /* RNCConnectionState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNCConnectionState.h; sourceTree = "<group>"; };
 		C9B85481229A669E003B9CCA /* RNCConnectionState.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNCConnectionState.m; sourceTree = "<group>"; };
+		C9CB7A59231E1CE8000393F8 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9CB7A5A231E1CE8000393F8 /* CoreTelephony.framework in Frameworks */,
 				C923EDBC220C2C1A00D3100F /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,6 +99,7 @@
 		C923EDBA220C2C1A00D3100F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C9CB7A59231E1CE8000393F8 /* CoreTelephony.framework */,
 				C923EDBB220C2C1A00D3100F /* SystemConfiguration.framework */,
 			);
 			name = Frameworks;
