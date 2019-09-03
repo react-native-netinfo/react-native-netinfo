@@ -8,6 +8,10 @@ package com.reactnativecommunity.netinfo;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
+import android.telephony.TelephonyManager;
+import android.text.format.Formatter;
 import androidx.core.net.ConnectivityManagerCompat;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -22,6 +26,8 @@ import javax.annotation.Nullable;
 abstract class ConnectivityReceiver {
 
     private final ConnectivityManager mConnectivityManager;
+    private final WifiManager mWifiManager;
+    private final TelephonyManager mTelephonyManager;
     private final ReactApplicationContext mReactContext;
 
     @Nonnull private ConnectionType mConnectionType = ConnectionType.UNKNOWN;
@@ -32,6 +38,9 @@ abstract class ConnectivityReceiver {
         mReactContext = reactContext;
         mConnectivityManager =
                 (ConnectivityManager) reactContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        mWifiManager = (WifiManager) reactContext.getSystemService(Context.WIFI_SERVICE);
+        mTelephonyManager =
+                (TelephonyManager) reactContext.getSystemService(Context.TELEPHONY_SERVICE);
     }
 
     abstract void register();
@@ -74,6 +83,20 @@ abstract class ConnectivityReceiver {
                 .emit("netInfo.networkStatusDidChange", createConnectivityEventMap());
     }
 
+    // cast the wifi signal strength value as a readable string
+    private String formatSignalStrength(int strength) {
+        if (strength >= -50) {
+            return "great";
+        } else if (strength <= -50 && strength >= -60) {
+            return "good";
+        } else if (strength <= -60 && strength >= -70) {
+            return "fair";
+        } else if (strength <= -70) {
+            return "poor";
+        }
+        return "unstable";
+    }
+
     private WritableMap createConnectivityEventMap() {
         WritableMap event = new WritableNativeMap();
 
@@ -100,6 +123,33 @@ abstract class ConnectivityReceiver {
 
             if (mConnectionType.equals(ConnectionType.CELLULAR) && mCellularGeneration != null) {
                 details.putString("cellularGeneration", mCellularGeneration.label);
+            }
+
+            // Get the cell carrier
+            if (mConnectionType.equals(ConnectionType.CELLULAR) {
+                String carrier = mTelephonyManager.getNetworkOperatorName();
+                details.putString("carrier", carrier);
+            }
+
+            // Get the SSID and strip the quotes
+            String initialSSID = mWifiManager.getConnectionInfo().getSSID();
+            String ssid = initialSSID.replace("\"", "");
+
+            // Get/parse the wifi signal strength
+            int initialSignalStrength = mWifiManager.getConnectionInfo().getRssi();
+            String signalStrength = formatSignalStrength(initialSignalStrength);
+
+            // Get the IP address
+            int ipAddress = mWifiManager.getConnectionInfo().getIpAddress();
+            String formattedIp = Formatter.formatIpAddress(ipAddress);
+
+            if (mConnectionType.equals(CONNECTION_TYPE_WIFI)) {
+                // Add the SSID
+                details.putString("ssid", ssid);
+                // Add the signal strength represented as string value
+                details.putString("strength", signalStrength);
+                // Add the IP address
+                details.putString("ip", formattedIp);
             }
         }
         event.putMap("details", details);
