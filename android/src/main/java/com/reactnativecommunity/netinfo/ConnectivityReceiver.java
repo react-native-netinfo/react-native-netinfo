@@ -8,6 +8,9 @@ package com.reactnativecommunity.netinfo;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.telephony.TelephonyManager;
 import androidx.core.net.ConnectivityManagerCompat;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -16,12 +19,16 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.reactnativecommunity.netinfo.types.CellularGeneration;
 import com.reactnativecommunity.netinfo.types.ConnectionType;
+import java.math.BigInteger;
+import java.net.InetAddress;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 abstract class ConnectivityReceiver {
 
     private final ConnectivityManager mConnectivityManager;
+    private final WifiManager mWifiManager;
+    private final TelephonyManager mTelephonyManager;
     private final ReactApplicationContext mReactContext;
 
     @Nonnull private ConnectionType mConnectionType = ConnectionType.UNKNOWN;
@@ -32,6 +39,11 @@ abstract class ConnectivityReceiver {
         mReactContext = reactContext;
         mConnectivityManager =
                 (ConnectivityManager) reactContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        mWifiManager =
+                (WifiManager)
+                        reactContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        mTelephonyManager =
+                (TelephonyManager) reactContext.getSystemService(Context.TELEPHONY_SERVICE);
     }
 
     abstract void register();
@@ -98,8 +110,54 @@ abstract class ConnectivityReceiver {
                     ConnectivityManagerCompat.isActiveNetworkMetered(getConnectivityManager());
             details.putBoolean("isConnectionExpensive", isConnectionExpensive);
 
-            if (mConnectionType.equals(ConnectionType.CELLULAR) && mCellularGeneration != null) {
-                details.putString("cellularGeneration", mCellularGeneration.label);
+            if (mConnectionType.equals(ConnectionType.CELLULAR)) {
+                // Add the cellular generation, if we have one
+                if (mCellularGeneration != null) {
+                    details.putString("cellularGeneration", mCellularGeneration.label);
+                }
+
+                // Add the network operator name, if there is one
+                String carrier = mTelephonyManager.getNetworkOperatorName();
+                if (carrier != null) {
+                    details.putString("carrier", carrier);
+                }
+            } else if (mConnectionType.equals(ConnectionType.WIFI)) {
+                WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
+
+                if (wifiInfo != null) {
+                    // Get the SSID
+                    try {
+                        String initialSSID = wifiInfo.getSSID();
+                        if (initialSSID != null && !initialSSID.contains("<unknown ssid>")) {
+                            // Strip the quotes, if any
+                            String ssid = initialSSID.replace("\"", "");
+                            details.putString("ssid", ssid);
+                        }
+                    } catch (Exception e) {
+                        // Ignore errors
+                    }
+
+                    // Get/parse the wifi signal strength
+                    try {
+                        int signalStrength =
+                                WifiManager.calculateSignalLevel(wifiInfo.getRssi(), 100);
+                        details.putInt("strength", signalStrength);
+                    } catch (Exception e) {
+                        // Ignore errors
+                    }
+
+                    // Get the IP address
+                    try {
+                        byte[] ipAddressByteArray =
+                                BigInteger.valueOf(wifiInfo.getIpAddress()).toByteArray();
+                        NetInfoUtils.reverseByteArray(ipAddressByteArray);
+                        InetAddress inetAddress = InetAddress.getByAddress(ipAddressByteArray);
+                        String ipAddress = inetAddress.getHostAddress();
+                        details.putString("ipAddress", ipAddress);
+                    } catch (Exception e) {
+                        // Ignore errors
+                    }
+                }
             }
         }
         event.putMap("details", details);

@@ -183,22 +183,34 @@ The `details` value depends on the `type` value.
 
 `details` is `null`.
 
-##### `type` is `wifi`, `bluetooth`, `ethernet`, `wimax`, `vpn`, or `other`
+##### `type` is `wifi`
+
+`details` has these properties:
+
+| Property                | Platform              | Type      | Description                                                                                                                |
+| ----------------------- | --------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `isConnectionExpensive` | Android, iOS, Windows | `boolean` | If the network connection is considered "expensive". This could be in either energy or monetary terms.                     |
+| `ssid`                  | Android               | `string`  | The SSID of the network. May not be present, `null`, or an empty string if it cannot be determined.                        |
+| `strength`              | Android               | `number`  | An integer number from `0` to `5` for the signal strength. May not be present if the signal strength cannot be determined. |
+| `ipAddress`             | Android, iOS          | `string`  | The external IP address. Can be in IPv4 or IPv6 format. May not be present if it cannot be determined.                     |
+
+##### `type` is `cellular`
+
+`details` has these properties:
+
+| Property                | Platform              | Type                                                               | Description                                                                                                           |
+| ----------------------- | --------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `isConnectionExpensive` | Android, iOS, Windows | `boolean`                                                          | If the network connection is considered "expensive". This could be in either energy or monetary terms.                |
+| `cellularGeneration`    | Android, iOS, Windows | [`NetInfoCellularGeneration`](#netinfocellulargeneration)          | The generation of the cell network the user is connected to. This can give an indication of speed, but no guarantees. |
+| `carrier`               | Android, iOS          | `string`                                                           | The network carrier name. May not be present or may be empty if none can be determined.                               |
+
+##### `type` is `bluetooth`, `ethernet`, `wimax`, `vpn`, or `other`
 
 `details` has these properties:
 
 | Property                | Type      | Description                                                                                            |
 | ----------------------- | --------- | ------------------------------------------------------------------------------------------------------ |
 | `isConnectionExpensive` | `boolean` | If the network connection is considered "expensive". This could be in either energy or monetary terms. |
-
-##### `type` is `cellular`
-
-`details` has these properties:
-
-| Property                | Type                                                               | Description                                                                                                           |
-| ----------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| `isConnectionExpensive` | `boolean`                                                          | If the network connection is considered "expensive". This could be in either energy or monetary terms.                |
-| `cellularGeneration`    | [`NetInfoCellularGeneration`](#netinfocellulargeneration)          | The generation of the cell network the user is connected to. This can give an indication of speed, but no guarantees. |
 
 #### `NetInfoStateType`
 Describes the current type of network connection. It is an enum with these possible values:
