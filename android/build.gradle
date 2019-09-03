@@ -34,6 +34,10 @@ spotless {
   }
 }
 
+def getExtOrInitialValue(name, initialValue) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : initialValue
+}
+
 def getExtOrDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['ReactNativeNetInfo_' + name]
 }
@@ -66,4 +70,17 @@ repositories {
 dependencies {
   //noinspection GradleDynamicVersion
   api 'com.facebook.react:react-native:+'
+
+  def supportLibVersion = getExtOrInitialValue('supportLibVersion', getExtOrInitialValue('supportVersion', null))
+  def androidXVersion = getExtOrInitialValue('androidXVersion', null)
+  if (supportLibVersion && androidXVersion == null) {
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
+  } else {
+    def defaultAndroidXVersion = "1.+"
+    if (androidXVersion == null) {
+      androidXVersion = defaultAndroidXVersion
+    }
+    def androidXCore = getExtOrInitialValue('androidXCore', androidXVersion)
+    implementation "androidx.core:core:$androidXCore"
+  }
 }

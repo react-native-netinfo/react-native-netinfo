@@ -6,7 +6,8 @@ buildscript {
     minSdkVersion = 18
     compileSdkVersion = 28
     targetSdkVersion = 28
-    supportLibVersion = "28.0.0"
+    androidXVersion = "1.+" // Default AndroidX dependency
+    androidXCore = "1.0.2"
 
     // e2e
     kotlinVersion = '1.3.0'
