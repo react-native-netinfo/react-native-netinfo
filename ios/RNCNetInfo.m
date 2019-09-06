@@ -10,7 +10,10 @@
 
 #include <ifaddrs.h>
 #include <arpa/inet.h>
+
+#if !TARGET_OS_TV
 @import CoreTelephony;
+#endif
 
 #import <React/RCTAssert.h>
 #import <React/RCTBridge.h>
