@@ -1,3 +1,10 @@
+## [4.2.1](https://github.com/react-native-community/react-native-netinfo/compare/v4.2.0...v4.2.1) (2019-09-07)
+
+
+### Bug Fixes
+
+* **tvOS:** Do not import CoreTelephony on tvOS ([#195](https://github.com/react-native-community/react-native-netinfo/issues/195)) ([3fe3c6f](https://github.com/react-native-community/react-native-netinfo/commit/3fe3c6f))
+
 # [4.2.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.1.5...v4.2.0) (2019-09-03)
 
 
