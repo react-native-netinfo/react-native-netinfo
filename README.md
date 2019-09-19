@@ -21,6 +21,48 @@ or npm:
 npm install --save @react-native-community/netinfo
 ```
 
+#### Using React Native >= 0.60
+Linking the package manually is not required anymore with [Autolinking](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md).
+
+- **iOS Platform:**
+
+  `$ cd ios && pod install && cd ..` # CocoaPods on iOS needs this extra step
+
+- **Android Platform with Android Support:**
+
+  Using [Jetifier tool](https://github.com/mikehardy/jetifier) for backward-compatibility.
+
+  Modify your **android/build.gradle** configuration:
+  ```
+  buildscript {
+    ext {
+      buildToolsVersion = "28.0.3"
+      minSdkVersion = 16
+      compileSdkVersion = 28
+      targetSdkVersion = 28
+      # Only using Android Support libraries
+      supportLibVersion = "28.0.0"
+    }
+  ```
+
+- **Android Platform with AndroidX:**
+
+  Modify your **android/build.gradle** configuration:
+  ```
+  buildscript {
+    ext {
+      buildToolsVersion = "28.0.3"
+      minSdkVersion = 16
+      compileSdkVersion = 28
+      targetSdkVersion = 28
+      # Remove 'supportLibVersion' property and put specific versions for AndroidX libraries
+      androidXCore = "1.0.2"
+      // Put here other AndroidX dependencies
+    }
+  ```
+
+#### Using React Native < 0.60
+
 You then need to link the native parts of the library for the platforms you are using. The easiest way to link the library is using the CLI tool by running this command from the root of your project:
 
 ```
