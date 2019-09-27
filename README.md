@@ -97,7 +97,7 @@ project(':react-native-community-netinfo').projectDir = new File(rootProject.pro
 ```groovy
 dependencies {
    ...
-   implementation project(':react-native-community-netinfo')
+   implementation project(':@react-native-community_netinfo')
 }
 ```
 
