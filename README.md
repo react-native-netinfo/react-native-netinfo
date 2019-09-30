@@ -232,7 +232,7 @@ The `details` value depends on the `type` value.
 | Property                | Platform              | Type      | Description                                                                                                                |
 | ----------------------- | --------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `isConnectionExpensive` | Android, iOS, Windows | `boolean` | If the network connection is considered "expensive". This could be in either energy or monetary terms.                     |
-| `ssid`                  | Android               | `string`  | The SSID of the network. May not be present, `null`, or an empty string if it cannot be determined.                        |
+| `ssid`                  | Android, iOS          | `string`  | The SSID of the network. May not be present, `null`, or an empty string if it cannot be determined.                        |
 | `strength`              | Android               | `number`  | An integer number from `0` to `5` for the signal strength. May not be present if the signal strength cannot be determined. |
 | `ipAddress`             | Android, iOS          | `string`  | The external IP address. Can be in IPv4 or IPv6 format. May not be present if it cannot be determined.                     |
 | `subnet`                | Android, iOS          | `string`  | The subnet mask in IPv4 format. May not be present if it cannot be determined.                                             |
