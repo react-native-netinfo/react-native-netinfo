@@ -14,6 +14,7 @@
 #if !TARGET_OS_TV
 @import CoreTelephony;
 #endif
+@import SystemConfiguration.CaptiveNetwork;
 
 #import <React/RCTAssert.h>
 #import <React/RCTBridge.h>
@@ -110,6 +111,7 @@ RCT_EXPORT_METHOD(getCurrentState:(RCTPromiseResolveBlock)resolve
     } else if ([state.type isEqualToString:RNCConnectionTypeWifi]) {
       details[@"ipAddress"] = [self ipAddress] ?: NSNull.null;
       details[@"subnet"] = [self subnet] ?: NSNull.null;
+      details[@"ssid"] = [self ssid] ?: NSNull.null;
     }
   }
   
@@ -185,6 +187,21 @@ RCT_EXPORT_METHOD(getCurrentState:(RCTPromiseResolveBlock)resolve
   // Free memory
   freeifaddrs(interfaces);
   return subnet;
+}
+
+- (NSString *)ssid
+{
+  NSArray *interfaceNames = CFBridgingRelease(CNCopySupportedInterfaces());
+  NSDictionary *SSIDInfo;
+  NSString *SSID = NULL;
+  for (NSString *interfaceName in interfaceNames) {
+    SSIDInfo = CFBridgingRelease(CNCopyCurrentNetworkInfo((__bridge CFStringRef)interfaceName));
+    if (SSIDInfo.count > 0) {
+        SSID = SSIDInfo[@"SSID"];
+        break;
+    }
+  }
+  return SSID;
 }
 
 @end
