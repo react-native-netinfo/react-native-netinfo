@@ -1,3 +1,10 @@
+# [4.3.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.2.2...v4.3.0) (2019-09-30)
+
+
+### Features
+
+* Added 'subnet' to wifi details ([#205](https://github.com/react-native-community/react-native-netinfo/issues/205) by @Rapsssito) ([2912a76](https://github.com/react-native-community/react-native-netinfo/commit/2912a76))
+
 ## [4.2.2](https://github.com/react-native-community/react-native-netinfo/compare/v4.2.1...v4.2.2) (2019-09-19)
 
 
