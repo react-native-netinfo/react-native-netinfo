@@ -37,10 +37,9 @@
 {
     self.delegate = nil;
 
-    if (self.reachabilityRef != NULL) {
+    if (self.reachabilityRef != nil) {
         SCNetworkReachabilityUnscheduleFromRunLoop(self.reachabilityRef, CFRunLoopGetMain(), kCFRunLoopCommonModes);
         CFRelease(self.reachabilityRef);
-        self.reachabilityRef = nil;
     }
 }
 
@@ -53,10 +52,24 @@
 
 #pragma mark - Callback
 
+typedef void (^RNCConnectionStateUpdater)(SCNetworkReachabilityFlags);
+
 static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info)
 {
-    RNCConnectionStateWatcher *self = (__bridge id)info;
-    [self update:flags];
+    RNCConnectionStateUpdater block = (__bridge id)info;
+    if (block != nil) {
+        block(flags);
+    }
+}
+
+static void RNCReachabilityContextRelease(const void *info)
+{
+    Block_release(info);
+}
+
+static const void *RNCReachabilityContextRetain(const void *info)
+{
+    return Block_copy(info);
 }
 
 - (void)update:(SCNetworkReachabilityFlags)flags
@@ -91,8 +104,22 @@ static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SC
     zeroAddress.sin_family = AF_INET;
 
     SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr *) &zeroAddress);
-    // Set the callback, setting our "self" as the info so we can get a reference in the callback
-    SCNetworkReachabilityContext context = { 0, ( __bridge void *)self, NULL, NULL, NULL };
+
+    __weak typeof(self) weakSelf = self;
+    RNCConnectionStateUpdater callback = ^(SCNetworkReachabilityFlags flags) {
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
+        if (strongSelf != nil) {
+            [strongSelf update:flags];
+        }
+    };
+
+    SCNetworkReachabilityContext context = {
+        0,
+        (__bridge void *)callback,
+        RNCReachabilityContextRetain,
+        RNCReachabilityContextRelease,
+        NULL
+    };
     SCNetworkReachabilitySetCallback(reachability, RNCReachabilityCallback, &context);
     SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetMain(), kCFRunLoopCommonModes);
 
