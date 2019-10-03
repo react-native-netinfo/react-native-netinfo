@@ -1,3 +1,10 @@
+## [4.3.1](https://github.com/react-native-community/react-native-netinfo/compare/v4.3.0...v4.3.1) (2019-10-03)
+
+
+### Bug Fixes
+
+* **iOS:** Crash caused by trace condition when releasing resources ([#209](https://github.com/react-native-community/react-native-netinfo/issues/209) by [@tido64](https://github.com/tido64)) ([b43838f](https://github.com/react-native-community/react-native-netinfo/commit/b43838f))
+
 # [4.3.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.2.2...v4.3.0) (2019-09-30)
 
 
