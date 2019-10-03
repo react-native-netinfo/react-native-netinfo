@@ -40,6 +40,7 @@
     if (self.reachabilityRef != nil) {
         SCNetworkReachabilityUnscheduleFromRunLoop(self.reachabilityRef, CFRunLoopGetMain(), kCFRunLoopCommonModes);
         CFRelease(self.reachabilityRef);
+        self.reachabilityRef = nil;
     }
 }
 
