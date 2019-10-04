@@ -1,3 +1,10 @@
+## [4.3.2](https://github.com/react-native-community/react-native-netinfo/compare/v4.3.1...v4.3.2) (2019-10-04)
+
+
+### Bug Fixes
+
+* **iOS:** Method definition for 'dictionaryValue' not found ([#224](https://github.com/react-native-community/react-native-netinfo/issues/224)) ([a5f227c](https://github.com/react-native-community/react-native-netinfo/commit/a5f227c))
+
 ## [4.3.1](https://github.com/react-native-community/react-native-netinfo/compare/v4.3.0...v4.3.1) (2019-10-03)
 
 
