@@ -1,3 +1,10 @@
+## [4.3.3](https://github.com/react-native-community/react-native-netinfo/compare/v4.3.2...v4.3.3) (2019-10-04)
+
+
+### Bug Fixes
+
+* **Android:** Fix build.gradle react-native dependency version ([#218](https://github.com/react-native-community/react-native-netinfo/issues/218) by [@friederbluemle](https://github.com/friederbluemle)) ([1bfb425](https://github.com/react-native-community/react-native-netinfo/commit/1bfb425))
+
 ## [4.3.2](https://github.com/react-native-community/react-native-netinfo/compare/v4.3.1...v4.3.2) (2019-10-04)
 
 
