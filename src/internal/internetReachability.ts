@@ -7,11 +7,8 @@
  * @format
  */
 
+import * as Types from './types';
 import * as PrivateTypes from './privateTypes';
-
-const REACHABILITY_URL = 'https://clients3.google.com/generate_204';
-const LONG_TIMEOUT = 60 * 1000; // 60s
-const SHORT_TIMEOUT = 5 * 1000; // 5s
 
 interface InternetReachabilityCheckHandler {
   promise: Promise<void>;
@@ -19,14 +16,17 @@ interface InternetReachabilityCheckHandler {
 }
 
 export default class InternetReachability {
+  private _configuration: Types.NetInfoConfiguration;
   private _listener: PrivateTypes.NetInfoInternetReachabilityChangeListener;
   private _isInternetReachable: boolean | null = null;
   private _currentInternetReachabilityCheckHandler: InternetReachabilityCheckHandler | null = null;
   private _currentTimeoutHandle: number | null = null;
 
   constructor(
+    configuration: Types.NetInfoConfiguration,
     listener: PrivateTypes.NetInfoInternetReachabilityChangeListener,
   ) {
+    this._configuration = configuration;
     this._listener = listener;
   }
 
@@ -71,14 +71,16 @@ export default class InternetReachability {
     // We wraop the promise to allow us to cancel the pending request, if needed
     let hasCanceled = false;
 
-    const promise = fetch(REACHABILITY_URL)
+    const promise = fetch(this._configuration.reachabilityUrl)
       .then(
         (response): void => {
           if (!hasCanceled) {
-            this._setIsInternetReachable(response.status === 204);
+            this._setIsInternetReachable(
+              this._configuration.reachabilityTest(response),
+            );
             const nextTimeoutInterval = this._isInternetReachable
-              ? LONG_TIMEOUT
-              : SHORT_TIMEOUT;
+              ? this._configuration.reachabilityLongTimeout
+              : this._configuration.reachabilityShortTimeout;
             this._currentTimeoutHandle = setTimeout(
               this._checkInternetReachability,
               nextTimeoutInterval,
@@ -91,7 +93,7 @@ export default class InternetReachability {
           this._setIsInternetReachable(false);
           this._currentTimeoutHandle = setTimeout(
             this._checkInternetReachability,
-            SHORT_TIMEOUT,
+            this._configuration.reachabilityShortTimeout,
           );
         },
       );
