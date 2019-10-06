@@ -82,3 +82,10 @@ export type NetInfoState =
 
 export type NetInfoChangeHandler = (state: NetInfoState) => void;
 export type NetInfoSubscription = () => void;
+
+export interface NetInfoConfiguration {
+  reachabilityUrl: string;
+  reachabilityTest: (response: Response) => boolean;
+  reachabilityLongTimeout: number;
+  reachabilityShortTimeout: number;
+}

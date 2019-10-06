@@ -21,9 +21,10 @@ export default class State {
   private _latestState: Types.NetInfoState | null = null;
   private _internetReachability: InternetReachability;
 
-  constructor() {
+  constructor(configuration: Types.NetInfoConfiguration) {
     // Add the listener to the internet connectivity events
     this._internetReachability = new InternetReachability(
+      configuration,
       this._handleInternetReachabilityUpdate,
     );
 

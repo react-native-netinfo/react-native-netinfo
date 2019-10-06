@@ -280,7 +280,33 @@ Describes the current generation of the `cellular` connection. It is an enum wit
 | `3g`      | Currently connected to a 3G cellular network. Includes EHRPD, EVDO, HSPA, HSUPA, HSDPA, and UTMS type connections |
 | `4g`      | Currently connected to a 4G cellular network. Includes HSPAP and LTE type connections                             |
 
+#### `NetInfoConfiguration`
+The configuration options for the library.
+
+| Property                   | Type                              | Description                                                                                                                                                                                                                               |
+| -------------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `reachabilityUrl`          | `string`                          | The URL to call to test if the internet is reachable. Only used on platforms which do not supply internet reachability natively.                                                                                                          |
+| `reachabilityTest`         | `(response: Response) => boolean` | A function which is passed the `Response` from calling the reachability URL. It should return `true` if the response indicates that the internet is reachable. Only used on platforms which do not supply internet reachability natively. |
+| `reachabilityShortTimeout` | `number`                          | The number of seconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively.                                                      |
+| `reachabilityLongTimeout`  | `number`                          | The number of seconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively.                                                          |
+
 ### Methods
+
+#### `configure()`
+
+Configures the library with the given configuration. You only need to supply the properties which you want to change from the default values.
+
+Note that calling this will stop all previously added listeners from being called again. It is best to call this right when your application is started to avoid issues.
+
+**Example:**
+```javascript
+NetInfo.configure({
+  reachabilityUrl: 'https://clients3.google.com/generate_204',
+  reachabilityTest: response => response.status === 204,
+  reachabilityShortTimeout: 60 * 1000, // 60s
+  reachabilityLongTimeout: 5 * 1000, // 5s
+});
+```
 
 #### `fetch()`
 
