@@ -21,7 +21,6 @@ import com.reactnativecommunity.netinfo.types.CellularGeneration;
 import com.reactnativecommunity.netinfo.types.ConnectionType;
 import java.math.BigInteger;
 import java.net.InetAddress;
-import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -166,9 +165,22 @@ abstract class ConnectivityReceiver {
                                 BigInteger.valueOf(wifiInfo.getIpAddress()).toByteArray();
                         NetInfoUtils.reverseByteArray(ipAddressByteArray);
                         InetAddress inetAddress = InetAddress.getByAddress(ipAddressByteArray);
-                        NetworkInterface netAddress = NetworkInterface.getByInetAddress(inetAddress);
-                        int mask = 0xffffffff << (32 - netAddress.getInterfaceAddresses().get(1).getNetworkPrefixLength());
-                        String subnet = String.format("%d.%d.%d.%d", (mask >> 24 & 0xff), (mask >> 16 & 0xff), (mask >> 8 & 0xff), (mask & 0xff));
+                        NetworkInterface netAddress =
+                                NetworkInterface.getByInetAddress(inetAddress);
+                        int mask =
+                                0xffffffff
+                                        << (32
+                                                - netAddress
+                                                        .getInterfaceAddresses()
+                                                        .get(1)
+                                                        .getNetworkPrefixLength());
+                        String subnet =
+                                String.format(
+                                        "%d.%d.%d.%d",
+                                        (mask >> 24 & 0xff),
+                                        (mask >> 16 & 0xff),
+                                        (mask >> 8 & 0xff),
+                                        (mask & 0xff));
                         details.putString("subnet", subnet);
                     } catch (Exception e) {
                         // Ignore errors

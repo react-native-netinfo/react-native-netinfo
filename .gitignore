@@ -51,6 +51,7 @@ debug.keystore
 coverage
 
 .tmp
+example/ios/Pods/
 example/android-bundle.js
 example/ios-bundle.js
 index.android.bundle
