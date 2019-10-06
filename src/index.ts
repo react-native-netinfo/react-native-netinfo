@@ -14,7 +14,8 @@ import * as Types from './internal/types';
 // The default configuration to be used
 const DEFAULT_CONFIGURATION = {
   reachabilityUrl: 'https://clients3.google.com/generate_204',
-  reachabilityTest: (response: Response): boolean => response.status === 204,
+  reachabilityTest: (response: Response): Promise<boolean> =>
+    Promise.resolve(response.status === 204),
   reachabilityShortTimeout: 60 * 1000, // 60s
   reachabilityLongTimeout: 5 * 1000, // 5s
 };

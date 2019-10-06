@@ -73,11 +73,18 @@ export default class InternetReachability {
 
     const promise = fetch(this._configuration.reachabilityUrl)
       .then(
-        (response): void => {
+        (response): Promise<boolean | 'canceled'> => {
           if (!hasCanceled) {
-            this._setIsInternetReachable(
-              this._configuration.reachabilityTest(response),
-            );
+            return this._configuration.reachabilityTest(response);
+          } else {
+            return Promise.resolve('canceled');
+          }
+        },
+      )
+      .then(
+        (result): void => {
+          if (result !== 'canceled') {
+            this._setIsInternetReachable(result);
             const nextTimeoutInterval = this._isInternetReachable
               ? this._configuration.reachabilityLongTimeout
               : this._configuration.reachabilityShortTimeout;
