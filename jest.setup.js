@@ -44,12 +44,4 @@ global.beforeEach(() => {
       cellularGeneration: NetInfoCellularGeneration['3g'],
     },
   });
-
-  require('./src/internal/deprecatedState').setup();
-  require('./src/internal/state').setup();
-});
-
-global.afterEach(() => {
-  require('./src/internal/deprecatedState').tearDown();
-  require('./src/internal/state').tearDown();
 });
