@@ -198,6 +198,9 @@ RCT_EXPORT_METHOD(getCurrentState:(RCTPromiseResolveBlock)resolve
     SSIDInfo = CFBridgingRelease(CNCopyCurrentNetworkInfo((__bridge CFStringRef)interfaceName));
     if (SSIDInfo.count > 0) {
         SSID = SSIDInfo[@"SSID"];
+        if ([SSID isEqualToString:@"Wi-Fi"] || [SSID isEqualToString:@"WLAN"]){
+          SSID = NULL;
+        }
         break;
     }
   }
