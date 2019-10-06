@@ -9,15 +9,13 @@
 
 import * as React from 'react';
 import {Text, View, TouchableOpacity} from 'react-native';
-import NetInfo, {NetInfoSubscription} from '../src';
+import NetInfo from '../src';
 
 interface State {
   connectionInfo: string;
 }
 
 export default class ConnectionInfoCurrent extends React.Component<{}, State> {
-  _subscription: NetInfoSubscription | null = null;
-
   state = {
     connectionInfo: 'Tap to get current state',
   };
