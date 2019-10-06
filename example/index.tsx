@@ -21,6 +21,7 @@ import {
 
 import ConnectionInfoSubscription from './ConnectionInfoSubscription';
 import ConnectionInfoCurrent from './ConnectionInfoCurrent';
+import ConnectionInfoFetch from './ConnectionInfoFetch';
 import NetInfoHook from './NetInfoHook';
 import IsConnected from './IsConnected';
 
@@ -39,6 +40,14 @@ const EXAMPLES: Example[] = [
     description: 'Asynchronously load and observe connectivity',
     render() {
       return <IsConnected />;
+    },
+  },
+  {
+    id: 'fetch',
+    title: 'NetInfo.fetch',
+    description: 'Fetch the state on tap',
+    render() {
+      return <ConnectionInfoFetch />;
     },
   },
   {
