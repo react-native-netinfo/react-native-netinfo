@@ -16,6 +16,7 @@ static NSString *const RNCConnectionTypeUnknown = @"unknown";
 static NSString *const RNCConnectionTypeNone = @"none";
 static NSString *const RNCConnectionTypeWifi = @"wifi";
 static NSString *const RNCConnectionTypeCellular = @"cellular";
+static NSString *const RNCConnectionTypeEthernet = @"ethernet";
 
 // Based on the EffectiveConnectionType enum described in the W3C Network Information API spec
 // (https://wicg.github.io/netinfo/).
