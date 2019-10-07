@@ -107,7 +107,10 @@ RCT_EXPORT_METHOD(getCurrentState:(RCTPromiseResolveBlock)resolve
     if ([state.type isEqualToString:RNCConnectionTypeCellular]) {
       details[@"cellularGeneration"] = state.cellularGeneration ?: NSNull.null;
       details[@"carrier"] = [self carrier] ?: NSNull.null;
-    } else if ([state.type isEqualToString:RNCConnectionTypeWifi]) {
+    } else if (
+      [state.type isEqualToString:RNCConnectionTypeWifi] ||
+      [state.type isEqualToString:RNCConnectionTypeEthernet]
+    ) {
       details[@"ipAddress"] = [self ipAddress] ?: NSNull.null;
       details[@"subnet"] = [self subnet] ?: NSNull.null;
     }
