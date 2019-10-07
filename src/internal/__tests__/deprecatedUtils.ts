@@ -68,6 +68,8 @@ describe('Deprecated utils', () => {
         isInternetReachable: true,
         details: {
           isConnectionExpensive: false,
+          ipAddress: '1.2.3.4',
+          subnet: '0.0.0.0',
         },
       },
       isConnected: true,
@@ -86,6 +88,7 @@ describe('Deprecated utils', () => {
         details: {
           isConnectionExpensive: true,
           cellularGeneration: NetInfoCellularGeneration['3g'],
+          carrier: 'carrier',
         },
       },
       isConnected: true,
@@ -104,6 +107,7 @@ describe('Deprecated utils', () => {
         details: {
           isConnectionExpensive: true,
           cellularGeneration: null,
+          carrier: 'carrier',
         },
       },
       isConnected: true,
@@ -138,6 +142,8 @@ describe('Deprecated utils', () => {
         isInternetReachable: true,
         details: {
           isConnectionExpensive: false,
+          ipAddress: '1.2.3.4',
+          subnet: '0.0.0.0',
         },
       },
       isConnected: true,
