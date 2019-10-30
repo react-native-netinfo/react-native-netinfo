@@ -364,6 +364,18 @@ NativeModules.RNCNetInfo = {
 };
 ```
 
+Alternative way to not edit your `jest.setup.js` and close the config only to the component that implement `NetInfo`:
+
+```js
+jest.mock('NativeModules', () => ({
+    RNCNetInfo: {
+      getCurrentState: jest.fn(() => Promise.resolve()),
+      addListener: jest.fn(),
+      removeListeners: jest.fn(),
+    },
+}));
+```
+
 ### Issues with the iOS simulator
 
 There is a [known](http://openradar.appspot.com/14585459) [issue](http://www.openradar.appspot.com/29913522) with the iOS Simulator which causes it to not receive network change notifications correctly when the host machine disconnects and then connects to Wifi. If you are having issues with iOS then please test on an actual device before reporting any bugs.
