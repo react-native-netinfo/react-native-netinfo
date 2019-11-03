@@ -56,14 +56,25 @@ export type NetInfoCellularState = NetInfoConnectedState<
   NetInfoStateType.cellular,
   {
     cellularGeneration: NetInfoCellularGeneration | null;
+    carrier: string | null;
   }
 >;
-export type NetInfoWifiState = NetInfoConnectedState<NetInfoStateType.wifi>;
+export type NetInfoWifiState = NetInfoConnectedState<
+  NetInfoStateType.wifi,
+  {
+    ipAddress: string | null;
+    subnet: string | null;
+  }
+>;
 export type NetInfoBluetoothState = NetInfoConnectedState<
   NetInfoStateType.bluetooth
 >;
 export type NetInfoEthernetState = NetInfoConnectedState<
-  NetInfoStateType.ethernet
+  NetInfoStateType.ethernet,
+  {
+    ipAddress: string | null;
+    subnet: string | null;
+  }
 >;
 export type NetInfoWimaxState = NetInfoConnectedState<NetInfoStateType.wimax>;
 export type NetInfoVpnState = NetInfoConnectedState<NetInfoStateType.vpn>;
