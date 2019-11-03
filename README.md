@@ -322,7 +322,7 @@ A [React Hook](https://reactjs.org/docs/hooks-intro.html) which can be used to g
 ```jsx
 import {useNetInfo} from "@react-native-community/netinfo";
 
-const YourComplement = () => {
+const YourComponent = () => {
   const netInfo = useNetInfo();
 
   return (
