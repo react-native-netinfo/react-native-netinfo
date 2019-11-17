@@ -1,3 +1,10 @@
+## [4.6.1](https://github.com/react-native-community/react-native-netinfo/compare/v4.6.0...v4.6.1) (2019-11-17)
+
+
+### Bug Fixes
+
+* Remove Android Spotless formatter to avoid issues with resolving plugins ([1c2de77](https://github.com/react-native-community/react-native-netinfo/commit/1c2de77)), closes [#243](https://github.com/react-native-community/react-native-netinfo/issues/243) [#213](https://github.com/react-native-community/react-native-netinfo/issues/213)
+
 # [4.6.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.5.0...v4.6.0) (2019-11-03)
 
 
