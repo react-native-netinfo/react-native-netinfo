@@ -133,10 +133,6 @@
     "*.{js,ts,tsx}": [
       "yarn eslint --fix",
       "git add"
-    ],
-    "*.java": [
-      "cd android && ./graldew spotlessApply",
-      "git add"
     ]
   }
 }
