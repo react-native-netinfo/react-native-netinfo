@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
+
 import androidx.core.net.ConnectivityManagerCompat;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -36,6 +37,7 @@ abstract class ConnectivityReceiver {
     @Nonnull private ConnectionType mConnectionType = ConnectionType.UNKNOWN;
     @Nullable private CellularGeneration mCellularGeneration = null;
     private boolean mIsInternetReachable = false;
+    private Boolean mIsInternetReachableOverride;
 
     ConnectivityReceiver(ReactApplicationContext reactContext) {
         mReactContext = reactContext;
@@ -56,6 +58,15 @@ abstract class ConnectivityReceiver {
         promise.resolve(createConnectivityEventMap());
     }
 
+    public void setIsInternetReachableOverride(boolean isInternetReachableOverride) {
+        this.mIsInternetReachableOverride = isInternetReachableOverride;
+        updateConnectivity(mConnectionType, mCellularGeneration, mIsInternetReachable);
+    }
+
+    public void clearIsInternetReachableOverride() {
+        this.mIsInternetReachableOverride = null;
+    }
+
     ReactApplicationContext getReactContext() {
         return mReactContext;
     }
@@ -67,7 +78,11 @@ abstract class ConnectivityReceiver {
     void updateConnectivity(
             @Nonnull ConnectionType connectionType,
             @Nullable CellularGeneration cellularGeneration,
-            boolean isInternetReachable) {
+            boolean isInternetReachableRaw) {
+        boolean isInternetReachable = mIsInternetReachableOverride == null
+                ? isInternetReachableRaw
+                : mIsInternetReachableOverride;
+
         // It is possible to get multiple broadcasts for the same connectivity change, so we only
         // update and send an event when the connectivity has indeed changed.
         boolean connectionTypeChanged = connectionType != mConnectionType;
