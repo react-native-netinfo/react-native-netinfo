@@ -71,8 +71,8 @@ public class AmazonFireDeviceConnectivityPoller {
             return;
         }
 
-        unregisterReceiver();
         stopPoller();
+        unregisterReceiver();
     }
 
     private boolean isFireOsDevice() {
