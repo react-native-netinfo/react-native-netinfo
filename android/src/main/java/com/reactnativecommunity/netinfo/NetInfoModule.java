@@ -46,7 +46,7 @@ public class NetInfoModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getCurrentState(Promise promise) {
-        mConnectivityReceiver.getCurrentState(promise);
+    public void getCurrentState(final String intf, final Promise promise) {
+        mConnectivityReceiver.getCurrentState(intf, promise);
     }
 }

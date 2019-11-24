@@ -53,14 +53,16 @@ export function configure(
 /**
  * Returns a `Promise` that resolves to a `NetInfoState` object.
  *
+ * @param [intf] interface from which to obtain the information
+ *
  * @returns A Promise which contains the current connection state.
  */
-export function fetch(): Promise<Types.NetInfoState> {
+export function fetch(intf?: string): Promise<Types.NetInfoState> {
   if (!_state) {
     _state = createState();
   }
 
-  return _state.latest();
+  return _state.latest(intf);
 }
 
 /**
