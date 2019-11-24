@@ -184,6 +184,15 @@ NetInfo.fetch().then(state => {
 });
 ```
 
+Get the network from an specific interface once:
+
+```javascript
+NetInfo.fetch("wifi").then(state => {
+  console.log("SSID", state.details.ssid);
+  console.log("Is connected?", state.isConnected);
+});
+```
+
 Subscribe to network state updates:
 
 ```javascript
@@ -203,7 +212,7 @@ unsubscribe();
   * [`NetInfoStateType`](#netinfostatetype)
   * [`NetInfoCellularGeneration`](#netinfocellulargeneration)
 * **Methods:**
-  * [`fetch()`](#fetch)
+  * [`fetch([interface])`](#fetch)
   * [`addEventListener()`](#addeventlistener)
   * [`useNetInfo()`](#usenetinfo)
 
@@ -311,11 +320,19 @@ NetInfo.configure({
 #### `fetch()`
 
 Returns a `Promise` that resolves to a [`NetInfoState`](README.md#netinfostate) object.
+If a valid `interface` string is passed as an argument, returns a `Promise` that resolves to a [`NetInfoState`](README.md#netinfostate) from the [`NetInfoStateType`](#netinfostatetype) indicated in `interface` argument.
 
 **Example:**
 ```javascript
 NetInfo.fetch().then(state => {
   console.log("Connection type", state.type);
+  console.log("Is connected?", state.isConnected);
+});
+```
+
+```javascript
+NetInfo.fetch("wifi").then(state => {
+  console.log("SSID", state.details.ssid);
   console.log("Is connected?", state.isConnected);
 });
 ```
