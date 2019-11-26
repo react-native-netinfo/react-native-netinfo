@@ -87,37 +87,44 @@ RCT_EXPORT_MODULE()
 
 #pragma mark - Public API
 
-RCT_EXPORT_METHOD(getCurrentState:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)intf resolve:(RCTPromiseResolveBlock)resolve
                   reject:(__unused RCTPromiseRejectBlock)reject)
 {
   RNCConnectionState *state = [self.connectionStateWatcher currentState];
-  resolve([self currentDictionaryFromUpdateState:state]);
+  resolve([self currentDictionaryFromUpdateState:intf state:state]);
 }
 
 #pragma mark - Utilities
 
 // Converts the state into a dictionary to send over the bridge
-- (NSDictionary *)currentDictionaryFromUpdateState:(RNCConnectionState *)state
+- (NSDictionary *)currentDictionaryFromUpdateState:(nullable NSString *)intf state:(RNCConnectionState *)state
 {
-  NSMutableDictionary *details = nil;
-  if (state.connected) {
-    details = [NSMutableDictionary new];
+  NSString *selectedInterface = intf ?: state.type;
+  NSMutableDictionary *details = [self detailsFromInterface:selectedInterface state:state];
+  bool connected = state.connected && [state.type isEqualToString:selectedInterface];
+  if (connected) {
     details[@"isConnectionExpensive"] = @(state.expensive);
-    
-    if ([state.type isEqualToString:RNCConnectionTypeCellular]) {
-      details[@"cellularGeneration"] = state.cellularGeneration ?: NSNull.null;
-      details[@"carrier"] = [self carrier] ?: NSNull.null;
-    } else if ([state.type isEqualToString:RNCConnectionTypeWifi]) {
-      details[@"ipAddress"] = [self ipAddress] ?: NSNull.null;
-      details[@"subnet"] = [self subnet] ?: NSNull.null;
-    }
   }
   
   return @{
-           @"type": state.type,
-           @"isConnected": @(state.connected),
-           @"details": details ?: NSNull.null
-           };
+    @"type": selectedInterface,
+    @"isConnected": @(connected),
+    @"details": details ?: NSNull.null
+  };
+}
+
+- (NSMutableDictionary *)detailsFromInterface:(nonnull NSString *)intf state:(RNCConnectionState *)state
+{
+  NSMutableDictionary *details = [NSMutableDictionary new];
+  if([intf isEqualToString: RNCConnectionTypeCellular]){
+    details[@"cellularGeneration"] = state.cellularGeneration ?: NSNull.null;
+    details[@"carrier"] = [self carrier] ?: NSNull.null;
+  } else if([intf isEqualToString: RNCConnectionTypeWifi] || [intf isEqualToString: RNCConnectionTypeEthernet]){
+    details[@"ipAddress"] = [self ipAddress] ?: NSNull.null;
+    details[@"subnet"] = [self subnet] ?: NSNull.null;
+    details[@"ssid"] = [self ssid] ?: NSNull.null;
+  }
+  return details;
 }
 
 - (NSString *)carrier
