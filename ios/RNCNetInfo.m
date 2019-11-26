@@ -81,7 +81,7 @@ RCT_EXPORT_MODULE()
 - (void)connectionStateWatcher:(RNCConnectionStateWatcher *)connectionStateWatcher didUpdateState:(RNCConnectionState *)state
 {
   if (self.isObserving) {
-    NSDictionary *dictionary = [self currentDictionaryFromUpdateState:state];
+    NSDictionary *dictionary = [self currentDictionaryFromUpdateState:NULL state:state];
     [self sendEventWithName:@"netInfo.networkStatusDidChange" body:dictionary];
   }
 }
