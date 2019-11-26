@@ -14,6 +14,7 @@
 #if !TARGET_OS_TV
 @import CoreTelephony;
 #endif
+@import SystemConfiguration.CaptiveNetwork;
 
 #import <React/RCTAssert.h>
 #import <React/RCTBridge.h>
@@ -151,8 +152,14 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)intf resolve:(RCTPromiseR
     temp_addr = interfaces;
     while (temp_addr != NULL) {
       if (temp_addr->ifa_addr->sa_family == AF_INET) {
-        // Check if interface is en0 which is the wifi connection on the iPhone
-        if ([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"]) {
+        NSString* ifname = [NSString stringWithUTF8String:temp_addr->ifa_name];
+        if (
+          // Check if interface is en0 which is the wifi connection on the iPhone
+          // and the ethernet connection on the Apple TV
+          [ifname isEqualToString:@"en0"] ||
+          // Check if interface is en1 which is the wifi connection on the Apple TV
+          [ifname isEqualToString:@"en1"]
+        ) {
           // Get NSString from C String
           address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
         }
@@ -179,8 +186,14 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)intf resolve:(RCTPromiseR
     temp_addr = interfaces;
     while (temp_addr != NULL) {
       if (temp_addr->ifa_addr->sa_family == AF_INET) {
-        // Check if interface is en0 which is the wifi connection on the iPhone
-        if ([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"]) {
+        NSString* ifname = [NSString stringWithUTF8String:temp_addr->ifa_name];
+        if (
+          // Check if interface is en0 which is the wifi connection on the iPhone
+          // and the ethernet connection on the Apple TV
+          [ifname isEqualToString:@"en0"] ||
+          // Check if interface is en1 which is the wifi connection on the Apple TV
+          [ifname isEqualToString:@"en1"]
+        ) {
           // Get NSString from C String
           subnet = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_netmask)->sin_addr)];
         }
@@ -192,6 +205,24 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)intf resolve:(RCTPromiseR
   // Free memory
   freeifaddrs(interfaces);
   return subnet;
+}
+
+- (NSString *)ssid
+{
+  NSArray *interfaceNames = CFBridgingRelease(CNCopySupportedInterfaces());
+  NSDictionary *SSIDInfo;
+  NSString *SSID = NULL;
+  for (NSString *interfaceName in interfaceNames) {
+    SSIDInfo = CFBridgingRelease(CNCopyCurrentNetworkInfo((__bridge CFStringRef)interfaceName));
+    if (SSIDInfo.count > 0) {
+        SSID = SSIDInfo[@"SSID"];
+        if ([SSID isEqualToString:@"Wi-Fi"] || [SSID isEqualToString:@"WLAN"]){
+          SSID = NULL;
+        }
+        break;
+    }
+  }
+  return SSID;
 }
 
 @end
