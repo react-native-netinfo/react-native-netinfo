@@ -114,7 +114,9 @@ RCT_EXPORT_METHOD(getCurrentState:(RCTPromiseResolveBlock)resolve
     ) {
       details[@"ipAddress"] = [self ipAddress] ?: NSNull.null;
       details[@"subnet"] = [self subnet] ?: NSNull.null;
+#if !TARGET_OS_TV
       details[@"ssid"] = [self ssid] ?: NSNull.null;
+#endif
     }
   }
   
@@ -204,6 +206,7 @@ RCT_EXPORT_METHOD(getCurrentState:(RCTPromiseResolveBlock)resolve
   return subnet;
 }
 
+#if !TARGET_OS_TV
 - (NSString *)ssid
 {
   NSArray *interfaceNames = CFBridgingRelease(CNCopySupportedInterfaces());
@@ -221,5 +224,6 @@ RCT_EXPORT_METHOD(getCurrentState:(RCTPromiseResolveBlock)resolve
   }
   return SSID;
 }
+#endif
 
 @end
