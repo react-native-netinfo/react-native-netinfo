@@ -1,3 +1,17 @@
+# [5.0.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.7.0...v5.0.0) (2019-12-08)
+
+
+### Features
+
+* Configuration & removal of deprecated methods ([#230](https://github.com/react-native-community/react-native-netinfo/issues/230)) ([fab577d](https://github.com/react-native-community/react-native-netinfo/commit/fab577d))
+
+
+### BREAKING CHANGES
+
+* Previously deprecated methods have not been removed. These methods have been deprecated since this library was extracted from the core of React Native. Most users will not have any issues with migrating if they were not ignoring the previous warnings.
+
+Added a new way to configure the reachability URL that the library uses on iOS to check for an internet connection. The default is still to use the Google Chrome URL, however, you can now customise this URL, test function, and the timeouts that are used.
+
 # [4.7.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.6.2...v4.7.0) (2019-12-08)
 
 
