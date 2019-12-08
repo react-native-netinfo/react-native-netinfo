@@ -8,7 +8,7 @@
 
 ### BREAKING CHANGES
 
-* Previously deprecated methods have not been removed. These methods have been deprecated since this library was extracted from the core of React Native. Most users will not have any issues with migrating if they were not ignoring the previous warnings.
+* Previously deprecated methods have been removed. These methods have been deprecated since this library was extracted from the core of React Native. Most users will not have any issues with migrating if they were not ignoring the previous warnings.
 
 Added a new way to configure the reachability URL that the library uses on iOS to check for an internet connection. The default is still to use the Google Chrome URL, however, you can now customise this URL, test function, and the timeouts that are used.
 
