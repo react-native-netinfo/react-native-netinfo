@@ -66,7 +66,7 @@ namespace ReactNativeCommunity.NetInfo
         /// <summary>
         /// Gets the current connectivity state of the app.
         /// </summary>
-        /// <param name="string">The interface from which to obtain the information</param>
+        /// <param name="string">The interface from which to obtain the information (not supported)</param>
         /// <param name="promise">A promise to resolve the request.</param>
         [ReactMethod]
         public void getCurrentState(String intf, IPromise promise)
