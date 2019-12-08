@@ -1,3 +1,15 @@
+# [4.7.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.6.2...v4.7.0) (2019-12-08)
+
+
+### Bug Fixes
+
+* **Android:** Allow using androidXCore together with supportLibVersion ([#247](https://github.com/react-native-community/react-native-netinfo/issues/247) by [@euharrison](https://github.com/euharrison)) ([37366ee](https://github.com/react-native-community/react-native-netinfo/commit/37366ee))
+
+
+### Features
+
+* **fireOS:** Add ability to detect network reachability on FireOS devices ([#250](https://github.com/react-native-community/react-native-netinfo/issues/250) by [@fxdemolisher](https://github.com/fxdemolisher)) ([5ae653f](https://github.com/react-native-community/react-native-netinfo/commit/5ae653f))
+
 ## [4.6.2](https://github.com/react-native-community/react-native-netinfo/compare/v4.6.1...v4.6.2) (2019-12-08)
 
 
