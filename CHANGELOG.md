@@ -1,3 +1,10 @@
+## [4.6.2](https://github.com/react-native-community/react-native-netinfo/compare/v4.6.1...v4.6.2) (2019-12-08)
+
+
+### Bug Fixes
+
+* **tvOS:** Ensure the libraries compiles for tvOS ([#259](https://github.com/react-native-community/react-native-netinfo/issues/259) by [@bcontrol](https://github.com/bcontrol)) ([aa0aff8](https://github.com/react-native-community/react-native-netinfo/commit/aa0aff8))
+
 ## [4.6.1](https://github.com/react-native-community/react-native-netinfo/compare/v4.6.0...v4.6.1) (2019-11-17)
 
 
