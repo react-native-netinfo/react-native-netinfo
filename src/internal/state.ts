@@ -53,7 +53,7 @@ export default class State {
   };
 
   private _handleInternetReachabilityUpdate = (
-    isInternetReachable: boolean | null,
+    isInternetReachable: boolean | null | undefined,
   ): void => {
     if (!this._latestState) {
       return;

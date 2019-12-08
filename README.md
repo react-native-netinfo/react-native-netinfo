@@ -238,13 +238,13 @@ The `details` value depends on the `type` value.
 
 `details` has these properties:
 
-| Property                | Platform              | Type      | Description                                                                                                                |
-| ----------------------- | --------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `isConnectionExpensive` | Android, iOS, Windows | `boolean` | If the network connection is considered "expensive". This could be in either energy or monetary terms.                     |
-| `ssid`                  | Android, iOS          | `string`  | The SSID of the network. May not be present, `null`, or an empty string if it cannot be determined. **On iOS, make sure your app meets at least one of the [following requirements](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo?language=objc#discussion)**.             |
-| `strength`              | Android               | `number`  | An integer number from `0` to `5` for the signal strength. May not be present if the signal strength cannot be determined. |
-| `ipAddress`             | Android, iOS          | `string`  | The external IP address. Can be in IPv4 or IPv6 format. May not be present if it cannot be determined.                     |
-| `subnet`                | Android, iOS          | `string`  | The subnet mask in IPv4 format. May not be present if it cannot be determined.                                             |
+| Property                | Platform                | Type      | Description                                                                                                                |
+| ----------------------- | ----------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `isConnectionExpensive` | Android, iOS, Windows   | `boolean` | If the network connection is considered "expensive". This could be in either energy or monetary terms.                     |
+| `ssid`                  | Android, iOS (not tvOS) | `string`  | The SSID of the network. May not be present, `null`, or an empty string if it cannot be determined. **On iOS, make sure your app meets at least one of the [following requirements](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo?language=objc#discussion)**.             |
+| `strength`              | Android                 | `number`  | An integer number from `0` to `5` for the signal strength. May not be present if the signal strength cannot be determined. |
+| `ipAddress`             | Android, iOS            | `string`  | The external IP address. Can be in IPv4 or IPv6 format. May not be present if it cannot be determined.                     |
+| `subnet`                | Android, iOS            | `string`  | The subnet mask in IPv4 format. May not be present if it cannot be determined.                                             |
 
 ##### `type` is `cellular`
 
@@ -311,9 +311,9 @@ Note that calling this will stop all previously added listeners from being calle
 ```javascript
 NetInfo.configure({
   reachabilityUrl: 'https://clients3.google.com/generate_204',
-  reachabilityTest: response => response.status === 204,
-  reachabilityShortTimeout: 60 * 1000, // 60s
-  reachabilityLongTimeout: 5 * 1000, // 5s
+  reachabilityTest: async (response) => response.status === 204,
+  reachabilityLongTimeout: 60 * 1000, // 60s
+  reachabilityShortTimeout: 5 * 1000, // 5s
 });
 ```
 
@@ -374,6 +374,21 @@ const YourComponent = () => {
       <Text>Is Connected? {netInfo.isConnected.toString()}</Text>
     </View>
   );
+};
+```
+
+You can optionally send configuration when setting up the hook. Note that configuration is global for the library, so you shouldn't send different configuration for different hooks. It is instead recommended that you called `NetInfo.configure()` once when your project starts. The hook option is only provided as a convinience.
+
+```jsx
+const YourComponent = () => {
+  const netInfo = useNetInfo({
+    reachabilityUrl: 'https://clients3.google.com/generate_204',
+    reachabilityTest: async (response) => response.status === 204,
+    reachabilityLongTimeout: 60 * 1000, // 60s
+    reachabilityShortTimeout: 5 * 1000, // 5s
+  });
+
+  // ...
 };
 ```
 

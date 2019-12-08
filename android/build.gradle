@@ -77,14 +77,14 @@ dependencies {
 
   def supportLibVersion = getExtOrInitialValue('supportLibVersion', getExtOrInitialValue('supportVersion', null))
   def androidXVersion = getExtOrInitialValue('androidXVersion', null)
-  if (supportLibVersion && androidXVersion == null) {
+  def androidXCore = getExtOrInitialValue('androidXCore', null)
+  if (supportLibVersion && androidXVersion == null && androidXCore == null) {
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
   } else {
     def defaultAndroidXVersion = "1.+"
-    if (androidXVersion == null) {
-      androidXVersion = defaultAndroidXVersion
+    if (androidXCore == null) {
+      androidXCore = androidXVersion == null ? defaultAndroidXVersion : androidXVersion
     }
-    def androidXCore = getExtOrInitialValue('androidXCore', androidXVersion)
     implementation "androidx.core:core:$androidXCore"
   }
 }

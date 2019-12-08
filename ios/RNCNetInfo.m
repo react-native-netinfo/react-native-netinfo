@@ -207,6 +207,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)intf resolve:(RCTPromiseR
   return subnet;
 }
 
+#if !TARGET_OS_TV
 - (NSString *)ssid
 {
   NSArray *interfaceNames = CFBridgingRelease(CNCopySupportedInterfaces());
@@ -224,5 +225,6 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)intf resolve:(RCTPromiseR
   }
   return SSID;
 }
+#endif
 
 @end

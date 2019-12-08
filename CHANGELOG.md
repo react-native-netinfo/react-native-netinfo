@@ -1,3 +1,50 @@
+# [4.7.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.6.2...v4.7.0) (2019-12-08)
+
+
+### Bug Fixes
+
+* **Android:** Allow using androidXCore together with supportLibVersion ([#247](https://github.com/react-native-community/react-native-netinfo/issues/247) by [@euharrison](https://github.com/euharrison)) ([37366ee](https://github.com/react-native-community/react-native-netinfo/commit/37366ee))
+
+
+### Features
+
+* **fireOS:** Add ability to detect network reachability on FireOS devices ([#250](https://github.com/react-native-community/react-native-netinfo/issues/250) by [@fxdemolisher](https://github.com/fxdemolisher)) ([5ae653f](https://github.com/react-native-community/react-native-netinfo/commit/5ae653f))
+
+## [4.6.2](https://github.com/react-native-community/react-native-netinfo/compare/v4.6.1...v4.6.2) (2019-12-08)
+
+
+### Bug Fixes
+
+* **tvOS:** Ensure the libraries compiles for tvOS ([#259](https://github.com/react-native-community/react-native-netinfo/issues/259) by [@bcontrol](https://github.com/bcontrol)) ([aa0aff8](https://github.com/react-native-community/react-native-netinfo/commit/aa0aff8))
+
+## [4.6.1](https://github.com/react-native-community/react-native-netinfo/compare/v4.6.0...v4.6.1) (2019-11-17)
+
+
+### Bug Fixes
+
+* Remove Android Spotless formatter to avoid issues with resolving plugins ([1c2de77](https://github.com/react-native-community/react-native-netinfo/commit/1c2de77)), closes [#243](https://github.com/react-native-community/react-native-netinfo/issues/243) [#213](https://github.com/react-native-community/react-native-netinfo/issues/213)
+
+# [4.6.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.5.0...v4.6.0) (2019-11-03)
+
+
+### Features
+
+* iOS SSID to WiFi details ([#210](https://github.com/react-native-community/react-native-netinfo/issues/210)) ([119b372](https://github.com/react-native-community/react-native-netinfo/commit/119b372))
+
+# [4.5.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.4.0...v4.5.0) (2019-11-03)
+
+
+### Features
+
+* **ios:** Report IP address and subnet for ethernet ([#233](https://github.com/react-native-community/react-native-netinfo/issues/233) by [@gcesarmza](https://github.com/gcesarmza)) ([507b731](https://github.com/react-native-community/react-native-netinfo/commit/507b731))
+
+# [4.4.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.3.3...v4.4.0) (2019-10-06)
+
+
+### Features
+
+* **iOS:** Detect Apple TV wired connection and retrieve the Wifi IP address & subnet ([#229](https://github.com/react-native-community/react-native-netinfo/issues/229) by [@gcesarmza](https://github.com/gcesarmza)) ([2d2d167](https://github.com/react-native-community/react-native-netinfo/commit/2d2d167))
+
 ## [4.3.3](https://github.com/react-native-community/react-native-netinfo/compare/v4.3.2...v4.3.3) (2019-10-04)
 
 

@@ -15,10 +15,11 @@ import com.facebook.react.module.annotations.ReactModule;
 
 /** Module that monitors and provides information about the connectivity state of the device. */
 @ReactModule(name = NetInfoModule.NAME)
-public class NetInfoModule extends ReactContextBaseJavaModule {
+public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonFireDeviceConnectivityPoller.ConnectivityChangedCallback {
     public static final String NAME = "RNCNetInfo";
 
     private final ConnectivityReceiver mConnectivityReceiver;
+    private final AmazonFireDeviceConnectivityPoller mAmazonConnectivityChecker;
 
     public NetInfoModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -28,15 +29,19 @@ public class NetInfoModule extends ReactContextBaseJavaModule {
         } else {
             mConnectivityReceiver = new BroadcastReceiverConnectivityReceiver(reactContext);
         }
+
+        mAmazonConnectivityChecker = new AmazonFireDeviceConnectivityPoller(reactContext, this);
     }
 
     @Override
     public void initialize() {
         mConnectivityReceiver.register();
+        mAmazonConnectivityChecker.register();
     }
 
     @Override
     public void onCatalystInstanceDestroy() {
+        mAmazonConnectivityChecker.unregister();
         mConnectivityReceiver.unregister();
     }
 
@@ -48,5 +53,10 @@ public class NetInfoModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getCurrentState(final String intf, final Promise promise) {
         mConnectivityReceiver.getCurrentState(intf, promise);
+    }
+
+    @Override
+    public void onAmazonFireDeviceConnectivityChanged(boolean isConnected) {
+        mConnectivityReceiver.setIsInternetReachableOverride(isConnected);
     }
 }
