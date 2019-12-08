@@ -360,6 +360,21 @@ const YourComponent = () => {
 };
 ```
 
+You can optionally send configuration when setting up the hook. Note that configuration is global for the library, so you shouldn't send different configuration for different hooks. It is instead recommended that you called `NetInfo.configure()` once when your project starts. The hook option is only provided as a convinience.
+
+```jsx
+const YourComponent = () => {
+  const netInfo = useNetInfo({
+    reachabilityUrl: 'https://clients3.google.com/generate_204',
+    reachabilityTest: response => response.status === 204,
+    reachabilityShortTimeout: 60 * 1000, // 60s
+    reachabilityLongTimeout: 5 * 1000, // 5s
+  });
+
+  // ...
+};
+```
+
 ## Troubleshooting
 
 ### Errors when building on Android
