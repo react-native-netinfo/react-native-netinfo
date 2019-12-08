@@ -18,7 +18,7 @@ interface InternetReachabilityCheckHandler {
 export default class InternetReachability {
   private _configuration: Types.NetInfoConfiguration;
   private _listener: PrivateTypes.NetInfoInternetReachabilityChangeListener;
-  private _isInternetReachable: boolean | null = null;
+  private _isInternetReachable: boolean | null | undefined = undefined;
   private _currentInternetReachabilityCheckHandler: InternetReachabilityCheckHandler | null = null;
   private _currentTimeoutHandle: number | null = null;
 
@@ -31,7 +31,7 @@ export default class InternetReachability {
   }
 
   private _setIsInternetReachable = (
-    isInternetReachable: boolean | null,
+    isInternetReachable: boolean | null | undefined,
   ): void => {
     if (this._isInternetReachable === isInternetReachable) {
       return;
@@ -121,7 +121,7 @@ export default class InternetReachability {
     }
   };
 
-  public currentState = (): boolean | null => {
+  public currentState = (): boolean | null | undefined => {
     return this._isInternetReachable;
   };
 
