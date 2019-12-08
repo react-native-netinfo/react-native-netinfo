@@ -302,9 +302,9 @@ Note that calling this will stop all previously added listeners from being calle
 ```javascript
 NetInfo.configure({
   reachabilityUrl: 'https://clients3.google.com/generate_204',
-  reachabilityTest: response => response.status === 204,
-  reachabilityShortTimeout: 60 * 1000, // 60s
-  reachabilityLongTimeout: 5 * 1000, // 5s
+  reachabilityTest: async (response) => response.status === 204,
+  reachabilityLongTimeout: 60 * 1000, // 60s
+  reachabilityShortTimeout: 5 * 1000, // 5s
 });
 ```
 
@@ -366,9 +366,9 @@ You can optionally send configuration when setting up the hook. Note that config
 const YourComponent = () => {
   const netInfo = useNetInfo({
     reachabilityUrl: 'https://clients3.google.com/generate_204',
-    reachabilityTest: response => response.status === 204,
-    reachabilityShortTimeout: 60 * 1000, // 60s
-    reachabilityLongTimeout: 5 * 1000, // 5s
+    reachabilityTest: async (response) => response.status === 204,
+    reachabilityLongTimeout: 60 * 1000, // 60s
+    reachabilityShortTimeout: 5 * 1000, // 5s
   });
 
   // ...
