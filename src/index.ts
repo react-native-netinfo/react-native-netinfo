@@ -8,21 +8,47 @@
  */
 
 import {useState, useEffect} from 'react';
-import DeprecatedUtils from './internal/deprecatedUtils';
-import DeprecatedState from './internal/deprecatedState';
-import * as DeprecatedTypes from './internal/deprecatedTypes';
 import State from './internal/state';
 import * as Types from './internal/types';
 
-// Call the setup methods of the two state modules right away
-State.setup();
-DeprecatedState.setup();
+// The default configuration to be used
+const DEFAULT_CONFIGURATION = {
+  reachabilityUrl: 'https://clients3.google.com/generate_204',
+  reachabilityTest: (response: Response): Promise<boolean> =>
+    Promise.resolve(response.status === 204),
+  reachabilityShortTimeout: 60 * 1000, // 60s
+  reachabilityLongTimeout: 5 * 1000, // 5s
+};
 
-const _isConnectedListeners = new Map<
-  DeprecatedTypes.IsConnectedHandler,
-  /// @ts-ignore Typescript des not like the trailing comma that Prettier insists upon
-  Types.NetInfoChangeHandler
->();
+// Stores the currently used configuration
+let _configuration: Types.NetInfoConfiguration = DEFAULT_CONFIGURATION;
+
+// Stores the singleton reference to the state manager
+let _state: State | null = null;
+const createState = (): State => {
+  return new State(_configuration);
+};
+
+/**
+ * Configures the library with the given configuration. Note that calling this will stop all
+ * previously added listeners from being called again. It is best to call this right when your
+ * application is started to avoid issues.
+ *
+ * @param configuration The new configuration to set.
+ */
+export function configure(
+  configuration: Partial<Types.NetInfoConfiguration>,
+): void {
+  _configuration = {
+    ...DEFAULT_CONFIGURATION,
+    ...configuration,
+  };
+
+  if (_state) {
+    _state.tearDown();
+    _state = createState();
+  }
+}
 
 /**
  * Returns a `Promise` that resolves to a `NetInfoState` object.
@@ -30,7 +56,11 @@ const _isConnectedListeners = new Map<
  * @returns A Promise which contains the current connection state.
  */
 export function fetch(): Promise<Types.NetInfoState> {
-  return State.latest();
+  if (!_state) {
+    _state = createState();
+  }
+
+  return _state.latest();
 }
 
 /**
@@ -46,54 +76,15 @@ export function fetch(): Promise<Types.NetInfoState> {
  */
 export function addEventListener(
   listener: Types.NetInfoChangeHandler,
-): Types.NetInfoSubscription;
-
-/**
- * Deprecated network state listener. You should remove the event name and change your handler to
- * use the new state shape.
- *
- * @deprecated
- *
- * @param type The event type.
- * @param deprecatedHandler The listener.
- *
- * @returns An object with a remove function which can be called to unsubscribe.
- */
-export function addEventListener(
-  type: string,
-  deprecatedHandler: DeprecatedTypes.ChangeHandler,
-): DeprecatedTypes.Subscription;
-
-// Implementation of the overloaded methods above
-export function addEventListener(
-  listenerOrType: Types.NetInfoChangeHandler | string,
-  deprecatedHandler: DeprecatedTypes.ChangeHandler | undefined = undefined,
-): Types.NetInfoSubscription | DeprecatedTypes.Subscription {
-  if (typeof listenerOrType === 'string') {
-    DeprecatedUtils.warnOnce();
-
-    if (
-      listenerOrType === DeprecatedTypes.CHANGE_EVENT_NAME &&
-      deprecatedHandler
-    ) {
-      DeprecatedState.add(deprecatedHandler);
-      return {
-        remove: (): void => {
-          DeprecatedState.remove(deprecatedHandler);
-        },
-      };
-    } else {
-      return {
-        remove: (): void => {},
-      };
-    }
-  } else {
-    const listener = listenerOrType;
-    State.add(listener);
-    return (): void => {
-      State.remove(listener);
-    };
+): Types.NetInfoSubscription {
+  if (!_state) {
+    _state = createState();
   }
+
+  _state.add(listener);
+  return (): void => {
+    _state && _state.remove(listener);
+  };
 }
 
 /**
@@ -101,7 +92,13 @@ export function addEventListener(
  *
  * @returns The connection state.
  */
-export function useNetInfo(): Types.NetInfoState {
+export function useNetInfo(
+  configuration: Partial<Types.NetInfoConfiguration> = {},
+): Types.NetInfoState {
+  if (configuration) {
+    configure(configuration);
+  }
+
   const [netInfo, setNetInfo] = useState<Types.NetInfoState>({
     type: Types.NetInfoStateType.unknown,
     isConnected: false,
@@ -116,111 +113,11 @@ export function useNetInfo(): Types.NetInfoState {
   return netInfo;
 }
 
-/**
- * Deprecated method to remove the listener. You should upgrade to the new API.
- *
- * @deprecated
- *
- * @param type The event type.
- * @param handler The event listener.
- */
-export function removeEventListener(
-  type: string,
-  handler: DeprecatedTypes.ChangeHandler,
-): void {
-  DeprecatedUtils.warnOnce();
-
-  if (type === DeprecatedTypes.CHANGE_EVENT_NAME) {
-    DeprecatedState.remove(handler);
-  }
-}
-
-/**
- * Deprecated method to get the current state. You should upgrade to the new `fetch` method and
- * handle the new state type.
- *
- * @deprecated
- */
-export function getConnectionInfo(): Promise<DeprecatedTypes.NetInfoData> {
-  DeprecatedUtils.warnOnce();
-  return DeprecatedState.latest();
-}
-
-/**
- * Deprecated method to tell if the current connection is "expensive". Only available on Android.
- * You should now call the `fetch` method and look at the `details.isConnectionExpensive` property.
- *
- * @deprecated
- */
-export function isConnectionExpensive(): Promise<boolean> {
-  DeprecatedUtils.warnOnce();
-  return State.latest().then(DeprecatedUtils.isConnectionExpensive);
-}
-
-export const isConnected = {
-  /**
-   * Deprecated method to listen for changes to the connected boolean. You should now use the
-   * normal `addEventListener` method and look at the `isConnected` property.
-   *
-   * @deprecated
-   */
-  addEventListener: (
-    eventName: string,
-    handler: DeprecatedTypes.IsConnectedHandler,
-  ): DeprecatedTypes.Subscription => {
-    if (eventName !== DeprecatedTypes.CHANGE_EVENT_NAME) {
-      return {remove: (): void => {}};
-    }
-
-    const listener = (state: Types.NetInfoState): void => {
-      handler(DeprecatedUtils.isConnected(state));
-    };
-
-    _isConnectedListeners.set(handler, listener);
-    State.add(listener);
-
-    return {
-      remove: (): void => {
-        State.remove(listener);
-      },
-    };
-  },
-
-  /**
-   * Deprecated method to stop listening for changes to the connected boolean. You should now use
-   * the normal `addEventListener` method and look at the `isConnected` property.
-   *
-   * @deprecated
-   */
-  removeEventListener: (
-    _eventName: string,
-    handler: DeprecatedTypes.IsConnectedHandler,
-  ): void => {
-    const listener = _isConnectedListeners.get(handler);
-    listener && State.remove(listener);
-    _isConnectedListeners.delete(handler);
-  },
-
-  /**
-   * Deprecated method to get the current is connected boolean. You should now use the normal
-   * `fetch` method and look at the `isConnected` property.
-   *
-   * @deprecated
-   */
-  fetch: (): Promise<boolean> => {
-    return State.latest().then(DeprecatedUtils.isConnected);
-  },
-};
-
 export * from './internal/types';
-export * from './internal/deprecatedTypes';
 
 export default {
+  configure,
   fetch,
   addEventListener,
   useNetInfo,
-  removeEventListener,
-  getConnectionInfo,
-  isConnectionExpensive,
-  isConnected,
 };

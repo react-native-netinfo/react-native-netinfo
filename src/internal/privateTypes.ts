@@ -22,5 +22,5 @@ export interface NetInfoNativeModule {
 }
 
 export type NetInfoInternetReachabilityChangeListener = (
-  isInternetReachable: boolean | null,
+  isInternetReachable: boolean | null | undefined,
 ) => void;

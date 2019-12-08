@@ -7,141 +7,135 @@
  * @format
  */
 
+import * as Types from './types';
 import * as PrivateTypes from './privateTypes';
-
-const REACHABILITY_URL = 'https://clients3.google.com/generate_204';
-const LONG_TIMEOUT = 60 * 1000; // 60s
-const SHORT_TIMEOUT = 5 * 1000; // 5s
-
-const _subscriptions = new Set<
-  PrivateTypes.NetInfoInternetReachabilityChangeListener
->();
-let _isInternetReachable: boolean | null = null;
-let _currentInternetReachabilityCheckHandler: InternetReachabilityCheckHandler | null = null;
-let _currentTimeoutHandle: number | null = null;
-
-function setIsInternetReachable(isInternetReachable: boolean | null): void {
-  if (_isInternetReachable === isInternetReachable) {
-    return;
-  }
-
-  _isInternetReachable = isInternetReachable;
-  _subscriptions.forEach(
-    (listener): void => {
-      listener(_isInternetReachable);
-    },
-  );
-}
 
 interface InternetReachabilityCheckHandler {
   promise: Promise<void>;
   cancel: () => void;
 }
-function checkInternetReachability(): InternetReachabilityCheckHandler {
-  // We wraop the promise to allow us to cancel the pending request, if needed
-  let hasCanceled = false;
 
-  const promise = fetch(REACHABILITY_URL)
-    .then(
-      (response): void => {
-        if (!hasCanceled) {
-          setIsInternetReachable(response.status === 204);
-          const nextTimeoutInterval = _isInternetReachable
-            ? LONG_TIMEOUT
-            : SHORT_TIMEOUT;
-          _currentTimeoutHandle = setTimeout(
-            checkInternetReachability,
-            nextTimeoutInterval,
-          );
-        }
-      },
-    )
-    .catch(
-      (): void => {
-        setIsInternetReachable(false);
-        _currentTimeoutHandle = setTimeout(
-          checkInternetReachability,
-          SHORT_TIMEOUT,
-        );
-      },
-    );
+export default class InternetReachability {
+  private _configuration: Types.NetInfoConfiguration;
+  private _listener: PrivateTypes.NetInfoInternetReachabilityChangeListener;
+  private _isInternetReachable: boolean | null | undefined = undefined;
+  private _currentInternetReachabilityCheckHandler: InternetReachabilityCheckHandler | null = null;
+  private _currentTimeoutHandle: number | null = null;
 
-  return {
-    promise,
-    cancel: (): void => {
-      hasCanceled = true;
-    },
-  };
-}
-
-function setExpectsConnection(expectsConnection: boolean): void {
-  // Cancel any pending check
-  if (_currentInternetReachabilityCheckHandler !== null) {
-    _currentInternetReachabilityCheckHandler.cancel();
-    _currentInternetReachabilityCheckHandler = null;
-  }
-  // Cancel any pending timeout
-  if (_currentTimeoutHandle !== null) {
-    clearTimeout(_currentTimeoutHandle);
-    _currentTimeoutHandle = null;
+  constructor(
+    configuration: Types.NetInfoConfiguration,
+    listener: PrivateTypes.NetInfoInternetReachabilityChangeListener,
+  ) {
+    this._configuration = configuration;
+    this._listener = listener;
   }
 
-  if (expectsConnection) {
-    // If we expect a connection, start the process for finding if we have one
-    // Set the state to "null" if it was previously false
-    if (!_isInternetReachable) {
-      setIsInternetReachable(null);
+  private _setIsInternetReachable = (
+    isInternetReachable: boolean | null | undefined,
+  ): void => {
+    if (this._isInternetReachable === isInternetReachable) {
+      return;
     }
-    // Start a network request to check for internet
-    _currentInternetReachabilityCheckHandler = checkInternetReachability();
-  } else {
-    // If we don't expect a connection, just change the state to "false"
-    setIsInternetReachable(false);
-  }
-}
 
-export function clear(): void {
-  // Cancel any pending check
-  if (_currentInternetReachabilityCheckHandler !== null) {
-    _currentInternetReachabilityCheckHandler.cancel();
-    _currentInternetReachabilityCheckHandler = null;
-  }
+    this._isInternetReachable = isInternetReachable;
+    this._listener(this._isInternetReachable);
+  };
 
-  // Cancel any pending timeout
-  if (_currentTimeoutHandle !== null) {
-    clearTimeout(_currentTimeoutHandle);
-    _currentTimeoutHandle = null;
-  }
+  private _setExpectsConnection = (expectsConnection: boolean): void => {
+    // Cancel any pending check
+    if (this._currentInternetReachabilityCheckHandler !== null) {
+      this._currentInternetReachabilityCheckHandler.cancel();
+      this._currentInternetReachabilityCheckHandler = null;
+    }
+    // Cancel any pending timeout
+    if (this._currentTimeoutHandle !== null) {
+      clearTimeout(this._currentTimeoutHandle);
+      this._currentTimeoutHandle = null;
+    }
 
-  // Clear the subscriptions
-  _subscriptions.clear();
-}
+    if (expectsConnection) {
+      // If we expect a connection, start the process for finding if we have one
+      // Set the state to "null" if it was previously false
+      if (!this._isInternetReachable) {
+        this._setIsInternetReachable(null);
+      }
+      // Start a network request to check for internet
+      this._currentInternetReachabilityCheckHandler = this._checkInternetReachability();
+    } else {
+      // If we don't expect a connection, just change the state to "false"
+      this._setIsInternetReachable(false);
+    }
+  };
 
-export function update(state: PrivateTypes.NetInfoNativeModuleState): void {
-  if (typeof state.isInternetReachable === 'boolean') {
-    setIsInternetReachable(state.isInternetReachable);
-  } else {
-    setExpectsConnection(state.isConnected);
-  }
-}
+  private _checkInternetReachability = (): InternetReachabilityCheckHandler => {
+    // We wraop the promise to allow us to cancel the pending request, if needed
+    let hasCanceled = false;
 
-export function currentState(): boolean | null {
-  return _isInternetReachable;
-}
+    const promise = fetch(this._configuration.reachabilityUrl)
+      .then(
+        (response): Promise<boolean | 'canceled'> => {
+          if (!hasCanceled) {
+            return this._configuration.reachabilityTest(response);
+          } else {
+            return Promise.resolve('canceled');
+          }
+        },
+      )
+      .then(
+        (result): void => {
+          if (result !== 'canceled') {
+            this._setIsInternetReachable(result);
+            const nextTimeoutInterval = this._isInternetReachable
+              ? this._configuration.reachabilityLongTimeout
+              : this._configuration.reachabilityShortTimeout;
+            this._currentTimeoutHandle = setTimeout(
+              this._checkInternetReachability,
+              nextTimeoutInterval,
+            );
+          }
+        },
+      )
+      .catch(
+        (): void => {
+          this._setIsInternetReachable(false);
+          this._currentTimeoutHandle = setTimeout(
+            this._checkInternetReachability,
+            this._configuration.reachabilityShortTimeout,
+          );
+        },
+      );
 
-export function addSubscription(
-  listener: PrivateTypes.NetInfoInternetReachabilityChangeListener,
-): () => void {
-  _subscriptions.add(listener);
+    return {
+      promise,
+      cancel: (): void => {
+        hasCanceled = true;
+      },
+    };
+  };
 
-  return (): void => {
-    _subscriptions.delete(listener);
+  public update = (state: PrivateTypes.NetInfoNativeModuleState): void => {
+    if (typeof state.isInternetReachable === 'boolean') {
+      this._setIsInternetReachable(state.isInternetReachable);
+    } else {
+      this._setExpectsConnection(state.isConnected);
+    }
+  };
+
+  public currentState = (): boolean | null | undefined => {
+    return this._isInternetReachable;
+  };
+
+  public tearDown = (): void => {
+    // Cancel any pending check
+    if (this._currentInternetReachabilityCheckHandler !== null) {
+      this._currentInternetReachabilityCheckHandler.cancel();
+      this._currentInternetReachabilityCheckHandler = null;
+    }
+
+    // Cancel any pending timeout
+    if (this._currentTimeoutHandle !== null) {
+      clearTimeout(this._currentTimeoutHandle);
+      this._currentTimeoutHandle = null;
+    }
   };
 }
-
-export default {
-  update,
-  currentState,
-  clear,
-  addSubscription,
-};

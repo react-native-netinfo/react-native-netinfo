@@ -11,122 +11,122 @@ import {NativeEventSubscription} from 'react-native';
 import NativeInterface from './nativeInterface';
 import InternetReachability from './internetReachability';
 import * as Types from './types';
-import Utils from './utils';
+import * as PrivateTypes from './privateTypes';
 
 const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
 
-let _isSetup = false;
-let _nativeEventSubscription: NativeEventSubscription | null = null;
-let _internetReachabilitySubscription: (() => void) | null = null;
-const _subscriptions = new Set<Types.NetInfoChangeHandler>();
-let _latestState: Types.NetInfoState | null = null;
+export default class State {
+  private _nativeEventSubscription: NativeEventSubscription | null = null;
+  private _subscriptions = new Set<Types.NetInfoChangeHandler>();
+  private _latestState: Types.NetInfoState | null = null;
+  private _internetReachability: InternetReachability;
 
-function fetchCurrentState(): Promise<Types.NetInfoState> {
-  return Utils.currentState().then(
-    (state): Types.NetInfoState => {
-      // Update the internet reachability module
-      InternetReachability.update(state);
+  constructor(configuration: Types.NetInfoConfiguration) {
+    // Add the listener to the internet connectivity events
+    this._internetReachability = new InternetReachability(
+      configuration,
+      this._handleInternetReachabilityUpdate,
+    );
 
-      // Convert and store the new state
-      const convertedState = Utils.convertState(state);
-      _latestState = convertedState;
-      return convertedState;
-    },
-  );
-}
+    // Add the subscription to the natvie events
+    this._nativeEventSubscription = NativeInterface.eventEmitter.addListener(
+      DEVICE_CONNECTIVITY_EVENT,
+      this._handleNativeStateUpdate,
+    );
 
-export function setup(): void {
-  // Skip if we are already setup
-  if (_isSetup) {
-    return;
+    // Fetch the current state from the native module
+    this._fetchCurrentState();
   }
 
-  // Add the subscription to the natvie events
-  _nativeEventSubscription = NativeInterface.eventEmitter.addListener(
-    DEVICE_CONNECTIVITY_EVENT,
-    (state): void => {
-      // Update the internet reachability module
-      InternetReachability.update(state);
+  private _handleNativeStateUpdate = (
+    state: PrivateTypes.NetInfoNativeModuleState,
+  ): void => {
+    // Update the internet reachability module
+    this._internetReachability.update(state);
 
-      // Convert the state from native to JS shape
-      const convertedState = Utils.convertState(state);
+    // Convert the state from native to JS shape
+    const convertedState = this._convertState(state);
 
-      // Update the listeners
-      _latestState = convertedState;
-      _subscriptions.forEach((handler): void => handler(convertedState));
-    },
-  );
+    // Update the listeners
+    this._latestState = convertedState;
+    this._subscriptions.forEach((handler): void => handler(convertedState));
+  };
 
-  // Fetch the current state from the native module
-  fetchCurrentState();
+  private _handleInternetReachabilityUpdate = (
+    isInternetReachable: boolean | null | undefined,
+  ): void => {
+    if (!this._latestState) {
+      return;
+    }
 
-  // Add the listener to the internet connectivity events
-  _internetReachabilitySubscription = InternetReachability.addSubscription(
-    (isInternetReachable): void => {
-      if (!_latestState) {
-        return;
-      }
+    const nextState = {
+      ...this._latestState,
+      isInternetReachable,
+    } as Types.NetInfoState;
+    this._latestState = nextState;
+    this._subscriptions.forEach((handler): void => handler(nextState));
+  };
 
-      const nextState = {
-        ..._latestState,
-        isInternetReachable,
+  private _fetchCurrentState = (): Promise<Types.NetInfoState> => {
+    return NativeInterface.getCurrentState().then(
+      (state): Types.NetInfoState => {
+        // Update the internet reachability module
+        this._internetReachability.update(state);
+
+        // Convert and store the new state
+        const convertedState = this._convertState(state);
+        this._latestState = convertedState;
+        return convertedState;
+      },
+    );
+  };
+
+  private _convertState = (
+    input: PrivateTypes.NetInfoNativeModuleState,
+  ): Types.NetInfoState => {
+    if (typeof input.isInternetReachable === 'boolean') {
+      return input as Types.NetInfoState;
+    } else {
+      return {
+        ...input,
+        isInternetReachable: this._internetReachability.currentState(),
       } as Types.NetInfoState;
-      _latestState = nextState;
-      _subscriptions.forEach((handler): void => handler(nextState));
-    },
-  );
+    }
+  };
 
-  // We are are now setup
-  _isSetup = true;
+  public latest = (): Promise<Types.NetInfoState> => {
+    if (this._latestState) {
+      return Promise.resolve(this._latestState);
+    } else {
+      return this._fetchCurrentState();
+    }
+  };
+
+  public add = (handler: Types.NetInfoChangeHandler): void => {
+    // Add the subscription handler to our set
+    this._subscriptions.add(handler);
+
+    // Send it the latest data we have
+    if (this._latestState) {
+      handler(this._latestState);
+    } else {
+      this.latest().then(handler);
+    }
+  };
+
+  public remove = (handler: Types.NetInfoChangeHandler): void => {
+    this._subscriptions.delete(handler);
+  };
+
+  public tearDown = (): void => {
+    if (this._internetReachability) {
+      this._internetReachability.tearDown();
+    }
+
+    if (this._nativeEventSubscription) {
+      this._nativeEventSubscription.remove();
+    }
+
+    this._subscriptions.clear();
+  };
 }
-
-export function tearDown(): void {
-  // Skip if we are not setup
-  if (!_isSetup) {
-    return;
-  }
-
-  if (_nativeEventSubscription) {
-    _nativeEventSubscription.remove();
-  }
-  _subscriptions.clear();
-  InternetReachability.clear();
-  if (_internetReachabilitySubscription) {
-    _internetReachabilitySubscription();
-  }
-
-  // We are are no longer setup
-  _isSetup = false;
-}
-
-export function latest(): Promise<Types.NetInfoState> {
-  if (_latestState) {
-    return Promise.resolve(_latestState);
-  } else {
-    return fetchCurrentState();
-  }
-}
-
-export function add(handler: Types.NetInfoChangeHandler): void {
-  // Add the subscription handler to our set
-  _subscriptions.add(handler);
-
-  // Send it the latest data we have
-  if (_latestState) {
-    handler(_latestState);
-  } else {
-    latest().then(handler);
-  }
-}
-
-export function remove(handler: Types.NetInfoChangeHandler): void {
-  _subscriptions.delete(handler);
-}
-
-export default {
-  setup,
-  tearDown,
-  latest,
-  add,
-  remove,
-};
