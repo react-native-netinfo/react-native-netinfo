@@ -23,9 +23,7 @@
   "license": "MIT",
   "scripts": {
     "start": "react-native start",
-    "test": "yarn validate:eslint && yarn validate:android && yarn validate:typescript && yarn test:jest",
-    "validate:android": "cd android && ./gradlew spotlessCheck",
-    "validate:android:fix": "cd android && ./gradlew spotlessApply",
+    "test": "yarn validate:eslint && yarn validate:typescript && yarn test:jest",
     "validate:eslint": "eslint \"src/**/*.{js,ts,tsx}\" \"example/**/*.{js,ts,tsx}\"",
     "validate:typescript": "tsc --project ./ --noEmit",
     "test:jest": "jest \"/src/\"",
@@ -134,10 +132,6 @@
   "lint-staged": {
     "*.{js,ts,tsx}": [
       "yarn eslint --fix",
-      "git add"
-    ],
-    "*.java": [
-      "cd android && ./graldew spotlessApply",
       "git add"
     ]
   }
