@@ -24,7 +24,7 @@
   "scripts": {
     "start": "react-native start",
     "test": "yarn validate:eslint && yarn validate:typescript && yarn test:jest",
-    "validate:eslint": "eslint \"src/**/*.{js,ts,tsx}\" \"example/**/*.{js,ts,tsx}\"",
+    "validate:eslint": "eslint --fix \"src/**/*.{js,ts,tsx}\" \"example/**/*.{js,ts,tsx}\"",
     "validate:typescript": "tsc --project ./ --noEmit",
     "test:jest": "jest \"/src/\"",
     "test:detox:android:test:debug": "detox test -c android.emu.debug",
@@ -38,7 +38,8 @@
     "test:detox:clean": "rimraf example/android/build && rimraf example/android/app/build && rimraf example/android/.gradle && rimraf example/ios/build",
     "ci:publish": "yarn semantic-release",
     "semantic-release": "semantic-release",
-    "prepare": "bob build"
+    "prepare": "bob build",
+    "watch": "jest \"/src/\" --watch"
   },
   "keywords": [
     "react-native",

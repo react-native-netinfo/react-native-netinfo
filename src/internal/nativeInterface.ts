@@ -11,7 +11,6 @@ import {NativeEventEmitter, NativeModules} from 'react-native';
 import {NetInfoNativeModule} from './privateTypes';
 
 const RNCNetInfo: NetInfoNativeModule | undefined = NativeModules.RNCNetInfo;
-
 // Produce an error if we don't have the native module
 if (!RNCNetInfo) {
   throw new Error(`@react-native-community/netinfo: NativeModule.RNCNetInfo is null. To fix this issue try these steps:
