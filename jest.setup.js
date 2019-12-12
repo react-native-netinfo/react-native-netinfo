@@ -21,16 +21,6 @@ NativeModules.RNCNetInfo = {
   removeListeners: jest.fn(),
 };
 
-// NativeModules.RNCNetInfo.getCurrentState.mockResolvedValue({
-//   type: NetInfoStateType.cellular,
-//   isConnected: true,
-//   isInternetReachable: true,
-//   details: {
-//     isConnectionExpensive: true,
-//     cellularGeneration: NetInfoCellularGeneration['3g'],
-//   },
-// });
-
 // Reset the mocks before each test
 global.beforeEach(() => {
   jest.resetAllMocks();

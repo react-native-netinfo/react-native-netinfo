@@ -59,7 +59,9 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     private void updateAndSend() {
         ConnectionType connectionType = ConnectionType.UNKNOWN;
         CellularGeneration cellularGeneration = null;
+        NetworkInfo networkInfo = null;
         boolean isInternetReachable = false;
+        boolean isInternetSuspended = false;
 
         if (mNetworkCapabilities != null) {
             // Get the connection type
@@ -75,14 +77,31 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
                 connectionType = ConnectionType.VPN;
             }
 
+            if (mNetwork != null) {
+                networkInfo = getConnectivityManager().getNetworkInfo(mNetwork);
+            }
+
+            // Check to see if the network is temporarily unavailable or if airplane mode is toggled on
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                isInternetSuspended = !mNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_SUSPENDED);
+            } else {
+                if (mNetwork != null) {
+                    NetworkInfo.DetailedState detailedConnectionState = networkInfo.getDetailedState();
+                    if (!detailedConnectionState.equals(NetworkInfo.DetailedState.CONNECTED)) {
+                        isInternetSuspended = true;
+                        connectionType = ConnectionType.NONE;
+                    }
+                }
+            }
+
             isInternetReachable =
                     mNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                             && mNetworkCapabilities.hasCapability(
-                                    NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+                                    NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+                            && !isInternetSuspended;
 
             // Get the cellular network type
             if (mNetwork != null && connectionType == ConnectionType.CELLULAR) {
-                NetworkInfo networkInfo = getConnectivityManager().getNetworkInfo(mNetwork);
                 cellularGeneration = CellularGeneration.fromNetworkInfo(networkInfo);
             }
         } else {
