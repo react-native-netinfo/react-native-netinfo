@@ -383,16 +383,18 @@ describe('@react-native-community/netinfo fetch', () => {
     });
 
     it('will properly reject a promise if the connection request cannot be resolved', () => {
+      const rejectionMessage = 'nope, no connection info for you';
+
       NativeModules.RNCNetInfo.getCurrentState.mockRejectedValue(
-        'nope, no connection info for you',
+        rejectionMessage,
       );
 
       NativeInterface.eventEmitter.emit(
         DEVICE_CONNECTIVITY_EVENT,
-        'nope, no connection info for you',
+        rejectionMessage,
       );
 
-      expect(NetInfo.fetch()).rejects;
+      expect(NetInfo.fetch()).rejects.toMatch(rejectionMessage);
     });
   });
 });

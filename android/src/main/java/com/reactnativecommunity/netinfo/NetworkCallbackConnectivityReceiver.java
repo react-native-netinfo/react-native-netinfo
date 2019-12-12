@@ -89,7 +89,6 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
                     NetworkInfo.DetailedState detailedConnectionState = networkInfo.getDetailedState();
                     if (!detailedConnectionState.equals(NetworkInfo.DetailedState.CONNECTED)) {
                         isInternetSuspended = true;
-                        connectionType = ConnectionType.NONE;
                     }
                 }
             }
@@ -101,7 +100,7 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
                             && !isInternetSuspended;
 
             // Get the cellular network type
-            if (mNetwork != null && connectionType == ConnectionType.CELLULAR) {
+            if (mNetwork != null && connectionType == ConnectionType.CELLULAR && isInternetReachable) {
                 cellularGeneration = CellularGeneration.fromNetworkInfo(networkInfo);
             }
         } else {
