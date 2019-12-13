@@ -103,9 +103,6 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
             if (mNetwork != null && connectionType == ConnectionType.CELLULAR && isInternetReachable) {
                 cellularGeneration = CellularGeneration.fromNetworkInfo(networkInfo);
             }
-            else {
-                connectionType = ConnectionType.NONE;
-            }
         } else {
             connectionType = ConnectionType.NONE;
         }
