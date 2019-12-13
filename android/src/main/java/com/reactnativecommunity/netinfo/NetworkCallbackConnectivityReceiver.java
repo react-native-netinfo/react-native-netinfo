@@ -56,7 +56,7 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     }
 
     @SuppressLint("MissingPermission")
-    private void updateAndSend() {
+        private void updateAndSend() {
         ConnectionType connectionType = ConnectionType.UNKNOWN;
         CellularGeneration cellularGeneration = null;
         NetworkInfo networkInfo = null;
@@ -102,6 +102,9 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
             // Get the cellular network type
             if (mNetwork != null && connectionType == ConnectionType.CELLULAR && isInternetReachable) {
                 cellularGeneration = CellularGeneration.fromNetworkInfo(networkInfo);
+            }
+            else {
+                connectionType = ConnectionType.NONE;
             }
         } else {
             connectionType = ConnectionType.NONE;
