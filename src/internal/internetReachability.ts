@@ -20,7 +20,7 @@ export default class InternetReachability {
   private _listener: PrivateTypes.NetInfoInternetReachabilityChangeListener;
   private _isInternetReachable: boolean | null | undefined = undefined;
   private _currentInternetReachabilityCheckHandler: InternetReachabilityCheckHandler | null = null;
-  private _currentTimeoutHandle: number | null = null;
+  private _currentTimeoutHandle: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     configuration: Types.NetInfoConfiguration,
@@ -81,25 +81,29 @@ export default class InternetReachability {
           }
         },
       )
-      .then((result): void => {
-        if (result !== 'canceled') {
-          this._setIsInternetReachable(result);
-          const nextTimeoutInterval = this._isInternetReachable
-            ? this._configuration.reachabilityLongTimeout
-            : this._configuration.reachabilityShortTimeout;
+      .then(
+        (result): void => {
+          if (result !== 'canceled') {
+            this._setIsInternetReachable(result);
+            const nextTimeoutInterval = this._isInternetReachable
+              ? this._configuration.reachabilityLongTimeout
+              : this._configuration.reachabilityShortTimeout;
+            this._currentTimeoutHandle = setTimeout(
+              this._checkInternetReachability,
+              nextTimeoutInterval,
+            );
+          }
+        },
+      )
+      .catch(
+        (): void => {
+          this._setIsInternetReachable(false);
           this._currentTimeoutHandle = setTimeout(
             this._checkInternetReachability,
-            nextTimeoutInterval,
+            this._configuration.reachabilityShortTimeout,
           );
-        }
-      })
-      .catch((): void => {
-        this._setIsInternetReachable(false);
-        this._currentTimeoutHandle = setTimeout(
-          this._checkInternetReachability,
-          this._configuration.reachabilityShortTimeout,
-        );
-      });
+        },
+      );
 
     return {
       promise,
