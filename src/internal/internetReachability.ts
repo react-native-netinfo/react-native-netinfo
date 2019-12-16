@@ -81,29 +81,25 @@ export default class InternetReachability {
           }
         },
       )
-      .then(
-        (result): void => {
-          if (result !== 'canceled') {
-            this._setIsInternetReachable(result);
-            const nextTimeoutInterval = this._isInternetReachable
-              ? this._configuration.reachabilityLongTimeout
-              : this._configuration.reachabilityShortTimeout;
-            this._currentTimeoutHandle = setTimeout(
-              this._checkInternetReachability,
-              nextTimeoutInterval,
-            );
-          }
-        },
-      )
-      .catch(
-        (): void => {
-          this._setIsInternetReachable(false);
+      .then((result): void => {
+        if (result !== 'canceled') {
+          this._setIsInternetReachable(result);
+          const nextTimeoutInterval = this._isInternetReachable
+            ? this._configuration.reachabilityLongTimeout
+            : this._configuration.reachabilityShortTimeout;
           this._currentTimeoutHandle = setTimeout(
             this._checkInternetReachability,
-            this._configuration.reachabilityShortTimeout,
+            nextTimeoutInterval,
           );
-        },
-      );
+        }
+      })
+      .catch((): void => {
+        this._setIsInternetReachable(false);
+        this._currentTimeoutHandle = setTimeout(
+          this._checkInternetReachability,
+          this._configuration.reachabilityShortTimeout,
+        );
+      });
 
     return {
       promise,
