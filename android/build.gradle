@@ -45,6 +45,9 @@ repositories {
   google()
   jcenter()
   mavenCentral()
+  maven {
+     url 'https://maven.google.com'
+  }
 }
 
 dependencies {
@@ -54,6 +57,8 @@ dependencies {
   def supportLibVersion = getExtOrInitialValue('supportLibVersion', getExtOrInitialValue('supportVersion', null))
   def androidXVersion = getExtOrInitialValue('androidXVersion', null)
   def androidXCore = getExtOrInitialValue('androidXCore', null)
+  def androidXTestVersion = getExtOrInitialValue('androidXVersion', '1.3.0-alpha03')
+  implementation 'junit:junit:4.12'
   if (supportLibVersion && androidXVersion == null && androidXCore == null) {
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
   } else {
@@ -62,5 +67,33 @@ dependencies {
       androidXCore = androidXVersion == null ? defaultAndroidXVersion : androidXVersion
     }
     implementation "androidx.core:core:$androidXCore"
+
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation "androidx.test:core:$androidXTestVersion"
+    androidTestImplementation "androidx.test:rules:$androidXTestVersion"
+    // Optional -- Mockito framework
+    testImplementation 'org.robolectric:robolectric:4.3.1'
+    testImplementation 'org.mockito:mockito-core:3.2.0'
+    testImplementation 'org.objenesis:objenesis:2.3'
+    // Powermock
+    testImplementation "org.powermock:powermock-module-junit4:2.0.4"
+    testImplementation "org.powermock:powermock-module-junit4-rule:2.0.4"
+    testImplementation "org.powermock:powermock-api-mockito2:2.0.4"
+    testImplementation "org.powermock:powermock-classloading-xstream:2.0.4"
+
+  }
+}
+
+android {
+
+  useLibrary 'android.test.runner'
+
+  useLibrary 'android.test.base'
+  useLibrary 'android.test.mock'
+
+  testOptions {
+    unitTests {
+      includeAndroidResources = true
+    }
   }
 }

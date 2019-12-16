@@ -13,10 +13,11 @@ import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 
 import androidx.core.net.ConnectivityManagerCompat;
+
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.reactnativecommunity.netinfo.types.CellularGeneration;
 import com.reactnativecommunity.netinfo.types.ConnectionType;
@@ -103,7 +104,7 @@ abstract class ConnectivityReceiver {
     }
 
     private WritableMap createConnectivityEventMap() {
-        WritableMap event = new WritableNativeMap();
+        WritableMap event = Arguments.createMap();
 
         // Add the connection type information
         event.putString("type", mConnectionType.label);
@@ -120,7 +121,7 @@ abstract class ConnectivityReceiver {
         // Add the details, if there are any
         WritableMap details = null;
         if (isConnected) {
-            details = new WritableNativeMap();
+            details = Arguments.createMap();
 
             boolean isConnectionExpensive =
                     ConnectivityManagerCompat.isActiveNetworkMetered(getConnectivityManager());

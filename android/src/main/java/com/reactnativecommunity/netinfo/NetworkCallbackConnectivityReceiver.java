@@ -26,8 +26,8 @@ import com.reactnativecommunity.netinfo.types.ConnectionType;
 @TargetApi(Build.VERSION_CODES.N)
 class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     private final ConnectivityNetworkCallback mNetworkCallback;
-    private Network mNetwork = null;
-    private NetworkCapabilities mNetworkCapabilities = null;
+    Network mNetwork = null;
+    NetworkCapabilities mNetworkCapabilities = null;
 
     public NetworkCallbackConnectivityReceiver(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -56,7 +56,7 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     }
 
     @SuppressLint("MissingPermission")
-        private void updateAndSend() {
+        void updateAndSend() {
         ConnectionType connectionType = ConnectionType.UNKNOWN;
         CellularGeneration cellularGeneration = null;
         NetworkInfo networkInfo = null;
