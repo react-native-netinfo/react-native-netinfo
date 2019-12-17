@@ -56,7 +56,7 @@ coverage
 example/ios/Pods/
 example/android-bundle.js
 example/ios-bundle.js
-example/android/.project/*
+example/android/.project
 example/android/.settings/*
 index.android.bundle
 index.ios.bundle
