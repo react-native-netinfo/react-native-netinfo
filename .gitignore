@@ -39,7 +39,7 @@ build/
 local.properties
 *.iml
 android/.settings/*
-android/.project/*
+android/.project
 
 # BUCK
 buck-out/

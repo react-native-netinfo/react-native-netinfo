@@ -24,6 +24,7 @@ NativeModules.RNCNetInfo = {
 // Reset the mocks before each test
 global.beforeEach(() => {
   jest.resetAllMocks();
+
   NativeModules.RNCNetInfo.getCurrentState.mockResolvedValue({
     type: NetInfoStateType.cellular,
     isConnected: true,
