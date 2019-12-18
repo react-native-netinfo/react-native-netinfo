@@ -149,8 +149,10 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
 
         @Override
         public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
-            mNetwork = network;
-            mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
+            if (mNetwork != null) {
+                mNetwork = network;
+                mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
+            }
             updateAndSend();
         }
     }
