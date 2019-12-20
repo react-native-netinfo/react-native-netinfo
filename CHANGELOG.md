@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.0.0...v5.0.1) (2019-12-20)
+
+
+### Bug Fixes
+
+* Ensure passing no configuration to the hook works correctly ([#264](https://github.com/react-native-community/react-native-netinfo/issues/264) by [@lonnylot](https://github.com/lonnylot)) ([e3fc1b4](https://github.com/react-native-community/react-native-netinfo/commit/e3fc1b4)), closes [#262](https://github.com/react-native-community/react-native-netinfo/issues/262)
+
 # [5.0.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.7.0...v5.0.0) (2019-12-08)
 
 
