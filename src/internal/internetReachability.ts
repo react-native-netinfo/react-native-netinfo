@@ -20,7 +20,7 @@ export default class InternetReachability {
   private _listener: PrivateTypes.NetInfoInternetReachabilityChangeListener;
   private _isInternetReachable: boolean | null | undefined = undefined;
   private _currentInternetReachabilityCheckHandler: InternetReachabilityCheckHandler | null = null;
-  private _currentTimeoutHandle: number | null = null;
+  private _currentTimeoutHandle: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     configuration: Types.NetInfoConfiguration,
