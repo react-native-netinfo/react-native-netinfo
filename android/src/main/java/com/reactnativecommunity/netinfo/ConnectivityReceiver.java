@@ -13,10 +13,10 @@ import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 
 import androidx.core.net.ConnectivityManagerCompat;
+
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.reactnativecommunity.netinfo.types.CellularGeneration;
 import com.reactnativecommunity.netinfo.types.ConnectionType;
@@ -105,6 +105,10 @@ abstract class ConnectivityReceiver {
 
     private WritableMap createConnectivityEventMap(@Nullable final String intf) {
         WritableMap event = new WritableNativeMap();
+      
+        // Add if WiFi is ON or OFF
+        boolean isEnabled = mWifiManager.isWifiEnabled();
+        event.putBoolean("isWifiEnabled", isEnabled);
 
         // Add the connection type information
         event.putString("type", intf != null ? intf : mConnectionType.label);

@@ -148,7 +148,7 @@ To use this library you need to ensure you are using the correct version of Reac
 
 | `@react-native-community/netinfo` version | Required React Native Version                                                     |
 | ----------------------------------------- | --------------------------------------------------------------------------------- |
-| `4.x.x`                                   | `>= 0.60` or `>= 0.59` if using [Jetifier](https://github.com/mikehardy/jetifier) |
+| `4.x.x` & `5.x.x`                         | `>= 0.60` or `>= 0.59` if using [Jetifier](https://github.com/mikehardy/jetifier) |
 | `3.x.x`                                   | `>= 0.59`                                                                         |
 | `2.x.x`                                   | `>= 0.57`                                                                         |
 | `1.x.x`                                   | `>= 0.57`                                                                         |
@@ -226,6 +226,7 @@ Describes the current state of the network. It is an object with these propertie
 | `type`                | [`NetInfoStateType`](#netinfostatetype) | The type of the current connection.                                                                |
 | `isConnected`         | `boolean`                               | If there is an active network connection. Note that this DOES NOT mean that internet is reachable. |
 | `isInternetReachable` | `boolean`                               | If the internet is reachable with the currently active network connection.                         |
+| `isWifiEnabled`                | `boolean` | *(Android only)* Whether the device's WiFi is ON or OFF.|
 | `details`             |                                         | The value depends on the `type` value. See below.                                                  |
 
 The `details` value depends on the `type` value.

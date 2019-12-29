@@ -13,6 +13,10 @@ import NativeInterface from '../internal/nativeInterface';
 const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
 
 describe('react-native-community/netinfo', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('Event listener callbacks', () => {
     it('should call the listener on listening', done => {
       const listener = jest.fn();
@@ -65,7 +69,7 @@ describe('react-native-community/netinfo', () => {
       const listener = jest.fn();
       NetInfo.addEventListener(listener);
 
-      NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
+      const cellularInfo = {
         type: 'cellular',
         isConnected: true,
         isInternetReachable: true,
@@ -73,8 +77,9 @@ describe('react-native-community/netinfo', () => {
           isConnectionExpensive: true,
           cellularGeneration: '3g',
         },
-      });
-      NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, {
+      };
+
+      const wifiInfo = {
         type: 'wifi',
         isConnected: true,
         isInternetReachable: true,
@@ -82,10 +87,76 @@ describe('react-native-community/netinfo', () => {
           isConnectionExpensive: true,
           cellularGeneration: 'unknown',
         },
-      });
+      };
+
+      NativeInterface.eventEmitter.emit(
+        DEVICE_CONNECTIVITY_EVENT,
+        cellularInfo,
+      );
+
+      expect(listener).toBeCalledWith(cellularInfo);
+
+      NativeInterface.eventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, wifiInfo);
+
+      expect(listener).toBeCalledWith(wifiInfo);
 
       // The additional time is from the call on listen
       expect(listener).toBeCalledTimes(3);
+    });
+
+    it('should call the listener with the correct data when transitioning state from connected to unconnected', () => {
+      const listener = jest.fn();
+      NetInfo.addEventListener(listener);
+
+      const cellularInfo = {
+        type: 'cellular',
+        isConnected: true,
+        isInternetReachable: true,
+        details: {
+          isConnectionExpensive: true,
+          cellularGeneration: '4g',
+        },
+      };
+
+      const airplaneModeInfo = {
+        type: 'none',
+        isConnected: false,
+        isInternetReachable: true,
+        details: null,
+      };
+
+      // Clear the stats from the call on listen
+      listener.mockClear();
+
+      NativeInterface.eventEmitter.emit(
+        DEVICE_CONNECTIVITY_EVENT,
+        cellularInfo,
+      );
+
+      expect(listener).toBeCalledWith(cellularInfo);
+      expect(listener).toBeCalledTimes(1);
+
+      // Clear the stats from the call on listen
+      listener.mockClear();
+
+      NativeInterface.eventEmitter.emit(
+        DEVICE_CONNECTIVITY_EVENT,
+        airplaneModeInfo,
+      );
+
+      expect(listener).toBeCalledWith(airplaneModeInfo);
+      expect(listener).toBeCalledTimes(1);
+
+      // Clear the stats from the call on listen
+      listener.mockClear();
+
+      NativeInterface.eventEmitter.emit(
+        DEVICE_CONNECTIVITY_EVENT,
+        cellularInfo,
+      );
+
+      expect(listener).toBeCalledWith(cellularInfo);
+      expect(listener).toBeCalledTimes(1);
     });
 
     it('should call all listeners when the native event is emmitted', () => {

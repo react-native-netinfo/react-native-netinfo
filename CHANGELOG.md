@@ -1,3 +1,38 @@
+# [5.1.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.0.2...v5.1.0) (2019-12-29)
+
+
+### Features
+
+* **Android:** Add information about whether Wifi is enabled ([#255](https://github.com/react-native-community/react-native-netinfo/issues/255) by [@gabrielrra](https://github.com/gabrielrra)) ([1006966](https://github.com/react-native-community/react-native-netinfo/commit/1006966))
+
+## [5.0.2](https://github.com/react-native-community/react-native-netinfo/compare/v5.0.1...v5.0.2) (2019-12-29)
+
+
+### Bug Fixes
+
+* **android:** Fixed connection change bug on Android ([#265](https://github.com/react-native-community/react-native-netinfo/issues/265) by @QuickBase) ([8748242](https://github.com/react-native-community/react-native-netinfo/commit/8748242))
+
+## [5.0.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.0.0...v5.0.1) (2019-12-20)
+
+
+### Bug Fixes
+
+* Ensure passing no configuration to the hook works correctly ([#264](https://github.com/react-native-community/react-native-netinfo/issues/264) by [@lonnylot](https://github.com/lonnylot)) ([e3fc1b4](https://github.com/react-native-community/react-native-netinfo/commit/e3fc1b4)), closes [#262](https://github.com/react-native-community/react-native-netinfo/issues/262)
+
+# [5.0.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.7.0...v5.0.0) (2019-12-08)
+
+
+### Features
+
+* Configuration & removal of deprecated methods ([#230](https://github.com/react-native-community/react-native-netinfo/issues/230)) ([fab577d](https://github.com/react-native-community/react-native-netinfo/commit/fab577d))
+
+
+### BREAKING CHANGES
+
+* Previously deprecated methods have been removed. These methods have been deprecated since this library was extracted from the core of React Native. Most users will not have any issues with migrating if they were not ignoring the previous warnings.
+
+Added a new way to configure the reachability URL that the library uses on iOS to check for an internet connection. The default is still to use the Google Chrome URL, however, you can now customise this URL, test function, and the timeouts that are used.
+
 # [4.7.0](https://github.com/react-native-community/react-native-netinfo/compare/v4.6.2...v4.7.0) (2019-12-08)
 
 

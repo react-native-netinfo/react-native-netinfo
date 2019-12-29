@@ -20,7 +20,7 @@ export default class InternetReachability {
   private _listener: PrivateTypes.NetInfoInternetReachabilityChangeListener;
   private _isInternetReachable: boolean | null | undefined = undefined;
   private _currentInternetReachabilityCheckHandler: InternetReachabilityCheckHandler | null = null;
-  private _currentTimeoutHandle: number | null = null;
+  private _currentTimeoutHandle: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     configuration: Types.NetInfoConfiguration,
@@ -68,7 +68,7 @@ export default class InternetReachability {
   };
 
   private _checkInternetReachability = (): InternetReachabilityCheckHandler => {
-    // We wraop the promise to allow us to cancel the pending request, if needed
+    // We wrap the promise to allow us to cancel the pending request, if needed
     let hasCanceled = false;
 
     const promise = fetch(this._configuration.reachabilityUrl)

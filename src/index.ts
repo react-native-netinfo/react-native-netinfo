@@ -94,7 +94,7 @@ export function addEventListener(
  * @returns The connection state.
  */
 export function useNetInfo(
-  configuration: Partial<Types.NetInfoConfiguration> = {},
+  configuration?: Partial<Types.NetInfoConfiguration>,
 ): Types.NetInfoState {
   if (configuration) {
     configure(configuration);
