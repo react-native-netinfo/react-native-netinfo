@@ -175,24 +175,6 @@ Import the library:
 import NetInfo from "@react-native-community/netinfo";
 ```
 
-Get the network state once:
-
-```javascript
-NetInfo.fetch().then(state => {
-  console.log("Connection type", state.type);
-  console.log("Is connected?", state.isConnected);
-});
-```
-
-Get the network from an specific interface once:
-
-```javascript
-NetInfo.fetch("wifi").then(state => {
-  console.log("SSID", state.details.ssid);
-  console.log("Is connected?", state.isConnected);
-});
-```
-
 Subscribe to network state updates:
 
 ```javascript
@@ -206,13 +188,22 @@ const unsubscribe = NetInfo.addEventListener(state => {
 unsubscribe();
 ```
 
+Get the network state once:
+
+```javascript
+NetInfo.fetch().then(state => {
+  console.log("Connection type", state.type);
+  console.log("Is connected?", state.isConnected);
+});
+```
+
 ## API
 * **Types:**
   * [`NetInfoState`](#netinfostate)
   * [`NetInfoStateType`](#netinfostatetype)
   * [`NetInfoCellularGeneration`](#netinfocellulargeneration)
 * **Methods:**
-  * [`fetch([interface])`](#fetch)
+  * [`fetch()`](#fetch)
   * [`addEventListener()`](#addeventlistener)
   * [`useNetInfo()`](#usenetinfo)
 
@@ -318,26 +309,6 @@ NetInfo.configure({
 });
 ```
 
-#### `fetch()`
-
-Returns a `Promise` that resolves to a [`NetInfoState`](README.md#netinfostate) object.
-If a valid `interface` string is passed as an argument, returns a `Promise` that resolves to a [`NetInfoState`](README.md#netinfostate) from the [`NetInfoStateType`](#netinfostatetype) indicated in `interface` argument.
-
-**Example:**
-```javascript
-NetInfo.fetch().then(state => {
-  console.log("Connection type", state.type);
-  console.log("Is connected?", state.isConnected);
-});
-```
-
-```javascript
-NetInfo.fetch("wifi").then(state => {
-  console.log("SSID", state.details.ssid);
-  console.log("Is connected?", state.isConnected);
-});
-```
-
 #### `addEventListener()`
 
 Subscribe to connection information. The callback is called with a parameter of type [`NetInfoState`](README.md#netinfostate) whenever the connection state changes. Your listener will be called with the latest information soon after you subscribe and then with any subsequent changes afterwards. You should not assume that the listener is called in the same way across devices or platforms.
@@ -391,6 +362,27 @@ const YourComponent = () => {
 
   // ...
 };
+```
+
+#### `fetch()`
+
+Returns a `Promise` that resolves to a [`NetInfoState`](README.md#netinfostate) object.
+
+**Example:**
+```javascript
+NetInfo.fetch().then(state => {
+  console.log("Connection type", state.type);
+  console.log("Is connected?", state.isConnected);
+});
+```
+
+You can optionally send an `interface` string so the `Promise` resolves to a [`NetInfoState`](README.md#netinfostate) from the [`NetInfoStateType`](#netinfostatetype) indicated in `interface` argument.
+
+```javascript
+NetInfo.fetch("wifi").then(state => {
+  console.log("SSID", state.details.ssid);
+  console.log("Is connected?", state.isConnected);
+});
 ```
 
 ## Troubleshooting
