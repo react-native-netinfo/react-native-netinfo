@@ -1,3 +1,10 @@
+# [5.2.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.1.0...v5.2.0) (2019-12-29)
+
+
+### Features
+
+* Allow fetching details for a specific network interface ([#256](https://github.com/react-native-community/react-native-netinfo/issues/256) by @Rapsssito) ([05e5fb7](https://github.com/react-native-community/react-native-netinfo/commit/05e5fb7))
+
 # [5.1.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.0.2...v5.1.0) (2019-12-29)
 
 
