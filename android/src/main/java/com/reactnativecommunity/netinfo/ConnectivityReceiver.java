@@ -24,6 +24,7 @@ import com.reactnativecommunity.netinfo.types.ConnectionType;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -54,8 +55,8 @@ abstract class ConnectivityReceiver {
 
     abstract void unregister();
 
-    public void getCurrentState(Promise promise) {
-        promise.resolve(createConnectivityEventMap());
+    public void getCurrentState(@Nullable final String requestedInterface, final Promise promise) {
+        promise.resolve(createConnectivityEventMap(requestedInterface));
     }
 
     public void setIsInternetReachableOverride(boolean isInternetReachableOverride) {
@@ -100,18 +101,18 @@ abstract class ConnectivityReceiver {
     private void sendConnectivityChangedEvent() {
         getReactContext()
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit("netInfo.networkStatusDidChange", createConnectivityEventMap());
+                .emit("netInfo.networkStatusDidChange", createConnectivityEventMap(null));
     }
 
-    private WritableMap createConnectivityEventMap() {
+    private WritableMap createConnectivityEventMap(@Nullable final String requestedInterface) {
         WritableMap event = Arguments.createMap();
-
+      
         // Add if WiFi is ON or OFF
         boolean isEnabled = mWifiManager.isWifiEnabled();
         event.putBoolean("isWifiEnabled", isEnabled);
 
         // Add the connection type information
-        event.putString("type", mConnectionType.label);
+        event.putString("type", requestedInterface != null ? requestedInterface : mConnectionType.label);
 
         // Add the connection state information
         boolean isConnected =
@@ -120,18 +121,27 @@ abstract class ConnectivityReceiver {
         event.putBoolean("isConnected", isConnected);
 
         // Add the internet reachable information
-        event.putBoolean("isInternetReachable", mIsInternetReachable);
+        event.putBoolean(
+                "isInternetReachable",
+                mIsInternetReachable && (requestedInterface == null || requestedInterface.equals(mConnectionType.label)));
 
         // Add the details, if there are any
-        WritableMap details = null;
+        String detailsInterface = requestedInterface != null ? requestedInterface : mConnectionType.label;
+        WritableMap details = createDetailsMap(detailsInterface);
         if (isConnected) {
-            details = Arguments.createMap();
-
             boolean isConnectionExpensive =
                     ConnectivityManagerCompat.isActiveNetworkMetered(getConnectivityManager());
             details.putBoolean("isConnectionExpensive", isConnectionExpensive);
+        }
+        event.putMap("details", details);
 
-            if (mConnectionType.equals(ConnectionType.CELLULAR)) {
+        return event;
+    }
+
+    private WritableMap createDetailsMap(@Nonnull String detailsInterface) {
+        WritableMap details = Arguments.createMap();
+        switch (detailsInterface) {
+            case "cellular":
                 // Add the cellular generation, if we have one
                 if (mCellularGeneration != null) {
                     details.putString("cellularGeneration", mCellularGeneration.label);
@@ -142,9 +152,9 @@ abstract class ConnectivityReceiver {
                 if (carrier != null) {
                     details.putString("carrier", carrier);
                 }
-            } else if (mConnectionType.equals(ConnectionType.WIFI)) {
+                break;
+            case "wifi":
                 WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
-
                 if (wifiInfo != null) {
                     // Get the SSID
                     try {
@@ -196,6 +206,7 @@ abstract class ConnectivityReceiver {
                                                         .getNetworkPrefixLength());
                         String subnet =
                                 String.format(
+                                        Locale.US,
                                         "%d.%d.%d.%d",
                                         (mask >> 24 & 0xff),
                                         (mask >> 16 & 0xff),
@@ -206,10 +217,8 @@ abstract class ConnectivityReceiver {
                         // Ignore errors
                     }
                 }
-            }
+                break;
         }
-        event.putMap("details", details);
-
-        return event;
+        return details;
     }
 }

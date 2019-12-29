@@ -51,8 +51,8 @@ public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonF
     }
 
     @ReactMethod
-    public void getCurrentState(Promise promise) {
-        mConnectivityReceiver.getCurrentState(promise);
+    public void getCurrentState(final String requestedInterface, final Promise promise) {
+        mConnectivityReceiver.getCurrentState(requestedInterface, promise);
     }
 
     @Override

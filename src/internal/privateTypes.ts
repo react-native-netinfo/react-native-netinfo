@@ -16,7 +16,9 @@ export type NetInfoNativeModuleState = Pick<
 > & {isInternetReachable?: boolean};
 
 export interface NetInfoNativeModule {
-  getCurrentState: () => Promise<NetInfoNativeModuleState>;
+  getCurrentState: (
+    requestedInterface?: string,
+  ) => Promise<NetInfoNativeModuleState>;
   addListener: (type: string, handler: Function) => void;
   removeListeners: (type: string, handler: Function) => void;
 }

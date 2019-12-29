@@ -67,18 +67,18 @@ export default class State {
     this._subscriptions.forEach((handler): void => handler(nextState));
   };
 
-  private _fetchCurrentState = (): Promise<Types.NetInfoState> => {
-    return NativeInterface.getCurrentState().then(
-      (state): Types.NetInfoState => {
-        // Update the internet reachability module
-        this._internetReachability.update(state);
-
-        // Convert and store the new state
-        const convertedState = this._convertState(state);
-        this._latestState = convertedState;
-        return convertedState;
-      },
-    );
+  private _fetchCurrentState = async (
+    requestedInterface?: string,
+  ): Promise<Types.NetInfoState> => {
+    const state = await NativeInterface.getCurrentState(requestedInterface);
+    // Update the internet reachability module
+    this._internetReachability.update(state);
+    // Convert and store the new state
+    const convertedState = this._convertState(state);
+    if (!requestedInterface) {
+      this._latestState = convertedState;
+    }
+    return convertedState;
   };
 
   private _convertState = (
@@ -94,8 +94,12 @@ export default class State {
     }
   };
 
-  public latest = (): Promise<Types.NetInfoState> => {
-    if (this._latestState) {
+  public latest = (
+    requestedInterface?: string,
+  ): Promise<Types.NetInfoState> => {
+    if (requestedInterface) {
+      return this._fetchCurrentState(requestedInterface);
+    } else if (this._latestState) {
       return Promise.resolve(this._latestState);
     } else {
       return this._fetchCurrentState();
