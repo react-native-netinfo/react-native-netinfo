@@ -1,3 +1,10 @@
+# [5.1.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.0.2...v5.1.0) (2019-12-29)
+
+
+### Features
+
+* **Android:** Add information about whether Wifi is enabled ([#255](https://github.com/react-native-community/react-native-netinfo/issues/255) by [@gabrielrra](https://github.com/gabrielrra)) ([1006966](https://github.com/react-native-community/react-native-netinfo/commit/1006966))
+
 ## [5.0.2](https://github.com/react-native-community/react-native-netinfo/compare/v5.0.1...v5.0.2) (2019-12-29)
 
 
