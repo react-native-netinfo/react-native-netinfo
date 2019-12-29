@@ -148,7 +148,7 @@ To use this library you need to ensure you are using the correct version of Reac
 
 | `@react-native-community/netinfo` version | Required React Native Version                                                     |
 | ----------------------------------------- | --------------------------------------------------------------------------------- |
-| `4.x.x`                                   | `>= 0.60` or `>= 0.59` if using [Jetifier](https://github.com/mikehardy/jetifier) |
+| `4.x.x` & `5.x.x`                         | `>= 0.60` or `>= 0.59` if using [Jetifier](https://github.com/mikehardy/jetifier) |
 | `3.x.x`                                   | `>= 0.59`                                                                         |
 | `2.x.x`                                   | `>= 0.57`                                                                         |
 | `1.x.x`                                   | `>= 0.57`                                                                         |
