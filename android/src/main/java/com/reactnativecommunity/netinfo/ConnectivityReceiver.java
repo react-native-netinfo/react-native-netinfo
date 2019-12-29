@@ -106,6 +106,10 @@ abstract class ConnectivityReceiver {
     private WritableMap createConnectivityEventMap() {
         WritableMap event = Arguments.createMap();
 
+        // Add if WiFi is ON or OFF
+        boolean isEnabled = mWifiManager.isWifiEnabled();
+        event.putBoolean("isWifiEnabled", isEnabled);
+
         // Add the connection type information
         event.putString("type", mConnectionType.label);
 
