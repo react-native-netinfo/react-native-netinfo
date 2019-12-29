@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/react-native-community/react-native-netinfo/compare/v5.0.1...v5.0.2) (2019-12-29)
+
+
+### Bug Fixes
+
+* **android:** Fixed connection change bug on Android ([#265](https://github.com/react-native-community/react-native-netinfo/issues/265) by @QuickBase) ([8748242](https://github.com/react-native-community/react-native-netinfo/commit/8748242))
+
 ## [5.0.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.0.0...v5.0.1) (2019-12-20)
 
 
