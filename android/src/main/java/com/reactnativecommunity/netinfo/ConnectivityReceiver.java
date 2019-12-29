@@ -14,6 +14,7 @@ import android.telephony.TelephonyManager;
 
 import androidx.core.net.ConnectivityManagerCompat;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
@@ -54,8 +55,8 @@ abstract class ConnectivityReceiver {
 
     abstract void unregister();
 
-    public void getCurrentState(@Nullable final String intf, final Promise promise) {
-        promise.resolve(createConnectivityEventMap(intf));
+    public void getCurrentState(@Nullable final String requestedInterface, final Promise promise) {
+        promise.resolve(createConnectivityEventMap(requestedInterface));
     }
 
     public void setIsInternetReachableOverride(boolean isInternetReachableOverride) {
@@ -103,15 +104,15 @@ abstract class ConnectivityReceiver {
                 .emit("netInfo.networkStatusDidChange", createConnectivityEventMap(null));
     }
 
-    private WritableMap createConnectivityEventMap(@Nullable final String intf) {
-        WritableMap event = new WritableNativeMap();
+    private WritableMap createConnectivityEventMap(@Nullable final String requestedInterface) {
+        WritableMap event = Arguments.createMap();
       
         // Add if WiFi is ON or OFF
         boolean isEnabled = mWifiManager.isWifiEnabled();
         event.putBoolean("isWifiEnabled", isEnabled);
 
         // Add the connection type information
-        event.putString("type", intf != null ? intf : mConnectionType.label);
+        event.putString("type", requestedInterface != null ? requestedInterface : mConnectionType.label);
 
         // Add the connection state information
         boolean isConnected =
@@ -122,10 +123,10 @@ abstract class ConnectivityReceiver {
         // Add the internet reachable information
         event.putBoolean(
                 "isInternetReachable",
-                mIsInternetReachable && (intf == null || intf.equals(mConnectionType.label)));
+                mIsInternetReachable && (requestedInterface == null || requestedInterface.equals(mConnectionType.label)));
 
         // Add the details, if there are any
-        String detailsInterface = intf != null ? intf : mConnectionType.label;
+        String detailsInterface = requestedInterface != null ? requestedInterface : mConnectionType.label;
         WritableMap details = createDetailsMap(detailsInterface);
         if (isConnected) {
             boolean isConnectionExpensive =
@@ -138,7 +139,7 @@ abstract class ConnectivityReceiver {
     }
 
     private WritableMap createDetailsMap(@Nonnull String detailsInterface) {
-        WritableMap details = new WritableNativeMap();
+        WritableMap details = Arguments.createMap();
         switch (detailsInterface) {
             case "cellular":
                 // Add the cellular generation, if we have one

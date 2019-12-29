@@ -81,28 +81,28 @@ RCT_EXPORT_MODULE()
 - (void)connectionStateWatcher:(RNCConnectionStateWatcher *)connectionStateWatcher didUpdateState:(RNCConnectionState *)state
 {
   if (self.isObserving) {
-    NSDictionary *dictionary = [self currentDictionaryFromUpdateState:NULL state:state];
+    NSDictionary *dictionary = [self currentDictionaryFromUpdateState:state withInterface:NULL];
     [self sendEventWithName:@"netInfo.networkStatusDidChange" body:dictionary];
   }
 }
 
 #pragma mark - Public API
 
-RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)intf resolve:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolve:(RCTPromiseResolveBlock)resolve
                   reject:(__unused RCTPromiseRejectBlock)reject)
 {
   RNCConnectionState *state = [self.connectionStateWatcher currentState];
-  resolve([self currentDictionaryFromUpdateState:intf state:state]);
+  resolve([self currentDictionaryFromUpdateState:state withInterface:requestedInterface]);
 }
 
 #pragma mark - Utilities
 
 // Converts the state into a dictionary to send over the bridge
-- (NSDictionary *)currentDictionaryFromUpdateState:(nullable NSString *)intf state:(RNCConnectionState *)state
+- (NSDictionary *)currentDictionaryFromUpdateState:(RNCConnectionState *)state withInterface:(nullable NSString *)requestedInterface
 {
-  NSString *selectedInterface = intf ?: state.type;
-  NSMutableDictionary *details = [self detailsFromInterface:selectedInterface state:state];
-  bool connected = state.connected && [state.type isEqualToString:selectedInterface];
+  NSString *selectedInterface = requestedInterface ?: state.type;
+  NSMutableDictionary *details = [self detailsFromInterface:selectedInterface withState:state];
+  bool connected = [state.type isEqualToString:selectedInterface] && state.connected;
   if (connected) {
     details[@"isConnectionExpensive"] = @(state.expensive);
   }
@@ -114,13 +114,13 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)intf resolve:(RCTPromiseR
   };
 }
 
-- (NSMutableDictionary *)detailsFromInterface:(nonnull NSString *)intf state:(RNCConnectionState *)state
+- (NSMutableDictionary *)detailsFromInterface:(nonnull NSString *)requestedInterface withState:(RNCConnectionState *)state
 {
   NSMutableDictionary *details = [NSMutableDictionary new];
-  if([intf isEqualToString: RNCConnectionTypeCellular]){
+  if ([requestedInterface isEqualToString: RNCConnectionTypeCellular]) {
     details[@"cellularGeneration"] = state.cellularGeneration ?: NSNull.null;
     details[@"carrier"] = [self carrier] ?: NSNull.null;
-  } else if([intf isEqualToString: RNCConnectionTypeWifi] || [intf isEqualToString: RNCConnectionTypeEthernet]){
+  } else if ([requestedInterface isEqualToString: RNCConnectionTypeWifi] || [requestedInterface isEqualToString: RNCConnectionTypeEthernet]) {
     details[@"ipAddress"] = [self ipAddress] ?: NSNull.null;
     details[@"subnet"] = [self subnet] ?: NSNull.null;
     details[@"ssid"] = [self ssid] ?: NSNull.null;

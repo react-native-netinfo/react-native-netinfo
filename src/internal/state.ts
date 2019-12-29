@@ -68,14 +68,14 @@ export default class State {
   };
 
   private _fetchCurrentState = async (
-    intf?: string,
+    requestedInterface?: string,
   ): Promise<Types.NetInfoState> => {
-    const state = await NativeInterface.getCurrentState(intf);
+    const state = await NativeInterface.getCurrentState(requestedInterface);
     // Update the internet reachability module
     this._internetReachability.update(state);
     // Convert and store the new state
     const convertedState = this._convertState(state);
-    if (!intf) {
+    if (!requestedInterface) {
       this._latestState = convertedState;
     }
     return convertedState;
@@ -94,9 +94,11 @@ export default class State {
     }
   };
 
-  public latest = (intf?: string): Promise<Types.NetInfoState> => {
-    if (intf) {
-      return this._fetchCurrentState(intf);
+  public latest = (
+    requestedInterface?: string,
+  ): Promise<Types.NetInfoState> => {
+    if (requestedInterface) {
+      return this._fetchCurrentState(requestedInterface);
     } else if (this._latestState) {
       return Promise.resolve(this._latestState);
     } else {
