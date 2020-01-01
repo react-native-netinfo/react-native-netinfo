@@ -14,12 +14,14 @@ import {
   NetInfoCellularGeneration,
 } from './src/internal/types';
 
-// Mock the RNCNetInfo native module to allow us to unit test the JavaScript code
-NativeModules.RNCNetInfo = {
+const RNCNetInfoMock = {
   getCurrentState: jest.fn(),
   addListener: jest.fn(),
   removeListeners: jest.fn(),
 };
+
+// Mock the RNCNetInfo native module to allow us to unit test the JavaScript code
+NativeModules.RNCNetInfo = RNCNetInfoMock;
 
 // Reset the mocks before each test
 global.beforeEach(() => {
@@ -35,3 +37,5 @@ global.beforeEach(() => {
     },
   });
 });
+
+module.exports = RNCNetInfoMock;
