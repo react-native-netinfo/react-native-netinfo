@@ -14,7 +14,7 @@
     "/src",
     "/lib",
     "/*.podspec",
-    "jest.setup.js"
+    "/jest"
   ],
   "author": "Matt Oakes <hello@mattoakes.net>",
   "contributors": [
