@@ -13,7 +13,8 @@
     "/windows",
     "/src",
     "/lib",
-    "/*.podspec"
+    "/*.podspec",
+    "/jest"
   ],
   "author": "Matt Oakes <hello@mattoakes.net>",
   "contributors": [

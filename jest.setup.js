@@ -13,13 +13,10 @@ import {
   NetInfoStateType,
   NetInfoCellularGeneration,
 } from './src/internal/types';
+import RNCNetInfoMock from './jest/netinfo-mock.js';
 
 // Mock the RNCNetInfo native module to allow us to unit test the JavaScript code
-NativeModules.RNCNetInfo = {
-  getCurrentState: jest.fn(),
-  addListener: jest.fn(),
-  removeListeners: jest.fn(),
-};
+NativeModules.RNCNetInfo = RNCNetInfoMock;
 
 // Reset the mocks before each test
 global.beforeEach(() => {
