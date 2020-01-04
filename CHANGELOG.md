@@ -1,3 +1,10 @@
+## [5.3.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.3.0...v5.3.1) (2020-01-04)
+
+
+### Bug Fixes
+
+* **android:** Remove the Android native tests to avoid issues ([d9fdf85](https://github.com/react-native-community/react-native-netinfo/commit/d9fdf85)), closes [#276](https://github.com/react-native-community/react-native-netinfo/issues/276)
+
 # [5.3.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.2.0...v5.3.0) (2020-01-04)
 
 
