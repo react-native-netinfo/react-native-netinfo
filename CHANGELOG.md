@@ -1,3 +1,10 @@
+# [5.3.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.2.0...v5.3.0) (2020-01-04)
+
+
+### Features
+
+* Export a mock to make Jest testing easier ([#275](https://github.com/react-native-community/react-native-netinfo/issues/275) by @Naturalclar) ([68bba0a](https://github.com/react-native-community/react-native-netinfo/commit/68bba0a))
+
 # [5.2.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.1.0...v5.2.0) (2019-12-29)
 
 
