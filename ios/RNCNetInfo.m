@@ -123,7 +123,9 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
   } else if ([requestedInterface isEqualToString: RNCConnectionTypeWifi] || [requestedInterface isEqualToString: RNCConnectionTypeEthernet]) {
     details[@"ipAddress"] = [self ipAddress] ?: NSNull.null;
     details[@"subnet"] = [self subnet] ?: NSNull.null;
+    #if !TARGET_OS_TV
     details[@"ssid"] = [self ssid] ?: NSNull.null;
+    #endif
   }
   return details;
 }
