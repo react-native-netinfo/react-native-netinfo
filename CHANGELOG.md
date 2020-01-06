@@ -1,3 +1,10 @@
+## [5.3.2](https://github.com/react-native-community/react-native-netinfo/compare/v5.3.1...v5.3.2) (2020-01-06)
+
+
+### Bug Fixes
+
+* **tvOS:** Fixed a crash with tvOS builds caused by trying to use the ssid method ([#283](https://github.com/react-native-community/react-native-netinfo/issues/283) by [@vdmtrv](https://github.com/vdmtrv)) ([a0191e0](https://github.com/react-native-community/react-native-netinfo/commit/a0191e0))
+
 ## [5.3.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.3.0...v5.3.1) (2020-01-04)
 
 
