@@ -1,3 +1,10 @@
+## [5.3.3](https://github.com/react-native-community/react-native-netinfo/compare/v5.3.2...v5.3.3) (2020-01-15)
+
+
+### Bug Fixes
+
+* **android:** Handle invalid networks in network listener ([#286](https://github.com/react-native-community/react-native-netinfo/issues/286)) ([a153240](https://github.com/react-native-community/react-native-netinfo/commit/a153240))
+
 ## [5.3.2](https://github.com/react-native-community/react-native-netinfo/compare/v5.3.1...v5.3.2) (2020-01-06)
 
 
