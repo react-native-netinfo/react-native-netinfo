@@ -9,18 +9,30 @@
 
 import {NetInfoState} from './types';
 
+export const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
+
 // Certain properties are optional when sent by the native module and are handled by the JS code
 export type NetInfoNativeModuleState = Pick<
   NetInfoState,
   Exclude<keyof NetInfoState, 'isInternetReachable'>
 > & {isInternetReachable?: boolean};
 
+interface Events {
+  DEVICE_CONNECTIVITY_EVENT: NetInfoNativeModuleState;
+}
+
 export interface NetInfoNativeModule {
   getCurrentState: (
     requestedInterface?: string,
   ) => Promise<NetInfoNativeModuleState>;
-  addListener: (type: string, handler: Function) => void;
-  removeListeners: (type: string, handler: Function) => void;
+  addListener<K extends keyof Events>(
+    type: K,
+    listener: (event: Events[K]) => void,
+  ): void;
+  removeListeners<K extends keyof Events>(
+    type: K,
+    listener: (event: Events[K]) => void,
+  ): void;
 }
 
 export type NetInfoInternetReachabilityChangeListener = (

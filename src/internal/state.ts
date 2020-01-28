@@ -13,8 +13,6 @@ import InternetReachability from './internetReachability';
 import * as Types from './types';
 import * as PrivateTypes from './privateTypes';
 
-const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
-
 export default class State {
   private _nativeEventSubscription: NativeEventSubscription | null = null;
   private _subscriptions = new Set<Types.NetInfoChangeHandler>();
@@ -28,9 +26,9 @@ export default class State {
       this._handleInternetReachabilityUpdate,
     );
 
-    // Add the subscription to the natvie events
+    // Add the subscription to the native events
     this._nativeEventSubscription = NativeInterface.eventEmitter.addListener(
-      DEVICE_CONNECTIVITY_EVENT,
+      PrivateTypes.DEVICE_CONNECTIVITY_EVENT,
       this._handleNativeStateUpdate,
     );
 

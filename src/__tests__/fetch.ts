@@ -11,8 +11,7 @@ import NetInfo from '../index';
 import {NativeModules} from 'react-native';
 import NativeInterface from '../internal/nativeInterface';
 import {NetInfoStateType, NetInfoCellularGeneration} from '../internal/types';
-
-const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
+import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
 
 describe('@react-native-community/netinfo fetch', () => {
   describe('with cellular data types', () => {

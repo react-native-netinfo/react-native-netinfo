@@ -9,8 +9,7 @@
 
 import NetInfo from '../index';
 import NativeInterface from '../internal/nativeInterface';
-
-const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
+import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
 
 describe('react-native-community/netinfo', () => {
   beforeEach(() => {
