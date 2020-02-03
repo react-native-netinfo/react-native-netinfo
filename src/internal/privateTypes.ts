@@ -17,8 +17,8 @@ export type NetInfoNativeModuleState = Pick<
   Exclude<keyof NetInfoState, 'isInternetReachable'>
 > & {isInternetReachable?: boolean};
 
-interface Events {
-  DEVICE_CONNECTIVITY_EVENT: NetInfoNativeModuleState;
+export interface Events {
+  [DEVICE_CONNECTIVITY_EVENT]: NetInfoNativeModuleState;
 }
 
 export interface NetInfoNativeModule {

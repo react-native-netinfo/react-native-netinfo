@@ -6,7 +6,7 @@
     "strict": true,
     "moduleResolution": "node",
     "lib": ["dom", "esnext"],
-    "jsx": "react-native",
+    "jsx": "react",
     "skipLibCheck": true
   },
   "exclude": ["node_modules"]

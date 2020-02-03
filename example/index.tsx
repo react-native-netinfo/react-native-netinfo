@@ -200,3 +200,10 @@ class ExampleApp extends React.Component<{}, State> {
 }
 
 AppRegistry.registerComponent('NetInfoExample', () => ExampleApp);
+
+// Run application on web
+if (typeof document !== 'undefined') {
+  AppRegistry.runApplication('NetInfoExample', {
+    rootTag: document.getElementById('root'),
+  });
+}

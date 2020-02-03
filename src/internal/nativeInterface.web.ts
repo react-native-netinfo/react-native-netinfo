@@ -27,6 +27,8 @@ import {
   NetInfoCellularGeneration,
 } from './types';
 
+const nativeEventEmitter = new NativeEventEmitter();
+
 // See https://wicg.github.io/netinfo/#dom-connectiontype
 type ConnectionType =
   | 'bluetooth'
@@ -135,7 +137,11 @@ const getCurrentState = (
 
   // Otherwise try to return detailed information
   const isConnectionExpensive = connection.saveData;
-  const type: NetInfoStateType = typeMapping[connection.type];
+  const type: NetInfoStateType = connection.type
+    ? typeMapping[connection.type]
+    : isConnected
+    ? NetInfoStateType.other
+    : NetInfoStateType.unknown;
 
   if (type === NetInfoStateType.bluetooth) {
     const state: NetInfoBluetoothState = {
@@ -172,24 +178,6 @@ const getCurrentState = (
       },
     };
     return state;
-  } else if (type === NetInfoStateType.none) {
-    const state: NetInfoNoConnectionState = {
-      ...baseState,
-      isConnected: false,
-      isInternetReachable: false,
-      type,
-      details: null,
-    };
-    return state;
-  } else if (type === NetInfoStateType.unknown) {
-    const state: NetInfoUnknownState = {
-      ...baseState,
-      isConnected: false,
-      isInternetReachable: false,
-      type,
-      details: null,
-    };
-    return state;
   } else if (type === NetInfoStateType.wifi) {
     const state: NetInfoWifiState = {
       ...baseState,
@@ -210,6 +198,24 @@ const getCurrentState = (
       details: {
         isConnectionExpensive,
       },
+    };
+    return state;
+  } else if (type === NetInfoStateType.none) {
+    const state: NetInfoNoConnectionState = {
+      ...baseState,
+      isConnected: false,
+      isInternetReachable: false,
+      type,
+      details: null,
+    };
+    return state;
+  } else if (type === NetInfoStateType.unknown) {
+    const state: NetInfoUnknownState = {
+      ...baseState,
+      isConnected: false,
+      isInternetReachable: false,
+      type,
+      details: null,
     };
     return state;
   }
@@ -279,19 +285,12 @@ const RNCNetInfo: NetInfoNativeModule = {
   },
 };
 
-/**
- * We export the native interface in this way to give easy shared access to it between the
- * JavaScript code and the tests
- */
-let nativeEventEmitter: NativeEventEmitter | null = null;
+// Register
+RNCNetInfo.addListener(DEVICE_CONNECTIVITY_EVENT, event => {
+  nativeEventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, event);
+});
+
 export default {
   ...RNCNetInfo,
-  get eventEmitter(): NativeEventEmitter {
-    if (!nativeEventEmitter) {
-      /// @ts-ignore
-      nativeEventEmitter = new NativeEventEmitter(RNCNetInfo);
-    }
-    /// @ts-ignore
-    return nativeEventEmitter;
-  },
+  eventEmitter: nativeEventEmitter,
 };

@@ -71,7 +71,10 @@ export default class InternetReachability {
     // We wrap the promise to allow us to cancel the pending request, if needed
     let hasCanceled = false;
 
-    const promise = fetch(this._configuration.reachabilityUrl)
+    const promise = fetch(this._configuration.reachabilityUrl, {
+      method: 'HEAD',
+      cache: 'no-cache',
+    })
       .then(
         (response): Promise<boolean | 'canceled'> => {
           if (!hasCanceled) {
