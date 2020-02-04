@@ -15,6 +15,8 @@ interface InternetReachabilityCheckHandler {
   cancel: () => void;
 }
 
+let checkInternetReachabilityPromise: Promise<Response> | null = null;
+
 export default class InternetReachability {
   private _configuration: Types.NetInfoConfiguration;
   private _listener: PrivateTypes.NetInfoInternetReachabilityChangeListener;
@@ -71,10 +73,17 @@ export default class InternetReachability {
     // We wrap the promise to allow us to cancel the pending request, if needed
     let hasCanceled = false;
 
-    const promise = fetch(this._configuration.reachabilityUrl, {
-      method: 'HEAD',
-      cache: 'no-cache',
-    })
+    // Ensure that there is always only one reachability promise
+    const fetchPromise =
+      checkInternetReachabilityPromise ||
+      fetch(this._configuration.reachabilityUrl, {
+        method: 'HEAD',
+        cache: 'no-cache',
+      });
+    checkInternetReachabilityPromise = fetchPromise;
+
+    // Process result
+    const promise = fetchPromise
       .then(
         (response): Promise<boolean | 'canceled'> => {
           if (!hasCanceled) {
@@ -106,7 +115,11 @@ export default class InternetReachability {
             this._configuration.reachabilityShortTimeout,
           );
         },
-      );
+      )
+      .finally(() => {
+        // Clear promise
+        checkInternetReachabilityPromise = null;
+      });
 
     return {
       promise,

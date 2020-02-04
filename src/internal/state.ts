@@ -69,6 +69,7 @@ export default class State {
     requestedInterface?: string,
   ): Promise<Types.NetInfoState> => {
     const state = await NativeInterface.getCurrentState(requestedInterface);
+
     // Update the internet reachability module
     this._internetReachability.update(state);
     // Convert and store the new state
@@ -76,6 +77,7 @@ export default class State {
     if (!requestedInterface) {
       this._latestState = convertedState;
     }
+
     return convertedState;
   };
 
