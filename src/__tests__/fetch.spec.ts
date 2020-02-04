@@ -16,7 +16,7 @@ import nativeModule from '../internal/nativeModule';
 // Mock modules
 require('jest-fetch-mock').enableMocks();
 jest.mock('./../internal/nativeModule', () =>
-  require('./../../jest/nativeModule.mock'),
+  require('./../../jest/netinfo-mock'),
 );
 
 describe('@react-native-community/netinfo fetch', () => {
