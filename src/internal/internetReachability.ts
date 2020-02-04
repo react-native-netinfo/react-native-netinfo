@@ -116,10 +116,12 @@ export default class InternetReachability {
           );
         },
       )
-      .finally(() => {
-        // Clear promise
-        checkInternetReachabilityPromise = null;
-      });
+      .finally(
+        (): void => {
+          // Clear promise
+          checkInternetReachabilityPromise = null;
+        },
+      );
 
     return {
       promise,
