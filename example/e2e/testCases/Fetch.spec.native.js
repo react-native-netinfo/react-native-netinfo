@@ -6,6 +6,7 @@
  *
  * @format
  */
+/* eslint-env jest */
 
 const {device, expect, element, by} = require('detox');
 

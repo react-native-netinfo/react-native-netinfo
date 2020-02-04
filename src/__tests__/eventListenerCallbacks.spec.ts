@@ -11,6 +11,12 @@ import NetInfo from '../index';
 import NativeInterface from '../internal/nativeInterface';
 import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
 
+// Mock modules
+require('jest-fetch-mock').enableMocks();
+jest.mock('./../internal/nativeModule', () =>
+  require('./../../jest/nativeModule.mock'),
+);
+
 describe('react-native-community/netinfo', () => {
   beforeEach(() => {
     jest.clearAllMocks();

@@ -7,10 +7,8 @@
  * @format
  */
 
-import {NativeEventEmitter, NativeModules} from 'react-native';
-import {NetInfoNativeModule} from './privateTypes';
-
-const RNCNetInfo: NetInfoNativeModule | undefined = NativeModules.RNCNetInfo;
+import {NativeEventEmitter} from 'react-native';
+import RNCNetInfo from './nativeModule';
 
 // Produce an error if we don't have the native module
 if (!RNCNetInfo) {
