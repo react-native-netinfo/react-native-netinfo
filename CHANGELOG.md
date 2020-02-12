@@ -1,3 +1,10 @@
+## [5.3.4](https://github.com/react-native-community/react-native-netinfo/compare/v5.3.3...v5.3.4) (2020-02-12)
+
+
+### Bug Fixes
+
+* Correct reachability timeouts in default configuration ([#301](https://github.com/react-native-community/react-native-netinfo/issues/301) by [@davidstritzl](https://github.com/davidstritzl)) ([f74b8cc](https://github.com/react-native-community/react-native-netinfo/commit/f74b8cc))
+
 ## [5.3.3](https://github.com/react-native-community/react-native-netinfo/compare/v5.3.2...v5.3.3) (2020-01-15)
 
 

@@ -102,4 +102,5 @@ export interface NetInfoConfiguration {
   reachabilityTest: (response: Response) => Promise<boolean>;
   reachabilityLongTimeout: number;
   reachabilityShortTimeout: number;
+  reachabilityRequestTimeout: number;
 }

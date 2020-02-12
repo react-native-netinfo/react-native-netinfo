@@ -288,12 +288,13 @@ Describes the current generation of the `cellular` connection. It is an enum wit
 #### `NetInfoConfiguration`
 The configuration options for the library.
 
-| Property                   | Type                              | Description                                                                                                                                                                                                                               |
-| -------------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `reachabilityUrl`          | `string`                          | The URL to call to test if the internet is reachable. Only used on platforms which do not supply internet reachability natively.                                                                                                          |
-| `reachabilityTest`         | `(response: Response) => boolean` | A function which is passed the `Response` from calling the reachability URL. It should return `true` if the response indicates that the internet is reachable. Only used on platforms which do not supply internet reachability natively. |
-| `reachabilityShortTimeout` | `number`                          | The number of seconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively.                                                      |
-| `reachabilityLongTimeout`  | `number`                          | The number of seconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively.                                                          |
+| Property                     | Type                              | Description                                                                                                                                                                                                                               |
+| ---------------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `reachabilityUrl`            | `string`                          | The URL to call to test if the internet is reachable. Only used on platforms which do not supply internet reachability natively.                                                                                                          |
+| `reachabilityTest`           | `(response: Response) => boolean` | A function which is passed the `Response` from calling the reachability URL. It should return `true` if the response indicates that the internet is reachable. Only used on platforms which do not supply internet reachability natively. |
+| `reachabilityShortTimeout`   | `number`                          | The number of milliseconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively.                                                 |
+| `reachabilityLongTimeout`    | `number`                          | The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively.                                                     |
+| `reachabilityRequestTimeout` | `number`                          | The number of milliseconds that a reachability check is allowed to take before failing. Only used on platforms which do not supply internet reachability natively.                                                                        |
 
 ### Methods
 
@@ -310,6 +311,7 @@ NetInfo.configure({
   reachabilityTest: async (response) => response.status === 204,
   reachabilityLongTimeout: 60 * 1000, // 60s
   reachabilityShortTimeout: 5 * 1000, // 5s
+  reachabilityRequestTimeout: 15 * 1000, // 15s
 });
 ```
 
@@ -362,6 +364,7 @@ const YourComponent = () => {
     reachabilityTest: async (response) => response.status === 204,
     reachabilityLongTimeout: 60 * 1000, // 60s
     reachabilityShortTimeout: 5 * 1000, // 5s
+    reachabilityRequestTimeout: 15 * 1000, // 15s
   });
 
   // ...
