@@ -1,3 +1,10 @@
+# [5.5.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.4.0...v5.5.0) (2020-02-12)
+
+
+### Features
+
+* Add React Native Web support ([#292](https://github.com/react-native-community/react-native-netinfo/issues/292) by [@jaulz](https://github.com/jaulz)) ([5ce329b](https://github.com/react-native-community/react-native-netinfo/commit/5ce329b))
+
 # [5.4.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.3.4...v5.4.0) (2020-02-12)
 
 
