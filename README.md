@@ -153,6 +153,10 @@ To use this library you need to ensure you are using the correct version of Reac
 | `2.x.x`                                   | `>= 0.57`                                                                         |
 | `1.x.x`                                   | `>= 0.57`                                                                         |
 
+## Browser Compatilibity
+The web implementation heavily depends on the [Network Information API](https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API) which is still an is an experimental technology and thus it's not supported in every browser.
+If this API is not available the library will safely fallback to the old [onLine](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/onLine) property and return basic connection information.
+
 ## Migrating from the core `react-native` module
 This module was created when the NetInfo was split out from the core of React Native. To migrate to this module you need to follow the installation instructions above and then change you imports from:
 
@@ -232,7 +236,7 @@ The `details` value depends on the `type` value.
 
 | Property                | Platform                | Type      | Description                                                                                                                |
 | ----------------------- | ----------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `isConnectionExpensive` | Android, iOS, Windows   | `boolean` | If the network connection is considered "expensive". This could be in either energy or monetary terms.                     |
+| `isConnectionExpensive` | Android, iOS, Windows, Web   | `boolean` | If the network connection is considered "expensive". This could be in either energy or monetary terms.                     |
 | `ssid`                  | Android, iOS (not tvOS) | `string`  | The SSID of the network. May not be present, `null`, or an empty string if it cannot be determined. **On iOS, make sure your app meets at least one of the [following requirements](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo?language=objc#discussion). On Android, you need to have the `ACCESS_FINE_LOCATION` permission in your `AndroidManifest.xml` and accepted by the user**.             |
 | `strength`              | Android                 | `number`  | An integer number from `0` to `5` for the signal strength. May not be present if the signal strength cannot be determined. |
 | `ipAddress`             | Android, iOS            | `string`  | The external IP address. Can be in IPv4 or IPv6 format. May not be present if it cannot be determined.                     |
@@ -242,11 +246,11 @@ The `details` value depends on the `type` value.
 
 `details` has these properties:
 
-| Property                | Platform              | Type                                                               | Description                                                                                                           |
-| ----------------------- | --------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| `isConnectionExpensive` | Android, iOS, Windows | `boolean`                                                          | If the network connection is considered "expensive". This could be in either energy or monetary terms.                |
-| `cellularGeneration`    | Android, iOS, Windows | [`NetInfoCellularGeneration`](#netinfocellulargeneration)          | The generation of the cell network the user is connected to. This can give an indication of speed, but no guarantees. |
-| `carrier`               | Android, iOS          | `string`                                                           | The network carrier name. May not be present or may be empty if none can be determined.                               |
+| Property                | Platform                   | Type                                                               | Description                                                                                                           |
+| ----------------------- | -------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `isConnectionExpensive` | Android, iOS, Windows, Web | `boolean`                                                          | If the network connection is considered "expensive". This could be in either energy or monetary terms.                |
+| `cellularGeneration`    | Android, iOS, Windows      | [`NetInfoCellularGeneration`](#netinfocellulargeneration)          | The generation of the cell network the user is connected to. This can give an indication of speed, but no guarantees. |
+| `carrier`               | Android, iOS               | `string`                                                           | The network carrier name. May not be present or may be empty if none can be determined.                               |
 
 ##### `type` is `bluetooth`, `ethernet`, `wimax`, `vpn`, or `other`
 
@@ -259,17 +263,17 @@ The `details` value depends on the `type` value.
 #### `NetInfoStateType`
 Describes the current type of network connection. It is an enum with these possible values:
 
-| Value       | Platform              | Description                                                |
-| ----------- | --------------------- | ---------------------------------------------------------- |
-| `none`      | Android, iOS, Windows | No network connection is active                            |
-| `unknown`   | Android, iOS, Windows | The network state could not or has yet to be be determined |
-| `cellular`  | Android, iOS, Windows | Active network over cellular                               |
-| `wifi`      | Android, iOS, Windows | Active network over Wifi                                   |
-| `bluetooth` | Android               | Active network over Bluetooth                              |
-| `ethernet`  | Android, Windows      | Active network over wired ethernet                         |
-| `wimax`     | Android               | Active network over WiMax                                  |
-| `vpn`       | Android               | Active network over VPN                                    |
-| `other`     | Android, iOS, Windows | Active network over another type of network                |
+| Value       | Platform                   | Description                                                |
+| ----------- | -------------------------- | ---------------------------------------------------------- |
+| `none`      | Android, iOS, Windows, Web | No network connection is active                            |
+| `unknown`   | Android, iOS, Windows, Web | The network state could not or has yet to be be determined |
+| `cellular`  | Android, iOS, Windows, Web | Active network over cellular                               |
+| `wifi`      | Android, iOS, Windows, Web | Active network over Wifi                                   |
+| `bluetooth` | Android, Web               | Active network over Bluetooth                              |
+| `ethernet`  | Android, Windows, Web      | Active network over wired ethernet                         |
+| `wimax`     | Android, Web               | Active network over WiMax                                  |
+| `vpn`       | Android                    | Active network over VPN                                    |
+| `other`     | Android, iOS, Windows, Web | Active network over another type of network                |
 
 #### `NetInfoCellularGeneration`
 Describes the current generation of the `cellular` connection. It is an enum with these possible values:

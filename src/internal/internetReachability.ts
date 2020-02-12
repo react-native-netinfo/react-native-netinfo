@@ -68,7 +68,10 @@ export default class InternetReachability {
   };
 
   private _checkInternetReachability = (): InternetReachabilityCheckHandler => {
-    const responsePromise = fetch(this._configuration.reachabilityUrl);
+    const responsePromise = fetch(this._configuration.reachabilityUrl, {
+      method: 'HEAD',
+      cache: 'no-cache',
+    });
 
     // Create promise that will reject after the request timeout has been reached
     let timeoutHandle: ReturnType<typeof setTimeout>;

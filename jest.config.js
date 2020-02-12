@@ -3,7 +3,11 @@ const { defaults: tsjPreset } = require('ts-jest/presets');
 
 module.exports = {
   ...tsjPreset,
-  preset: 'react-native',
+  'projects': [
+    { 'preset': 'jest-expo/ios' },
+    { 'preset': 'jest-expo/android' },
+    { 'preset': 'jest-expo/web' },
+  ],
   transform: {
     ...tsjPreset.transform,
     '\\.js$': '<rootDir>/node_modules/react-native/jest/preprocessor.js',
@@ -14,7 +18,4 @@ module.exports = {
       babelConfig: true,
     },
   },
-  setupFilesAfterEnv: [
-    '<rootDir>/jest.setup.js',
-  ],
 };

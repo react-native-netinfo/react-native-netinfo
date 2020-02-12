@@ -8,18 +8,28 @@
  */
 
 import NetInfo from '../index';
-import {NativeModules} from 'react-native';
 import NativeInterface from '../internal/nativeInterface';
 import {NetInfoStateType, NetInfoCellularGeneration} from '../internal/types';
+import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
+import nativeModule from '../internal/nativeModule';
 
-const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
+// Mock modules
+require('jest-fetch-mock').enableMocks();
+jest.mock('./../internal/nativeModule', () =>
+  require('./../../jest/netinfo-mock'),
+);
 
 describe('@react-native-community/netinfo fetch', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('with cellular data types', () => {
     describe('4g cellular generation', () => {
       beforeEach(() => {
         jest.clearAllMocks();
-        NativeModules.RNCNetInfo.getCurrentState.mockResolvedValue({
+        // @ts-ignore
+        nativeModule.getCurrentState.mockResolvedValue({
           type: NetInfoStateType.cellular,
           isConnected: true,
           isInternetReachable: true,
@@ -75,7 +85,8 @@ describe('@react-native-community/netinfo fetch', () => {
 
       dataProvider().forEach(testCase => {
         it(testCase.description, () => {
-          NativeModules.RNCNetInfo.getCurrentState.mockResolvedValue(
+          // @ts-ignore
+          nativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
           );
 
@@ -93,7 +104,8 @@ describe('@react-native-community/netinfo fetch', () => {
     describe('3g cellular generation', () => {
       beforeEach(() => {
         jest.clearAllMocks();
-        NativeModules.RNCNetInfo.getCurrentState.mockResolvedValue({
+        // @ts-ignore
+        nativeModule.getCurrentState.mockResolvedValue({
           type: NetInfoStateType.cellular,
           isConnected: true,
           isInternetReachable: true,
@@ -149,7 +161,8 @@ describe('@react-native-community/netinfo fetch', () => {
 
       dataProvider().forEach(testCase => {
         it(testCase.description, () => {
-          NativeModules.RNCNetInfo.getCurrentState.mockResolvedValue(
+          // @ts-ignore
+          nativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
           );
 
@@ -167,7 +180,8 @@ describe('@react-native-community/netinfo fetch', () => {
     describe('2g cellular generation', () => {
       beforeEach(() => {
         jest.clearAllMocks();
-        NativeModules.RNCNetInfo.getCurrentState.mockResolvedValue({
+        // @ts-ignore
+        nativeModule.getCurrentState.mockResolvedValue({
           type: NetInfoStateType.cellular,
           isConnected: true,
           isInternetReachable: true,
@@ -223,7 +237,8 @@ describe('@react-native-community/netinfo fetch', () => {
 
       dataProvider().forEach(testCase => {
         it(testCase.description, () => {
-          NativeModules.RNCNetInfo.getCurrentState.mockResolvedValue(
+          // @ts-ignore
+          nativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
           );
 
@@ -241,7 +256,8 @@ describe('@react-native-community/netinfo fetch', () => {
     describe('null cellular generation', () => {
       beforeEach(() => {
         jest.clearAllMocks();
-        NativeModules.RNCNetInfo.getCurrentState.mockResolvedValue({
+        // @ts-ignore
+        nativeModule.getCurrentState.mockResolvedValue({
           type: NetInfoStateType.cellular,
           isConnected: true,
           isInternetReachable: true,
@@ -297,7 +313,8 @@ describe('@react-native-community/netinfo fetch', () => {
 
       dataProvider().forEach(testCase => {
         it(testCase.description, () => {
-          NativeModules.RNCNetInfo.getCurrentState.mockResolvedValue(
+          // @ts-ignore
+          nativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
           );
 
@@ -316,7 +333,8 @@ describe('@react-native-community/netinfo fetch', () => {
   describe('with unknown and no connection data types', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-      NativeModules.RNCNetInfo.getCurrentState.mockResolvedValue({
+      // @ts-ignore
+      nativeModule.getCurrentState.mockResolvedValue({
         type: NetInfoStateType.cellular,
         isConnected: true,
         isInternetReachable: true,
@@ -353,7 +371,8 @@ describe('@react-native-community/netinfo fetch', () => {
 
     dataProvider().forEach(testCase => {
       it(testCase.description, () => {
-        NativeModules.RNCNetInfo.getCurrentState.mockResolvedValue(
+        // @ts-ignore
+        nativeModule.getCurrentState.mockResolvedValue(
           testCase.expectedConnectionInfo,
         );
 
@@ -371,7 +390,8 @@ describe('@react-native-community/netinfo fetch', () => {
   describe('rejected promises are handled', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-      NativeModules.RNCNetInfo.getCurrentState.mockResolvedValue({
+      // @ts-ignore
+      nativeModule.getCurrentState.mockResolvedValue({
         type: NetInfoStateType.cellular,
         isConnected: true,
         isInternetReachable: true,
@@ -382,19 +402,17 @@ describe('@react-native-community/netinfo fetch', () => {
       });
     });
 
-    it('will properly reject a promise if the connection request cannot be resolved', () => {
+    it('will properly reject a promise if the connection request cannot be resolved', async () => {
       const rejectionMessage = 'nope, no connection info for you';
 
-      NativeModules.RNCNetInfo.getCurrentState.mockRejectedValue(
-        rejectionMessage,
-      );
+      // @ts-ignore
+      nativeModule.getCurrentState.mockRejectedValue(rejectionMessage);
 
-      NativeInterface.eventEmitter.emit(
-        DEVICE_CONNECTIVITY_EVENT,
-        rejectionMessage,
-      );
-
-      expect(NetInfo.fetch()).rejects.toMatch(rejectionMessage);
+      try {
+        await NetInfo.fetch();
+      } catch (error) {
+        expect(error.message).toMatch(rejectionMessage);
+      }
     });
   });
 });

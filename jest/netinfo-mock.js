@@ -9,4 +9,14 @@ const RNCNetInfoMock = {
   removeListeners: jest.fn(),
 };
 
+RNCNetInfoMock.getCurrentState.mockResolvedValue({
+  type: 'cellular',
+  isConnected: true,
+  isInternetReachable: true,
+  details: {
+    isConnectionExpensive: true,
+    cellularGeneration: '3g',
+  },
+});
+
 module.exports = RNCNetInfoMock;

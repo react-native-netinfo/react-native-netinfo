@@ -9,8 +9,13 @@
 
 import NetInfo from '../index';
 import NativeInterface from '../internal/nativeInterface';
+import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
 
-const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
+// Mock modules
+require('jest-fetch-mock').enableMocks();
+jest.mock('./../internal/nativeModule', () =>
+  require('./../../jest/netinfo-mock'),
+);
 
 describe('react-native-community/netinfo', () => {
   beforeEach(() => {

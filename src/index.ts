@@ -8,18 +8,9 @@
  */
 
 import {useState, useEffect} from 'react';
+import DEFAULT_CONFIGURATION from './internal/defaultConfiguration';
 import State from './internal/state';
 import * as Types from './internal/types';
-
-// The default configuration to be used
-const DEFAULT_CONFIGURATION = {
-  reachabilityUrl: 'https://clients3.google.com/generate_204',
-  reachabilityTest: (response: Response): Promise<boolean> =>
-    Promise.resolve(response.status === 204),
-  reachabilityLongTimeout: 60 * 1000, // 60s
-  reachabilityShortTimeout: 5 * 1000, // 5s
-  reachabilityRequestTimeout: 15 * 1000, // 15s
-};
 
 // Stores the currently used configuration
 let _configuration: Types.NetInfoConfiguration = DEFAULT_CONFIGURATION;

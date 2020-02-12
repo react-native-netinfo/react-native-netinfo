@@ -52,6 +52,10 @@ export type NetInfoUnknownState = NetInfoDisconnectedState<
 export type NetInfoNoConnectionState = NetInfoDisconnectedState<
   NetInfoStateType.none
 >;
+export type NetInfoDisconnectedStates =
+  | NetInfoUnknownState
+  | NetInfoNoConnectionState;
+
 export type NetInfoCellularState = NetInfoConnectedState<
   NetInfoStateType.cellular,
   {
@@ -79,10 +83,7 @@ export type NetInfoEthernetState = NetInfoConnectedState<
 export type NetInfoWimaxState = NetInfoConnectedState<NetInfoStateType.wimax>;
 export type NetInfoVpnState = NetInfoConnectedState<NetInfoStateType.vpn>;
 export type NetInfoOtherState = NetInfoConnectedState<NetInfoStateType.other>;
-
-export type NetInfoState =
-  | NetInfoUnknownState
-  | NetInfoNoConnectionState
+export type NetInfoConnectedStates =
   | NetInfoCellularState
   | NetInfoWifiState
   | NetInfoBluetoothState
@@ -90,6 +91,8 @@ export type NetInfoState =
   | NetInfoWimaxState
   | NetInfoVpnState
   | NetInfoOtherState;
+
+export type NetInfoState = NetInfoDisconnectedStates | NetInfoConnectedStates;
 
 export type NetInfoChangeHandler = (state: NetInfoState) => void;
 export type NetInfoSubscription = () => void;
