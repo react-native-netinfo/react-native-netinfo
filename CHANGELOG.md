@@ -1,3 +1,10 @@
+# [5.4.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.3.4...v5.4.0) (2020-02-12)
+
+
+### Features
+
+* Add reachability request timeout to improve handling of bad network connections ([#302](https://github.com/react-native-community/react-native-netinfo/issues/302) by [@davidstritzl](https://github.com/davidstritzl)) ([9eb1531](https://github.com/react-native-community/react-native-netinfo/commit/9eb1531))
+
 ## [5.3.4](https://github.com/react-native-community/react-native-netinfo/compare/v5.3.3...v5.3.4) (2020-02-12)
 
 
