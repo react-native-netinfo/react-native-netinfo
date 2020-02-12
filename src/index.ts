@@ -18,6 +18,7 @@ const DEFAULT_CONFIGURATION = {
     Promise.resolve(response.status === 204),
   reachabilityLongTimeout: 60 * 1000, // 60s
   reachabilityShortTimeout: 5 * 1000, // 5s
+  reachabilityRequestTimeout: 15 * 1000, // 15s
 };
 
 // Stores the currently used configuration
