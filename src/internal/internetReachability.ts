@@ -68,48 +68,69 @@ export default class InternetReachability {
   };
 
   private _checkInternetReachability = (): InternetReachabilityCheckHandler => {
-    // We wrap the promise to allow us to cancel the pending request, if needed
-    let hasCanceled = false;
+    const responsePromise = fetch(this._configuration.reachabilityUrl);
 
-    const promise = fetch(this._configuration.reachabilityUrl)
+    // Create promise that will reject after the request timeout has been reached
+    let timeoutHandle: ReturnType<typeof setTimeout>;
+    const timeoutPromise = new Promise<Response>(
+      (_, reject): void => {
+        timeoutHandle = setTimeout(
+          (): void => reject('timedout'),
+          this._configuration.reachabilityRequestTimeout,
+        );
+      },
+    );
+
+    // Create promise that makes it possible to cancel a pending request through a reject
+    let cancel: () => void = (): void => {};
+    const cancelPromise = new Promise<Response>(
+      (_, reject): void => {
+        cancel = (): void => reject('canceled');
+      },
+    );
+
+    const promise = Promise.race([
+      responsePromise,
+      timeoutPromise,
+      cancelPromise,
+    ])
       .then(
-        (response): Promise<boolean | 'canceled'> => {
-          if (!hasCanceled) {
-            return this._configuration.reachabilityTest(response);
-          } else {
-            return Promise.resolve('canceled');
-          }
+        (response): Promise<boolean> => {
+          return this._configuration.reachabilityTest(response);
         },
       )
       .then(
         (result): void => {
-          if (result !== 'canceled') {
-            this._setIsInternetReachable(result);
-            const nextTimeoutInterval = this._isInternetReachable
-              ? this._configuration.reachabilityLongTimeout
-              : this._configuration.reachabilityShortTimeout;
+          this._setIsInternetReachable(result);
+          const nextTimeoutInterval = this._isInternetReachable
+            ? this._configuration.reachabilityLongTimeout
+            : this._configuration.reachabilityShortTimeout;
+          this._currentTimeoutHandle = setTimeout(
+            this._checkInternetReachability,
+            nextTimeoutInterval,
+          );
+        },
+      )
+      .catch(
+        (error: Error | 'timedout' | 'canceled'): void => {
+          if (error !== 'canceled') {
+            this._setIsInternetReachable(false);
             this._currentTimeoutHandle = setTimeout(
               this._checkInternetReachability,
-              nextTimeoutInterval,
+              this._configuration.reachabilityShortTimeout,
             );
           }
         },
       )
-      .catch(
+      .finally(
         (): void => {
-          this._setIsInternetReachable(false);
-          this._currentTimeoutHandle = setTimeout(
-            this._checkInternetReachability,
-            this._configuration.reachabilityShortTimeout,
-          );
+          clearTimeout(timeoutHandle);
         },
       );
 
     return {
       promise,
-      cancel: (): void => {
-        hasCanceled = true;
-      },
+      cancel,
     };
   };
 
