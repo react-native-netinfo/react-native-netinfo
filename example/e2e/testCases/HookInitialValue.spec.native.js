@@ -17,7 +17,7 @@ describe('HookInitialValue', () => {
   });
 
   it('should have the correct elements to perform the test', async () => {
-    await expect(element(by.id('results'))).toExist();
+    await expect(element(by.id('result'))).toExist();
   });
 
   it('should show a pass', async () => {

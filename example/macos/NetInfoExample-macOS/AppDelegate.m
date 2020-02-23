@@ -7,6 +7,7 @@
 
 #import "AppDelegate.h"
 
+#import <React/RCTUIKit.h>
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
@@ -23,9 +24,14 @@
   _bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:nil];
 }
 
-- (void)application:(NSApplication *)application openURLs:(NSArray<NSURL *> *)urls {
-  NSURL *url = [urls firstObject];
-//  [RCTLinkingManager o]
+- (void)applicationWillFinishLaunching:(NSNotification *)__unused aNotification
+{
+  // initialize the url event listeners for Linking module
+  // this example registers the netinfoexample scheme in Info.plist
+  [[NSAppleEventManager sharedAppleEventManager] setEventHandler:[RCTLinkingManager class]
+                                                     andSelector:@selector(getUrlEventHandler:withReplyEvent:)
+                                                   forEventClass:kInternetEventClass
+                                                      andEventID:kAEGetURL];
 }
 
 #pragma mark - RCTBridgeDelegate Methods
