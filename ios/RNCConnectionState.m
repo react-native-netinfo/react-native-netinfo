@@ -41,7 +41,7 @@
             (flags & kSCNetworkReachabilityFlagsConnectionRequired) != 0) {
             _type = RNCConnectionTypeNone;
         }
-#if !TARGET_OS_TV
+#if !TARGET_OS_TV && !TARGET_OS_OSX
         else if ((flags & kSCNetworkReachabilityFlagsIsWWAN) != 0) {
             _type = RNCConnectionTypeCellular;
             _expensive = true;

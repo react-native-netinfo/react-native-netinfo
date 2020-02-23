@@ -123,7 +123,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
   } else if ([requestedInterface isEqualToString: RNCConnectionTypeWifi] || [requestedInterface isEqualToString: RNCConnectionTypeEthernet]) {
     details[@"ipAddress"] = [self ipAddress] ?: NSNull.null;
     details[@"subnet"] = [self subnet] ?: NSNull.null;
-    #if !TARGET_OS_TV
+    #if !TARGET_OS_TV && !TARGET_OS_OSX
     details[@"ssid"] = [self ssid] ?: NSNull.null;
     #endif
   }
@@ -132,7 +132,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
 
 - (NSString *)carrier
 {
-#if (TARGET_OS_TV)
+#if (TARGET_OS_TV || TARGET_OS_OSX)
   return nil;
 #else
   CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
@@ -209,7 +209,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
   return subnet;
 }
 
-#if !TARGET_OS_TV
+#if !TARGET_OS_TV && !TARGET_OS_OSX
 - (NSString *)ssid
 {
   NSArray *interfaceNames = CFBridgingRelease(CNCopySupportedInterfaces());
