@@ -125,9 +125,14 @@ export default class InternetReachability {
           }
         },
       )
-      .finally(
+      // Clear request timeout and propagate any errors
+      .then(
         (): void => {
           clearTimeout(timeoutHandle);
+        },
+        (error: Error): void => {
+          clearTimeout(timeoutHandle);
+          throw error;
         },
       );
 
