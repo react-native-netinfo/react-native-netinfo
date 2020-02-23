@@ -1,3 +1,10 @@
+## [5.5.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.5.0...v5.5.1) (2020-02-23)
+
+
+### Bug Fixes
+
+* Remove use of `Promise.prototype.finally` to prevent possible compatibility issues ([#311](https://github.com/react-native-community/react-native-netinfo/issues/311) by [@davidstritzl](https://github.com/davidstritzl)) ([c0e6f62](https://github.com/react-native-community/react-native-netinfo/commit/c0e6f62))
+
 # [5.5.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.4.0...v5.5.0) (2020-02-12)
 
 
