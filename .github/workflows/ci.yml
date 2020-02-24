@@ -1,0 +1,24 @@
+name: CI
+
+on: 
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: macOS-latest
+    
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Installing Yarn dependencies
+      run: yarn install
+
+    - name: Build and test macOS app
+      run: yarn test:e2e:macos
+
