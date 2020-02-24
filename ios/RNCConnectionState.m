@@ -10,7 +10,7 @@
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #endif
 
-#if TARGET_OS_TV
+#if TARGET_OS_TV || TARGET_OS_OSX
 #include <ifaddrs.h>
 #endif
 
@@ -68,7 +68,7 @@
 #endif
         else {
             _type = RNCConnectionTypeWifi;
-#if TARGET_OS_TV
+#if TARGET_OS_TV || TARGET_OS_OSX
             struct ifaddrs *interfaces = NULL;
             struct ifaddrs *temp_addr = NULL;
             int success = 0;

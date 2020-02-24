@@ -30,6 +30,7 @@
 		38A4294924032A7E0034D6C7 /* libRCTLinking-macOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A4283724031C6F0034D6C7 /* libRCTLinking-macOS.a */; };
 		38A4294A24032A870034D6C7 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A4282224031C190034D6C7 /* libRCTWebSocket.a */; };
 		38A429B42403306E0034D6C7 /* NetInfoExample_macOSUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A429B32403306E0034D6C7 /* NetInfoExample_macOSUITests.m */; };
+		38A42A412403921C0034D6C7 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A42A18240391D60034D6C7 /* libRCTAnimation.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -348,6 +349,27 @@
 			remoteGlobalIDString = 38A42860240321900034D6C7;
 			remoteInfo = "NetInfoExample-macOS";
 		};
+		38A42A13240391D60034D6C7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 38A42A0D240391D60034D6C7 /* RCTAnimation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTAnimation;
+		};
+		38A42A15240391D60034D6C7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 38A42A0D240391D60034D6C7 /* RCTAnimation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2D2A28201D9B03D100D4039D;
+			remoteInfo = "RCTAnimation-tvOS";
+		};
+		38A42A17240391D60034D6C7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 38A42A0D240391D60034D6C7 /* RCTAnimation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 647647C51F0BC7F200C2D89B;
+			remoteInfo = "RCTAnimation-macOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -377,6 +399,7 @@
 		38A429B12403306E0034D6C7 /* NetInfoExample-macOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NetInfoExample-macOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		38A429B32403306E0034D6C7 /* NetInfoExample_macOSUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NetInfoExample_macOSUITests.m; sourceTree = "<group>"; };
 		38A429B52403306E0034D6C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		38A42A0D240391D60034D6C7 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../../node_modules/react-native-macos/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		60565FE83F65A70BD7AED6A6 /* libPods-NetInfoExample-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NetInfoExample-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FEF14CEE13D4E80A155D752 /* libPods-NetInfoExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NetInfoExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		94A0CC127BE789BB32D9BB9B /* libPods-NetInfoExample-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NetInfoExample-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -406,9 +429,10 @@
 			files = (
 				38A4294324032A1F0034D6C7 /* libRNCNetInfo-macOS.a in Frameworks */,
 				38A4294424032A3C0034D6C7 /* libReact.a in Frameworks */,
-				38A4294824032A770034D6C7 /* libRCTText.a in Frameworks */,
+				38A42A412403921C0034D6C7 /* libRCTAnimation.a in Frameworks */,
 				38A4294924032A7E0034D6C7 /* libRCTLinking-macOS.a in Frameworks */,
 				38A4294724032A6A0034D6C7 /* libRCTNetwork.a in Frameworks */,
+				38A4294824032A770034D6C7 /* libRCTText.a in Frameworks */,
 				38A4294A24032A870034D6C7 /* libRCTWebSocket.a in Frameworks */,
 				38A4294624032A4A0034D6C7 /* JavaScriptCore.framework in Frameworks */,
 			);
@@ -524,9 +548,10 @@
 			children = (
 				38A427F72403192C0034D6C7 /* RNCNetInfo.xcodeproj */,
 				38A42895240324210034D6C7 /* React.xcodeproj */,
-				38A4283924031CF20034D6C7 /* RCTText.xcodeproj */,
+				38A42A0D240391D60034D6C7 /* RCTAnimation.xcodeproj */,
 				38A4282C24031C6F0034D6C7 /* RCTLinking.xcodeproj */,
 				38A4284624031D560034D6C7 /* RCTNetwork.xcodeproj */,
+				38A4283924031CF20034D6C7 /* RCTText.xcodeproj */,
 				38A4281624031C190034D6C7 /* RCTWebSocket.xcodeproj */,
 			);
 			name = Libraries;
@@ -570,6 +595,16 @@
 				38A429B52403306E0034D6C7 /* Info.plist */,
 			);
 			path = "NetInfoExample-macOSUITests";
+			sourceTree = "<group>";
+		};
+		38A42A0E240391D60034D6C7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				38A42A14240391D60034D6C7 /* libRCTAnimation.a */,
+				38A42A16240391D60034D6C7 /* libRCTAnimation.a */,
+				38A42A18240391D60034D6C7 /* libRCTAnimation.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		83CBB9F61A601CBA00E9B192 = {
@@ -694,6 +729,10 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = 38A42A0E240391D60034D6C7 /* Products */;
+					ProjectRef = 38A42A0D240391D60034D6C7 /* RCTAnimation.xcodeproj */;
+				},
 				{
 					ProductGroup = 38A4282D24031C6F0034D6C7 /* Products */;
 					ProjectRef = 38A4282C24031C6F0034D6C7 /* RCTLinking.xcodeproj */;
@@ -1021,6 +1060,27 @@
 			fileType = archive.ar;
 			path = "libjsiexecutor-tvOS.a";
 			remoteRef = 38A428DE240324210034D6C7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		38A42A14240391D60034D6C7 /* libRCTAnimation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTAnimation.a;
+			remoteRef = 38A42A13240391D60034D6C7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		38A42A16240391D60034D6C7 /* libRCTAnimation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTAnimation.a;
+			remoteRef = 38A42A15240391D60034D6C7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		38A42A18240391D60034D6C7 /* libRCTAnimation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTAnimation.a;
+			remoteRef = 38A42A17240391D60034D6C7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
