@@ -11,5 +11,7 @@ jobs:
     - uses: actions/checkout@master
     - name: Installing Yarn dependencies
       run: yarn install
-    - name: Build and test macOS app
+    - name: Build macOS app
+      run: yarn build:e2e:macos
+    - name: Run e2e tests
       run: yarn test:e2e:macos

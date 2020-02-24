@@ -39,6 +39,7 @@
     "test:detox:ios:build:debug": "detox build -c ios.sim.debug",
     "test:detox:ios:build:release": "detox build -c ios.sim.release",
     "test:detox:clean": "rimraf example/android/build && rimraf example/android/app/build && rimraf example/android/.gradle && rimraf example/ios/build",
+    "build:e2e:macos": "scripts/run_macos_e2e.sh 'build'",
     "test:e2e:macos": "scripts/run_macos_e2e.sh 'build test'",    
     "ci:publish": "yarn semantic-release",
     "semantic-release": "semantic-release",
