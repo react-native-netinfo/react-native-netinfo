@@ -10,8 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Installing Yarn dependencies
-      run: yarn install
-    - name: Build macOS app
-      run: yarn build:e2e:macos
+      run: yarn install --frozen-lockfile
     - name: Run e2e tests
       run: yarn test:e2e:macos
