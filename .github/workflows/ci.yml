@@ -9,6 +9,9 @@ jobs:
     
     steps:
     - uses: actions/checkout@master
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
     - name: Installing Yarn dependencies
       run: yarn install --frozen-lockfile
     - name: Run e2e tests
