@@ -19,6 +19,7 @@ Currently we use `flow` for typechecking, `eslint` with `prettier` for linting a
 * `yarn test:jest`: Run unit tests with `jest`.
 * `yarn test:detox:<android|ios>:build:<debug|release>`: Build the `debug` or `release` app for end-to-end tests with `detox` on either `android` or `ios`. You need to run this before running the test command and whenever you make changes to the native code.
 * `yarn test:detox:<android|ios>:test:<debug|release>`: Run the `debug` or `release` end-to-end tests with `detox` on either `android` or `ios`.
+* `yarn test:e2e:macos`: Run the end-to-end tests for macOS.
 
 ## Sending a pull request
 When you're sending a pull request:

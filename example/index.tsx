@@ -12,6 +12,7 @@ import * as React from 'react';
 import {
   AppRegistry,
   Linking,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -127,16 +128,27 @@ class ExampleApp extends React.Component<{}, State> {
 
   componentDidMount() {
     Linking.getInitialURL().then(this._handleOpenURLString);
-    Linking.addEventListener('url', this._handleOpenURL);
+    if (Platform.OS === 'macos') {
+      Linking.addEventListener('url', this._handleOpenURLMacOS);
+    } else {
+      Linking.addEventListener('url', this._handleOpenURL);
+    }
   }
 
   componentWillUnmount() {
-    Linking.removeEventListener('url', this._handleOpenURL);
+    if (Platform.OS === 'macos') {
+      Linking.removeEventListener('url', this._handleOpenURLMacOS);
+    } else {
+      Linking.removeEventListener('url', this._handleOpenURL);
+    }
   }
 
   // Receives commands from the test runner when it opens the app with a given URL
   // We use this to decide which test case to show
   _handleOpenURL = ({url}: {url: string}) => {
+    this._handleOpenURLString(url);
+  };
+  _handleOpenURLMacOS = (url: any) => {
     this._handleOpenURLString(url);
   };
   _handleOpenURLString = (url: string | null) => {

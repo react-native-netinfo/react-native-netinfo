@@ -1,0 +1,18 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: macOS-latest
+    
+    steps:
+    - uses: actions/checkout@master
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+    - name: Installing Yarn dependencies
+      run: yarn install --frozen-lockfile
+    - name: Run e2e tests
+      run: yarn test:e2e:macos
