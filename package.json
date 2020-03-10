@@ -1,6 +1,6 @@
 {
   "name": "@react-native-community/netinfo",
-  "version": "5.5.1",
+  "version": "5.6.0",
   "description": "React Native Network Info API for iOS & Android",
   "react-native": "src/index.ts",
   "types": "lib/typescript/src/index.d.ts",
@@ -40,7 +40,7 @@
     "test:detox:ios:build:release": "detox build -c ios.sim.release",
     "test:detox:clean": "rimraf example/android/build && rimraf example/android/app/build && rimraf example/android/.gradle && rimraf example/ios/build",
     "build:e2e:macos": "scripts/run_macos_e2e.sh 'build'",
-    "test:e2e:macos": "scripts/run_macos_e2e.sh 'test'",    
+    "test:e2e:macos": "scripts/run_macos_e2e.sh 'test'",
     "ci:publish": "yarn semantic-release",
     "semantic-release": "semantic-release",
     "prepare": "bob build"

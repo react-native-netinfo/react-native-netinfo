@@ -1,3 +1,10 @@
+# [5.6.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.5.1...v5.6.0) (2020-03-10)
+
+
+### Features
+
+* **macos:** Add in a macOS implementation of NetInfo ([#312](https://github.com/react-native-community/react-native-netinfo/issues/312) by [@tom-un](https://github.com/tom-un)) ([b0ad866](https://github.com/react-native-community/react-native-netinfo/commit/b0ad866))
+
 ## [5.5.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.5.0...v5.5.1) (2020-02-23)
 
 
