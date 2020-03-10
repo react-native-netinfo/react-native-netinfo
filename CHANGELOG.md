@@ -1,3 +1,10 @@
+## [5.6.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.6.0...v5.6.1) (2020-03-10)
+
+
+### Bug Fixes
+
+* Ensure the default timeouts are the correct way around ([4e3e981](https://github.com/react-native-community/react-native-netinfo/commit/4e3e981))
+
 # [5.6.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.5.1...v5.6.0) (2020-03-10)
 
 
