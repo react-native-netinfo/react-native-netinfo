@@ -414,7 +414,7 @@ You should then add the following to your Jest setup file to mock the NetInfo Na
 
 ```js
 import { NativeModules } from 'react-native';
-import RNCNetInfoMock from './jest/netinfo-mock.js';
+import RNCNetInfoMock from '@react-native-community/netinfo/jest/netinfo-mock.js';
 
 NativeModules.RNCNetInfo = RNCNetInfoMock;
 ```
