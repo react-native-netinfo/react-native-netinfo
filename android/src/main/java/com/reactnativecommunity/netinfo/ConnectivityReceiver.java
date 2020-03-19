@@ -1,6 +1,6 @@
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
- *
+ * <p>
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
@@ -28,6 +28,7 @@ import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Locale;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -109,7 +110,7 @@ abstract class ConnectivityReceiver {
 
     private WritableMap createConnectivityEventMap(@Nullable final String requestedInterface) {
         WritableMap event = Arguments.createMap();
-      
+
         // Add if WiFi is ON or OFF
         boolean isEnabled = mWifiManager.isWifiEnabled();
         event.putBoolean("isWifiEnabled", isEnabled);
@@ -205,10 +206,10 @@ abstract class ConnectivityReceiver {
                             int mask =
                                     0xffffffff
                                             << (32
-                                                    - netAddress
-                                                            .getInterfaceAddresses()
-                                                            .get(1)
-                                                            .getNetworkPrefixLength());
+                                            - netAddress
+                                            .getInterfaceAddresses()
+                                            .get(1)
+                                            .getNetworkPrefixLength());
                             String subnet =
                                     String.format(
                                             Locale.US,
