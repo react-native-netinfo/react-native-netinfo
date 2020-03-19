@@ -14,6 +14,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.net.ConnectivityManagerCompat;
 
 import com.facebook.react.bridge.Arguments;
