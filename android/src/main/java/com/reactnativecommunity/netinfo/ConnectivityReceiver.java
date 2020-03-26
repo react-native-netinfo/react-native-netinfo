@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.net.ConnectivityManagerCompat;
@@ -161,68 +162,72 @@ abstract class ConnectivityReceiver {
             case "wifi":
                 if (ContextCompat.checkSelfPermission(getReactContext(),
                         Manifest.permission.ACCESS_WIFI_STATE) == PackageManager.PERMISSION_GRANTED) {
-                    WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
-                    if (wifiInfo != null) {
-                        // Get the SSID
-                        try {
-                            String initialSSID = wifiInfo.getSSID();
-                            if (initialSSID != null && !initialSSID.contains("<unknown ssid>")) {
-                                // Strip the quotes, if any
-                                String ssid = initialSSID.replace("\"", "");
-                                details.putString("ssid", ssid);
+                    try {
+                        WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
+                        if (wifiInfo != null) {
+                            // Get the SSID
+                            try {
+                                String initialSSID = wifiInfo.getSSID();
+                                if (initialSSID != null && !initialSSID.contains("<unknown ssid>")) {
+                                    // Strip the quotes, if any
+                                    String ssid = initialSSID.replace("\"", "");
+                                    details.putString("ssid", ssid);
+                                }
+                            } catch (Exception e) {
+                                // Ignore errors
                             }
-                        } catch (Exception e) {
-                            // Ignore errors
-                        }
 
-                        // Get/parse the wifi signal strength
-                        try {
-                            int signalStrength =
-                                    WifiManager.calculateSignalLevel(wifiInfo.getRssi(), 100);
-                            details.putInt("strength", signalStrength);
-                        } catch (Exception e) {
-                            // Ignore errors
-                        }
+                            // Get/parse the wifi signal strength
+                            try {
+                                int signalStrength =
+                                        WifiManager.calculateSignalLevel(wifiInfo.getRssi(), 100);
+                                details.putInt("strength", signalStrength);
+                            } catch (Exception e) {
+                                // Ignore errors
+                            }
 
-                        // Get the IP address
-                        try {
-                            byte[] ipAddressByteArray =
-                                    BigInteger.valueOf(wifiInfo.getIpAddress()).toByteArray();
-                            NetInfoUtils.reverseByteArray(ipAddressByteArray);
-                            InetAddress inetAddress = InetAddress.getByAddress(ipAddressByteArray);
-                            String ipAddress = inetAddress.getHostAddress();
-                            details.putString("ipAddress", ipAddress);
-                        } catch (Exception e) {
-                            // Ignore errors
-                        }
+                            // Get the IP address
+                            try {
+                                byte[] ipAddressByteArray =
+                                        BigInteger.valueOf(wifiInfo.getIpAddress()).toByteArray();
+                                NetInfoUtils.reverseByteArray(ipAddressByteArray);
+                                InetAddress inetAddress = InetAddress.getByAddress(ipAddressByteArray);
+                                String ipAddress = inetAddress.getHostAddress();
+                                details.putString("ipAddress", ipAddress);
+                            } catch (Exception e) {
+                                // Ignore errors
+                            }
 
-                        // Get the subnet mask
-                        try {
-                            byte[] ipAddressByteArray =
-                                    BigInteger.valueOf(wifiInfo.getIpAddress()).toByteArray();
-                            NetInfoUtils.reverseByteArray(ipAddressByteArray);
-                            InetAddress inetAddress = InetAddress.getByAddress(ipAddressByteArray);
-                            NetworkInterface netAddress =
-                                    NetworkInterface.getByInetAddress(inetAddress);
-                            int mask =
-                                    0xffffffff
-                                            << (32
-                                            - netAddress
-                                            .getInterfaceAddresses()
-                                            .get(1)
-                                            .getNetworkPrefixLength());
-                            String subnet =
-                                    String.format(
-                                            Locale.US,
-                                            "%d.%d.%d.%d",
-                                            (mask >> 24 & 0xff),
-                                            (mask >> 16 & 0xff),
-                                            (mask >> 8 & 0xff),
-                                            (mask & 0xff));
-                            details.putString("subnet", subnet);
-                        } catch (Exception e) {
-                            // Ignore errors
+                            // Get the subnet mask
+                            try {
+                                byte[] ipAddressByteArray =
+                                        BigInteger.valueOf(wifiInfo.getIpAddress()).toByteArray();
+                                NetInfoUtils.reverseByteArray(ipAddressByteArray);
+                                InetAddress inetAddress = InetAddress.getByAddress(ipAddressByteArray);
+                                NetworkInterface netAddress =
+                                        NetworkInterface.getByInetAddress(inetAddress);
+                                int mask =
+                                        0xffffffff
+                                                << (32
+                                                - netAddress
+                                                .getInterfaceAddresses()
+                                                .get(1)
+                                                .getNetworkPrefixLength());
+                                String subnet =
+                                        String.format(
+                                                Locale.US,
+                                                "%d.%d.%d.%d",
+                                                (mask >> 24 & 0xff),
+                                                (mask >> 16 & 0xff),
+                                                (mask >> 8 & 0xff),
+                                                (mask & 0xff));
+                                details.putString("subnet", subnet);
+                            } catch (Exception e) {
+                                // Ignore errors
+                            }
                         }
+                    } catch (SecurityException e) {
+                        Log.e("ConnectivityReceiver", "ContextCompat.checkSelfPermission failed. Fail silently here instead.", e);
                     }
                 }
                 break;
