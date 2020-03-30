@@ -1,3 +1,15 @@
+# [5.7.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.6.2...v5.7.0) (2020-03-30)
+
+
+### Bug Fixes
+
+* **macos:** Ensure macOS files are included in the NPM package ([#335](https://github.com/react-native-community/react-native-netinfo/issues/335) by [@matt-oakes](https://github.com/matt-oakes)) ([742c79a](https://github.com/react-native-community/react-native-netinfo/commit/742c79a))
+
+
+### Features
+
+* **android:** Make the ACCESS_WIFI_STATE permission optional ([#328](https://github.com/react-native-community/react-native-netinfo/issues/328) by [@sweggersen](https://github.com/sweggersen)) ([ba16e0a](https://github.com/react-native-community/react-native-netinfo/commit/ba16e0a))
+
 ## [5.6.2](https://github.com/react-native-community/react-native-netinfo/compare/v5.6.1...v5.6.2) (2020-03-11)
 
 
