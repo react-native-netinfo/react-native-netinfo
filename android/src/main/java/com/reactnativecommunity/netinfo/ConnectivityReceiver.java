@@ -38,6 +38,7 @@ abstract class ConnectivityReceiver {
     private final ConnectivityManager mConnectivityManager;
     private final WifiManager mWifiManager;
     private final TelephonyManager mTelephonyManager;
+    private final BluetoothManager mBluetoothManager;
     private final ReactApplicationContext mReactContext;
 
     @Nonnull private ConnectionType mConnectionType = ConnectionType.UNKNOWN;
@@ -54,6 +55,8 @@ abstract class ConnectivityReceiver {
                         reactContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         mTelephonyManager =
                 (TelephonyManager) reactContext.getSystemService(Context.TELEPHONY_SERVICE);
+        mbluetoothManager =
+                (BluetoothManager) = reactContext.getSystemService(Context.BLUETOOTH_SERVICE);
     }
 
     abstract void register();
@@ -115,6 +118,15 @@ abstract class ConnectivityReceiver {
         // Add if WiFi is ON or OFF
         boolean isEnabled = mWifiManager.isWifiEnabled();
         event.putBoolean("isWifiEnabled", isEnabled);
+
+        // Check if bluetooth is enabled
+        BluetoothAdapter mBluetoothAdapter = mBluetoothManager.getAdapter();
+        boolean isBluetoothEnabled;
+        if (mBluetoothAdapter == null) {
+            isBluetoothEnabled = false;
+        } else {
+            isBluetoothEnabled = mBluetoothAdapter.isEnabled();
+        }
 
         // Add the connection type information
         event.putString("type", requestedInterface != null ? requestedInterface : mConnectionType.label);
