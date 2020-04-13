@@ -43,11 +43,11 @@ export default class State {
     this._internetReachability.update(state);
 
     // Convert the state from native to JS shape
-    const convertedState = this._convertState(state);
+    const connectionChange = this._convertState(state);
 
     // Update the listeners
-    this._latestState = convertedState;
-    this._subscriptions.forEach((handler): void => handler(convertedState));
+    this._latestState = connectionChange;
+    this._subscriptions.forEach((handler): void => handler(connectionChange));
   };
 
   private _handleInternetReachabilityUpdate = (
