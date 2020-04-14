@@ -1,3 +1,10 @@
+## [5.7.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.7.0...v5.7.1) (2020-04-14)
+
+
+### Bug Fixes
+
+* Fix the provided Jest mock so it works with the instructions in the README ([a24ebb1](https://github.com/react-native-community/react-native-netinfo/commit/a24ebb1)), closes [#345](https://github.com/react-native-community/react-native-netinfo/issues/345) [#327](https://github.com/react-native-community/react-native-netinfo/issues/327)
+
 # [5.7.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.6.2...v5.7.0) (2020-03-30)
 
 

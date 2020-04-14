@@ -1,6 +1,6 @@
 {
   "name": "@react-native-community/netinfo",
-  "version": "5.7.0",
+  "version": "5.7.1",
   "description": "React Native Network Info API for iOS & Android",
   "react-native": "src/index.ts",
   "types": "lib/typescript/src/index.d.ts",
