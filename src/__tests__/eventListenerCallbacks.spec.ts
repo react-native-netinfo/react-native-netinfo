@@ -10,16 +10,24 @@
 import NetInfo from '../index';
 import NativeInterface from '../internal/nativeInterface';
 import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
+import {NetInfoStateType, NetInfoCellularGeneration} from '../internal/types';
 
 // Mock modules
 require('jest-fetch-mock').enableMocks();
-jest.mock('./../internal/nativeModule', () =>
-  require('./../../jest/netinfo-mock'),
-);
+jest.mock('../internal/nativeModule');
+const mockNativeModule = jest.requireMock('../internal/nativeModule').default;
 
 describe('react-native-community/netinfo', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    mockNativeModule.getCurrentState.mockResolvedValue({
+      type: NetInfoStateType.cellular,
+      isConnected: true,
+      isInternetReachable: true,
+      details: {
+        isConnectionExpensive: true,
+        cellularGeneration: NetInfoCellularGeneration['4g'],
+      },
+    });
   });
 
   describe('Event listener callbacks', () => {

@@ -11,34 +11,15 @@ import NetInfo from '../index';
 import NativeInterface from '../internal/nativeInterface';
 import {NetInfoStateType, NetInfoCellularGeneration} from '../internal/types';
 import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
-import nativeModule from '../internal/nativeModule';
 
 // Mock modules
 require('jest-fetch-mock').enableMocks();
-jest.mock('./../internal/nativeModule', () =>
-  require('./../../jest/netinfo-mock'),
-);
+jest.mock('../internal/nativeModule');
+const mockNativeModule = jest.requireMock('../internal/nativeModule').default;
 
 describe('@react-native-community/netinfo fetch', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe('with cellular data types', () => {
     describe('4g cellular generation', () => {
-      beforeEach(() => {
-        jest.clearAllMocks();
-        // @ts-ignore
-        nativeModule.getCurrentState.mockResolvedValue({
-          type: NetInfoStateType.cellular,
-          isConnected: true,
-          isInternetReachable: true,
-          details: {
-            isConnectionExpensive: true,
-            cellularGeneration: NetInfoCellularGeneration['4g'],
-          },
-        });
-      });
       function dataProvider() {
         return [
           {
@@ -85,8 +66,7 @@ describe('@react-native-community/netinfo fetch', () => {
 
       dataProvider().forEach(testCase => {
         it(testCase.description, () => {
-          // @ts-ignore
-          nativeModule.getCurrentState.mockResolvedValue(
+          mockNativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
           );
 
@@ -102,19 +82,6 @@ describe('@react-native-community/netinfo fetch', () => {
     });
 
     describe('3g cellular generation', () => {
-      beforeEach(() => {
-        jest.clearAllMocks();
-        // @ts-ignore
-        nativeModule.getCurrentState.mockResolvedValue({
-          type: NetInfoStateType.cellular,
-          isConnected: true,
-          isInternetReachable: true,
-          details: {
-            isConnectionExpensive: true,
-            cellularGeneration: NetInfoCellularGeneration['3g'],
-          },
-        });
-      });
       function dataProvider() {
         return [
           {
@@ -161,8 +128,7 @@ describe('@react-native-community/netinfo fetch', () => {
 
       dataProvider().forEach(testCase => {
         it(testCase.description, () => {
-          // @ts-ignore
-          nativeModule.getCurrentState.mockResolvedValue(
+          mockNativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
           );
 
@@ -178,19 +144,6 @@ describe('@react-native-community/netinfo fetch', () => {
     });
 
     describe('2g cellular generation', () => {
-      beforeEach(() => {
-        jest.clearAllMocks();
-        // @ts-ignore
-        nativeModule.getCurrentState.mockResolvedValue({
-          type: NetInfoStateType.cellular,
-          isConnected: true,
-          isInternetReachable: true,
-          details: {
-            isConnectionExpensive: true,
-            cellularGeneration: NetInfoCellularGeneration['2g'],
-          },
-        });
-      });
       function dataProvider() {
         return [
           {
@@ -237,8 +190,7 @@ describe('@react-native-community/netinfo fetch', () => {
 
       dataProvider().forEach(testCase => {
         it(testCase.description, () => {
-          // @ts-ignore
-          nativeModule.getCurrentState.mockResolvedValue(
+          mockNativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
           );
 
@@ -254,19 +206,6 @@ describe('@react-native-community/netinfo fetch', () => {
     });
 
     describe('null cellular generation', () => {
-      beforeEach(() => {
-        jest.clearAllMocks();
-        // @ts-ignore
-        nativeModule.getCurrentState.mockResolvedValue({
-          type: NetInfoStateType.cellular,
-          isConnected: true,
-          isInternetReachable: true,
-          details: {
-            isConnectionExpensive: true,
-            cellularGeneration: null,
-          },
-        });
-      });
       function dataProvider() {
         return [
           {
@@ -313,8 +252,7 @@ describe('@react-native-community/netinfo fetch', () => {
 
       dataProvider().forEach(testCase => {
         it(testCase.description, () => {
-          // @ts-ignore
-          nativeModule.getCurrentState.mockResolvedValue(
+          mockNativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
           );
 
@@ -331,19 +269,6 @@ describe('@react-native-community/netinfo fetch', () => {
   });
 
   describe('with unknown and no connection data types', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-      // @ts-ignore
-      nativeModule.getCurrentState.mockResolvedValue({
-        type: NetInfoStateType.cellular,
-        isConnected: true,
-        isInternetReachable: true,
-        details: {
-          isConnectionExpensive: true,
-          cellularGeneration: NetInfoCellularGeneration['4g'],
-        },
-      });
-    });
     function dataProvider() {
       return [
         {
@@ -371,8 +296,7 @@ describe('@react-native-community/netinfo fetch', () => {
 
     dataProvider().forEach(testCase => {
       it(testCase.description, () => {
-        // @ts-ignore
-        nativeModule.getCurrentState.mockResolvedValue(
+        mockNativeModule.getCurrentState.mockResolvedValue(
           testCase.expectedConnectionInfo,
         );
 
@@ -388,25 +312,10 @@ describe('@react-native-community/netinfo fetch', () => {
   });
 
   describe('rejected promises are handled', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-      // @ts-ignore
-      nativeModule.getCurrentState.mockResolvedValue({
-        type: NetInfoStateType.cellular,
-        isConnected: true,
-        isInternetReachable: true,
-        details: {
-          isConnectionExpensive: true,
-          cellularGeneration: NetInfoCellularGeneration['4g'],
-        },
-      });
-    });
-
     it('will properly reject a promise if the connection request cannot be resolved', async () => {
       const rejectionMessage = 'nope, no connection info for you';
 
-      // @ts-ignore
-      nativeModule.getCurrentState.mockRejectedValue(rejectionMessage);
+      mockNativeModule.getCurrentState.mockRejectedValue(rejectionMessage);
 
       try {
         await NetInfo.fetch();
