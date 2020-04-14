@@ -430,9 +430,9 @@ setupFiles: ['<rootDir>/jest.setup.js']
 You should then add the following to your Jest setup file to mock the NetInfo Native Module:
 
 ```js
-import RNCNetInfoMock from '@react-native-community/netinfo/jest/netinfo-mock.js';
+import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js';
 
-jest.mock('@react-native-community/netinfo', () => RNCNetInfoMock);
+jest.mock('@react-native-community/netinfo', () => mockRNCNetInfo);
 ```
 
 ### Issues with the iOS simulator
