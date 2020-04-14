@@ -3,13 +3,7 @@
  */
 /* eslint-env jest */
 
-const RNCNetInfoMock = {
-  getCurrentState: jest.fn(),
-  addListener: jest.fn(),
-  removeListeners: jest.fn(),
-};
-
-RNCNetInfoMock.getCurrentState.mockResolvedValue({
+const defaultState = {
   type: 'cellular',
   isConnected: true,
   isInternetReachable: true,
@@ -17,6 +11,16 @@ RNCNetInfoMock.getCurrentState.mockResolvedValue({
     isConnectionExpensive: true,
     cellularGeneration: '3g',
   },
-});
+};
+
+const RNCNetInfoMock = {
+  configure: jest.fn(),
+  fetch: jest.fn(),
+  addEventListener: jest.fn(),
+  useNetInfo: jest.fn(),
+};
+
+RNCNetInfoMock.fetch.mockResolvedValue(defaultState);
+RNCNetInfoMock.useNetInfo.mockResolvedValue(defaultState);
 
 module.exports = RNCNetInfoMock;

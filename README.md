@@ -430,7 +430,6 @@ setupFiles: ['<rootDir>/jest.setup.js']
 You should then add the following to your Jest setup file to mock the NetInfo Native Module:
 
 ```js
-import { NativeModules } from 'react-native';
 import RNCNetInfoMock from '@react-native-community/netinfo/jest/netinfo-mock.js';
 
 jest.mock('@react-native-community/netinfo', () => RNCNetInfoMock);
