@@ -14,8 +14,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
     NetworkInfo::NetworkInfo() {
         m_profile = NetworkInformation::GetInternetConnectionProfile();
 
-        m_networkStatusChangedRevoker = NetworkInformation::NetworkStatusChanged(winrt::auto_revoke, [&](const winrt::IInspectable& sender)
-            {
+        m_networkStatusChangedRevoker = NetworkInformation::NetworkStatusChanged(winrt::auto_revoke, [&](const winrt::IInspectable& sender) {
                 m_profile = NetworkInformation::GetInternetConnectionProfile();
 
                 if (m_statusChangedHandler) {
@@ -33,40 +32,31 @@ namespace winrt::ReactNativeNetInfo::implementation {
     }
 
     std::string NetworkInfo::ConnectivityType() {
-        if (!m_profile)
-        {
+        if (!m_profile) {
             return CONNECTION_TYPE_NONE;
         }
-
-        if (m_profile.IsWlanConnectionProfile())
-        {
+        if (m_profile.IsWlanConnectionProfile()) {
             return CONNECTION_TYPE_WIFI;
         }
-        if (m_profile.IsWwanConnectionProfile())
-        {
+        if (m_profile.IsWwanConnectionProfile()) {
             return CONNECTION_TYPE_CELLULAR;
         }
 
         auto networkAdapter = m_profile.NetworkAdapter();
-        if (!networkAdapter)
-        {
+        if (!networkAdapter) {
             return CONNECTION_TYPE_UNKNOWN;
         }
-
         // Possible values: https://docs.microsoft.com/en-us/uwp/api/windows.networking.connectivity.networkadapter.ianainterfacetype
-        if (networkAdapter.IanaInterfaceType() == 6u)
-        {
+        if (networkAdapter.IanaInterfaceType() == 6u) {
             return CONNECTION_TYPE_ETHERNET;
         }
-        else
-        {
+        else {
             return CONNECTION_TYPE_OTHER;
         }
     }
 
     std::string NetworkInfo::CellularGeneration() {
-        if (!m_profile.IsWwanConnectionProfile())
-        {
+        if (!m_profile.IsWwanConnectionProfile()) {
             return CELLULAR_GENERATION_NONE;
         }
 
@@ -97,8 +87,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
     }
 
     bool NetworkInfo::IsConnectionExpensive() {
-        if (!m_profile)
-        {
+        if (!m_profile) {
             return false;
         }
 

@@ -20,15 +20,15 @@ namespace winrt::ReactNativeNetInfo::implementation {
         }
 
         REACT_EVENT(NetworkStatusChanged, L"netInfo.networkStatusDidChange");
-        std::function<void(winrt::Microsoft::ReactNative::JSValue)> NetworkStatusChanged;
+        std::function<void(JSValue)> NetworkStatusChanged;
 
         REACT_METHOD(getCurrentState);
         void getCurrentState(std::string requestedInterface,
-            winrt::Microsoft::ReactNative::ReactPromise<winrt::Microsoft::ReactNative::JSValue> const& promise) noexcept {
+            ReactPromise<JSValue> const& promise) noexcept {
             promise.Resolve(CreateNetInfoStateObject());
         }
 
-        winrt::Microsoft::ReactNative::JSValue CreateNetInfoStateObject()
+        JSValue CreateNetInfoStateObject()
         {
             auto isConnected = networkInfo.IsConnected();
             auto type = networkInfo.ConnectivityType();
@@ -45,8 +45,8 @@ namespace winrt::ReactNativeNetInfo::implementation {
 
             auto writer = winrt::Microsoft::ReactNative::MakeJSValueTreeWriter();
             writer.WriteObjectBegin();
-            winrt::Microsoft::ReactNative::WriteProperty(writer, L"type", type);
-            winrt::Microsoft::ReactNative::WriteProperty(writer, L"isConnected", isConnected);
+            WriteProperty(writer, L"type", type);
+            WriteProperty(writer, L"isConnected", isConnected);
             if (isConnected) {
                 WriteProperty(writer, L"details", TakeJSValue(detailsWriter));
             }
