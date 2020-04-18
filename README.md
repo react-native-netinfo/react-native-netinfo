@@ -141,6 +141,16 @@ protected List<ReactPackage> getPackages() {
 <details>
 <summary>Manually link the library on Windows</summary>
 
+#### Link C++ implementation
+* Open the solution in Visual Studio for your Windows apps
+* Right click in the Explorer and click Add > Existing Project...
+* Navigate to `./<app-name>/node_modules/@react-native-community/netinfo/windows/RNCNetInfoCPP/` and add `RNCNetInfoCPP.vcxproj`
+* This time right click on your React Native Windows app under your solutions directory and click Add > Reference...
+* Check the `RNCNetInfoCPP` you just added and press ok
+* Open `pch.h`, add `#include "winrt/ReactNativeNetInfo.h"`
+* Open `App.cpp`, add `PackageProviders().Append(winrt::ReactNativeNetInfo::ReactPackageProvider());` before `InitializeComponent();`
+
+#### Link C# implementation
 * Open the solution in Visual Studio for your Windows apps
 * Right click in the Explorer and click Add > Existing Project...
 * Navigate to `./<app-name>/node_modules/@react-native-community/netinfo/windows/RNCNetInfo/` and add `RNCNetInfo.csproj`
