@@ -1,3 +1,10 @@
+# [5.8.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.7.1...v5.8.0) (2020-04-22)
+
+
+### Features
+
+* **windows:** Add C++/WinRT Implementation to support the latest react-native-windows ([#349](https://github.com/react-native-community/react-native-netinfo/issues/349) by [@kaiguo](https://github.com/kaiguo)) ([18e2f20](https://github.com/react-native-community/react-native-netinfo/commit/18e2f20))
+
 ## [5.7.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.7.0...v5.7.1) (2020-04-14)
 
 
