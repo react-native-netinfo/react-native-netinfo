@@ -40,8 +40,10 @@ abstract class ConnectivityReceiver {
     private final TelephonyManager mTelephonyManager;
     private final ReactApplicationContext mReactContext;
 
-    @Nonnull private ConnectionType mConnectionType = ConnectionType.UNKNOWN;
-    @Nullable private CellularGeneration mCellularGeneration = null;
+    @Nonnull
+    private ConnectionType mConnectionType = ConnectionType.UNKNOWN;
+    @Nullable
+    private CellularGeneration mCellularGeneration = null;
     private boolean mIsInternetReachable = false;
     private Boolean mIsInternetReachableOverride;
 
