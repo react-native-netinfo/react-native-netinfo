@@ -1,3 +1,10 @@
+## [5.8.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.8.0...v5.8.1) (2020-05-11)
+
+
+### Bug Fixes
+
+* **android:** Avoid unneccesary downoads of Gradle plugins ([#358](https://github.com/react-native-community/react-native-netinfo/issues/358) by @SaeedZhiany) ([8479319](https://github.com/react-native-community/react-native-netinfo/commit/8479319))
+
 # [5.8.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.7.1...v5.8.0) (2020-04-22)
 
 
