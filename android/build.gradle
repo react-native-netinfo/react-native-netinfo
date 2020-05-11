@@ -1,12 +1,16 @@
 buildscript {
-  repositories {
-    google()
-    jcenter()
-  }
+  // The Android Gradle plugin is only required when opening the android folder stand-alone.
+  // This avoids unnecessary downloads and potential conflicts when the library is included as a
+  // module dependency in an application project.
+  if (project == rootProject) {
+    repositories {
+      google()
+      jcenter()
+    }
 
-  dependencies {
-    //noinspection GradleDependency
-    classpath 'com.android.tools.build:gradle:3.2.1'
+    dependencies {
+      classpath("com.android.tools.build:gradle:3.6.3")
+    }
   }
 }
 
@@ -26,7 +30,6 @@ apply plugin: 'com.android.library'
 
 android {
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
-  buildToolsVersion getExtOrDefault('buildToolsVersion')
 
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault('minSdkVersion')
