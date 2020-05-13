@@ -106,7 +106,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
   if (connected) {
     details[@"isConnectionExpensive"] = @(state.expensive);
   }
-  
+
   return @{
     @"type": selectedInterface,
     @"isConnected": @(connected),
@@ -125,6 +125,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
     details[@"subnet"] = [self subnet] ?: NSNull.null;
     #if !TARGET_OS_TV && !TARGET_OS_OSX
     details[@"ssid"] = [self ssid] ?: NSNull.null;
+    details[@"bssid"] = [self bssid] ?: NSNull.null;
     #endif
   }
   return details;
@@ -166,7 +167,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
           address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
         }
       }
-      
+
       temp_addr = temp_addr->ifa_next;
     }
   }
@@ -200,7 +201,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
           subnet = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_netmask)->sin_addr)];
         }
       }
-      
+
       temp_addr = temp_addr->ifa_next;
     }
   }
@@ -226,6 +227,22 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
     }
   }
   return SSID;
+}
+
+- (NSString *)bssid
+{
+  NSArray *interfaceNames = CFBridgingRelease(CNCopySupportedInterfaces());
+  NSDictionary *networkDetails;
+  NSString *BSSID = NULL;
+  for (NSString *interfaceName in interfaceNames) {
+      networkDetails = CFBridgingRelease(CNCopyCurrentNetworkInfo((__bridge CFStringRef)interfaceName));
+      if (networkDetails.count > 0)
+      {
+          BSSID = networkDetails[(NSString *) kCNNetworkInfoKeyBSSID];
+          break;
+      }
+  }
+  return BSSID;
 }
 #endif
 
