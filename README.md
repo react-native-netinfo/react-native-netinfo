@@ -26,7 +26,7 @@ Linking the package manually is not required anymore with [Autolinking](https://
 
 - **iOS Platform:**
 
-  `$ cd ios && pod install && cd ..` # CocoaPods on iOS needs this extra step
+  `$ npx pod-install` # CocoaPods on iOS needs this extra step
 
 - **Android Platform with Android Support:**
 
