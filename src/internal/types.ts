@@ -66,8 +66,10 @@ export type NetInfoCellularState = NetInfoConnectedState<
 export type NetInfoWifiState = NetInfoConnectedState<
   NetInfoStateType.wifi,
   {
+    ssid: string | null;
     ipAddress: string | null;
     subnet: string | null;
+    frequency: number | null;
   }
 >;
 export type NetInfoBluetoothState = NetInfoConnectedState<
