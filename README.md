@@ -269,6 +269,7 @@ The `details` value depends on the `type` value.
 | `strength`              | Android                           | `number`  | An integer number from `0` to `5` for the signal strength. May not be present if the signal strength cannot be determined. |
 | `ipAddress`             | Android, iOS, macOS               | `string`  | The external IP address. Can be in IPv4 or IPv6 format. May not be present if it cannot be determined.                     |
 | `subnet`                | Android, iOS, macOS               | `string`  | The subnet mask in IPv4 format. May not be present if it cannot be determined.                                             |
+| `frequency`             | Android                           | `number`  | Network frequency. Example: For 2.4 GHz networks, the method will return 2457. May not be present if it cannot be determined.                                             |
 
 ##### `type` is `cellular`
 

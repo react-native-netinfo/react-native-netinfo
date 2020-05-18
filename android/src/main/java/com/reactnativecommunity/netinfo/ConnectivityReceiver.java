@@ -197,6 +197,14 @@ abstract class ConnectivityReceiver {
                             // Ignore errors
                         }
 
+                        // Get WiFi frequency
+                        try {
+                            int frequency = wifiInfo.getFrequency();
+                            details.putInt("frequency", frequency);
+                        } catch (Exception e) {
+                            // Ignore errors
+                        }
+
                         // Get the IP address
                         try {
                             byte[] ipAddressByteArray =
