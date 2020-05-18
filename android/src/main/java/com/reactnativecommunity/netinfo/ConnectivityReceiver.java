@@ -177,6 +177,17 @@ abstract class ConnectivityReceiver {
                             // Ignore errors
                         }
 
+                        // Get the BSSID
+                        try {
+                            String bssid = wifiInfo.getBSSID();
+                            if (bssid != null) {
+                                details.putString("bssid", bssid);
+                            }
+                        } catch (Exception e) {
+                            // Ignore errors
+                        }
+
+
                         // Get/parse the wifi signal strength
                         try {
                             int signalStrength =
