@@ -1,3 +1,11 @@
+# [5.9.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.8.1...v5.9.0) (2020-05-18)
+
+
+### Features
+
+* **android:** Add BSSID WIFI type ([#361](https://github.com/react-native-community/react-native-netinfo/issues/361) by  [@organom](https://github.com/organom)) ([b99e1d6](https://github.com/react-native-community/react-native-netinfo/commit/b99e1d6))
+* **android:** Add WiFi frequency value ([#362](https://github.com/react-native-community/react-native-netinfo/issues/362) by [@kulyk](https://github.com/kulyk)) ([6d95244](https://github.com/react-native-community/react-native-netinfo/commit/6d95244))
+
 ## [5.8.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.8.0...v5.8.1) (2020-05-11)
 
 
