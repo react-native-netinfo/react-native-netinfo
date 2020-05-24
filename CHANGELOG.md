@@ -1,3 +1,10 @@
+## [5.9.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.0...v5.9.1) (2020-05-24)
+
+
+### Bug Fixes
+
+* **macOS:** Ensure Cocoapods installation works on macOS ([#366](https://github.com/react-native-community/react-native-netinfo/issues/366) by @Simek) ([c8b280c](https://github.com/react-native-community/react-native-netinfo/commit/c8b280c))
+
 # [5.9.0](https://github.com/react-native-community/react-native-netinfo/compare/v5.8.1...v5.9.0) (2020-05-18)
 
 
