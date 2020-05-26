@@ -1,3 +1,10 @@
+## [5.9.2](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.1...v5.9.2) (2020-05-26)
+
+
+### Bug Fixes
+
+* **Android:** Do not use getFrequency method for Android lower than LOLLIPOP ([#367](https://github.com/react-native-community/react-native-netinfo/issues/367) by @ObidosDev) ([4957aaa](https://github.com/react-native-community/react-native-netinfo/commit/4957aaa))
+
 ## [5.9.1](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.0...v5.9.1) (2020-05-24)
 
 
