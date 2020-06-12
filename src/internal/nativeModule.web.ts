@@ -183,6 +183,8 @@ const getCurrentState = (
       details: {
         isConnectionExpensive,
         ssid: null,
+        rssi: null,
+        strength: null,
         ipAddress: null,
         subnet: null,
         frequency: null,

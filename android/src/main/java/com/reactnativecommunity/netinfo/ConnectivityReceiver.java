@@ -187,6 +187,12 @@ abstract class ConnectivityReceiver {
                             // Ignore errors
                         }
 
+                        // Get RSSI
+                        try {
+                            details.putInt("rssi", wifiInfo.getRssi());
+                        } catch (Exception e) {
+                            // Ignore errors
+                        }
 
                         // Get/parse the wifi signal strength
                         try {
