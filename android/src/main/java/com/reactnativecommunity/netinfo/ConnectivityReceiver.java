@@ -189,7 +189,10 @@ abstract class ConnectivityReceiver {
 
                         // Get RSSI
                         try {
-                            details.putInt("rssi", wifiInfo.getRssi());
+                            int rssi = wifiInfo.getRssi();
+                            if(rssi != WifiInfo.INVALID_RSSI) {
+                                details.putInt("rssi", rssi);
+                            }
                         } catch (Exception e) {
                             // Ignore errors
                         }
