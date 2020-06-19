@@ -1,3 +1,10 @@
+## [5.9.3](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.2...v5.9.3) (2020-06-19)
+
+
+### Bug Fixes
+
+* added strength wifi property to typescript ([#377](https://github.com/react-native-community/react-native-netinfo/issues/377)) ([e8cb4d3](https://github.com/react-native-community/react-native-netinfo/commit/e8cb4d3))
+
 ## [5.9.2](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.1...v5.9.2) (2020-05-26)
 
 
