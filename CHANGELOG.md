@@ -1,3 +1,10 @@
+## [5.9.4](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.3...v5.9.4) (2020-06-25)
+
+
+### Bug Fixes
+
+* **android:** Add another check in ConnectivityReciever to make sure we have ACCESS_WIFI_STATE permission ([#379](https://github.com/react-native-community/react-native-netinfo/issues/379) by [@sweggersen](https://github.com/sweggersen)) ([b0ff1ff](https://github.com/react-native-community/react-native-netinfo/commit/b0ff1ff))
+
 ## [5.9.3](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.2...v5.9.3) (2020-06-19)
 
 
