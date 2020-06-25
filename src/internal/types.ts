@@ -68,6 +68,7 @@ export type NetInfoWifiState = NetInfoConnectedState<
   {
     ssid: string | null;
     bssid: string | null,
+    strength: number | null;
     ipAddress: string | null;
     subnet: string | null;
     frequency: number | null;
