@@ -67,7 +67,7 @@ export function fetch(
  *
  * @param listener The listener which is called when the network state changes.
  *
- * @returns An ofunction which can be called to unsubscribe.
+ * @returns A function which can be called to unsubscribe.
  */
 export function addEventListener(
   listener: Types.NetInfoChangeHandler,
