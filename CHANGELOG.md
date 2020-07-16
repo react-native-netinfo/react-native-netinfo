@@ -1,3 +1,10 @@
+## [5.9.5](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.4...v5.9.5) (2020-07-16)
+
+
+### Bug Fixes
+
+* Added missing bssid type definition to Typescript ([#370](https://github.com/react-native-community/react-native-netinfo/issues/370) by [@organom](https://github.com/organom)) ([72ef6cd](https://github.com/react-native-community/react-native-netinfo/commit/72ef6cd))
+
 ## [5.9.4](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.3...v5.9.4) (2020-06-25)
 
 
