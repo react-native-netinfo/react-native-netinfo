@@ -37,6 +37,7 @@ interface NetInfoConnectedState<
   isConnected: true;
   isInternetReachable: boolean | null | undefined;
   details: D & NetInfoConnectedDetails;
+  isWifiEnabled?: boolean;
 }
 
 interface NetInfoDisconnectedState<T extends NetInfoStateType> {
