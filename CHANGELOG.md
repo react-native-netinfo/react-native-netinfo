@@ -1,3 +1,10 @@
+## [5.9.6](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.5...v5.9.6) (2020-08-10)
+
+
+### Bug Fixes
+
+* **android:** Add missing isWifiEnabled type definition ([#396](https://github.com/react-native-community/react-native-netinfo/issues/396) by @TimRobinson1) ([76d8db5](https://github.com/react-native-community/react-native-netinfo/commit/76d8db5))
+
 ## [5.9.5](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.4...v5.9.5) (2020-07-16)
 
 
