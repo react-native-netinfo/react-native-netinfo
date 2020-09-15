@@ -7,7 +7,7 @@
  * @format
  */
 
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useReducer} from 'react';
 import DEFAULT_CONFIGURATION from './internal/defaultConfiguration';
 import State from './internal/state';
 import * as Types from './internal/types';
@@ -106,6 +106,32 @@ export function useNetInfo(
   }, []);
 
   return netInfo;
+}
+/**
+ * A React Hook which updates when the internet connection state changes.
+ *
+ * @returns The internet connection state.
+ */
+export function useInternet(): boolean | undefined {
+  const [isInternetReachable, setIsInternetReachable] =
+    useReducer((currentState: boolean | undefined, newState: boolean | undefined | null) => {
+      if (currentState !== newState) {
+        if (newState === false) return false;
+        else if (newState === true) return true;
+        else return currentState;
+      }
+    }, undefined);
+
+  useEffect(() => {
+    NetInfo.fetch().then((state: NetInfoState) => {
+      setIsInternetReachable(state.isInternetReachable)
+    });
+    return NetInfo.addEventListener((state: NetInfoState) => {
+      setIsInternetReachable(state.isInternetReachable)
+    });
+  }, [isInternetReachable]);
+
+  return isInternetReachable;
 }
 
 export * from './internal/types';
