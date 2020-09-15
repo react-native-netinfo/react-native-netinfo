@@ -123,10 +123,10 @@ export function useInternet(): boolean | undefined {
     }, undefined);
 
   useEffect(() => {
-    fetch().then((state: NetInfoState) => {
+    fetch().then((state: Types.NetInfoState) => {
       setIsInternetReachable(state.isInternetReachable)
     });
-    return addEventListener((state: NetInfoState) => {
+    return addEventListener((state: Types.NetInfoState) => {
       setIsInternetReachable(state.isInternetReachable)
     });
   }, [isInternetReachable]);
