@@ -1,3 +1,10 @@
+## [5.9.7](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.6...v5.9.7) (2020-09-18)
+
+
+### Bug Fixes
+
+* **ios:** depend directly on React-Core in podspec for Xcode 12 compatibility ([#409](https://github.com/react-native-community/react-native-netinfo/issues/409)) ([bcf8bf9](https://github.com/react-native-community/react-native-netinfo/commit/bcf8bf9))
+
 ## [5.9.6](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.5...v5.9.6) (2020-08-10)
 
 
