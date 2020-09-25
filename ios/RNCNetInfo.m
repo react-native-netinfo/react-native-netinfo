@@ -133,7 +133,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
 
 - (NSString *)carrier
 {
-#if (TARGET_OS_TV || TARGET_OS_OSX)
+#if (TARGET_OS_TV || TARGET_OS_OSX || TARGET_OS_MACCATALYST)
   return nil;
 #else
   CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
