@@ -63,7 +63,7 @@ Linking the package manually is not required anymore with [Autolinking](https://
 
 - **macOS Platform:**
 
-  Autolinking is not yet available on macOS.  See the [Manual linking steps for macOS](#manual-linking-macos) below.
+  Autolinking is not yet available on MacOS.  See the [Manual linking steps for macOS](#manual-linking-macos) below.
 
 #### Using React Native < 0.60
 
