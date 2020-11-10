@@ -60,7 +60,7 @@ dependencies {
   if (supportLibVersion && androidXVersion == null && androidXCore == null) {
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
   } else {
-    def defaultAndroidXVersion = "1.+"
+    def defaultAndroidXVersion = "1.3.2"
     if (androidXCore == null) {
       androidXCore = androidXVersion == null ? defaultAndroidXVersion : androidXVersion
     }
