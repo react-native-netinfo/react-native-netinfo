@@ -1,3 +1,10 @@
+## [5.9.9](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.8...v5.9.9) (2020-11-23)
+
+
+### Bug Fixes
+
+* **ios:** Support Mac Catalyst ([#415](https://github.com/react-native-community/react-native-netinfo/issues/415) by [@kyle-ssg](https://github.com/kyle-ssg)) ([5771efb](https://github.com/react-native-community/react-native-netinfo/commit/5771efb))
+
 ## [5.9.8](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.7...v5.9.8) (2020-11-23)
 
 
