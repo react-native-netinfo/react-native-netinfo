@@ -12,7 +12,8 @@
 #include <arpa/inet.h>
 
 #if !TARGET_OS_TV
-@import CoreTelephony;
+#import <CoreTelephony/CTCarrier.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #endif
 @import SystemConfiguration.CaptiveNetwork;
 
