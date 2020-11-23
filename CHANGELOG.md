@@ -1,3 +1,10 @@
+## [5.9.8](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.7...v5.9.8) (2020-11-23)
+
+
+### Bug Fixes
+
+* **windows:** Resolve Missing Deploy Target ([#426](https://github.com/react-native-community/react-native-netinfo/issues/426) by [@chiaramooney](https://github.com/chiaramooney)) ([b43a3e4](https://github.com/react-native-community/react-native-netinfo/commit/b43a3e4))
+
 ## [5.9.7](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.6...v5.9.7) (2020-09-18)
 
 
