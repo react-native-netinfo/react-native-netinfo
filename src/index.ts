@@ -89,17 +89,12 @@ export function addEventListener(
  */
 export function useNetInfo(
   configuration?: Partial<Types.NetInfoConfiguration>,
-): Types.NetInfoState {
+): Types.NetInfoState | undefined {
   if (configuration) {
     configure(configuration);
   }
 
-  const [netInfo, setNetInfo] = useState<Types.NetInfoState>({
-    type: Types.NetInfoStateType.unknown,
-    isConnected: false,
-    isInternetReachable: false,
-    details: null,
-  });
+  const [netInfo, setNetInfo] = useState<Types.NetInfoState>();
 
   useEffect((): (() => void) => {
     return addEventListener(setNetInfo);
