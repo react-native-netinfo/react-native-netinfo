@@ -1,3 +1,10 @@
+## [5.9.10](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.9...v5.9.10) (2021-01-06)
+
+
+### Bug Fixes
+
+* **ios,tvos:** Remove IPv4-only paths to prevent App Store warnings ([#431](https://github.com/react-native-community/react-native-netinfo/issues/431) by @ greenantdotcom ) ([1db98cb](https://github.com/react-native-community/react-native-netinfo/commit/1db98cb))
+
 ## [5.9.9](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.8...v5.9.9) (2020-11-23)
 
 
