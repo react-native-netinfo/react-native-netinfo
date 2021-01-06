@@ -165,7 +165,9 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
           [ifname isEqualToString:@"en1"]
         ) {
           // Get NSString from C String
-          address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+          char str[INET_ADDRSTRLEN];
+          inet_ntop(AF_INET, &((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr, str, INET_ADDRSTRLEN);
+          address = [NSString stringWithUTF8String:str];
         }
       }
 
@@ -199,7 +201,9 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
           [ifname isEqualToString:@"en1"]
         ) {
           // Get NSString from C String
-          subnet = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_netmask)->sin_addr)];
+          char str[INET_ADDRSTRLEN];
+          inet_ntop(AF_INET, &((struct sockaddr_in *)temp_addr->ifa_netmask)->sin_addr, str, INET_ADDRSTRLEN);
+          subnet = [NSString stringWithUTF8String:str];
         }
       }
 
