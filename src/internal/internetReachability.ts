@@ -41,7 +41,7 @@ export default class InternetReachability {
     this._listener(this._isInternetReachable);
   };
 
-  private _setExpectsConnection = (expectsConnection: boolean): void => {
+  private _setExpectsConnection = (expectsConnection: boolean | null): void => {
     // Cancel any pending check
     if (this._currentInternetReachabilityCheckHandler !== null) {
       this._currentInternetReachabilityCheckHandler.cancel();
