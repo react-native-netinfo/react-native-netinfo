@@ -97,7 +97,7 @@ export function useNetInfo(
   const [netInfo, setNetInfo] = useState<Types.NetInfoState>({
     type: Types.NetInfoStateType.unknown,
     isConnected: false,
-    isInternetReachable: false,
+    isInternetReachable: null,
     details: null,
   });
 

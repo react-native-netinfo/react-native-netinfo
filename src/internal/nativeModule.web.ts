@@ -214,7 +214,7 @@ const getCurrentState = (
     const state: NetInfoUnknownState = {
       ...baseState,
       isConnected: false,
-      isInternetReachable: false,
+      isInternetReachable: null,
       type,
       details: null,
     };
