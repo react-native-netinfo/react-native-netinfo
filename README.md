@@ -246,7 +246,7 @@ Describes the current state of the network. It is an object with these propertie
 | Property              | Type                                    | Description                                                                                        |
 | --------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | `type`                | [`NetInfoStateType`](#netinfostatetype) | The type of the current connection.                                                                |
-| `isConnected`         | `boolean`                               | If there is an active network connection. Note that this DOES NOT mean that internet is reachable. |
+| `isConnected`         | `boolean`, `null`                               | If there is an active network connection. If unknown defaults to `null`. |
 | `isInternetReachable` | `boolean`, `null`                             | If the internet is reachable with the currently active network connection. If unknown defaults to `null`                         |
 | `isWifiEnabled`       | `boolean`                               | *(Android only)* Whether the device's WiFi is ON or OFF.                                           |
 | `details`             |                                         | The value depends on the `type` value. See below.                                                  |
