@@ -31,7 +31,7 @@ export default class InternetReachability {
   }
 
   private _setIsInternetReachable = (
-    isInternetReachable: boolean | null | undefined,
+    isInternetReachable: boolean | null,
   ): void => {
     if (this._isInternetReachable === isInternetReachable) {
       return;
