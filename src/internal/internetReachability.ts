@@ -31,7 +31,7 @@ export default class InternetReachability {
   }
 
   private _setIsInternetReachable = (
-    isInternetReachable: boolean | null | undefined,
+    isInternetReachable: boolean | null,
   ): void => {
     if (this._isInternetReachable === isInternetReachable) {
       return;
@@ -41,7 +41,7 @@ export default class InternetReachability {
     this._listener(this._isInternetReachable);
   };
 
-  private _setExpectsConnection = (expectsConnection: boolean): void => {
+  private _setExpectsConnection = (expectsConnection: boolean | null): void => {
     // Cancel any pending check
     if (this._currentInternetReachabilityCheckHandler !== null) {
       this._currentInternetReachabilityCheckHandler.cancel();

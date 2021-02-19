@@ -35,7 +35,7 @@ interface NetInfoConnectedState<
 > {
   type: T;
   isConnected: true;
-  isInternetReachable: boolean | null | undefined;
+  isInternetReachable: boolean | null;
   details: D & NetInfoConnectedDetails;
   isWifiEnabled?: boolean;
 }
@@ -47,9 +47,13 @@ interface NetInfoDisconnectedState<T extends NetInfoStateType> {
   details: null;
 }
 
-export type NetInfoUnknownState = NetInfoDisconnectedState<
-  NetInfoStateType.unknown
->;
+export interface NetInfoUnknownState {
+  type: NetInfoStateType.unknown;
+  isConnected: null;
+  isInternetReachable: null;
+  details: null;
+}
+
 export type NetInfoNoConnectionState = NetInfoDisconnectedState<
   NetInfoStateType.none
 >;
