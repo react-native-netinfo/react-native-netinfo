@@ -21,7 +21,7 @@
   "contributors": [
     "Mike Diarmid (Salakar) <mike@invertase.io>"
   ],
-  "homepage": "https://github.com/react-native-community/react-native-netinfo#readme",
+  "homepage": "https://github.com/react-native-netinfo/react-native-netinfo#readme",
   "license": "MIT",
   "scripts": {
     "start": "react-native start",
@@ -132,7 +132,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/react-native-community/react-native-netinfo.git"
+    "url": "https://github.com/react-native-netinfo/react-native-netinfo.git"
   },
   "@react-native-community/bob": {
     "source": "src",
