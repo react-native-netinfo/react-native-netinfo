@@ -1,3 +1,15 @@
+# [6.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v5.9.10...v6.0.0) (2021-02-19)
+
+
+### feature
+
+* **useNetinfo:** return null for initial unknown connection state ([#444](https://github.com/react-native-netinfo/react-native-netinfo/issues/444) by [@lisabaut](https://github.com/lisabaut)) ([4d84f14](https://github.com/react-native-netinfo/react-native-netinfo/commit/4d84f14)), closes [#295](https://github.com/react-native-netinfo/react-native-netinfo/issues/295)
+
+
+### BREAKING CHANGES
+
+* **useNetinfo:** When the connection state is unknown, the `isConnected` and `isInternetConnected` properties are now set to `null` rather than `false`. This allow you to easily detect the initial "unknown" state before the state is detected and set to a `boolean`.
+
 ## [5.9.10](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.9...v5.9.10) (2021-01-06)
 
 
