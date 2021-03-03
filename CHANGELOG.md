@@ -8,7 +8,7 @@
 
 ### BREAKING CHANGES
 
-* **useNetinfo:** When the connection state is unknown, the `isConnected` and `isInternetConnected` properties are now set to `null` rather than `false`. This allow you to easily detect the initial "unknown" state before the state is detected and set to a `boolean`.
+* **useNetinfo:** When the connection state is unknown, the `isConnected` and `isInternetReachable` properties are now set to `null` rather than `false`. This allow you to easily detect the initial "unknown" state before the state is detected and set to a `boolean`.
 
 ## [5.9.10](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.9...v5.9.10) (2021-01-06)
 
