@@ -15,6 +15,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.NetworkRequest;
 import android.os.Build;
+import android.content.Context;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.reactnativecommunity.netinfo.types.CellularGeneration;
@@ -30,10 +31,12 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     private final ConnectivityNetworkCallback mNetworkCallback;
     Network mNetwork = null;
     NetworkCapabilities mNetworkCapabilities = null;
+    public ConnectivityManager connection;
 
     public NetworkCallbackConnectivityReceiver(ReactApplicationContext reactContext) {
         super(reactContext);
         mNetworkCallback = new ConnectivityNetworkCallback();
+        connection = (ConnectivityManager) reactContext.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     @Override
@@ -103,6 +106,10 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
                             && mNetworkCapabilities.hasCapability(
                             NetworkCapabilities.NET_CAPABILITY_VALIDATED)
                             && !isInternetSuspended;
+
+            if (isInternetReachable) {
+                connection.bindProcessToNetwork(null);
+            }
 
             // Get the cellular network type
             if (mNetwork != null && connectionType == ConnectionType.CELLULAR && isInternetReachable) {
