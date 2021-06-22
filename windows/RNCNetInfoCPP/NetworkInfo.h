@@ -12,6 +12,9 @@ namespace winrt::ReactNativeNetInfo::implementation {
 		std::string ConnectivityType();
         std::string CellularGeneration();
         bool IsConnectionExpensive();
+        std::string GetSsid();
+        int8_t GetStrength();
+        winrt::Windows::Foundation::IAsyncOperation<int64_t> GetFrequency();
         void StatusChanged(const winrt::Windows::Networking::Connectivity::NetworkStatusChangedEventHandler& handler);
 
         static constexpr auto CONNECTION_TYPE_CELLULAR = "cellular";
@@ -31,6 +34,8 @@ namespace winrt::ReactNativeNetInfo::implementation {
 		winrt::Windows::Networking::Connectivity::NetworkInformation::NetworkStatusChanged_revoker m_networkStatusChangedRevoker{};
         winrt::Windows::Networking::Connectivity::NetworkStatusChangedEventHandler m_statusChangedHandler{};
         winrt::Windows::Networking::Connectivity::ConnectionProfile m_profile{ nullptr };
+        winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Devices::WiFi::WiFiAdapter> getConnectedWiFiAdapter(winrt::hstring inetSsid);
+        winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Devices::WiFi::WiFiAvailableNetwork> getConnectedNetwork(winrt::hstring inetSsid);
 	};
 
 }

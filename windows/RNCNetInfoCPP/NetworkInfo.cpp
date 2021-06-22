@@ -7,6 +7,7 @@
 namespace winrt{
     using namespace Windows::Foundation;
 	using namespace Windows::Networking::Connectivity;
+    using namespace Windows::Devices;
 }
 
 namespace winrt::ReactNativeNetInfo::implementation {
@@ -95,4 +96,78 @@ namespace winrt::ReactNativeNetInfo::implementation {
         return costType == NetworkCostType::Fixed || costType == NetworkCostType::Variable;
     }
 
+    std::string NetworkInfo::GetSsid() {
+        if (!m_profile.IsWlanConnectionProfile) {
+            return "";
+        }
+        return m_profile.WlanConnectionProfileDetails().GetConnectedSsid();
+    }
+
+    int8_t NetworkInfo::GetStrength() {
+        if (!m_profile.IsWlanConnectionProfile) {
+            return 0;
+        }
+        return m_profile.WlanConnectionProfileDetails().GetSignalBars() * 20;
+    }
+
+    IAsyncOperation<int64_t> NetworkInfo::GetFrequency() noexcept {
+        try
+        {
+            if (!m_profile.IsWlanConnectionProfile) {
+                return 0;
+            }
+
+            auto inetSsid = m_profile.WlanConnectionProfileDetails().GetConnectedSsid();
+
+            auto connectedNetwork = co_await getConnectedNetwork(inetSsid);
+            const auto frequency =
+                connectedNetwork ? static_cast<int64_t>(connectedNetwork.ChannelCenterFrequencyInKilohertz()) : 0;
+
+            return frequency;
+        }
+        catch (...)
+        {
+            return 0;
+        }
+    }
+
+    IAsyncOperation<WiFi::WiFiAdapter> NetworkInfo::getConnectedWiFiAdapter(winrt::hstring inetSsid)
+    {
+        auto wifiAdapters = co_await WiFi::WiFiAdapter::FindAllAdaptersAsync();
+
+        for (WiFi::WiFiAdapter wifiAdapter : wifiAdapters)
+        {
+            auto networkAdapter = wifiAdapter.NetworkAdapter();
+            auto connectedProfile = co_await networkAdapter.GetConnectedProfileAsync();
+
+            // check each WiFi adapter for a connected profile
+            if (connectedProfile && connectedProfile.IsWlanConnectionProfile())
+            {
+                // Ensure the connected profile is the same as the internet profile
+                auto connectedSsid = connectedProfile.WlanConnectionProfileDetails().GetConnectedSsid();
+                if (connectedSsid == inetSsid)
+                {
+                    return wifiAdapter;
+                }
+            }
+        }
+
+        return WiFi::WiFiAdapter(nullptr);
+    }
+
+    IAsyncOperation<WiFi::WiFiAvailableNetwork> NetworkInfo::getConnectedNetwork(winrt::hstring inetSsid)
+    {
+        auto wifiAdapter = co_await getConnectedWiFiAdapter(inetSsid);
+
+        auto availableNetworks = wifiAdapter.NetworkReport().AvailableNetworks();
+        for (WiFi::WiFiAvailableNetwork availableNetwork : availableNetworks)
+        {
+            if (availableNetwork.Ssid() == inetSsid)
+            {
+                return availableNetwork;
+            }
+        }
+
+        return WiFi::WiFiAvailableNetwork(nullptr);
+    }
 }

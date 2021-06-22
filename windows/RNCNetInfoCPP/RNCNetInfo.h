@@ -40,10 +40,16 @@ namespace winrt::ReactNativeNetInfo::implementation {
                 {
                     WriteProperty(detailsWriter, L"cellularGeneration", networkInfo.CellularGeneration());
                 }
+                if (type == NetworkInfo::CONNECTION_TYPE_WIFI)
+                {
+                    WriteProperty(detailsWriter, L"frequency", networkInfo.GetFrequency());
+                    WriteProperty(detailsWriter, L"ssid", networkInfo.GetSsid());
+                    WriteProperty(detailsWriter, L"strength", networkInfo.GetStrength());
+                }
                 detailsWriter.WriteObjectEnd();
             }
 
-            auto writer = winrt::Microsoft::ReactNative::MakeJSValueTreeWriter();
+            auto writer = MakeJSValueTreeWriter();
             writer.WriteObjectBegin();
             WriteProperty(writer, L"type", type);
             WriteProperty(writer, L"isConnected", isConnected);
