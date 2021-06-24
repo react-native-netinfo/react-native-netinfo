@@ -13,9 +13,7 @@ import android.net.LinkProperties;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
-import android.net.NetworkRequest;
 import android.os.Build;
-import android.content.Context;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.reactnativecommunity.netinfo.types.CellularGeneration;
@@ -36,15 +34,14 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     public NetworkCallbackConnectivityReceiver(ReactApplicationContext reactContext) {
         super(reactContext);
         mNetworkCallback = new ConnectivityNetworkCallback();
-        connection = (ConnectivityManager) reactContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        connection = getConnectivityManager();
     }
 
     @Override
     @SuppressLint("MissingPermission")
     void register() {
         try {
-            NetworkRequest.Builder builder = new NetworkRequest.Builder();
-            getConnectivityManager().registerNetworkCallback(builder.build(), mNetworkCallback);
+            getConnectivityManager().registerDefaultNetworkCallback(mNetworkCallback);
         } catch (SecurityException e) {
             // TODO: Display a yellow box about this
         }
