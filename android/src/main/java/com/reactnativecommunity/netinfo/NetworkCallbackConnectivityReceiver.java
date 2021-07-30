@@ -29,12 +29,10 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     private final ConnectivityNetworkCallback mNetworkCallback;
     Network mNetwork = null;
     NetworkCapabilities mNetworkCapabilities = null;
-    public ConnectivityManager connection;
 
     public NetworkCallbackConnectivityReceiver(ReactApplicationContext reactContext) {
         super(reactContext);
         mNetworkCallback = new ConnectivityNetworkCallback();
-        connection = getConnectivityManager();
     }
 
     @Override
@@ -105,7 +103,7 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
                             && !isInternetSuspended;
 
             if (isInternetReachable) {
-                connection.bindProcessToNetwork(null);
+                getConnectivityManager().bindProcessToNetwork(null);
             }
 
             // Get the cellular network type
