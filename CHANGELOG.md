@@ -1,3 +1,11 @@
+## [6.0.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.0...v6.0.1) (2021-08-24)
+
+
+### Bug Fixes
+
+* Ensure warnings are not shown on React Native 0.65 ([#487](https://github.com/react-native-netinfo/react-native-netinfo/issues/487) by [@lubomyr](https://github.com/lubomyr)) ([ac0ed65](https://github.com/react-native-netinfo/react-native-netinfo/commit/ac0ed65))
+* **android:** isConnected is incorrect for wifi networks only the app has access to ([#443](https://github.com/react-native-netinfo/react-native-netinfo/issues/443) by [@eliaslecomte](https://github.com/eliaslecomte)) ([7084771](https://github.com/react-native-netinfo/react-native-netinfo/commit/7084771))
+
 # [6.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v5.9.10...v6.0.0) (2021-02-19)
 
 
