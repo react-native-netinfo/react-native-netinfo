@@ -32,15 +32,6 @@
     "validate:eslint": "eslint \"src/**/*.{js,ts,tsx}\" \"example/**/*.{js,ts,tsx}\"",
     "validate:typescript": "tsc --project ./ --noEmit",
     "test:jest": "jest \"/src/\"",
-    "test:detox:android:test:debug": "detox test -c android.emu.debug",
-    "test:detox:android:test:release": "detox test -c android.emu.release",
-    "test:detox:android:build:debug": "detox build -c android.emu.debug",
-    "test:detox:android:build:release": "detox build -c android.emu.release",
-    "test:detox:ios:test:debug": "detox test -c ios.sim.debug",
-    "test:detox:ios:test:release": "detox test -c ios.sim.release",
-    "test:detox:ios:build:debug": "detox build -c ios.sim.debug",
-    "test:detox:ios:build:release": "detox build -c ios.sim.release",
-    "test:detox:clean": "rimraf example/android/build && rimraf example/android/app/build && rimraf example/android/.gradle && rimraf example/ios/build",
     "build:e2e:macos": "scripts/run_macos_e2e.sh 'build'",
     "test:e2e:macos": "scripts/run_macos_e2e.sh 'test'",
     "ci:publish": "yarn semantic-release",
@@ -63,14 +54,13 @@
     "@babel/runtime": "^7.6.2",
     "@react-native-community/bob": "^0.4.1",
     "@react-native-community/eslint-config": "^0.0.5",
-    "@semantic-release/changelog": "^3.0.2",
-    "@semantic-release/git": "7.0.8",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "9.0.0",
     "@types/jest": "^24.0.12",
     "@types/react-native": "^0.57.51",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
     "babel-loader": "^8.0.6",
-    "detox": "^12.8.0",
     "eslint": "5.16.0",
     "eslint-config-prettier": "^4.2.0",
     "eslint-plugin-prettier": "3.0.1",
@@ -89,7 +79,7 @@
     "react-native-web": "^0.12.0",
     "react-test-renderer": "16.9.0",
     "rimraf": "^2.6.3",
-    "semantic-release": "17.2.3",
+    "semantic-release": "^17.4.6",
     "source-map-loader": "^0.2.4",
     "ts-jest": "^24.0.2",
     "ts-loader": "^6.2.1",
@@ -99,36 +89,6 @@
     "webpack-dev-server": "^3.10.2",
     "react-native-windows": "0.61.0",
     "metro": "0.56.0"
-  },
-  "detox": {
-    "test-runner": "jest",
-    "runner-config": "example/e2e/config.json",
-    "configurations": {
-      "ios.sim.debug": {
-        "binaryPath": "example/ios/build/Build/Products/Debug-iphonesimulator/NetInfoExample.app",
-        "build": "export RCT_NO_LAUNCH_PACKAGER=true && xcodebuild -project example/ios/NetInfoExample.xcodeproj -destination 'platform=iOS Simulator,name=iPhone X' -scheme NetInfoExample -parallelizeTargets -configuration Debug -derivedDataPath example/ios/build  -UseModernBuildSystem=YES | xcpretty -k",
-        "type": "ios.simulator",
-        "name": "iPhone X"
-      },
-      "ios.sim.release": {
-        "binaryPath": "example/ios/build/Build/Products/Release-iphonesimulator/NetInfoExample.app",
-        "build": "export RCT_NO_LAUNCH_PACKAGER=true && xcodebuild -project example/ios/NetInfoExample.xcodeproj -destination 'platform=iOS Simulator,name=iPhone X' -scheme NetInfoExample -parallelizeTargets -configuration Release -derivedDataPath example/ios/build  -UseModernBuildSystem=YES | xcpretty -k",
-        "type": "ios.simulator",
-        "name": "iPhone X"
-      },
-      "android.emu.debug": {
-        "binaryPath": "example/android/app/build/outputs/apk/debug/app-debug.apk",
-        "build": "export RCT_NO_LAUNCH_PACKAGER=true && pushd example/android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && popd",
-        "type": "android.emulator",
-        "name": "TestingAVD"
-      },
-      "android.emu.release": {
-        "binaryPath": "example/android/app/build/outputs/apk/release/app-release.apk",
-        "build": "export RCT_NO_LAUNCH_PACKAGER=true && pushd example/android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release && popd",
-        "type": "android.emulator",
-        "name": "TestingAVD"
-      }
-    }
   },
   "repository": {
     "type": "git",
