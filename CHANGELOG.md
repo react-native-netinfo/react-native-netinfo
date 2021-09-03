@@ -1,3 +1,10 @@
+## [6.0.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.1...v6.0.2) (2021-09-03)
+
+
+### Bug Fixes
+
+* **ios:** remove iOS listener stubs added for RN0.65 compat, they caused a regression ([#493](https://github.com/react-native-netinfo/react-native-netinfo/issues/493)) ([a52b0a5](https://github.com/react-native-netinfo/react-native-netinfo/commit/a52b0a5))
+
 ## [6.0.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.0...v6.0.1) (2021-08-24)
 
 
