@@ -14,6 +14,13 @@
 #include <ifaddrs.h>
 #endif
 
+@interface RNCConnectionState ()
+
+@property (nonatomic, readwrite) BOOL connected;
+@property (nonatomic, readwrite) BOOL expensive;
+    
+@end
+
 @implementation RNCConnectionState
 
 // Creates a new "blank" state
@@ -28,70 +35,22 @@
     return self;
 }
 
-// Creates the state from the given reachability references
-- (instancetype)initWithReachabilityFlags:(SCNetworkReachabilityFlags)flags
-{
+- (instancetype)initWithPath:(nw_path_t)path {
     self = [self init];
     if (self) {
-        _type = RNCConnectionTypeUnknown;
-        _cellularGeneration = nil;
-        _expensive = false;
+        _connected = (nw_path_get_status(path) == nw_path_status_satisfied);
+        _expensive = nw_path_is_expensive(path);
         
-        if ((flags & kSCNetworkReachabilityFlagsReachable) == 0 ||
-            (flags & kSCNetworkReachabilityFlagsConnectionRequired) != 0) {
-            _type = RNCConnectionTypeNone;
-        }
-#if !TARGET_OS_TV && !TARGET_OS_OSX
-        else if ((flags & kSCNetworkReachabilityFlagsIsWWAN) != 0) {
-            _type = RNCConnectionTypeCellular;
-            _expensive = true;
-            
-            CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
-            if (netinfo) {
-                if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyGPRS] ||
-                    [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyEdge] ||
-                    [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMA1x]) {
-                    _cellularGeneration = RNCCellularGeneration2g;
-                } else if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyWCDMA] ||
-                           [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyHSDPA] ||
-                           [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyHSUPA] ||
-                           [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMAEVDORev0] ||
-                           [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMAEVDORevA] ||
-                           [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMAEVDORevB] ||
-                           [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyeHRPD]) {
-                    _cellularGeneration = RNCCellularGeneration3g;
-                } else if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyLTE]) {
-                    _cellularGeneration = RNCCellularGeneration4g;
-                }
-            }
-        }
-#endif
-        else {
+        if (nw_path_uses_interface_type(path, nw_interface_type_wifi)) {
             _type = RNCConnectionTypeWifi;
-#if TARGET_OS_TV || TARGET_OS_OSX
-            struct ifaddrs *interfaces = NULL;
-            struct ifaddrs *temp_addr = NULL;
-            int success = 0;
-            // retrieve the current interfaces - returns 0 on success
-            success = getifaddrs(&interfaces);
-            if (success == 0) {
-                // Loop through linked list of interfaces
-                temp_addr = interfaces;
-                while (temp_addr != NULL) {
-                    if (temp_addr->ifa_addr->sa_family == AF_INET) {
-                        // Check if interface is en0 which is the ethernet connection on the Apple TV
-                        NSString* ifname = [NSString stringWithUTF8String:temp_addr->ifa_name];
-                        if ([ifname isEqualToString:@"en0"]) {
-                            _type = RNCConnectionTypeEthernet;
-                        }
-                    }
-                    temp_addr = temp_addr->ifa_next;
-                }
-            }
-            // Free memory
-            freeifaddrs(interfaces);
-#endif
+        } else if (nw_path_uses_interface_type(path, nw_interface_type_cellular)) {
+            _type = RNCConnectionTypeCellular;
+        } else if (nw_path_uses_interface_type(path, nw_interface_type_wired)) {
+            _type = RNCConnectionTypeEthernet;
+        } else {
+            _type = RNCConnectionTypeUnknown;
         }
+        [self buildCellularGenerationType];
     }
     return self;
 }
@@ -99,14 +58,32 @@
 // Checks if two states are equal
 - (BOOL)isEqualToConnectionState:(RNCConnectionState *)otherState
 {
-    return [self.type isEqualToString:otherState.type]
-            && [self.cellularGeneration isEqualToString:otherState.cellularGeneration]
-            && self.expensive == otherState.expensive;
+    return (self.connected == otherState.connected &&
+            self.type == otherState.type &&
+            self.expensive == otherState.expensive);
 }
 
-- (BOOL)connected
-{
-    return ![self.type isEqualToString:RNCConnectionTypeNone] && ![self.type isEqualToString:RNCConnectionTypeUnknown];
+- (void)buildCellularGenerationType {
+#if !TARGET_OS_TV && !TARGET_OS_OSX
+    CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
+    if (netinfo) {
+        if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyGPRS] ||
+            [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyEdge] ||
+            [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMA1x]) {
+            _cellularGeneration = RNCCellularGeneration2g;
+        } else if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyWCDMA] ||
+                   [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyHSDPA] ||
+                   [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyHSUPA] ||
+                   [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMAEVDORev0] ||
+                   [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMAEVDORevA] ||
+                   [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyCDMAEVDORevB] ||
+                   [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyeHRPD]) {
+            _cellularGeneration = RNCCellularGeneration3g;
+        } else if ([netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyLTE]) {
+            _cellularGeneration = RNCCellularGeneration4g;
+        }
+    }
+#endif
 }
 
 @end

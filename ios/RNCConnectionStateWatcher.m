@@ -6,15 +6,13 @@
  */
 
 #import "RNCConnectionStateWatcher.h"
-#import <SystemConfiguration/SystemConfiguration.h>
-#import <netinet/in.h>
+#import <Network/Network.h>
 
 @interface RNCConnectionStateWatcher () <NSURLSessionDataDelegate>
 
-@property (nonatomic) SCNetworkReachabilityRef reachabilityRef;
 @property (nullable, weak, nonatomic) id<RNCConnectionStateWatcherDelegate> delegate;
-@property (nonatomic) SCNetworkReachabilityFlags lastFlags;
-@property (nonnull, strong, nonatomic) RNCConnectionState *state;
+@property (nonnull, strong, nonatomic, readwrite) RNCConnectionState *state;
+@property (nonatomic, copy) nw_path_monitor_t pathMonitor;
 
 @end
 
@@ -28,55 +26,20 @@
     if (self) {
         _delegate = delegate;
         _state = [[RNCConnectionState alloc] init];
-        _reachabilityRef = [self createReachabilityRef];
+        _pathMonitor = nw_path_monitor_create();
+        nw_path_monitor_set_queue(_pathMonitor, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
+        __weak __typeof__(self) weakSelf = self;
+        nw_path_monitor_set_update_handler(_pathMonitor, ^(nw_path_t  _Nonnull path) {
+            weakSelf.state = [[RNCConnectionState alloc] initWithPath:path];
+        });
+        nw_path_monitor_start(_pathMonitor);
     }
     return self;
 }
 
 - (void)dealloc
 {
-    self.delegate = nil;
-
-    if (self.reachabilityRef != nil) {
-        SCNetworkReachabilityUnscheduleFromRunLoop(self.reachabilityRef, CFRunLoopGetMain(), kCFRunLoopCommonModes);
-        CFRelease(self.reachabilityRef);
-        self.reachabilityRef = nil;
-    }
-}
-
-#pragma mark - Public methods
-
-- (RNCConnectionState *)currentState
-{
-    return self.state;
-}
-
-#pragma mark - Callback
-
-typedef void (^RNCConnectionStateUpdater)(SCNetworkReachabilityFlags);
-
-static void RNCReachabilityCallback(__unused SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info)
-{
-    RNCConnectionStateUpdater block = (__bridge id)info;
-    if (block != nil) {
-        block(flags);
-    }
-}
-
-static void RNCReachabilityContextRelease(const void *info)
-{
-    Block_release(info);
-}
-
-static const void *RNCReachabilityContextRetain(const void *info)
-{
-    return Block_copy(info);
-}
-
-- (void)update:(SCNetworkReachabilityFlags)flags
-{
-    self.lastFlags = flags;
-    self.state = [[RNCConnectionState alloc] initWithReachabilityFlags:flags];
+    nw_path_monitor_cancel(_pathMonitor);
 }
 
 #pragma mark - Setters
@@ -95,41 +58,6 @@ static const void *RNCReachabilityContextRetain(const void *info)
 - (void)updateDelegate
 {
     [self.delegate connectionStateWatcher:self didUpdateState:self.state];
-}
-
-- (SCNetworkReachabilityRef)createReachabilityRef
-{
-    struct sockaddr_in zeroAddress;
-    bzero(&zeroAddress, sizeof(zeroAddress));
-    zeroAddress.sin_len = sizeof(zeroAddress);
-    zeroAddress.sin_family = AF_INET;
-
-    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr *) &zeroAddress);
-
-    __weak typeof(self) weakSelf = self;
-    RNCConnectionStateUpdater callback = ^(SCNetworkReachabilityFlags flags) {
-        __strong __typeof(weakSelf) strongSelf = weakSelf;
-        if (strongSelf != nil) {
-            [strongSelf update:flags];
-        }
-    };
-
-    SCNetworkReachabilityContext context = {
-        0,
-        (__bridge void *)callback,
-        RNCReachabilityContextRetain,
-        RNCReachabilityContextRelease,
-        NULL
-    };
-    SCNetworkReachabilitySetCallback(reachability, RNCReachabilityCallback, &context);
-    SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetMain(), kCFRunLoopCommonModes);
-
-    // Set the state the first time
-    SCNetworkReachabilityFlags flags;
-    SCNetworkReachabilityGetFlags(reachability, &flags);
-    [self update:flags];
-
-    return reachability;
 }
 
 @end

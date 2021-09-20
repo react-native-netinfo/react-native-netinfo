@@ -55,7 +55,9 @@ RCT_EXPORT_MODULE()
 
 - (void)startObserving
 {
-  self.isObserving = YES;
+    self.isObserving = YES;
+    NSDictionary *dictionary = [self currentDictionaryFromUpdateState:_connectionStateWatcher.state withInterface:NULL];
+    [self sendEventWithName:@"netInfo.networkStatusDidChange" body:dictionary];
 }
 
 - (void)stopObserving
@@ -92,7 +94,7 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolve:(RCTPromiseResolveBlock)resolve
                   reject:(__unused RCTPromiseRejectBlock)reject)
 {
-  RNCConnectionState *state = [self.connectionStateWatcher currentState];
+  RNCConnectionState *state = self.connectionStateWatcher.state;
   resolve([self currentDictionaryFromUpdateState:state withInterface:requestedInterface]);
 }
 
