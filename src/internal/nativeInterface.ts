@@ -32,9 +32,11 @@ export default {
   ...RNCNetInfo,
   get eventEmitter(): NativeEventEmitter {
     if (!nativeEventEmitter) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       /// @ts-ignore
       nativeEventEmitter = new NativeEventEmitter(RNCNetInfo);
     }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     /// @ts-ignore
     return nativeEventEmitter;
   },

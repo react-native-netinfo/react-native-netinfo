@@ -15,7 +15,10 @@ interface State {
   connectionInfo: NetInfoState | null;
 }
 
-export default class ConnectionInfoCurrent extends React.Component<{}, State> {
+export default class ConnectionInfoCurrent extends React.Component<
+  Record<string, unknown>,
+  State
+> {
   _subscription: NetInfoSubscription | null = null;
 
   state = {

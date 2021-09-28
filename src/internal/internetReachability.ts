@@ -85,6 +85,7 @@ export default class InternetReachability {
     );
 
     // Create promise that makes it possible to cancel a pending request through a reject
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     let cancel: () => void = (): void => {};
     const cancelPromise = new Promise<Response>(
       (_, reject): void => {

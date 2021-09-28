@@ -15,7 +15,10 @@ interface State {
   isConnected: boolean | null;
 }
 
-export default class IsConnected extends React.Component<{}, State> {
+export default class IsConnected extends React.Component<
+  Record<string, unknown>,
+  State
+> {
   _subscription: NetInfoSubscription | null = null;
 
   state = {
