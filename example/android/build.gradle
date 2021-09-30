@@ -2,7 +2,8 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "28.0.3"
+        buildToolsVersion = "30.0.2"
+        ndkVersion = "21.4.7075529"
         minSdkVersion = 21
         compileSdkVersion = 30
         targetSdkVersion = 30
