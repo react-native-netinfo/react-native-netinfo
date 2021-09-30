@@ -1,10 +1,8 @@
 /**
  * @format
  */
-
-module.exports = {
-  preset: 'react-native',
-  displayName: {name: 'Native', color: 'cyan'},
+const defaultConfiguration = {
+  transformIgnorePatterns: ['node_modules/(?!@react-native|react-native)'],
   testPathIgnorePatterns: [
     '<rootDir>/lib/',
     '<rootDir>/node_modules/',
@@ -15,4 +13,21 @@ module.exports = {
       babelConfig: true,
     },
   },
+};
+
+module.exports = {
+  projects: [
+    {
+      preset: 'jest-expo/ios',
+      ...defaultConfiguration,
+    },
+    {
+      preset: 'jest-expo/android',
+      ...defaultConfiguration,
+    },
+    {
+      preset: 'jest-expo/web',
+      ...defaultConfiguration,
+    },
+  ],
 };
