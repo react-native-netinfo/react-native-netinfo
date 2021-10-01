@@ -130,7 +130,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.netinfoexample"
+        applicationId "com.reactnativecommunity.netinfo.example"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
