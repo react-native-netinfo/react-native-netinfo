@@ -20,11 +20,11 @@ const windowsSwitch = '--use-react-native-windows';
 let config = {
   project: {
     ios: {
-      // I dont know why its not work. When run `react-native run-ios` react-native Found Xcode project "RNCNetInfo.xcodeproj" but not NetInfoExample.xcodeproj. Build from xcode works fine.
+      // this works but only in combination with `yarn react-native run-ios --project-path `pwd`/ios` - at least it works...
       project: './example/ios/NetInfoExample.xcodeproj',
     },
     android:{
-      sourceDir: './example/android',
+      sourceDir: 'example/android',
     }
   },
 }
