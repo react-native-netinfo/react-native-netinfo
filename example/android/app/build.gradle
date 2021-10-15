@@ -201,7 +201,6 @@ dependencies {
         implementation jscFlavor
     }
 
-    androidTestImplementation('com.wix:detox:+') { transitive = true }
     androidTestImplementation 'junit:junit:4.12'
 }
 
