@@ -16,19 +16,19 @@ namespace winrt::ReactNativeNetInfo::implementation {
         RNCNetInfo() {
             networkInfo.StatusChanged([&](const auto& /*sender*/) {
                 NetworkStatusChanged(CreateNetInfoStateObject());
-                });
+            });
         }
 
         REACT_EVENT(NetworkStatusChanged, L"netInfo.networkStatusDidChange");
         std::function<void(JSValue)> NetworkStatusChanged;
 
         REACT_METHOD(getCurrentState);
-        void getCurrentState(std::string requestedInterface,
+        winrt::fire_and_forget getCurrentState(std::string requestedInterface,
             ReactPromise<JSValue> const& promise) noexcept {
-            promise.Resolve(CreateNetInfoStateObject());
+            promise.Resolve(co_await CreateNetInfoStateObject());
         }
 
-        JSValue CreateNetInfoStateObject()
+        winrt::Windows::Foundation::IAsyncOperation<JSValue> CreateNetInfoStateObject()
         {
             auto isConnected = networkInfo.IsConnected();
             auto type = networkInfo.ConnectivityType();
@@ -42,7 +42,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
                 }
                 if (type == NetworkInfo::CONNECTION_TYPE_WIFI)
                 {
-                    WriteProperty(detailsWriter, L"frequency", networkInfo.GetFrequency());
+                    WriteProperty(detailsWriter, L"frequency", co_await networkInfo.GetFrequency());
                     WriteProperty(detailsWriter, L"ssid", networkInfo.GetSsid());
                     WriteProperty(detailsWriter, L"strength", networkInfo.GetStrength());
                 }
@@ -57,7 +57,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
                 WriteProperty(writer, L"details", TakeJSValue(detailsWriter));
             }
             writer.WriteObjectEnd();
-            return TakeJSValue(writer);
+            co_return TakeJSValue(writer);
         }
     };
 }

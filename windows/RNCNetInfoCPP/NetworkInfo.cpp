@@ -7,7 +7,7 @@
 namespace winrt{
     using namespace Windows::Foundation;
 	using namespace Windows::Networking::Connectivity;
-    using namespace Windows::Devices;
+    using namespace Windows::Devices::WiFi;
 }
 
 namespace winrt::ReactNativeNetInfo::implementation {
@@ -97,23 +97,23 @@ namespace winrt::ReactNativeNetInfo::implementation {
     }
 
     std::string NetworkInfo::GetSsid() {
-        if (!m_profile.IsWlanConnectionProfile) {
+        if (!m_profile.IsWlanConnectionProfile()) {
             return "";
         }
-        return m_profile.WlanConnectionProfileDetails().GetConnectedSsid();
+        return winrt::to_string(m_profile.WlanConnectionProfileDetails().GetConnectedSsid().c_str());
     }
 
-    int8_t NetworkInfo::GetStrength() {
-        if (!m_profile.IsWlanConnectionProfile) {
+    uint8_t NetworkInfo::GetStrength() {
+        if (!m_profile.IsWlanConnectionProfile()) {
             return 0;
         }
-        return m_profile.WlanConnectionProfileDetails().GetSignalBars() * 20;
+        return m_profile.GetSignalBars().GetUInt8() * 20;
     }
 
     IAsyncOperation<int64_t> NetworkInfo::GetFrequency() noexcept {
         try
         {
-            if (!m_profile.IsWlanConnectionProfile) {
+            if (!m_profile.IsWlanConnectionProfile()) {
                 return 0;
             }
 
@@ -131,11 +131,11 @@ namespace winrt::ReactNativeNetInfo::implementation {
         }
     }
 
-    IAsyncOperation<WiFi::WiFiAdapter> NetworkInfo::getConnectedWiFiAdapter(winrt::hstring inetSsid)
+    IAsyncOperation<WiFiAdapter> NetworkInfo::getConnectedWiFiAdapter(winrt::hstring inetSsid)
     {
-        auto wifiAdapters = co_await WiFi::WiFiAdapter::FindAllAdaptersAsync();
+        auto wifiAdapters = co_await WiFiAdapter::FindAllAdaptersAsync();
 
-        for (WiFi::WiFiAdapter wifiAdapter : wifiAdapters)
+        for (WiFiAdapter wifiAdapter : wifiAdapters)
         {
             auto networkAdapter = wifiAdapter.NetworkAdapter();
             auto connectedProfile = co_await networkAdapter.GetConnectedProfileAsync();
@@ -152,15 +152,15 @@ namespace winrt::ReactNativeNetInfo::implementation {
             }
         }
 
-        return WiFi::WiFiAdapter(nullptr);
+        return WiFiAdapter(nullptr);
     }
 
-    IAsyncOperation<WiFi::WiFiAvailableNetwork> NetworkInfo::getConnectedNetwork(winrt::hstring inetSsid)
+    IAsyncOperation<WiFiAvailableNetwork> NetworkInfo::getConnectedNetwork(winrt::hstring inetSsid)
     {
         auto wifiAdapter = co_await getConnectedWiFiAdapter(inetSsid);
 
         auto availableNetworks = wifiAdapter.NetworkReport().AvailableNetworks();
-        for (WiFi::WiFiAvailableNetwork availableNetwork : availableNetworks)
+        for (WiFiAvailableNetwork availableNetwork : availableNetworks)
         {
             if (availableNetwork.Ssid() == inetSsid)
             {
@@ -168,6 +168,6 @@ namespace winrt::ReactNativeNetInfo::implementation {
             }
         }
 
-        return WiFi::WiFiAvailableNetwork(nullptr);
+        return WiFiAvailableNetwork(nullptr);
     }
 }

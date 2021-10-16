@@ -13,8 +13,8 @@ namespace winrt::ReactNativeNetInfo::implementation {
         std::string CellularGeneration();
         bool IsConnectionExpensive();
         std::string GetSsid();
-        int8_t GetStrength();
-        winrt::Windows::Foundation::IAsyncOperation<int64_t> GetFrequency();
+        uint8_t GetStrength();
+        winrt::Windows::Foundation::IAsyncOperation<int64_t> GetFrequency() noexcept;
         void StatusChanged(const winrt::Windows::Networking::Connectivity::NetworkStatusChangedEventHandler& handler);
 
         static constexpr auto CONNECTION_TYPE_CELLULAR = "cellular";
