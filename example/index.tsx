@@ -117,8 +117,8 @@ interface State {
   activeTestCase: Example | null;
 }
 
-class ExampleApp extends React.Component<{}, State> {
-  constructor(props: {}) {
+class ExampleApp extends React.Component<Record<string, unknown>, State> {
+  constructor(props: Record<string, unknown>) {
     super(props);
 
     this.state = {

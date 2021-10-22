@@ -15,10 +15,13 @@ interface State {
   triggered: boolean;
 }
 
-export default class EmitOnListen extends React.Component<{}, State> {
+export default class EmitOnListen extends React.Component<
+  Record<string, unknown>,
+  State
+> {
   _subscription: NetInfoSubscription | null = null;
 
-  constructor(props: {}) {
+  constructor(props: Record<string, unknown>) {
     super(props);
 
     this.state = {
