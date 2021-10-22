@@ -54,5 +54,4 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation 'com.facebook.react:react-native:+'
 
-  def supportLibVersion = getExtOrInitialValue('supportLibVersion', getExtOrInitialValue('supportVersion', null))
 }
