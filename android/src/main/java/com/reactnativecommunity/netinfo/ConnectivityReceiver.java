@@ -134,7 +134,7 @@ abstract class ConnectivityReceiver {
         WritableMap details = createDetailsMap(detailsInterface);
         if (isConnected) {
             boolean isConnectionExpensive =
-                    getConnectivityManager().isActiveNetworkMetered();
+                    getConnectivityManager() == null ? true : getConnectivityManager().isActiveNetworkMetered();
             details.putBoolean("isConnectionExpensive", isConnectionExpensive);
         }
         event.putMap("details", details);
