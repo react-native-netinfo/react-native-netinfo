@@ -1,3 +1,10 @@
+## [6.0.4](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.3...v6.0.4) (2021-10-22)
+
+
+### Bug Fixes
+
+* **android:** use ConnectivityManager directly, drop androidx dependency ([#509](https://github.com/react-native-netinfo/react-native-netinfo/issues/509)) ([2569f56](https://github.com/react-native-netinfo/react-native-netinfo/commit/2569f56))
+
 ## [6.0.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.2...v6.0.3) (2021-10-22)
 
 
