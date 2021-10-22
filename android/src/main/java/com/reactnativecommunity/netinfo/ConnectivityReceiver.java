@@ -12,8 +12,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 
-import androidx.core.net.ConnectivityManagerCompat;
-
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -136,7 +134,7 @@ abstract class ConnectivityReceiver {
         WritableMap details = createDetailsMap(detailsInterface);
         if (isConnected) {
             boolean isConnectionExpensive =
-                    ConnectivityManagerCompat.isActiveNetworkMetered(getConnectivityManager());
+                    getConnectivityManager().isActiveNetworkMetered();
             details.putBoolean("isConnectionExpensive", isConnectionExpensive);
         }
         event.putMap("details", details);
