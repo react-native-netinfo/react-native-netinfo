@@ -1,9 +1,6 @@
 #include "pch.h"
 #include "ReactPackageProvider.h"
-
 #include "NativeModules.h"
-
-
 
 using namespace winrt::Microsoft::ReactNative;
 
@@ -16,5 +13,3 @@ void ReactPackageProvider::CreatePackage(IReactPackageBuilder const &packageBuil
 }
 
 } // namespace winrt::NetInfoExample::implementation
-
-
