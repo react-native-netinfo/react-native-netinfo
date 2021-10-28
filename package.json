@@ -37,8 +37,7 @@
     "test:e2e:macos": "scripts/run_macos_e2e.sh 'test'",
     "ci:publish": "yarn semantic-release",
     "semantic-release": "semantic-release",
-    "prepare": "bob build",
-    "postinstall": "npx patch-package"
+    "prepare": "bob build"
   },
   "keywords": [
     "react-native",
@@ -75,6 +74,8 @@
     "jest-expo": "^42.1.0",
     "jest-fetch-mock": "^3.0.3",
     "lint-staged": "^8.1.7",
+    "metro": "^0.66.2",
+    "metro-config": "^0.66.1",
     "metro-react-native-babel-preset": "^0.66.2",
     "prettier": "^1.17.0",
     "react": "17.0.2",
@@ -83,7 +84,7 @@
     "react-native-codegen": "^0.0.8",
     "react-native-macos": "0.60.0-microsoft.50",
     "react-native-web": "^0.17.5",
-    "react-native-windows": "0.65.2",
+    "react-native-windows": "0.65.6",
     "react-test-renderer": "17.0.2",
     "rimraf": "^2.6.3",
     "semantic-release": "^17.4.6",
