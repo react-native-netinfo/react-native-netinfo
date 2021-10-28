@@ -31,7 +31,7 @@ export interface NetInfoConnectedDetails {
 
 interface NetInfoConnectedState<
   T extends NetInfoStateType,
-  D extends object = {}
+  D extends Record<string, unknown> = Record<string, unknown>
 > {
   type: T;
   isConnected: true;

@@ -3,10 +3,11 @@
  * integration tests during local development or on CI services.
  */
 
-const blacklist = require('metro-config/src/defaults/blacklist');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const exclusionList = require('metro-config/src/defaults/exclusionList');
 
 module.exports = {
   resolver: {
-    blacklistRE: blacklist([/node_modules\/react-native-macos\/.*/]),
+    blockList: exclusionList([/node_modules\/react-native-macos\/.*/]),
   },
 };

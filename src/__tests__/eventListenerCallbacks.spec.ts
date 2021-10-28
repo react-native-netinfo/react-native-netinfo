@@ -13,6 +13,7 @@ import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
 import {NetInfoStateType, NetInfoCellularGeneration} from '../internal/types';
 
 // Mock modules
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('jest-fetch-mock').enableMocks();
 jest.mock('../internal/nativeModule');
 const mockNativeModule = jest.requireMock('../internal/nativeModule').default;
@@ -35,10 +36,10 @@ describe('react-native-community/netinfo', () => {
       const listener = jest.fn();
       NetInfo.addEventListener(listener);
 
-      setImmediate(() => {
+      setTimeout(() => {
         expect(listener).toBeCalled();
         done();
-      });
+      }, 0);
     });
 
     it('should call the listener on listening with multiple listeners', done => {
@@ -47,11 +48,11 @@ describe('react-native-community/netinfo', () => {
       NetInfo.addEventListener(listener1);
       NetInfo.addEventListener(listener2);
 
-      setImmediate(() => {
+      setTimeout(() => {
         expect(listener1).toBeCalled();
         expect(listener2).toBeCalled();
         done();
-      });
+      }, 0);
     });
 
     it('should call the listener when the native event is emmitted', () => {

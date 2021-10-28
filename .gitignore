@@ -44,7 +44,8 @@ android/.project
 # BUCK
 buck-out/
 \.buckd/
-debug.keystore
+*.keystore
+!debug.keystore
 
 # Editor config
 .vscode

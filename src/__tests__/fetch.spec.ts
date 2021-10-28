@@ -13,6 +13,7 @@ import {NetInfoStateType, NetInfoCellularGeneration} from '../internal/types';
 import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
 
 // Mock modules
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('jest-fetch-mock').enableMocks();
 jest.mock('../internal/nativeModule');
 const mockNativeModule = jest.requireMock('../internal/nativeModule').default;
@@ -320,6 +321,8 @@ describe('@react-native-community/netinfo fetch', () => {
       try {
         await NetInfo.fetch();
       } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         expect(error.message).toMatch(rejectionMessage);
       }
     });

@@ -45,22 +45,6 @@ Linking the package manually is not required anymore with [Autolinking](https://
     }
   ```
 
-- **Android Platform with AndroidX:**
-
-  Modify your **android/build.gradle** configuration:
-  ```
-  buildscript {
-    ext {
-      buildToolsVersion = "28.0.3"
-      minSdkVersion = 16
-      compileSdkVersion = 28
-      targetSdkVersion = 28
-      # Remove 'supportLibVersion' property and put specific versions for AndroidX libraries
-      androidXCore = "1.0.2"
-      // Put here other AndroidX dependencies
-    }
-  ```
-
 - **macOS Platform:**
 
   Autolinking is not yet available on macOS.  See the [Manual linking steps for macOS](#manual-linking-macos) below.
@@ -425,12 +409,6 @@ NetInfo.fetch("wifi").then(state => {
 ## Troubleshooting
 
 ### Errors when building on Android
-
-This library was migrated from using the support library to AndroidX in version `4.0.0`. All of your depenencies must be using either the support library *or* AndroidX. Using a mixture of the two is not possible.
-
-From React Native 0.60 AndroidX is used by default.
-
-If you need to either convert this library back to the support library (to use an older React Native version) or convert other libraries forward to use AndroidX (if they have not been updated yet), you can use the [Jetifier](https://github.com/mikehardy/jetifier) tool.
 
 ### Errors while running Jest tests
 

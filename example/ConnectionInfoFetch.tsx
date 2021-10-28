@@ -15,7 +15,10 @@ interface State {
   connectionInfo: string;
 }
 
-export default class ConnectionInfoCurrent extends React.Component<{}, State> {
+export default class ConnectionInfoCurrent extends React.Component<
+  Record<string, unknown>,
+  State
+> {
   state = {
     connectionInfo: 'Tap to get current state',
   };

@@ -1,3 +1,17 @@
+## [6.0.4](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.3...v6.0.4) (2021-10-22)
+
+
+### Bug Fixes
+
+* **android:** use ConnectivityManager directly, drop androidx dependency ([#509](https://github.com/react-native-netinfo/react-native-netinfo/issues/509)) ([2569f56](https://github.com/react-native-netinfo/react-native-netinfo/commit/2569f56))
+
+## [6.0.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.2...v6.0.3) (2021-10-22)
+
+
+### Bug Fixes
+
+* **android, jcenter:** remove jcenter dependency / update example ([#500](https://github.com/react-native-netinfo/react-native-netinfo/issues/500)) ([94c5398](https://github.com/react-native-netinfo/react-native-netinfo/commit/94c5398))
+
 ## [6.0.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.1...v6.0.2) (2021-09-03)
 
 
