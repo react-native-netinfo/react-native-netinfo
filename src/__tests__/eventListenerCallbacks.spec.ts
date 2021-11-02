@@ -7,6 +7,7 @@
  * @format
  */
 
+import fetchMock from 'jest-fetch-mock';
 import NetInfo from '../index';
 import NativeInterface from '../internal/nativeInterface';
 import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
@@ -253,6 +254,71 @@ describe('react-native-community/netinfo', () => {
 
       expect(listener1).not.toBeCalled();
       expect(listener2).toBeCalledWith(expectedConnectionInfo);
+    });
+
+    describe('With configuration options listener', () => {
+      beforeEach(() => {
+        fetchMock.resetMocks();
+      });
+
+      describe('reachabilityShouldRun', () => {
+        function dataProvider() {
+          return [
+            {
+              description: 'reachabilityShouldRun returns true',
+              configuration: {
+                reachabilityShouldRun: () => true,
+              },
+              expectedConnectionInfo: {
+                type: 'wifi',
+                isConnected: true,
+                details: {
+                  isConnectionExpensive: true,
+                  cellularGeneration: 'unknown',
+                },
+              },
+              expectFetchToBeCalled: true,
+            },
+            {
+              description: 'reachabilityShouldRun returns false',
+              configuration: {
+                reachabilityShouldRun: () => false,
+              },
+              expectedConnectionInfo: {
+                type: 'wifi',
+                isConnected: true,
+                details: {
+                  isConnectionExpensive: true,
+                  cellularGeneration: 'unknown',
+                },
+              },
+              expectFetchToBeCalled: false,
+            },
+          ];
+        }
+
+        dataProvider().forEach(testCase => {
+          it(testCase.description, () => {
+            NetInfo.configure(testCase.configuration);
+
+            const listener = jest.fn();
+            NetInfo.addEventListener(listener);
+
+            NativeInterface.eventEmitter.emit(
+              DEVICE_CONNECTIVITY_EVENT,
+              testCase.expectedConnectionInfo,
+            );
+
+            expect(listener).toBeCalledTimes(1);
+
+            if (testCase.expectFetchToBeCalled) {
+              expect(fetchMock).toHaveBeenCalled();
+            } else {
+              expect(fetchMock).not.toHaveBeenCalled();
+            }
+          });
+        });
+      });
     });
   });
 });
