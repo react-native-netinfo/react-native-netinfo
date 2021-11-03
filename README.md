@@ -307,7 +307,8 @@ The configuration options for the library.
 | `reachabilityTest`           | `(response: Response) => boolean` | A function which is passed the `Response` from calling the reachability URL. It should return `true` if the response indicates that the internet is reachable. Only used on platforms which do not supply internet reachability natively. |
 | `reachabilityShortTimeout`   | `number`                          | The number of milliseconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively.                                                 |
 | `reachabilityLongTimeout`    | `number`                          | The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively.                                                     |
-| `reachabilityRequestTimeout` | `number`                          | The number of milliseconds that a reachability check is allowed to take before failing. Only used on platforms which do not supply internet reachability natively.                                                                        |
+| `reachabilityRequestTimeout` | `number`                          | The number of milliseconds that a reachability check is allowed to take before failing. Only used on platforms which do not supply internet reachability natively.                                                   |                    
+| `reachabilityShouldRun` | `() => boolean`                          | A function which returns a boolean to determine if checkInternetReachability should be run.
 
 ### Methods
 
@@ -325,6 +326,7 @@ NetInfo.configure({
   reachabilityLongTimeout: 60 * 1000, // 60s
   reachabilityShortTimeout: 5 * 1000, // 5s
   reachabilityRequestTimeout: 15 * 1000, // 15s
+  reachabilityShouldRun: () => true,
 });
 ```
 
@@ -378,6 +380,7 @@ const YourComponent = () => {
     reachabilityLongTimeout: 60 * 1000, // 60s
     reachabilityShortTimeout: 5 * 1000, // 5s
     reachabilityRequestTimeout: 15 * 1000, // 15s
+    reachabilityShouldRun: () => true,
   });
 
   // ...
