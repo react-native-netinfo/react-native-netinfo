@@ -14,10 +14,13 @@ import {NetInfoStateType, NetInfoCellularGeneration} from '../internal/types';
 import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
 
 // Mock modules
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('jest-fetch-mock').enableMocks();
+fetchMock.enableMocks();
 jest.mock('../internal/nativeModule');
 const mockNativeModule = jest.requireMock('../internal/nativeModule').default;
+
+beforeEach(() => {
+  mockNativeModule.getCurrentState.mockReset();
+});
 
 describe('@react-native-community/netinfo fetch', () => {
   describe('with cellular data types', () => {
@@ -317,7 +320,19 @@ describe('@react-native-community/netinfo fetch', () => {
     it('will properly reject a promise if the connection request cannot be resolved', async () => {
       const rejectionMessage = 'nope, no connection info for you';
 
-      mockNativeModule.getCurrentState.mockRejectedValue(rejectionMessage);
+      mockNativeModule.getCurrentState.mockResolvedValueOnce({
+        type: NetInfoStateType.cellular,
+        isConnected: true,
+        isInternetReachable: true,
+        details: {
+          isConnectionExpensive: true,
+          cellularGeneration: NetInfoCellularGeneration['4g'],
+        },
+      });
+
+      mockNativeModule.getCurrentState.mockRejectedValue(
+        new Error(rejectionMessage),
+      );
 
       try {
         await NetInfo.fetch();
@@ -329,7 +344,7 @@ describe('@react-native-community/netinfo fetch', () => {
     });
   });
 
-  describe('With configuration options fetch', () => {
+  describe('with configuration options', () => {
     beforeEach(() => {
       fetchMock.resetMocks();
     });
@@ -374,24 +389,21 @@ describe('@react-native-community/netinfo fetch', () => {
 
       dataProvider().forEach(testCase => {
         it(testCase.description, async () => {
-          fetchMock.mockResponse('', {status: 204});
-
-          NetInfo.configure(testCase.configuration);
-
           mockNativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
           );
+
+          // Configure NetInfo.
+          NetInfo.configure(testCase.configuration);
 
           await expect(NetInfo.fetch()).resolves.toEqual({
             ...testCase.expectedConnectionInfo,
             isInternetReachable: testCase.expectedIsInternetReachable,
           });
 
-          if (testCase.expectFetchToBeCalled) {
-            expect(fetchMock).toHaveBeenCalled();
-          } else {
-            expect(fetchMock).not.toHaveBeenCalled();
-          }
+          testCase.expectFetchToBeCalled
+            ? expect(fetchMock).toHaveBeenCalled()
+            : expect(fetchMock).not.toHaveBeenCalled();
         });
       });
     });
