@@ -1,3 +1,10 @@
+## [6.0.5](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.4...v6.0.5) (2021-11-03)
+
+
+### Bug Fixes
+
+* **jest:** mock return value not resolve value for useNetInfo mock ([#515](https://github.com/react-native-netinfo/react-native-netinfo/issues/515)) ([cfde0aa](https://github.com/react-native-netinfo/react-native-netinfo/commit/cfde0aa))
+
 ## [6.0.4](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.3...v6.0.4) (2021-10-22)
 
 
