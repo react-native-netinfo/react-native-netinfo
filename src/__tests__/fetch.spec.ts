@@ -320,6 +320,7 @@ describe('@react-native-community/netinfo fetch', () => {
     it('will properly reject a promise if the connection request cannot be resolved', async () => {
       const rejectionMessage = 'nope, no connection info for you';
 
+      // Mock `_fetchCurrentState` in the State constructor.
       mockNativeModule.getCurrentState.mockResolvedValueOnce({
         type: NetInfoStateType.cellular,
         isConnected: true,
