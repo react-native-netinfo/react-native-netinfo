@@ -1,3 +1,10 @@
+## [6.0.6](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.5...v6.0.6) (2021-11-04)
+
+
+### Bug Fixes
+
+* **windows, crash:** try/catch fetching network profile, new windows example app ([#511](https://github.com/react-native-netinfo/react-native-netinfo/issues/511)) ([ef3ac76](https://github.com/react-native-netinfo/react-native-netinfo/commit/ef3ac76)), closes [#454](https://github.com/react-native-netinfo/react-native-netinfo/issues/454)
+
 ## [6.0.5](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.4...v6.0.5) (2021-11-03)
 
 
