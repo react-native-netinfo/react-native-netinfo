@@ -1,3 +1,10 @@
+# [6.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.6...v6.1.0) (2021-11-07)
+
+
+### Features
+
+* reachability test may be enabled/disabled via user-supplied function ([#513](https://github.com/react-native-netinfo/react-native-netinfo/issues/513)) ([83c1e0d](https://github.com/react-native-netinfo/react-native-netinfo/commit/83c1e0d))
+
 ## [6.0.6](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.5...v6.0.6) (2021-11-04)
 
 
