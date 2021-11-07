@@ -112,4 +112,5 @@ export interface NetInfoConfiguration {
   reachabilityLongTimeout: number;
   reachabilityShortTimeout: number;
   reachabilityRequestTimeout: number;
+  reachabilityShouldRun: () => boolean;
 }

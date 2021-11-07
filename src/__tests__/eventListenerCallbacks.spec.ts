@@ -7,30 +7,30 @@
  * @format
  */
 
+import fetchMock from 'jest-fetch-mock';
 import NetInfo from '../index';
 import NativeInterface from '../internal/nativeInterface';
 import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
 import {NetInfoStateType, NetInfoCellularGeneration} from '../internal/types';
 
 // Mock modules
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('jest-fetch-mock').enableMocks();
+fetchMock.enableMocks();
 jest.mock('../internal/nativeModule');
 const mockNativeModule = jest.requireMock('../internal/nativeModule').default;
 
-describe('react-native-community/netinfo', () => {
-  beforeEach(() => {
-    mockNativeModule.getCurrentState.mockResolvedValue({
-      type: NetInfoStateType.cellular,
-      isConnected: true,
-      isInternetReachable: true,
-      details: {
-        isConnectionExpensive: true,
-        cellularGeneration: NetInfoCellularGeneration['4g'],
-      },
-    });
+beforeAll(() => {
+  mockNativeModule.getCurrentState.mockResolvedValue({
+    type: NetInfoStateType.cellular,
+    isConnected: true,
+    isInternetReachable: true,
+    details: {
+      isConnectionExpensive: true,
+      cellularGeneration: NetInfoCellularGeneration['4g'],
+    },
   });
+});
 
+describe('@react-native-community/netinfo listener', () => {
   describe('Event listener callbacks', () => {
     it('should call the listener on listening', done => {
       const listener = jest.fn();
@@ -253,6 +253,80 @@ describe('react-native-community/netinfo', () => {
 
       expect(listener1).not.toBeCalled();
       expect(listener2).toBeCalledWith(expectedConnectionInfo);
+    });
+
+    describe('with configuration options', () => {
+      beforeAll(() => {
+        // Prevent `_checkInternetReachability` from rescheduling.
+        jest.useFakeTimers();
+      });
+
+      beforeEach(() => {
+        fetchMock.resetMocks();
+      });
+
+      describe('reachabilityShouldRun', () => {
+        function dataProvider() {
+          return [
+            {
+              description: 'reachabilityShouldRun returns true',
+              configuration: {
+                reachabilityShouldRun: () => true,
+              },
+              expectedConnectionInfo: {
+                type: 'wifi',
+                isConnected: true,
+                details: {
+                  isConnectionExpensive: true,
+                  cellularGeneration: 'unknown',
+                },
+              },
+              expectedIsInternetReachable: null,
+              expectFetchToBeCalled: true,
+            },
+            {
+              description: 'reachabilityShouldRun returns false',
+              configuration: {
+                reachabilityShouldRun: () => false,
+              },
+              expectedConnectionInfo: {
+                type: 'wifi',
+                isConnected: true,
+                details: {
+                  isConnectionExpensive: true,
+                  cellularGeneration: 'unknown',
+                },
+              },
+              expectedIsInternetReachable: false,
+              expectFetchToBeCalled: false,
+            },
+          ];
+        }
+
+        dataProvider().forEach(testCase => {
+          it(testCase.description, () => {
+            NetInfo.configure(testCase.configuration);
+
+            const listener = jest.fn();
+            NetInfo.addEventListener(listener);
+
+            NativeInterface.eventEmitter.emit(
+              DEVICE_CONNECTIVITY_EVENT,
+              testCase.expectedConnectionInfo,
+            );
+
+            expect(listener).toBeCalledWith({
+              ...testCase.expectedConnectionInfo,
+              isInternetReachable: testCase.expectedIsInternetReachable,
+            });
+            expect(listener).toBeCalledTimes(1);
+
+            testCase.expectFetchToBeCalled
+              ? expect(fetchMock).toHaveBeenCalled()
+              : expect(fetchMock).not.toHaveBeenCalled();
+          });
+        });
+      });
     });
   });
 });
