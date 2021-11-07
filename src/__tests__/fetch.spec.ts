@@ -346,6 +346,11 @@ describe('@react-native-community/netinfo fetch', () => {
   });
 
   describe('with configuration options', () => {
+    beforeAll(() => {
+      // Prevent `_checkInternetReachability` from rescheduling.
+      jest.useFakeTimers();
+    });
+
     beforeEach(() => {
       fetchMock.resetMocks();
     });

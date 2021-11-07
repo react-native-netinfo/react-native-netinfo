@@ -256,6 +256,11 @@ describe('@react-native-community/netinfo listener', () => {
     });
 
     describe('with configuration options', () => {
+      beforeAll(() => {
+        // Prevent `_checkInternetReachability` from rescheduling.
+        jest.useFakeTimers();
+      });
+
       beforeEach(() => {
         fetchMock.resetMocks();
       });
