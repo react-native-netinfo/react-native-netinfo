@@ -22,7 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RNCConnectionStateWatcher : NSObject
 
 - (instancetype)initWithDelegate:(id<RNCConnectionStateWatcherDelegate>)delegate;
-- (RNCConnectionState *)currentState;
+
+@property (nonnull, strong, nonatomic, readonly) RNCConnectionState *state;
 
 @end
 

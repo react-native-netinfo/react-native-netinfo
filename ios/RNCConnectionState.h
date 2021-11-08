@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
+@import Network;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,7 +28,7 @@ static NSString *const RNCCellularGeneration4g = @"4g";
 @interface RNCConnectionState : NSObject
 
 - (instancetype)init;
-- (instancetype)initWithReachabilityFlags:(SCNetworkReachabilityFlags)flags;
+- (instancetype)initWithPath:(nw_path_t)path;
 - (BOOL)isEqualToConnectionState:(RNCConnectionState *)otherState;
 
 @property (nonatomic, strong, readonly) NSString *type;
