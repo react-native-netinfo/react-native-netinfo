@@ -1,3 +1,10 @@
+## [6.1.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.1.0...v6.1.1) (2021-11-13)
+
+
+### Bug Fixes
+
+* **android:** declare java 1.8 feature usage so assembleInstrumentedTest builds work ([#466](https://github.com/react-native-netinfo/react-native-netinfo/issues/466)) ([48d4364](https://github.com/react-native-netinfo/react-native-netinfo/commit/48d4364))
+
 # [6.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.6...v6.1.0) (2021-11-07)
 
 
