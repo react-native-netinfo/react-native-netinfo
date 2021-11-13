@@ -30,18 +30,15 @@ Linking the package manually is not required anymore with [Autolinking](https://
 
 - **Android Platform with AndroidX:**
 
-  Using [Jetifier tool](https://github.com/mikehardy/jetifier) for backward-compatibility.
-
   Modify your **android/build.gradle** configuration:
   ```
   buildscript {
     ext {
-      buildToolsVersion = "28.0.3"
-      minSdkVersion = 16
-      compileSdkVersion = 28
-      targetSdkVersion = 28
-      androidXCore = "1.7.0" // Check versions here: https://developer.android.com/jetpack/androidx/releases/core
-      // Put here other AndroidX dependencies
+      buildToolsVersion = "xx.yy.zz"
+      minSdkVersion = xyz
+      compileSdkVersion = xyz
+      targetSdkVersion = xyz
+      androidXCore = "1.7.0" // <-- Add this. Check versions here: https://developer.android.com/jetpack/androidx/releases/core
     }
   ```
 
