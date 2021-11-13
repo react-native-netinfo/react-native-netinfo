@@ -28,47 +28,23 @@ Linking the package manually is not required anymore with [Autolinking](https://
 
   `$ npx pod-install` # CocoaPods on iOS needs this extra step
 
-- **Android Platform with Android Support:**
-
-  Using [Jetifier tool](https://github.com/mikehardy/jetifier) for backward-compatibility.
+- **Android Platform with AndroidX:**
 
   Modify your **android/build.gradle** configuration:
   ```
   buildscript {
     ext {
-      buildToolsVersion = "28.0.3"
-      minSdkVersion = 16
-      compileSdkVersion = 28
-      targetSdkVersion = 28
-      # Only using Android Support libraries
-      supportLibVersion = "28.0.0"
+      buildToolsVersion = "xx.yy.zz"
+      minSdkVersion = xyz
+      compileSdkVersion = xyz
+      targetSdkVersion = xyz
+      androidXCore = "1.7.0" // <-- Add this. Check versions here: https://developer.android.com/jetpack/androidx/releases/core
     }
   ```
 
 - **macOS Platform:**
 
   Autolinking is not yet available on macOS.  See the [Manual linking steps for macOS](#manual-linking-macos) below.
-
-#### Using React Native < 0.60
-
-You then need to link the native parts of the library for the platforms you are using. The easiest way to link the library is using the CLI tool by running this command from the root of your project:
-
-```
-react-native link @react-native-community/netinfo
-```
-
-If you can't or don't want to use the CLI tool, you can also manually link the library using the instructions below (click on the arrow to show them):
-
-<details>
-<summary>Manually link the library on iOS</summary>
-
-Either follow the [instructions in the React Native documentation](https://facebook.github.io/react-native/docs/linking-libraries-ios#manual-linking) to manually link the framework or link using [Cocoapods](https://cocoapods.org) by adding this to your `Podfile`:
-
-```ruby
-pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
-```
-
-</details>
 
 <details id='manual-linking-macos'>
 <summary>Manually link the library on macOS</summary>
@@ -83,46 +59,11 @@ pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/ne
 
 </details>
 
-<details>
-<summary>Manually link the library on Android</summary>
+- **Windows Platform:**
 
-Make the following changes:
+  Autolinking status is unknown on Windows. If you need to manually link, see the [Manual linking steps for Windows](#manual-linking-windows) below.
 
-#### `android/settings.gradle`
-```groovy
-include ':react-native-community-netinfo'
-project(':react-native-community-netinfo').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/netinfo/android')
-```
-
-#### `android/app/build.gradle`
-```groovy
-dependencies {
-   ...
-   implementation project(':react-native-community-netinfo')
-}
-```
-
-#### `android/app/src/main/.../MainApplication.java`
-On top, where imports are:
-
-```java
-import com.reactnativecommunity.netinfo.NetInfoPackage;
-```
-
-Add the `NetInfoPackage` class to your list of exported packages.
-
-```java
-@Override
-protected List<ReactPackage> getPackages() {
-    return Arrays.asList(
-            new MainReactPackage(),
-            new NetInfoPackage()
-    );
-}
-```
-</details>
-
-<details>
+<details id='manual-linking-windows'>
 <summary>Manually link the library on Windows</summary>
 
 #### Link C++ implementation
@@ -155,14 +96,11 @@ protected List<ReactPackage> getPackages() {
 </details>
 
 ## React Native Compatibility
-To use this library you need to ensure you are using the correct version of React Native. If you are using a version of React Native that is lower than `0.57` you will need to upgrade that before attempting to use this library.
-
-| `@react-native-community/netinfo` version | Required React Native Version                                                     |
-| ----------------------------------------- | --------------------------------------------------------------------------------- |
-| `4.x.x` & `5.x.x`                         | `>= 0.60` or `>= 0.59` if using [Jetifier](https://github.com/mikehardy/jetifier) |
-| `3.x.x`                                   | `>= 0.59`                                                                         |
-| `2.x.x`                                   | `>= 0.57`                                                                         |
-| `1.x.x`                                   | `>= 0.57`                                                                         |
+To use this library you need to ensure you are using the correct version of React Native.
+We support react-native 0.60+ with auto-linking.
+  
+If you are using a version of React Native that is lower than 0.60 check older versions of this README for details,
+but no support will be provided.
 
 ## Browser Compatilibity
 The web implementation heavily depends on the [Network Information API](https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API) which is still an is an experimental technology and thus it's not supported in every browser.
@@ -435,6 +373,10 @@ There is a [known](http://openradar.appspot.com/14585459) [issue](http://www.ope
 
 ## Maintainers
 
+* [Mike Hardy](https://github.com/mikehardy)
+
+### Maintainers Emeritus
+  
 * [Matt Oakes](https://github.com/matt-oakes) - [Freelance React Native Developer](http://mattoakes.net)
 * [Mike Diarmid](https://github.com/salakar) - [Invertase](https://invertase.io)
 
