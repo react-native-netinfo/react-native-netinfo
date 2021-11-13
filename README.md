@@ -1,7 +1,7 @@
 
 # `@react-native-community/netinfo`
 
-[![CircleCI Status](https://img.shields.io/circleci/project/github/react-native-netinfo/react-native-netinfo/master.svg)](https://circleci.com/gh/react-native-netinfo/workflows/react-native-netinfo/tree/master) ![Supports Android, iOS, macOS, and Windows](https://img.shields.io/badge/platforms-android%20|%20ios%20|%20macos%20|%20windows-lightgrey.svg) ![MIT License](https://img.shields.io/npm/l/@react-native-community/netinfo.svg) [![Lean Core Extracted](https://img.shields.io/badge/Lean%20Core-Extracted-brightgreen.svg)](https://github.com/facebook/react-native/issues/23313)
+[![Actions](https://github.com/react-native-netinfo/react-native-netinfo/actions/workflows/ci.yml/badge.svg)](https://github.com/react-native-netinfo/react-native-netinfo/actions/workflows/ci.yml) ![Supports Android, iOS, macOS, and Windows](https://img.shields.io/badge/platforms-android%20|%20ios%20|%20macos%20|%20windows-lightgrey.svg) ![MIT License](https://img.shields.io/npm/l/@react-native-community/netinfo.svg) [![Lean Core Extracted](https://img.shields.io/badge/Lean%20Core-Extracted-brightgreen.svg)](https://github.com/facebook/react-native/issues/23313)
 
 React Native Network Info API for Android, iOS, macOS & Windows. It allows you to get information on:
 
@@ -30,6 +30,8 @@ Linking the package manually is not required anymore with [Autolinking](https://
 
 - **Android Platform with AndroidX:**
 
+  Using [Jetifier tool](https://github.com/mikehardy/jetifier) for backward-compatibility.
+
   Modify your **android/build.gradle** configuration:
   ```
   buildscript {
@@ -38,7 +40,7 @@ Linking the package manually is not required anymore with [Autolinking](https://
       minSdkVersion = 16
       compileSdkVersion = 28
       targetSdkVersion = 28
-      androidXCore = "1.3.2" // Check versions here: https://developer.android.com/jetpack/androidx/releases/core
+      androidXCore = "1.7.0" // Check versions here: https://developer.android.com/jetpack/androidx/releases/core
       // Put here other AndroidX dependencies
     }
   ```
@@ -97,14 +99,11 @@ Linking the package manually is not required anymore with [Autolinking](https://
 </details>
 
 ## React Native Compatibility
-To use this library you need to ensure you are using the correct version of React Native. If you are using a version of React Native that is lower than `0.57` you will need to upgrade that before attempting to use this library.
-
-| `@react-native-community/netinfo` version | Required React Native Version                                                     |
-| ----------------------------------------- | --------------------------------------------------------------------------------- |
-| `4.x.x` & `5.x.x`                         | `>= 0.60` or `>= 0.59` if using [Jetifier](https://github.com/mikehardy/jetifier) |
-| `3.x.x`                                   | `>= 0.59`                                                                         |
-| `2.x.x`                                   | `>= 0.57`                                                                         |
-| `1.x.x`                                   | `>= 0.57`                                                                         |
+To use this library you need to ensure you are using the correct version of React Native.
+We support react-native 0.60+ with auto-linking.
+  
+If you are using a version of React Native that is lower than 0.60 check older versions of this README for details,
+but no support will be provided.
 
 ## Browser Compatilibity
 The web implementation heavily depends on the [Network Information API](https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API) which is still an is an experimental technology and thus it's not supported in every browser.
@@ -243,13 +242,14 @@ Describes the current generation of the `cellular` connection. It is an enum wit
 #### `NetInfoConfiguration`
 The configuration options for the library.
 
-| Property                     | Type                              | Description                                                                                                                                                                                                                               |
-| ---------------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `reachabilityUrl`            | `string`                          | The URL to call to test if the internet is reachable. Only used on platforms which do not supply internet reachability natively.                                                                                                          |
-| `reachabilityTest`           | `(response: Response) => boolean` | A function which is passed the `Response` from calling the reachability URL. It should return `true` if the response indicates that the internet is reachable. Only used on platforms which do not supply internet reachability natively. |
-| `reachabilityShortTimeout`   | `number`                          | The number of milliseconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively.                                                 |
-| `reachabilityLongTimeout`    | `number`                          | The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively.                                                     |
-| `reachabilityRequestTimeout` | `number`                          | The number of milliseconds that a reachability check is allowed to take before failing. Only used on platforms which do not supply internet reachability natively.                                                                        |
+| Property | Type | Default | Description
+| ---------------------------- | --------------------------------- | ----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | 
+| `reachabilityUrl`            | `string`                          | `https://clients3.google.com/generate_204` | The URL to call to test if the internet is reachable. Only used on platforms which do not supply internet reachability natively.                                                                                                          |
+| `reachabilityTest`           | `(response: Response) => boolean` | `Promise.resolve(response.status === 204)` | A function which is passed the `Response` from calling the reachability URL. It should return `true` if the response indicates that the internet is reachable. Only used on platforms which do not supply internet reachability natively. |
+| `reachabilityShortTimeout`   | `number`                          | 5 seconds | The number of milliseconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively.                                                 |
+| `reachabilityLongTimeout`    | `number`                          | 60 seconds | The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively.                                                     |
+| `reachabilityRequestTimeout` | `number`                          | 15 seconds | The number of milliseconds that a reachability check is allowed to take before failing. Only used on platforms which do not supply internet reachability natively.                                                   |                    
+| `reachabilityShouldRun` | `() => boolean`                          | `() => true` | A function which returns a boolean to determine if checkInternetReachability should be run.
 
 ### Methods
 
@@ -267,6 +267,7 @@ NetInfo.configure({
   reachabilityLongTimeout: 60 * 1000, // 60s
   reachabilityShortTimeout: 5 * 1000, // 5s
   reachabilityRequestTimeout: 15 * 1000, // 15s
+  reachabilityShouldRun: () => true,
 });
 ```
 
@@ -320,6 +321,7 @@ const YourComponent = () => {
     reachabilityLongTimeout: 60 * 1000, // 60s
     reachabilityShortTimeout: 5 * 1000, // 5s
     reachabilityRequestTimeout: 15 * 1000, // 15s
+    reachabilityShouldRun: () => true,
   });
 
   // ...
@@ -352,12 +354,6 @@ NetInfo.fetch("wifi").then(state => {
 
 ### Errors when building on Android
 
-This library was migrated from using the support library to AndroidX in version `4.0.0`. All of your depenencies must be using either the support library *or* AndroidX. Using a mixture of the two is not possible.
-
-From React Native 0.60 AndroidX is used by default.
-
-If you need to either convert this library back to the support library (to use an older React Native version) or convert other libraries forward to use AndroidX (if they have not been updated yet), you can use the [Jetifier](https://github.com/mikehardy/jetifier) tool.
-
 ### Errors while running Jest tests
 
 If you do not have a Jest Setup file configured, you should add the following to your Jest settings and create the `jest.setup.js` file in project root:
@@ -380,6 +376,10 @@ There is a [known](http://openradar.appspot.com/14585459) [issue](http://www.ope
 
 ## Maintainers
 
+* [Mike Hardy](https://github.com/mikehardy)
+
+### Maintainers Emeritus
+  
 * [Matt Oakes](https://github.com/matt-oakes) - [Freelance React Native Developer](http://mattoakes.net)
 * [Mike Diarmid](https://github.com/salakar) - [Invertase](https://invertase.io)
 

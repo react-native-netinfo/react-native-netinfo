@@ -17,17 +17,30 @@
 
 const macSwitch = '--use-react-native-macos';
 const windowsSwitch = '--use-react-native-windows';
-
+let config = {
+  project: {
+    ios: {
+      // this works but only in combination with `yarn react-native run-ios --project-path `pwd`/ios` - at least it works...
+      project: './example/ios/NetInfoExample.xcodeproj',
+    },
+    android:{
+      sourceDir: 'example/android',
+    }
+  },
+}
 if (process.argv.includes(macSwitch)) {
   process.argv = process.argv.filter(arg => arg !== macSwitch);
   process.argv.push('--config=metro.config.macos.js');
-  module.exports = {
+  config = {
+    ...config,
     reactNativePath: 'node_modules/react-native-macos',
   };
 } else if (process.argv.includes(windowsSwitch)) {
   process.argv = process.argv.filter(arg => arg !== windowsSwitch);
   process.argv.push('--config=metro.config.windows.js');
-  module.exports = {
+  config = {
+    ...config,
     reactNativePath: 'node_modules/react-native-windows',
   };
 }
+module.exports = config

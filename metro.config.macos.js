@@ -3,8 +3,11 @@
  * integration tests during local development or on CI services.
  */
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path');
-const blacklist = require('metro-config/src/defaults/blacklist');
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const exclusionList = require('metro-config/src/defaults/exclusionList');
 
 const rnmPath = path.resolve(__dirname, 'node_modules/react-native-macos');
 
@@ -14,6 +17,6 @@ module.exports = {
       'react-native': rnmPath,
     },
     platforms: ['macos', 'ios'],
-    blacklistRE: blacklist([/node_modules\/react-native\/.*/]),
+    blockList: exclusionList([/node_modules\/react-native\/.*/]),
   },
 };

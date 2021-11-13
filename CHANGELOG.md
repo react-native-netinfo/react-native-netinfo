@@ -1,3 +1,53 @@
+# [6.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.6...v6.1.0) (2021-11-07)
+
+
+### Features
+
+* reachability test may be enabled/disabled via user-supplied function ([#513](https://github.com/react-native-netinfo/react-native-netinfo/issues/513)) ([83c1e0d](https://github.com/react-native-netinfo/react-native-netinfo/commit/83c1e0d))
+
+## [6.0.6](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.5...v6.0.6) (2021-11-04)
+
+
+### Bug Fixes
+
+* **windows, crash:** try/catch fetching network profile, new windows example app ([#511](https://github.com/react-native-netinfo/react-native-netinfo/issues/511)) ([ef3ac76](https://github.com/react-native-netinfo/react-native-netinfo/commit/ef3ac76)), closes [#454](https://github.com/react-native-netinfo/react-native-netinfo/issues/454)
+
+## [6.0.5](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.4...v6.0.5) (2021-11-03)
+
+
+### Bug Fixes
+
+* **jest:** mock return value not resolve value for useNetInfo mock ([#515](https://github.com/react-native-netinfo/react-native-netinfo/issues/515)) ([cfde0aa](https://github.com/react-native-netinfo/react-native-netinfo/commit/cfde0aa))
+
+## [6.0.4](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.3...v6.0.4) (2021-10-22)
+
+
+### Bug Fixes
+
+* **android:** use ConnectivityManager directly, drop androidx dependency ([#509](https://github.com/react-native-netinfo/react-native-netinfo/issues/509)) ([2569f56](https://github.com/react-native-netinfo/react-native-netinfo/commit/2569f56))
+
+## [6.0.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.2...v6.0.3) (2021-10-22)
+
+
+### Bug Fixes
+
+* **android, jcenter:** remove jcenter dependency / update example ([#500](https://github.com/react-native-netinfo/react-native-netinfo/issues/500)) ([94c5398](https://github.com/react-native-netinfo/react-native-netinfo/commit/94c5398))
+
+## [6.0.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.1...v6.0.2) (2021-09-03)
+
+
+### Bug Fixes
+
+* **ios:** remove iOS listener stubs added for RN0.65 compat, they caused a regression ([#493](https://github.com/react-native-netinfo/react-native-netinfo/issues/493)) ([a52b0a5](https://github.com/react-native-netinfo/react-native-netinfo/commit/a52b0a5))
+
+## [6.0.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.0...v6.0.1) (2021-08-24)
+
+
+### Bug Fixes
+
+* Ensure warnings are not shown on React Native 0.65 ([#487](https://github.com/react-native-netinfo/react-native-netinfo/issues/487) by [@lubomyr](https://github.com/lubomyr)) ([ac0ed65](https://github.com/react-native-netinfo/react-native-netinfo/commit/ac0ed65))
+* **android:** isConnected is incorrect for wifi networks only the app has access to ([#443](https://github.com/react-native-netinfo/react-native-netinfo/issues/443) by [@eliaslecomte](https://github.com/eliaslecomte)) ([7084771](https://github.com/react-native-netinfo/react-native-netinfo/commit/7084771))
+
 # [6.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v5.9.10...v6.0.0) (2021-02-19)
 
 

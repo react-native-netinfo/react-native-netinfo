@@ -7,15 +7,20 @@
  * @format
  */
 
+import fetchMock from 'jest-fetch-mock';
 import NetInfo from '../index';
 import NativeInterface from '../internal/nativeInterface';
 import {NetInfoStateType, NetInfoCellularGeneration} from '../internal/types';
 import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
 
 // Mock modules
-require('jest-fetch-mock').enableMocks();
+fetchMock.enableMocks();
 jest.mock('../internal/nativeModule');
 const mockNativeModule = jest.requireMock('../internal/nativeModule').default;
+
+beforeEach(() => {
+  mockNativeModule.getCurrentState.mockReset();
+});
 
 describe('@react-native-community/netinfo fetch', () => {
   describe('with cellular data types', () => {
@@ -315,13 +320,98 @@ describe('@react-native-community/netinfo fetch', () => {
     it('will properly reject a promise if the connection request cannot be resolved', async () => {
       const rejectionMessage = 'nope, no connection info for you';
 
-      mockNativeModule.getCurrentState.mockRejectedValue(rejectionMessage);
+      // Mock `_fetchCurrentState` in the State constructor.
+      mockNativeModule.getCurrentState.mockResolvedValueOnce({
+        type: NetInfoStateType.cellular,
+        isConnected: true,
+        isInternetReachable: true,
+        details: {
+          isConnectionExpensive: true,
+          cellularGeneration: NetInfoCellularGeneration['4g'],
+        },
+      });
+
+      mockNativeModule.getCurrentState.mockRejectedValue(
+        new Error(rejectionMessage),
+      );
 
       try {
         await NetInfo.fetch();
       } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         expect(error.message).toMatch(rejectionMessage);
       }
+    });
+  });
+
+  describe('with configuration options', () => {
+    beforeAll(() => {
+      // Prevent `_checkInternetReachability` from rescheduling.
+      jest.useFakeTimers();
+    });
+
+    beforeEach(() => {
+      fetchMock.resetMocks();
+    });
+
+    describe('reachabilityShouldRun', () => {
+      function dataProvider() {
+        return [
+          {
+            description: 'reachabilityShouldRun returns true',
+            configuration: {
+              reachabilityShouldRun: () => true,
+            },
+            expectedConnectionInfo: {
+              type: 'wifi',
+              isConnected: true,
+              details: {
+                isConnectionExpensive: true,
+                cellularGeneration: 'unknown',
+              },
+            },
+            expectedIsInternetReachable: null,
+            expectFetchToBeCalled: true,
+          },
+          {
+            description: 'reachabilityShouldRun returns false',
+            configuration: {
+              reachabilityShouldRun: () => false,
+            },
+            expectedConnectionInfo: {
+              type: 'wifi',
+              isConnected: true,
+              details: {
+                isConnectionExpensive: true,
+                cellularGeneration: 'unknown',
+              },
+            },
+            expectedIsInternetReachable: false,
+            expectFetchToBeCalled: false,
+          },
+        ];
+      }
+
+      dataProvider().forEach(testCase => {
+        it(testCase.description, async () => {
+          mockNativeModule.getCurrentState.mockResolvedValue(
+            testCase.expectedConnectionInfo,
+          );
+
+          // Configure NetInfo.
+          NetInfo.configure(testCase.configuration);
+
+          await expect(NetInfo.fetch()).resolves.toEqual({
+            ...testCase.expectedConnectionInfo,
+            isInternetReachable: testCase.expectedIsInternetReachable,
+          });
+
+          testCase.expectFetchToBeCalled
+            ? expect(fetchMock).toHaveBeenCalled()
+            : expect(fetchMock).not.toHaveBeenCalled();
+        });
+      });
     });
   });
 });
