@@ -1,3 +1,10 @@
+## [6.2.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.2.0...v6.2.1) (2021-11-15)
+
+
+### Bug Fixes
+
+* **android:** fix for outdated network states ([#510](https://github.com/react-native-netinfo/react-native-netinfo/issues/510)) ([d5f06ba](https://github.com/react-native-netinfo/react-native-netinfo/commit/d5f06ba))
+
 # [6.2.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.1.1...v6.2.0) (2021-11-13)
 
 
