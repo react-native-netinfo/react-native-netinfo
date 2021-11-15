@@ -2613,10 +2613,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-plugin/-/eslint-plugin-1.1.0.tgz#e42b1bef12d2415411519fd528e64b593b1363dc"
   integrity sha512-W/J0fNYVO01tioHjvYWQ9m6RgndVtbElzYozBq1ZPrHO/iCzlqoySHl4gO/fpCl9QEFjvJfjPgtPMTMlsoq5DQ==
 
-"@react-native-windows/cli@0.65.2":
-  version "0.65.2"
-  resolved "https://registry.yarnpkg.com/@react-native-windows/cli/-/cli-0.65.2.tgz#92b2e5a7028dc60051aa2330445eee51b9af9134"
-  integrity sha512-KTtc11rjinVHqGw0HqHNKFP2Ex34A8T3DLLGRiAQ/XHcN5jBXGdPDW9zoRZh9bUpk9XMb2Q/Cn3YAjwQd56czg==
+"@react-native-windows/cli@0.65.3":
+  version "0.65.3"
+  resolved "https://registry.yarnpkg.com/@react-native-windows/cli/-/cli-0.65.3.tgz#948f378b878a8ffc26e57a9dcdbf1f13022a596c"
+  integrity sha512-3cDyZkzYEOnwr9c1+nppsmQKjsG9QSd8/INUYYSvypwhOMHs7M/L7epECUSlUhh3ldGYAMWQhqvZ53KHgSBL1w==
   dependencies:
     "@react-native-windows/package-utils" "0.65.1"
     "@react-native-windows/telemetry" "0.65.1"
@@ -13809,17 +13809,17 @@ react-native-web@^0.17.5:
     normalize-css-color "^1.0.2"
     prop-types "^15.6.0"
 
-react-native-windows@0.65.6:
-  version "0.65.6"
-  resolved "https://registry.yarnpkg.com/react-native-windows/-/react-native-windows-0.65.6.tgz#ab87d98aab91cb7346bb2f421454eb593ec6f72e"
-  integrity sha512-D3gS4uX72ssb2IzF9TbAwKmIIRx464b02aptZgeA+cE/eaBPtuJjJoUukBKiWog68aAO62LRGp9HfwJb9vEKPw==
+react-native-windows@0.65.8:
+  version "0.65.8"
+  resolved "https://registry.yarnpkg.com/react-native-windows/-/react-native-windows-0.65.8.tgz#e11d6f699e484ddb3e3b638b2406390dc391ce1f"
+  integrity sha512-6BEx5NbKguoDBTpM/f3lCotF2TUsEb1y2U+8/HckuM1f+ZPD5jWbcyB+Bj73MKLCj2hjrZTowDS9BE96MyE1MA==
   dependencies:
     "@babel/runtime" "^7.0.0"
     "@jest/create-cache-key-function" "^27.0.1"
     "@react-native-community/cli" "^6.0.0"
     "@react-native-community/cli-platform-android" "^6.0.0"
     "@react-native-community/cli-platform-ios" "^6.0.0"
-    "@react-native-windows/cli" "0.65.2"
+    "@react-native-windows/cli" "0.65.3"
     "@react-native/assets" "1.0.0"
     "@react-native/normalize-color" "1.0.0"
     "@react-native/polyfills" "1.0.0"
