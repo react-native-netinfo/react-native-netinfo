@@ -1,3 +1,13 @@
+# [7.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.2.1...v7.0.0) (2021-11-16)
+
+
+* fix(windows)!: Fix autolinking and remove legacy projects (#521) ([45628d8](https://github.com/react-native-netinfo/react-native-netinfo/commit/45628d8)), closes [#521](https://github.com/react-native-netinfo/react-native-netinfo/issues/521)
+
+
+### BREAKING CHANGES
+
+* Drop support for react-native-windows 0.61 and lower. Update to RNW 0.62 or higher
+
 ## [6.2.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.2.0...v6.2.1) (2021-11-15)
 
 
