@@ -61,12 +61,12 @@ Linking the package manually is not required anymore with [Autolinking](https://
 
 - **Windows Platform:**
 
-  Autolinking status is unknown on Windows. If you need to manually link, see the [Manual linking steps for Windows](#manual-linking-windows) below.
+  Autolinking works on RNW >= 0.63. If you need to manually link, see the [Manual linking steps for Windows](#manual-linking-windows) below.
 
 <details id='manual-linking-windows'>
 <summary>Manually link the library on Windows</summary>
 
-#### Link C++ implementation
+#### Link to your C++ app (RNW >= 0.62)
 * Open the solution in Visual Studio for your Windows apps
 * Right click in the Explorer and click Add > Existing Project...
 * Navigate to `./<app-name>/node_modules/@react-native-community/netinfo/windows/RNCNetInfoCPP/` and add `RNCNetInfoCPP.vcxproj`
@@ -75,23 +75,14 @@ Linking the package manually is not required anymore with [Autolinking](https://
 * Open `pch.h`, add `#include "winrt/ReactNativeNetInfo.h"`
 * Open `App.cpp`, add `PackageProviders().Append(winrt::ReactNativeNetInfo::ReactPackageProvider());` before `InitializeComponent();`
 
-#### Link C# implementation
+#### Link C# to your C# app (RNW >= 0.62)
 * Open the solution in Visual Studio for your Windows apps
 * Right click in the Explorer and click Add > Existing Project...
-* Navigate to `./<app-name>/node_modules/@react-native-community/netinfo/windows/RNCNetInfo/` and add `RNCNetInfo.csproj`
+* Navigate to `./<app-name>/node_modules/@react-native-community/netinfo/windows/RNCNetInfoCPP/` and add `RNCNetInfoCPP.vcxproj`
 * This time right click on your React Native Windows app under your solutions directory and click Add > Reference...
-* Check the `RNCNetInfo` you just added and press ok
-* Open up `MainReactNativeHost.cs` for your app and edit the file like so:
-
-```diff
-+ using ReactNativeCommunity.NetInfo;
-......
-        protected override List<IReactPackage> Packages => new List<IReactPackage>
-        {
-            new MainReactPackage(),
-+           new RNCNetInfoPackage(),
-        };
-```
+* Check the `RNCNetInfoCPP` you just added and press ok
+* Open up `App.xaml.cs` for your app and add `using ReactNativeNetInfo;` to the top.
+* Open up `App.xaml.cs` for your app and add `PackageProviders.Add(new ReactNativeNetInfo.ReactPackageProvider());` before `InitializeComponent();`
 
 </details>
 

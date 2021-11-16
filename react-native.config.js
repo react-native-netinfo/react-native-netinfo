@@ -25,7 +25,14 @@ let config = {
     },
     android:{
       sourceDir: 'example/android',
-    }
+    },
+    windows:{
+      sourceDir: 'example\\windows',
+      solutionFile: 'NetInfoExample.sln',
+      project: {
+          projectFile: 'NetInfoExample\\NetInfoExample.vcxproj',
+      },
+    },
   },
 }
 if (process.argv.includes(macSwitch)) {
