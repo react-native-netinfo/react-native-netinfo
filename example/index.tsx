@@ -175,8 +175,8 @@ class ExampleApp extends React.Component<Record<string, unknown>, State> {
   render() {
     const {activeTestCase} = this.state;
     return (
-      <ScrollView testID="scrollView" style={styles.container}>
-        <SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        <ScrollView testID="scrollView">
           {activeTestCase ? (
             <>
               <Text testID="testCasesTitle" style={styles.sectionTitle}>
@@ -192,8 +192,8 @@ class ExampleApp extends React.Component<Record<string, unknown>, State> {
               {EXAMPLES.map(this._renderExample)}
             </>
           )}
-        </SafeAreaView>
-      </ScrollView>
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 
