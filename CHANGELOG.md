@@ -1,3 +1,10 @@
+# [7.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.0.0...v7.1.0) (2021-11-17)
+
+
+### Features
+
+* **android, native:** make native API public for mixed-native use ([#524](https://github.com/react-native-netinfo/react-native-netinfo/issues/524)) ([96b8d2f](https://github.com/react-native-netinfo/react-native-netinfo/commit/96b8d2f))
+
 # [7.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.2.1...v7.0.0) (2021-11-16)
 
 
