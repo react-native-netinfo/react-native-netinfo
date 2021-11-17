@@ -26,7 +26,7 @@ import com.reactnativecommunity.netinfo.types.ConnectionType;
  * it.
  */
 @TargetApi(Build.VERSION_CODES.N)
-class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
+public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     private final ConnectivityNetworkCallback mNetworkCallback;
 
     public NetworkCallbackConnectivityReceiver(ReactApplicationContext reactContext) {
@@ -36,7 +36,7 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
 
     @Override
     @SuppressLint("MissingPermission")
-    void register() {
+    public void register() {
         try {
             NetworkRequest.Builder builder = new NetworkRequest.Builder();
             getConnectivityManager().registerNetworkCallback(builder.build(), mNetworkCallback);
@@ -46,7 +46,7 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     }
 
     @Override
-    void unregister() {
+    public void unregister() {
         try {
             getConnectivityManager().unregisterNetworkCallback(mNetworkCallback);
         } catch (SecurityException e) {

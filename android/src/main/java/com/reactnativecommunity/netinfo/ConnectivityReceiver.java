@@ -28,7 +28,7 @@ import java.util.Locale;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-abstract class ConnectivityReceiver {
+public abstract class ConnectivityReceiver {
 
     private final ConnectivityManager mConnectivityManager;
     private final WifiManager mWifiManager;
@@ -53,9 +53,9 @@ abstract class ConnectivityReceiver {
                 (TelephonyManager) reactContext.getSystemService(Context.TELEPHONY_SERVICE);
     }
 
-    abstract void register();
+    public abstract void register();
 
-    abstract void unregister();
+    public abstract void unregister();
 
     public void getCurrentState(@Nullable final String requestedInterface, final Promise promise) {
         promise.resolve(createConnectivityEventMap(requestedInterface));
@@ -100,13 +100,13 @@ abstract class ConnectivityReceiver {
         }
     }
 
-    private void sendConnectivityChangedEvent() {
+    protected void sendConnectivityChangedEvent() {
         getReactContext()
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit("netInfo.networkStatusDidChange", createConnectivityEventMap(null));
     }
 
-    private WritableMap createConnectivityEventMap(@Nullable final String requestedInterface) {
+    protected WritableMap createConnectivityEventMap(@Nullable final String requestedInterface) {
         WritableMap event = Arguments.createMap();
 
         // Add if WiFi is ON or OFF
