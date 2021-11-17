@@ -22,5 +22,6 @@ const RNCNetInfoMock = {
 
 RNCNetInfoMock.fetch.mockResolvedValue(defaultState);
 RNCNetInfoMock.useNetInfo.mockReturnValue(defaultState);
+RNCNetInfoMock.addEventListener.mockReturnValue(jest.fn());
 
 module.exports = RNCNetInfoMock;
