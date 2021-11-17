@@ -25,6 +25,7 @@
   "license": "MIT",
   "scripts": {
     "start": "react-native start",
+    "start:android": "cd example && yarn react-native run-android",
     "start:ios": "cd example && yarn react-native run-ios --project-path `pwd`/ios",
     "start:macos": "node node_modules/react-native-macos/local-cli/cli.js start --use-react-native-macos",
     "start:web": "webpack-dev-server --config example/webpack.config.js",

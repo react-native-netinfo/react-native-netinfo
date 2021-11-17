@@ -14,6 +14,8 @@
  * and conversely metro.config.macos.js has to blacklist 'node_modules/react-native'.
  */
 'use strict';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const path = require('path');
 
 const macSwitch = '--use-react-native-macos';
 const windowsSwitch = '--use-react-native-windows';
@@ -27,10 +29,10 @@ let config = {
       sourceDir: 'example/android',
     },
     windows:{
-      sourceDir: 'example\\windows',
+      sourceDir: path.join('example', 'windows'),
       solutionFile: 'NetInfoExample.sln',
       project: {
-          projectFile: 'NetInfoExample\\NetInfoExample.vcxproj',
+          projectFile: path.join('NetInfoExample', 'NetInfoExample.vcxproj'),
       },
     },
   },
