@@ -16,6 +16,7 @@ export enum NetInfoStateType {
   ethernet = 'ethernet',
   wimax = 'wimax',
   vpn = 'vpn',
+  backgroundRefresh = 'backgroundRefresh',
   other = 'other',
 }
 
@@ -24,6 +25,15 @@ export enum NetInfoCellularGeneration {
   '3g' = '3g',
   '4g' = '4g',
   '5g' = '5g',
+}
+
+export enum NetInfoBackgroundRefreshSetting {
+  'unknown' = 'unknown',
+  'available' = 'available',
+  'denied' = 'denied',
+  'denied_if_metered' = 'denied_if_metered',
+  'restricted' = 'restricted',
+  'allowlist' = 'allowlist',
 }
 
 export interface NetInfoConnectedDetails {
@@ -37,6 +47,7 @@ interface NetInfoConnectedState<
   type: T;
   isConnected: true;
   isInternetReachable: boolean | null;
+  backgroundRefresh: NetInfoBackgroundRefreshSetting;
   details: D & NetInfoConnectedDetails;
   isWifiEnabled?: boolean;
 }
@@ -45,6 +56,7 @@ interface NetInfoDisconnectedState<T extends NetInfoStateType> {
   type: T;
   isConnected: false;
   isInternetReachable: false;
+  backgroundRefresh: NetInfoBackgroundRefreshSetting;
   details: null;
 }
 
@@ -52,6 +64,7 @@ export interface NetInfoUnknownState {
   type: NetInfoStateType.unknown;
   isConnected: null;
   isInternetReachable: null;
+  backgroundRefresh: NetInfoBackgroundRefreshSetting;
   details: null;
 }
 
@@ -90,6 +103,12 @@ export type NetInfoEthernetState = NetInfoConnectedState<
     subnet: string | null;
   }
 >;
+export type NetInfoBackgroundRefreshState = NetInfoConnectedState<
+  NetInfoStateType.backgroundRefresh,
+  {
+    backgroundRefresh: NetInfoBackgroundRefreshState | null;
+  }
+>;
 export type NetInfoWimaxState = NetInfoConnectedState<NetInfoStateType.wimax>;
 export type NetInfoVpnState = NetInfoConnectedState<NetInfoStateType.vpn>;
 export type NetInfoOtherState = NetInfoConnectedState<NetInfoStateType.other>;
@@ -100,6 +119,7 @@ export type NetInfoConnectedStates =
   | NetInfoEthernetState
   | NetInfoWimaxState
   | NetInfoVpnState
+  | NetInfoBackgroundRefreshState
   | NetInfoOtherState;
 
 export type NetInfoState = NetInfoDisconnectedStates | NetInfoConnectedStates;
