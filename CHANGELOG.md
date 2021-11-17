@@ -1,3 +1,10 @@
+## [7.1.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.0...v7.1.1) (2021-11-17)
+
+
+### Bug Fixes
+
+* **ios, 5g:** do not use 5g symbols until iOS14.1 ([#525](https://github.com/react-native-netinfo/react-native-netinfo/issues/525)) ([932cd83](https://github.com/react-native-netinfo/react-native-netinfo/commit/932cd83))
+
 # [7.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.0.0...v7.1.0) (2021-11-17)
 
 
