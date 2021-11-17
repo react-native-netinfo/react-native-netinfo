@@ -67,8 +67,6 @@
                         [netinfo.currentRadioAccessTechnology isEqualToString:CTRadioAccessTechnologyNR]) {
                         _cellularGeneration = RNCCellularGeneration5g;
                     }
-                } else {
-                    // Fallback on earlier versions
                 }
             }
         }
