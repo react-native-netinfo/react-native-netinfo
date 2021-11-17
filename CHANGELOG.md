@@ -1,3 +1,10 @@
+## [7.1.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.1...v7.1.2) (2021-11-17)
+
+
+### Bug Fixes
+
+* **jest, mock:** addEventListener returns a function to match API ([#529](https://github.com/react-native-netinfo/react-native-netinfo/issues/529)) ([82ca2ad](https://github.com/react-native-netinfo/react-native-netinfo/commit/82ca2ad))
+
 ## [7.1.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.0...v7.1.1) (2021-11-17)
 
 
