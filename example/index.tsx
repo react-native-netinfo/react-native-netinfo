@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   sectionTitle: {
+    color: 'black',
     fontSize: 24,
     marginHorizontal: 8,
     marginTop: 24,
@@ -97,6 +98,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   exampleTitle: {
+    color: 'black',
     fontSize: 18,
   },
   exampleDescription: {

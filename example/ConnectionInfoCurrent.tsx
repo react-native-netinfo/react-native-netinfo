@@ -42,7 +42,9 @@ export default class ConnectionInfoCurrent extends React.Component<
   render() {
     return (
       <View>
-        <Text>{JSON.stringify(this.state.connectionInfo)}</Text>
+        <Text style={{color: 'black'}}>
+          {JSON.stringify(this.state.connectionInfo)}
+        </Text>
       </View>
     );
   }

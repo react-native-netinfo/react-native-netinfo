@@ -38,7 +38,7 @@ export default class ConnectionInfoCurrent extends React.Component<
     return (
       <View>
         <TouchableOpacity onPress={this._fetchState}>
-          <Text>{this.state.connectionInfo}</Text>
+          <Text style={{color: 'black'}}>{this.state.connectionInfo}</Text>
         </TouchableOpacity>
       </View>
     );
