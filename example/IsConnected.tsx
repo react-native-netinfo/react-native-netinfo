@@ -44,7 +44,9 @@ export default class IsConnected extends React.Component<
   render() {
     return (
       <View>
-        <Text>{this.state.isConnected ? 'Online' : 'Offline'}</Text>
+        <Text style={{color: 'black'}}>
+          {this.state.isConnected ? 'Online' : 'Offline'}
+        </Text>
       </View>
     );
   }
