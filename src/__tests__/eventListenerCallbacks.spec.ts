@@ -11,7 +11,11 @@ import fetchMock from 'jest-fetch-mock';
 import NetInfo from '../index';
 import NativeInterface from '../internal/nativeInterface';
 import {DEVICE_CONNECTIVITY_EVENT} from '../internal/privateTypes';
-import {NetInfoStateType, NetInfoCellularGeneration} from '../internal/types';
+import {
+  NetInfoBackgroundRefreshSetting,
+  NetInfoStateType,
+  NetInfoCellularGeneration,
+} from '../internal/types';
 
 // Mock modules
 fetchMock.enableMocks();
@@ -23,6 +27,7 @@ beforeAll(() => {
     type: NetInfoStateType.cellular,
     isConnected: true,
     isInternetReachable: true,
+    expectedBackgroundRefreshStatus: NetInfoBackgroundRefreshSetting.available,
     details: {
       isConnectionExpensive: true,
       cellularGeneration: NetInfoCellularGeneration['4g'],
@@ -59,12 +64,15 @@ describe('@react-native-community/netinfo listener', () => {
       const listener = jest.fn();
       NetInfo.addEventListener(listener);
 
-      const expectedConnectionType = 'wifi';
-      const expectedEffectiveConnectionType = 'unknown';
+      const expectedConnectionType = NetInfoStateType.wifi;
+      const expectedEffectiveConnectionType = NetInfoStateType.unknown;
+      const expectedBackgroundRefreshStatus =
+        NetInfoBackgroundRefreshSetting.available;
       const expectedConnectionInfo = {
         type: expectedConnectionType,
         isConnected: true,
         isInternetReachable: true,
+        backgroundRefresh: expectedBackgroundRefreshStatus,
         details: {
           isConnectionExpensive: true,
           cellularGeneration: expectedEffectiveConnectionType,
@@ -84,17 +92,17 @@ describe('@react-native-community/netinfo listener', () => {
       NetInfo.addEventListener(listener);
 
       const cellularInfo = {
-        type: 'cellular',
+        type: NetInfoStateType.cellular,
         isConnected: true,
         isInternetReachable: true,
         details: {
           isConnectionExpensive: true,
-          cellularGeneration: '3g',
+          cellularGeneration: NetInfoCellularGeneration['3g'],
         },
       };
 
       const wifiInfo = {
-        type: 'wifi',
+        type: NetInfoStateType.wifi,
         isConnected: true,
         isInternetReachable: true,
         details: {

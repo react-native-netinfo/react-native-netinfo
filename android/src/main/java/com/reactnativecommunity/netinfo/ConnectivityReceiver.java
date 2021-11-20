@@ -39,6 +39,7 @@ public abstract class ConnectivityReceiver {
     private ConnectionType mConnectionType = ConnectionType.UNKNOWN;
     @Nullable
     private CellularGeneration mCellularGeneration = null;
+    private int mBackgroundDataRestriction = ConnectivityManager.RESTRICT_BACKGROUND_STATUS_DISABLED;
     private boolean mIsInternetReachable = false;
     private Boolean mIsInternetReachableOverride;
 
@@ -63,7 +64,7 @@ public abstract class ConnectivityReceiver {
 
     public void setIsInternetReachableOverride(boolean isInternetReachableOverride) {
         this.mIsInternetReachableOverride = isInternetReachableOverride;
-        updateConnectivity(mConnectionType, mCellularGeneration, mIsInternetReachable);
+        updateConnectivity(mConnectionType, mCellularGeneration, mIsInternetReachable, mBackgroundDataRestriction);
     }
 
     public void clearIsInternetReachableOverride() {
@@ -81,7 +82,8 @@ public abstract class ConnectivityReceiver {
     void updateConnectivity(
             @Nonnull ConnectionType connectionType,
             @Nullable CellularGeneration cellularGeneration,
-            boolean isInternetReachableRaw) {
+            boolean isInternetReachableRaw,
+            int backgroundDataRestriction) {
         boolean isInternetReachable = mIsInternetReachableOverride == null
                 ? isInternetReachableRaw
                 : mIsInternetReachableOverride;
@@ -91,11 +93,13 @@ public abstract class ConnectivityReceiver {
         boolean connectionTypeChanged = connectionType != mConnectionType;
         boolean cellularGenerationChanged = cellularGeneration != mCellularGeneration;
         boolean isInternetReachableChanged = isInternetReachable != mIsInternetReachable;
+        boolean backgroundDataRestrictionChanged = backgroundDataRestriction != mBackgroundDataRestriction;
 
-        if (connectionTypeChanged || cellularGenerationChanged || isInternetReachableChanged) {
+        if (connectionTypeChanged || cellularGenerationChanged || isInternetReachableChanged || backgroundDataRestrictionChanged) {
             mConnectionType = connectionType;
             mCellularGeneration = cellularGeneration;
             mIsInternetReachable = isInternetReachable;
+            mBackgroundDataRestriction = backgroundDataRestriction;
             sendConnectivityChangedEvent();
         }
     }
@@ -128,6 +132,20 @@ public abstract class ConnectivityReceiver {
         event.putBoolean(
                 "isInternetReachable",
                 mIsInternetReachable && (requestedInterface == null || requestedInterface.equals(mConnectionType.label)));
+
+        String refreshStatus = "unknown";
+        switch (mBackgroundDataRestriction) {
+            case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_DISABLED:
+                refreshStatus = "available";
+                break;
+            case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED:
+                refreshStatus = "denied_if_metered";
+                break;
+            case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_WHITELISTED:
+                refreshStatus = "allowlist";
+                break;
+        }
+        event.putString("backgroundRefresh", refreshStatus);
 
         // Add the details, if there are any
         String detailsInterface = requestedInterface != null ? requestedInterface : mConnectionType.label;

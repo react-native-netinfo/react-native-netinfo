@@ -24,6 +24,7 @@ import {
   NetInfoWimaxState,
   NetInfoOtherState,
   NetInfoCellularGeneration,
+  NetInfoBackgroundRefreshSetting,
 } from './types';
 
 // See https://wicg.github.io/netinfo/#dom-connectiontype
@@ -115,6 +116,7 @@ const getCurrentState = (
         ...baseState,
         isConnected: true,
         type: NetInfoStateType.other,
+        backgroundRefresh: NetInfoBackgroundRefreshSetting.unknown,
         details: {
           isConnectionExpensive: false,
         },
@@ -127,6 +129,7 @@ const getCurrentState = (
       isConnected: false,
       isInternetReachable: false,
       type: NetInfoStateType.none,
+      backgroundRefresh: NetInfoBackgroundRefreshSetting.unknown,
       details: null,
     };
     return state;
@@ -145,6 +148,7 @@ const getCurrentState = (
       ...baseState,
       isConnected: true,
       type,
+      backgroundRefresh: NetInfoBackgroundRefreshSetting.unknown,
       details: {
         isConnectionExpensive,
       },
@@ -155,6 +159,7 @@ const getCurrentState = (
       ...baseState,
       isConnected: true,
       type,
+      backgroundRefresh: NetInfoBackgroundRefreshSetting.unknown,
       details: {
         isConnectionExpensive,
         cellularGeneration:
@@ -168,6 +173,7 @@ const getCurrentState = (
       ...baseState,
       isConnected: true,
       type,
+      backgroundRefresh: NetInfoBackgroundRefreshSetting.unknown,
       details: {
         isConnectionExpensive,
         ipAddress: null,
@@ -180,6 +186,7 @@ const getCurrentState = (
       ...baseState,
       isConnected: true,
       type,
+      backgroundRefresh: NetInfoBackgroundRefreshSetting.unknown,
       details: {
         isConnectionExpensive,
         ssid: null,
@@ -196,6 +203,7 @@ const getCurrentState = (
       ...baseState,
       isConnected: true,
       type,
+      backgroundRefresh: NetInfoBackgroundRefreshSetting.unknown,
       details: {
         isConnectionExpensive,
       },
@@ -207,6 +215,7 @@ const getCurrentState = (
       isConnected: false,
       isInternetReachable: false,
       type,
+      backgroundRefresh: NetInfoBackgroundRefreshSetting.unknown,
       details: null,
     };
     return state;
@@ -216,6 +225,7 @@ const getCurrentState = (
       isConnected: null,
       isInternetReachable: null,
       type,
+      backgroundRefresh: NetInfoBackgroundRefreshSetting.unknown,
       details: null,
     };
     return state;
@@ -225,6 +235,7 @@ const getCurrentState = (
     ...baseState,
     isConnected: true,
     type: NetInfoStateType.other,
+    backgroundRefresh: NetInfoBackgroundRefreshSetting.unknown,
     details: {
       isConnectionExpensive,
     },

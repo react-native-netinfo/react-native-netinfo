@@ -98,6 +98,7 @@ export function useNetInfo(
     type: Types.NetInfoStateType.unknown,
     isConnected: null,
     isInternetReachable: null,
+    backgroundRefresh: Types.NetInfoBackgroundRefreshSetting.unknown,
     details: null,
   });
 

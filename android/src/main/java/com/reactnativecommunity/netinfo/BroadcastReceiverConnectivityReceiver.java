@@ -95,7 +95,7 @@ public class BroadcastReceiverConnectivityReceiver extends ConnectivityReceiver 
             connectionType = ConnectionType.UNKNOWN;
         }
 
-        updateConnectivity(connectionType, cellularGeneration, isInternetReachable);
+        updateConnectivity(connectionType, cellularGeneration, isInternetReachable, ConnectivityManager.RESTRICT_BACKGROUND_STATUS_DISABLED);
     }
 
     /**

@@ -8,6 +8,10 @@ package com.reactnativecommunity.netinfo;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.LinkProperties;
 import android.net.Network;
@@ -29,8 +33,13 @@ import com.reactnativecommunity.netinfo.types.ConnectionType;
 public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     private final ConnectivityNetworkCallback mNetworkCallback;
 
+    // The only way to monitor background data restriction changes is registering a broadcast receiver
+    public static final String RESTRICT_BACKGROUND_ACTION = ConnectivityManager.ACTION_RESTRICT_BACKGROUND_CHANGED;
+    private final BackgroundDataRestrictionBroadcastReceiver mBacgkroundDataRestrictionBroadcastReceiver;
+
     public NetworkCallbackConnectivityReceiver(ReactApplicationContext reactContext) {
         super(reactContext);
+        mBacgkroundDataRestrictionBroadcastReceiver = new BackgroundDataRestrictionBroadcastReceiver();
         mNetworkCallback = new ConnectivityNetworkCallback();
     }
 
@@ -43,6 +52,11 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
         } catch (SecurityException e) {
             // TODO: Display a yellow box about this
         }
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(RESTRICT_BACKGROUND_ACTION);
+        getReactContext().registerReceiver(mBacgkroundDataRestrictionBroadcastReceiver, filter);
+        mBacgkroundDataRestrictionBroadcastReceiver.setRegistered(true);
     }
 
     @Override
@@ -53,6 +67,11 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
             // TODO: Display a yellow box about this
         } catch (IllegalArgumentException e) {
             // ignore this, it is expected when the callback was not registered successfully
+        }
+
+        if (mBacgkroundDataRestrictionBroadcastReceiver.isRegistered()) {
+            getReactContext().unregisterReceiver(mBacgkroundDataRestrictionBroadcastReceiver);
+            mBacgkroundDataRestrictionBroadcastReceiver.setRegistered(false);
         }
     }
 
@@ -65,6 +84,7 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
         NetworkInfo networkInfo = null;
         boolean isInternetReachable = false;
         boolean isInternetSuspended = false;
+        int backgroundDataRestriction = getConnectivityManager().getRestrictBackgroundStatus();
 
         if (capabilities != null) {
             // Get the connection type
@@ -112,7 +132,7 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
             connectionType = ConnectionType.NONE;
         }
 
-        updateConnectivity(connectionType, cellularGeneration, isInternetReachable);
+        updateConnectivity(connectionType, cellularGeneration, isInternetReachable, backgroundDataRestriction);
     }
 
     private class ConnectivityNetworkCallback extends ConnectivityManager.NetworkCallback {
@@ -145,6 +165,31 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
         @Override
         public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
             updateAndSend();
+        }
+    }
+
+    /**
+     * Class that receives intents whenever the background data restriction changes.
+     */
+    private class BackgroundDataRestrictionBroadcastReceiver extends BroadcastReceiver {
+
+        // TODO: Remove registered check when source of crash is found. t9846865
+        private boolean isRegistered = false;
+
+        public void setRegistered(boolean registered) {
+            isRegistered = registered;
+        }
+
+        public boolean isRegistered() {
+            return isRegistered;
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action != null && action.equals(RESTRICT_BACKGROUND_ACTION)) {
+                updateAndSend();
+            }
         }
     }
 }

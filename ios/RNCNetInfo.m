@@ -10,6 +10,7 @@
 
 #include <ifaddrs.h>
 #include <arpa/inet.h>
+#import <UIKit/UIKit.h>
 
 #if !TARGET_OS_TV
 #import <CoreTelephony/CTCarrier.h>
@@ -56,11 +57,20 @@ RCT_EXPORT_MODULE()
 - (void)startObserving
 {
   self.isObserving = YES;
+  [[NSNotificationCenter defaultCenter]
+    addObserverForName:UIApplicationBackgroundRefreshStatusDidChangeNotification
+    object: [UIApplication sharedApplication]
+    queue:nil
+    usingBlock:^(NSNotification* notification) {
+      NSDictionary *dictionary = [self currentDictionaryFromUpdateState:self->_connectionStateWatcher.currentState withInterface:NULL];
+      [self sendEventWithName:@"netInfo.networkStatusDidChange" body:dictionary];
+    }];
 }
 
 - (void)stopObserving
 {
   self.isObserving = NO;
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (instancetype)init
@@ -108,9 +118,20 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
     details[@"isConnectionExpensive"] = @(state.expensive);
   }
 
+  NSString *refreshStatus = @"unknown";
+  enum UIBackgroundRefreshStatus backgroundRefreshStatus = [[UIApplication sharedApplication] backgroundRefreshStatus];
+  if (backgroundRefreshStatus == UIBackgroundRefreshStatusAvailable) {
+    refreshStatus = @"available";
+  } else if(backgroundRefreshStatus == UIBackgroundRefreshStatusDenied) {
+    refreshStatus = @"denied";
+  } else if(backgroundRefreshStatus == UIBackgroundRefreshStatusRestricted) {
+    refreshStatus = @"restricted";
+  }
+
   return @{
     @"type": selectedInterface,
     @"isConnected": @(connected),
+    @"backgroundRefresh": refreshStatus,
     @"details": details ?: NSNull.null
   };
 }
