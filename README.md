@@ -362,7 +362,7 @@ jest.mock('@react-native-community/netinfo', () => mockRNCNetInfo);
 
 There is a [known](http://openradar.appspot.com/14585459) [issue](http://www.openradar.appspot.com/29913522) with the iOS Simulator which causes it to not receive network change notifications correctly when the host machine disconnects and then connects to Wifi. If you are having issues with iOS then please test on an actual device before reporting any bugs.
 
-### Switching between different Wi-Fi not fire in iOS
+### Switching between different Wi-Fi does not send events in iOS
 
 The SCNetworkReachability used in iOS won't fire if you switching from one Wi-Fi network to another when your App was in background. If you want to be notified, a work around could be refreshing Wi-Fi state each time when App back to foreground. An example of following code could be added into to your `App.js` file:
 
