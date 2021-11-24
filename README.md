@@ -364,7 +364,7 @@ There is a [known](http://openradar.appspot.com/14585459) [issue](http://www.ope
 
 ### Switching between different Wi-Fi does not send events in iOS
 
-The SCNetworkReachability used in iOS won't fire if you switching from one Wi-Fi network to another when your App was in background. If you want to be notified, a work around could be refreshing Wi-Fi state each time when App back to foreground. An example of following code could be added into to your `App.js` file:
+The SCNetworkReachability API used in iOS does not send events to the app in the background, so switching from one Wi-Fi network to another when your App was in background will not send an event and your network state will be out of sync with device state. To be sure you have up to date status when your app is in foreground again, you should re-fetch state each time when App comes to foreground, something like this:
 
 ```js
   useEffect(() => {
