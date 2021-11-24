@@ -364,7 +364,7 @@ There is a [known](http://openradar.appspot.com/14585459) [issue](http://www.ope
 
 ### Switching between different Wi-Fi not fire in iOS
 
-The SCNetworkReachability used in iOS won't fire if your App is in background. If you want to be notified, a work around could be refreshing Wi-Fi state each time when App back to foreground. An example of following code could be added into to your `App.js` file:
+The SCNetworkReachability used in iOS won't fire if you switching from one Wi-Fi network to another when your App was in background. If you want to be notified, a work around could be refreshing Wi-Fi state each time when App back to foreground. An example of following code could be added into to your `App.js` file:
 
 ```js
   useEffect(() => {
