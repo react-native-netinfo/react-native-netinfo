@@ -50,7 +50,7 @@ interface NetInfoDisconnectedState<T extends NetInfoStateType> {
 
 export interface NetInfoUnknownState {
   type: NetInfoStateType.unknown;
-  isConnected: boolean;
+  isConnected: boolean | null;
   isInternetReachable: null;
   details: null;
 }
