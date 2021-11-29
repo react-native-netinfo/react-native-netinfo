@@ -159,7 +159,7 @@ Describes the current state of the network. It is an object with these propertie
 | Property              | Type                                    | Description                                                                                        |
 | --------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | `type`                | [`NetInfoStateType`](#netinfostatetype) | The type of the current connection.                                                                |
-| `isConnected`         | `boolean`, `null`                               | If there is an active network connection. If unknown defaults to `null`. |
+| `isConnected`         | `boolean`, `null`                               | If there is an active network connection. Defaults to `null` on most platforms for `unknown` networks. Note: Web browsers report network type `unknown` for many otherwise valid networks (https://caniuse.com/netinfo), so `isConnected` may be `true` or `false` and represent a real connection status even for unknown network types in certain cases.|
 | `isInternetReachable` | `boolean`, `null`                             | If the internet is reachable with the currently active network connection. If unknown defaults to `null`                         |
 | `isWifiEnabled`       | `boolean`                               | *(Android only)* Whether the device's WiFi is ON or OFF.                                           |
 | `details`             |                                         | The value depends on the `type` value. See below.                                                  |

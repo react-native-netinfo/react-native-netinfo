@@ -213,7 +213,7 @@ const getCurrentState = (
   } else if (type === NetInfoStateType.unknown) {
     const state: NetInfoUnknownState = {
       ...baseState,
-      isConnected: null,
+      isConnected,
       isInternetReachable: null,
       type,
       details: null,
