@@ -1,3 +1,10 @@
+## [7.1.4](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.3...v7.1.4) (2021-12-07)
+
+
+### Bug Fixes
+
+* **android:** try async state fetch as stale state workaround ([#547](https://github.com/react-native-netinfo/react-native-netinfo/issues/547)) ([937cf48](https://github.com/react-native-netinfo/react-native-netinfo/commit/937cf48)), closes [#542](https://github.com/react-native-netinfo/react-native-netinfo/issues/542)
+
 ## [7.1.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.2...v7.1.3) (2021-11-29)
 
 
