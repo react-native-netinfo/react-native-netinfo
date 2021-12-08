@@ -12,5 +12,3 @@
 #include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.Foundation.Metadata.h>
 #include <winrt/Windows.Networking.Connectivity.h>
-
-using namespace winrt::Windows::Foundation;
