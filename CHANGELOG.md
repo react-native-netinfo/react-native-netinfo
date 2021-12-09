@@ -1,3 +1,10 @@
+## [7.1.5](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.4...v7.1.5) (2021-12-09)
+
+
+### Bug Fixes
+
+* **android:** use method-local ref to instance var for multi-thread safety [#549](https://github.com/react-native-netinfo/react-native-netinfo/issues/549) ([#550](https://github.com/react-native-netinfo/react-native-netinfo/issues/550)) ([81bbc87](https://github.com/react-native-netinfo/react-native-netinfo/commit/81bbc87))
+
 ## [7.1.4](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.3...v7.1.4) (2021-12-07)
 
 
