@@ -79,31 +79,34 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
         boolean isInternetReachable = false;
         boolean isInternetSuspended = false;
 
-        if (mCapabilities != null) {
+        final Network network = mNetwork;
+        final NetworkCapabilities capabilities = mCapabilities;
+
+        if (capabilities != null) {
             // Get the connection type
-            if (mCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) {
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) {
                 connectionType = ConnectionType.BLUETOOTH;
-            } else if (mCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
                 connectionType = ConnectionType.CELLULAR;
-            } else if (mCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
                 connectionType = ConnectionType.ETHERNET;
-            } else if (mCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
                 connectionType = ConnectionType.WIFI;
-            } else if (mCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
                 connectionType = ConnectionType.VPN;
             }
 
-            if (mNetwork != null) {
+            if (network != null) {
                 // This may return null per API docs, and is deprecated, but for older APIs (< VERSION_CODES.P)
                 // we need it to test for suspended internet
-                networkInfo = getConnectivityManager().getNetworkInfo(mNetwork);
+                networkInfo = getConnectivityManager().getNetworkInfo(network);
             }
 
             // Check to see if the network is temporarily unavailable or if airplane mode is toggled on
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                isInternetSuspended = !mCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_SUSPENDED);
+                isInternetSuspended = !capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_SUSPENDED);
             } else {
-                if (mNetwork != null && networkInfo != null) {
+                if (network != null && networkInfo != null) {
                     NetworkInfo.DetailedState detailedConnectionState = networkInfo.getDetailedState();
                     if (!detailedConnectionState.equals(NetworkInfo.DetailedState.CONNECTED)) {
                         isInternetSuspended = true;
@@ -112,13 +115,13 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
             }
 
             isInternetReachable =
-                    mCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                            && mCapabilities.hasCapability(
+                    capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                            && capabilities.hasCapability(
                             NetworkCapabilities.NET_CAPABILITY_VALIDATED)
                             && !isInternetSuspended;
 
             // Get the cellular network type
-            if (mNetwork != null && connectionType == ConnectionType.CELLULAR && isInternetReachable) {
+            if (network != null && connectionType == ConnectionType.CELLULAR && isInternetReachable) {
                 cellularGeneration = CellularGeneration.fromNetworkInfo(networkInfo);
             }
         } else {
