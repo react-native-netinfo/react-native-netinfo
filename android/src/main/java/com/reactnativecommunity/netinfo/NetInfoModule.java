@@ -43,6 +43,7 @@ public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonF
     public void onCatalystInstanceDestroy() {
         mAmazonConnectivityChecker.unregister();
         mConnectivityReceiver.unregister();
+        mConnectivityReceiver.hasListener = false;
     }
 
     @Override
