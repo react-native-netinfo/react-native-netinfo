@@ -34,6 +34,7 @@ public abstract class ConnectivityReceiver {
     private final WifiManager mWifiManager;
     private final TelephonyManager mTelephonyManager;
     private final ReactApplicationContext mReactContext;
+    public boolean hasListener = false;
 
     @Nonnull
     private ConnectionType mConnectionType = ConnectionType.UNKNOWN;
@@ -96,7 +97,9 @@ public abstract class ConnectivityReceiver {
             mConnectionType = connectionType;
             mCellularGeneration = cellularGeneration;
             mIsInternetReachable = isInternetReachable;
-            sendConnectivityChangedEvent();
+            if (hasListener) {
+                sendConnectivityChangedEvent();
+            }
         }
     }
 
