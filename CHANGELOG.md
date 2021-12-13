@@ -1,3 +1,10 @@
+## [7.1.6](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.5...v7.1.6) (2021-12-13)
+
+
+### Bug Fixes
+
+* **android:** avoid send event when has no listener ([#548](https://github.com/react-native-netinfo/react-native-netinfo/issues/548)) ([cad47d8](https://github.com/react-native-netinfo/react-native-netinfo/commit/cad47d8))
+
 ## [7.1.5](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.4...v7.1.5) (2021-12-09)
 
 
