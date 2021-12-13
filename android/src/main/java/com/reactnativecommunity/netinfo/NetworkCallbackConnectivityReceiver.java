@@ -13,7 +13,6 @@ import android.net.LinkProperties;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
-import android.net.NetworkRequest;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -53,8 +52,7 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     @SuppressLint("MissingPermission")
     public void register() {
         try {
-            NetworkRequest.Builder builder = new NetworkRequest.Builder();
-            getConnectivityManager().registerNetworkCallback(builder.build(), mNetworkCallback);
+            getConnectivityManager().registerDefaultNetworkCallback(mNetworkCallback);
         } catch (SecurityException e) {
             // TODO: Display a yellow box about this
         }
@@ -119,6 +117,10 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
                             && capabilities.hasCapability(
                             NetworkCapabilities.NET_CAPABILITY_VALIDATED)
                             && !isInternetSuspended;
+
+            if (isInternetReachable) {
+                getConnectivityManager().bindProcessToNetwork(null);
+            }
 
             // Get the cellular network type
             if (network != null && connectionType == ConnectionType.CELLULAR && isInternetReachable) {
