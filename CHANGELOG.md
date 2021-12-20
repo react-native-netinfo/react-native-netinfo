@@ -1,3 +1,10 @@
+## [7.1.7](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.6...v7.1.7) (2021-12-20)
+
+
+### Bug Fixes
+
+* **android:** populate network value during initial module startup  ([#553](https://github.com/react-native-netinfo/react-native-netinfo/issues/553)) ([c05080f](https://github.com/react-native-netinfo/react-native-netinfo/commit/c05080f))
+
 ## [7.1.6](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.5...v7.1.6) (2021-12-13)
 
 
