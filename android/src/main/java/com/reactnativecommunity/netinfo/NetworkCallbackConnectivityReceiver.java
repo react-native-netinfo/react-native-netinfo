@@ -54,6 +54,14 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     public void register() {
         try {
             NetworkRequest.Builder builder = new NetworkRequest.Builder();
+
+            // Similar to BroadcastReceiver implementation, we need to force
+            // an initial callback call in order to get the current network state,
+            // otherwise, an app started without any network connection will
+            // always be reported as "unknown".
+            mNetwork = getConnectivityManager().getActiveNetwork();
+            asyncUpdateAndSend(0);
+
             getConnectivityManager().registerNetworkCallback(builder.build(), mNetworkCallback);
         } catch (SecurityException e) {
             // TODO: Display a yellow box about this
@@ -131,22 +139,19 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
         updateConnectivity(connectionType, cellularGeneration, isInternetReachable);
     }
 
-    private void asyncUpdateAndSend() {
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mCapabilities = getConnectivityManager().getNetworkCapabilities(mNetwork);
-                updateAndSend();
+    private void asyncUpdateAndSend(int delay) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            mCapabilities = getConnectivityManager().getNetworkCapabilities(mNetwork);
+            updateAndSend();
 
-            }
-        }, DELAY_MS);
+        }, delay);
     }
 
     private class ConnectivityNetworkCallback extends ConnectivityManager.NetworkCallback {
         @Override
         public void onAvailable(Network network) {
             mNetwork = network;
-            asyncUpdateAndSend();
+            asyncUpdateAndSend(DELAY_MS);
         }
 
         @Override
@@ -182,7 +187,7 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
             if (mNetwork != null) {
                 mNetwork = network;
             }
-            asyncUpdateAndSend();
+            asyncUpdateAndSend(DELAY_MS);
         }
     }
 }
