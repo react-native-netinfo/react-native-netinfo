@@ -125,8 +125,14 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
     details[@"ipAddress"] = [self ipAddress] ?: NSNull.null;
     details[@"subnet"] = [self subnet] ?: NSNull.null;
     #if !TARGET_OS_TV && !TARGET_OS_OSX
-    details[@"ssid"] = [self ssid] ?: NSNull.null;
-    details[@"bssid"] = [self bssid] ?: NSNull.null;
+      // Without location permissions enabled, CNCopyCurrentNetworkInfo used to get these details will leak
+      if (CLLocationManager.locationServicesEnabled) {
+          CLAuthorizationStatus status = CLLocationManager.authorizationStatus;
+          if(status == kCLAuthorizationStatusAuthorizedAlways || status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+              details[@"ssid"] = [self ssid] ?: NSNull.null;
+              details[@"bssid"] = [self bssid] ?: NSNull.null;
+          }
+      }
     #endif
   }
   return details;
