@@ -17,6 +17,10 @@
 #endif
 @import SystemConfiguration.CaptiveNetwork;
 
+#if !TARGET_OS_TV && !TARGET_OS_OSX
+#import <CoreLocation/CoreLocation.h>
+#endif
+
 #import <React/RCTAssert.h>
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
