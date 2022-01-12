@@ -129,7 +129,13 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
     details[@"ipAddress"] = [self ipAddress] ?: NSNull.null;
     details[@"subnet"] = [self subnet] ?: NSNull.null;
     #if !TARGET_OS_TV && !TARGET_OS_OSX
-      // Without location permissions enabled, CNCopyCurrentNetworkInfo used to get these details will leak
+      /*
+        Without one of the conditions needed to use CNCopyCurrentNetworkInfo, it will leak.
+        Checking location permissions currently.  See link in README under SSID for more info.
+
+        'locationServicesEnabled' needs to use the non-deprecated function of the same name to
+        handle location permission state change, and reset details when approved.
+      */
       if (CLLocationManager.locationServicesEnabled) {
           CLAuthorizationStatus status = CLLocationManager.authorizationStatus;
           if (status == kCLAuthorizationStatusAuthorizedAlways || status == kCLAuthorizationStatusAuthorizedWhenInUse) {
@@ -232,6 +238,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
   NSDictionary *SSIDInfo;
   NSString *SSID = NULL;
   for (NSString *interfaceName in interfaceNames) {
+    // CNCopyCurrentNetworkInfo is deprecated for iOS 13+, need to override & use fetchCurrentWithCompletionHandler
     SSIDInfo = CFBridgingRelease(CNCopyCurrentNetworkInfo((__bridge CFStringRef)interfaceName));
     if (SSIDInfo.count > 0) {
         SSID = SSIDInfo[@"SSID"];
@@ -250,6 +257,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
   NSDictionary *networkDetails;
   NSString *BSSID = NULL;
   for (NSString *interfaceName in interfaceNames) {
+        // CNCopyCurrentNetworkInfo is deprecated for iOS 13+, need to override & use fetchCurrentWithCompletionHandler
       networkDetails = CFBridgingRelease(CNCopyCurrentNetworkInfo((__bridge CFStringRef)interfaceName));
       if (networkDetails.count > 0)
       {
