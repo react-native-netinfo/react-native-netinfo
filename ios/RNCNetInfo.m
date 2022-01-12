@@ -132,7 +132,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
       // Without location permissions enabled, CNCopyCurrentNetworkInfo used to get these details will leak
       if (CLLocationManager.locationServicesEnabled) {
           CLAuthorizationStatus status = CLLocationManager.authorizationStatus;
-          if(status == kCLAuthorizationStatusAuthorizedAlways || status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+          if (status == kCLAuthorizationStatusAuthorizedAlways || status == kCLAuthorizationStatusAuthorizedWhenInUse) {
               details[@"ssid"] = [self ssid] ?: NSNull.null;
               details[@"bssid"] = [self bssid] ?: NSNull.null;
           }
