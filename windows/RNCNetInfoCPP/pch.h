@@ -4,7 +4,11 @@
 
 #define NOMINMAX
 
+#include <hstring.h>
+#include <restrictederrorinfo.h>
 #include <unknwn.h>
+#include <windows.h>
+
 #include <winrt/Microsoft.ReactNative.h>
 #include <winrt/Windows.Devices.WiFi.h>
 #include <winrt/Windows.Foundation.h>
@@ -17,3 +21,5 @@
 #include <winrt/Windows.UI.Xaml.Input.h>
 #include <winrt/Windows.UI.Xaml.Media.h>
 #include <winrt/Windows.UI.Xaml.Navigation.h>
+
+using namespace winrt::Windows::Foundation;

@@ -18,7 +18,7 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn test
   deploy:
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: github.repository == 'react-native-netinfo/react-native-netinfo' && github.ref == 'refs/heads/master'
     needs: test
     runs-on: ubuntu-latest
     steps:

@@ -23,6 +23,7 @@ export enum NetInfoCellularGeneration {
   '2g' = '2g',
   '3g' = '3g',
   '4g' = '4g',
+  '5g' = '5g',
 }
 
 export interface NetInfoConnectedDetails {
@@ -31,7 +32,7 @@ export interface NetInfoConnectedDetails {
 
 interface NetInfoConnectedState<
   T extends NetInfoStateType,
-  D extends object = {}
+  D extends Record<string, unknown> = Record<string, unknown>
 > {
   type: T;
   isConnected: true;
@@ -49,7 +50,7 @@ interface NetInfoDisconnectedState<T extends NetInfoStateType> {
 
 export interface NetInfoUnknownState {
   type: NetInfoStateType.unknown;
-  isConnected: null;
+  isConnected: boolean | null;
   isInternetReachable: null;
   details: null;
 }
@@ -112,4 +113,5 @@ export interface NetInfoConfiguration {
   reachabilityLongTimeout: number;
   reachabilityShortTimeout: number;
   reachabilityRequestTimeout: number;
+  reachabilityShouldRun: () => boolean;
 }

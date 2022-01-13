@@ -14,20 +14,42 @@
  * and conversely metro.config.macos.js has to blacklist 'node_modules/react-native'.
  */
 'use strict';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const path = require('path');
 
 const macSwitch = '--use-react-native-macos';
 const windowsSwitch = '--use-react-native-windows';
-
+let config = {
+  project: {
+    ios: {
+      // this works but only in combination with `yarn react-native run-ios --project-path `pwd`/ios` - at least it works...
+      project: './example/ios/NetInfoExample.xcodeproj',
+    },
+    android:{
+      sourceDir: 'example/android',
+    },
+    windows:{
+      sourceDir: path.join('example', 'windows'),
+      solutionFile: 'NetInfoExample.sln',
+      project: {
+          projectFile: path.join('NetInfoExample', 'NetInfoExample.vcxproj'),
+      },
+    },
+  },
+}
 if (process.argv.includes(macSwitch)) {
   process.argv = process.argv.filter(arg => arg !== macSwitch);
   process.argv.push('--config=metro.config.macos.js');
-  module.exports = {
+  config = {
+    ...config,
     reactNativePath: 'node_modules/react-native-macos',
   };
 } else if (process.argv.includes(windowsSwitch)) {
   process.argv = process.argv.filter(arg => arg !== windowsSwitch);
   process.argv.push('--config=metro.config.windows.js');
-  module.exports = {
+  config = {
+    ...config,
     reactNativePath: 'node_modules/react-native-windows',
   };
 }
+module.exports = config

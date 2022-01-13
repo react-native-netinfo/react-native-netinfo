@@ -31,6 +31,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
         static constexpr auto CELLULAR_GENERATION_UNKNOWN = nullptr;
 
 	private:
+        void GetConnectionProfile();
 		winrt::Windows::Networking::Connectivity::NetworkInformation::NetworkStatusChanged_revoker m_networkStatusChangedRevoker{};
         winrt::Windows::Networking::Connectivity::NetworkStatusChangedEventHandler m_statusChangedHandler{};
         winrt::Windows::Networking::Connectivity::ConnectionProfile m_profile{ nullptr };

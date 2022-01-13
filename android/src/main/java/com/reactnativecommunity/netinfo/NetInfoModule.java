@@ -43,6 +43,7 @@ public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonF
     public void onCatalystInstanceDestroy() {
         mAmazonConnectivityChecker.unregister();
         mConnectivityReceiver.unregister();
+        mConnectivityReceiver.hasListener = false;
     }
 
     @Override
@@ -63,10 +64,14 @@ public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonF
     @ReactMethod
     public void addListener(String eventName) {
         // Keep: Required for RN built in Event Emitter Calls.
+        mConnectivityReceiver.hasListener = true;
     }
 
     @ReactMethod
     public void removeListeners(Integer count) {
         // Keep: Required for RN built in Event Emitter Calls.
+        if (count == 0) {
+            mConnectivityReceiver.hasListener = false;
+        }
     }
 }

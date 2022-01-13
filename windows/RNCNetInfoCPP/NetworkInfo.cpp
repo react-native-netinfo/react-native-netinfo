@@ -13,10 +13,10 @@ namespace winrt{
 namespace winrt::ReactNativeNetInfo::implementation {
 
     NetworkInfo::NetworkInfo() {
-        m_profile = NetworkInformation::GetInternetConnectionProfile();
+        GetConnectionProfile();
 
         m_networkStatusChangedRevoker = NetworkInformation::NetworkStatusChanged(winrt::auto_revoke, [&](const winrt::IInspectable& sender) {
-                m_profile = NetworkInformation::GetInternetConnectionProfile();
+                GetConnectionProfile();
 
                 if (m_statusChangedHandler) {
                     m_statusChangedHandler(sender);
@@ -30,6 +30,17 @@ namespace winrt::ReactNativeNetInfo::implementation {
 
     bool NetworkInfo::IsConnected() {
         return m_profile && m_profile.GetNetworkConnectivityLevel() != NetworkConnectivityLevel::None;
+    }
+
+    void NetworkInfo::GetConnectionProfile() {
+        try
+        {
+            m_profile = NetworkInformation::GetInternetConnectionProfile();
+        }
+        catch (const std::exception&)
+        {
+            m_profile = { nullptr };
+        }
     }
 
     std::string NetworkInfo::ConnectivityType() {

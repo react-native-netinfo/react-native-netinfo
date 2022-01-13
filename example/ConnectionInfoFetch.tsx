@@ -15,7 +15,10 @@ interface State {
   connectionInfo: string;
 }
 
-export default class ConnectionInfoCurrent extends React.Component<{}, State> {
+export default class ConnectionInfoCurrent extends React.Component<
+  Record<string, unknown>,
+  State
+> {
   state = {
     connectionInfo: 'Tap to get current state',
   };
@@ -35,7 +38,7 @@ export default class ConnectionInfoCurrent extends React.Component<{}, State> {
     return (
       <View>
         <TouchableOpacity onPress={this._fetchState}>
-          <Text>{this.state.connectionInfo}</Text>
+          <Text style={{color: 'black'}}>{this.state.connectionInfo}</Text>
         </TouchableOpacity>
       </View>
     );
