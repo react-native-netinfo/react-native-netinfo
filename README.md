@@ -1,9 +1,9 @@
 
 # `@react-native-community/netinfo`
 
-[![Actions](https://github.com/react-native-netinfo/react-native-netinfo/actions/workflows/ci.yml/badge.svg)](https://github.com/react-native-netinfo/react-native-netinfo/actions/workflows/ci.yml) ![Supports Android, iOS, macOS, and Windows](https://img.shields.io/badge/platforms-android%20|%20ios%20|%20macos%20|%20windows-lightgrey.svg) ![MIT License](https://img.shields.io/npm/l/@react-native-community/netinfo.svg) [![Lean Core Extracted](https://img.shields.io/badge/Lean%20Core-Extracted-brightgreen.svg)](https://github.com/facebook/react-native/issues/23313)
+[![Actions](https://github.com/react-native-netinfo/react-native-netinfo/actions/workflows/ci.yml/badge.svg)](https://github.com/react-native-netinfo/react-native-netinfo/actions/workflows/ci.yml) ![Supports Android, iOS, macOS, Windows and Web](https://img.shields.io/badge/platforms-android%20|%20ios%20|%20macos%20|%20windows%20|%20web-lightgrey.svg) ![MIT License](https://img.shields.io/npm/l/@react-native-community/netinfo.svg) [![Lean Core Extracted](https://img.shields.io/badge/Lean%20Core-Extracted-brightgreen.svg)](https://github.com/facebook/react-native/issues/23313)
 
-React Native Network Info API for Android, iOS, macOS & Windows. It allows you to get information on:
+React Native Network Info API for Android, iOS, macOS, Windows & Web. It allows you to get information on:
 
 * Connection type
 * Connection quality
