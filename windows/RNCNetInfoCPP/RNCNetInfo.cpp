@@ -86,8 +86,8 @@ namespace winrt::ReactNativeNetInfo::implementation {
     {
         // Unfortunately UWP doesn't have any APIs for getting WiFi network info for an existing connection. We have to trigger a scan
         // of available networks and walk through them to get details.
-        // This call supposedly only works if the app has the "wiFiControl" capability enabled in its appxmanifest.
         try {
+            // This call only works if the app has the "wiFiControl" capability enabled in its appxmanifest, otherwise it will throw.
             auto wifiAdapters = co_await WiFiAdapter::FindAllAdaptersAsync();
             for (const auto& wifiAdapter : wifiAdapters)
             {
@@ -107,8 +107,9 @@ namespace winrt::ReactNativeNetInfo::implementation {
 
     void RNCNetInfo::Initialize(winrt::Microsoft::ReactNative::ReactContext const& /*reactContext*/) noexcept {
 
-        // NetworkStatusChanged callback is captured by value on purpose. A reference to this or this->NetworkStatusChanged could point to garbage
-        // if the async event handler we register here ends up firing after we've destructed (which can happen even if we revoked it).
+        // NetworkStatusChanged callback is captured by value on purpose. The event handler is called asynchronously and thus can fire even
+        // after we've already revoked it in our destructor during module teardown. In such a case, a reference
+        // to "this" or "this->NetworkStatusChanged" would be invalid.
         m_networkStatusChangedRevoker = NetworkInformation::NetworkStatusChanged(winrt::auto_revoke, [callback = NetworkStatusChanged](const winrt::IInspectable& /*sender*/) -> winrt::fire_and_forget {
             try {
                 // Copy lambda capture into a local so it still exists after the co_await.
@@ -120,6 +121,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
     }
 
     winrt::fire_and_forget RNCNetInfo::getCurrentState(std::string requestedInterface, winrt::Microsoft::ReactNative::ReactPromise<NetInfoState> promise) noexcept {
+        // Jump to background to avoid blocking the JS thread while we gather the requested data
         co_await winrt::resume_background();
 
         promise.Resolve(co_await GetNetworkStatus());
