@@ -128,61 +128,63 @@ namespace winrt::ReactNativeNetInfo::implementation {
     }
 
     /*static*/ std::future<NetInfoState> RNCNetInfo::GetNetworkStatus() {
-        NetInfoState state;
+        NetInfoState state{};
 
         // https://docs.microsoft.com/en-us/uwp/api/windows.networking.connectivity.connectionprofile
         try {
             auto profile = NetworkInformation::GetInternetConnectionProfile();
-            auto networkAdapter = profile.NetworkAdapter();
-            auto connectivityLevel = profile.GetNetworkConnectivityLevel();
-            auto signal = profile.GetSignalBars();
-            auto costType = profile.GetConnectionCost().NetworkCostType();
+            if (profile) {
+                auto networkAdapter = profile.NetworkAdapter();
+                auto connectivityLevel = profile.GetNetworkConnectivityLevel();
+                auto signal = profile.GetSignalBars();
+                auto costType = profile.GetConnectionCost().NetworkCostType();
 
-            state.isConnected = connectivityLevel != NetworkConnectivityLevel::None;
+                state.isConnected = connectivityLevel != NetworkConnectivityLevel::None;
 
-            if (state.isConnected) {
-                NetInfoDetails details{};
+                if (state.isConnected) {
+                    NetInfoDetails details{};
 
-                state.isInternetReachable = connectivityLevel == NetworkConnectivityLevel::InternetAccess;
-                details.isConnectionExpensive = costType == NetworkCostType::Fixed || costType == NetworkCostType::Variable;
-                if (signal) {
-                    details.strength = winrt::unbox_value<uint8_t>(signal) * 20; // Signal strength is 0-5 but we want 0-100.
-                }
-
-                if (profile.IsWlanConnectionProfile()) {
-                    auto wlanDetails = profile.WlanConnectionProfileDetails();
-                    auto ssid = wlanDetails.GetConnectedSsid();
-                    auto network = co_await GetWiFiNetwork(networkAdapter, ssid);
-
-                    state.type = CONNECTION_TYPE_WIFI;
-                    details.ssid = winrt::to_string(ssid);
-                    if (network) {
-                        details.bssid = winrt::to_string(network.Bssid());
-                        details.frequency = network.ChannelCenterFrequencyInKilohertz() / 1000; // Convert to Mhz
-                        details.wifiGeneration = GetWifiGeneration(network.PhyKind());
+                    state.isInternetReachable = connectivityLevel == NetworkConnectivityLevel::InternetAccess;
+                    details.isConnectionExpensive = costType == NetworkCostType::Fixed || costType == NetworkCostType::Variable;
+                    if (signal) {
+                        details.strength = winrt::unbox_value<uint8_t>(signal) * 20; // Signal strength is 0-5 but we want 0-100.
                     }
-                }
-                else if (profile.IsWwanConnectionProfile()) {
-                    auto wwanDetails = profile.WwanConnectionProfileDetails();
-                    auto dataClass = wwanDetails.GetCurrentDataClass();
 
-                    state.type = CONNECTION_TYPE_CELLULAR;
-                    details.cellularGeneration = GetCellularGeneration(dataClass);
-                }
-                else if (networkAdapter) {
-                    // Possible values: https://docs.microsoft.com/en-us/uwp/api/windows.networking.connectivity.networkadapter.ianainterfacetype
-                    if (networkAdapter.IanaInterfaceType() == 6u) {
-                        state.type = CONNECTION_TYPE_ETHERNET;
+                    if (profile.IsWlanConnectionProfile()) {
+                        auto wlanDetails = profile.WlanConnectionProfileDetails();
+                        auto ssid = wlanDetails.GetConnectedSsid();
+                        auto network = co_await GetWiFiNetwork(networkAdapter, ssid);
+
+                        state.type = CONNECTION_TYPE_WIFI;
+                        details.ssid = winrt::to_string(ssid);
+                        if (network) {
+                            details.bssid = winrt::to_string(network.Bssid());
+                            details.frequency = network.ChannelCenterFrequencyInKilohertz() / 1000; // Convert to Mhz
+                            details.wifiGeneration = GetWifiGeneration(network.PhyKind());
+                        }
+                    }
+                    else if (profile.IsWwanConnectionProfile()) {
+                        auto wwanDetails = profile.WwanConnectionProfileDetails();
+                        auto dataClass = wwanDetails.GetCurrentDataClass();
+
+                        state.type = CONNECTION_TYPE_CELLULAR;
+                        details.cellularGeneration = GetCellularGeneration(dataClass);
+                    }
+                    else if (networkAdapter) {
+                        // Possible values: https://docs.microsoft.com/en-us/uwp/api/windows.networking.connectivity.networkadapter.ianainterfacetype
+                        if (networkAdapter.IanaInterfaceType() == 6u) {
+                            state.type = CONNECTION_TYPE_ETHERNET;
+                        }
+                        else {
+                            state.type = CONNECTION_TYPE_OTHER;
+                        }
                     }
                     else {
-                        state.type = CONNECTION_TYPE_OTHER;
+                        state.type = CONNECTION_TYPE_UNKNOWN;
                     }
-                }
-                else {
-                    state.type = CONNECTION_TYPE_UNKNOWN;
-                }
 
-                state.details = std::move(details);
+                    state.details = std::move(details);
+                }
             }
         }
         catch (...) {
