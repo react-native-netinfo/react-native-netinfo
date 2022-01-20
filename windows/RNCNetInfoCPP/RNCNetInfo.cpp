@@ -29,11 +29,12 @@ namespace winrt::ReactNativeNetInfo::implementation {
     static constexpr auto CELLULAR_GENERATION_NONE = nullptr;
     static constexpr auto CELLULAR_GENERATION_UNKNOWN = nullptr;
 
-    static constexpr auto WIFI_GENERATION_2 = "2";
-    static constexpr auto WIFI_GENERATION_3 = "3";
-    static constexpr auto WIFI_GENERATION_4 = "4";
-    static constexpr auto WIFI_GENERATION_5 = "5";
-    static constexpr auto WIFI_GENERATION_6 = "6";
+    static constexpr auto WIFI_GENERATION_1 = "WiFi 1";
+    static constexpr auto WIFI_GENERATION_2 = "WiFi 2";
+    static constexpr auto WIFI_GENERATION_3 = "WiFi 3";
+    static constexpr auto WIFI_GENERATION_4 = "WiFi 4";
+    static constexpr auto WIFI_GENERATION_5 = "WiFi 5";
+    static constexpr auto WIFI_GENERATION_6 = "WiFi 6";
     static constexpr auto WIFI_GENERATION_UNKNOWN = nullptr;
 
     std::optional<std::string> GetCellularGeneration(winrt::WwanDataClass dataClass) {
@@ -65,8 +66,9 @@ namespace winrt::ReactNativeNetInfo::implementation {
     std::optional<std::string> GetWifiGeneration(winrt::WiFiPhyKind kind) {
         switch (kind) {
         case WiFiPhyKind::Dsss: // 802.11b
-            return WIFI_GENERATION_2;
+            return WIFI_GENERATION_1;
         case WiFiPhyKind::Ofdm: // 802.11a
+            return WIFI_GENERATION_2;
         case WiFiPhyKind::Erp:  // 802.11g
             return WIFI_GENERATION_3;
         case WiFiPhyKind::HT: // 802.11n
