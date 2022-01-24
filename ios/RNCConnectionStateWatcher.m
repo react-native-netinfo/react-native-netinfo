@@ -30,7 +30,9 @@
         nw_path_monitor_set_queue(_pathMonitor, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
         __weak __typeof__(self) weakSelf = self;
         nw_path_monitor_set_update_handler(_pathMonitor, ^(nw_path_t  _Nonnull path) {
-            weakSelf.state = [[RNCConnectionState alloc] initWithPath:path];
+            __strong typeof(self) strongSelf = weakSelf;
+            RNCConnectionState* state = [[RNCConnectionState alloc] initWithPath:path];
+            [strongSelf setState:state];
         });
         nw_path_monitor_start(_pathMonitor);
     }
@@ -46,7 +48,7 @@
 
 - (void)setState:(RNCConnectionState *)state
 {
-    if (![state isEqualToConnectionState:_state]) {
+    if (![_state isEqualToConnectionState:state]) {
         _state = state;
 
         [self updateDelegate];
