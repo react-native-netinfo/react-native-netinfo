@@ -59,7 +59,8 @@
 - (BOOL)isEqualToConnectionState:(RNCConnectionState *)otherState
 {
     return (self.connected == otherState.connected &&
-            self.type == otherState.type &&
+            [self.type isEqualToString:otherState.type] &&
+            [self.cellularGeneration isEqualToString:otherState.cellularGeneration] &&
             self.expensive == otherState.expensive);
 }
 
