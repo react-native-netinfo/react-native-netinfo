@@ -1,3 +1,10 @@
+## [7.1.8](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.7...v7.1.8) (2022-01-25)
+
+
+### Bug Fixes
+
+* **windows:** refactor implementation to avoid crashes ([#564](https://github.com/react-native-netinfo/react-native-netinfo/issues/564)) ([cc4bfa3](https://github.com/react-native-netinfo/react-native-netinfo/commit/cc4bfa3))
+
 ## [7.1.7](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.6...v7.1.7) (2021-12-20)
 
 
