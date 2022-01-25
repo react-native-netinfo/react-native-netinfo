@@ -7,12 +7,11 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="ReactPackageProvider.cpp" />
-    <ClCompile Include="NetworkInfo.cpp" />
+    <ClCompile Include="RNCNetInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="ReactPackageProvider.h" />
-    <ClInclude Include="NetworkInfo.h" />
     <ClInclude Include="RNCNetInfo.h" />
   </ItemGroup>
   <ItemGroup>
