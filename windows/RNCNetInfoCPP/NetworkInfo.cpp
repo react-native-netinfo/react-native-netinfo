@@ -16,12 +16,12 @@ namespace winrt::ReactNativeNetInfo::implementation {
         GetConnectionProfile();
 
         m_networkStatusChangedRevoker = NetworkInformation::NetworkStatusChanged(winrt::auto_revoke, [&](const winrt::IInspectable& sender) {
-                GetConnectionProfile();
+            GetConnectionProfile();
 
-                if (m_statusChangedHandler) {
-                    m_statusChangedHandler(sender);
-                }
-            });
+            if (m_statusChangedHandler) {
+                m_statusChangedHandler(sender);
+            }
+        });
     }
 
     void NetworkInfo::StatusChanged(const NetworkStatusChangedEventHandler& handler) {
@@ -43,14 +43,14 @@ namespace winrt::ReactNativeNetInfo::implementation {
         }
     }
 
-    std::string NetworkInfo::ConnectivityType() {
+    std::string NetworkInfo::ConnectivityType(std::string requestedInterface = "") {
         if (!m_profile) {
             return CONNECTION_TYPE_NONE;
         }
-        if (m_profile.IsWlanConnectionProfile()) {
+        if (m_profile.IsWlanConnectionProfile() || requestedInterface.find("wifi") != std::string::npos) {
             return CONNECTION_TYPE_WIFI;
         }
-        if (m_profile.IsWwanConnectionProfile()) {
+        if (m_profile.IsWwanConnectionProfile() || requestedInterface.find("cellular") != std::string::npos) {
             return CONNECTION_TYPE_CELLULAR;
         }
 
@@ -59,7 +59,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
             return CONNECTION_TYPE_UNKNOWN;
         }
         // Possible values: https://docs.microsoft.com/en-us/uwp/api/windows.networking.connectivity.networkadapter.ianainterfacetype
-        if (networkAdapter.IanaInterfaceType() == 6u) {
+        if (networkAdapter.IanaInterfaceType() == 6u || requestedInterface.find("ethernet") != std::string::npos) {
             return CONNECTION_TYPE_ETHERNET;
         }
         else {

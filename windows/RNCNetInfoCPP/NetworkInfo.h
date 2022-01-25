@@ -9,7 +9,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
 	public:
 		NetworkInfo();
         bool IsConnected();
-		std::string ConnectivityType();
+		std::string ConnectivityType(std::string requestedInterface);
         std::string CellularGeneration();
         bool IsConnectionExpensive();
         std::string GetSsid();
