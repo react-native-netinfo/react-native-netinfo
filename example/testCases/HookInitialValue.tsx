@@ -11,10 +11,6 @@ import * as React from 'react';
 import {Text, View} from 'react-native';
 import {useNetInfo} from '../../src';
 
-interface State {
-  triggered: boolean;
-}
-
 const HookInitialValue: React.FunctionComponent = () => {
   const netInfo = useNetInfo();
   return (

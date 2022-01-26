@@ -18,7 +18,7 @@ export default [
     id: 'emitOnListen',
     title: 'NetInfo.addEventListener Emit on Listen',
     description: 'Should emit when a new listener is added',
-    render() {
+    render(): JSX.Element {
       return <EmitOnListen />;
     },
   },
@@ -26,7 +26,7 @@ export default [
     id: 'fetch',
     title: 'NetInfo.fetch',
     description: 'Should return when called',
-    render() {
+    render(): JSX.Element {
       return <Fetch />;
     },
   },
@@ -34,7 +34,7 @@ export default [
     id: 'hookInitialValue',
     title: 'useNetInfo initial value',
     description: 'Should have an initial value for the hook',
-    render() {
+    render(): JSX.Element {
       return <HookInitialValue />;
     },
   },

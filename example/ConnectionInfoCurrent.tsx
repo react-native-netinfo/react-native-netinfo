@@ -25,21 +25,21 @@ export default class ConnectionInfoCurrent extends React.Component<
     connectionInfo: null,
   };
 
-  componentDidMount() {
+  componentDidMount(): void {
     this._subscription = NetInfo.addEventListener(
       this._handleConnectionInfoChange,
     );
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this._subscription && this._subscription();
   }
 
-  _handleConnectionInfoChange = (connectionInfo: NetInfoState) => {
+  _handleConnectionInfoChange = (connectionInfo: NetInfoState): void => {
     this.setState({connectionInfo});
   };
 
-  render() {
+  render(): JSX.Element {
     return (
       <View>
         <Text style={{color: 'black'}}>
