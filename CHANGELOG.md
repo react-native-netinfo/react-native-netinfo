@@ -1,3 +1,17 @@
+## [7.1.9](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.8...v7.1.9) (2022-01-26)
+
+
+### Bug Fixes
+
+* **android:** count native listeners / correctly disable listener if count == 0 ([#569](https://github.com/react-native-netinfo/react-native-netinfo/issues/569)) ([5ae16f6](https://github.com/react-native-netinfo/react-native-netinfo/commit/5ae16f6))
+
+## [7.1.8](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.7...v7.1.8) (2022-01-25)
+
+
+### Bug Fixes
+
+* **windows:** refactor implementation to avoid crashes ([#564](https://github.com/react-native-netinfo/react-native-netinfo/issues/564)) ([cc4bfa3](https://github.com/react-native-netinfo/react-native-netinfo/commit/cc4bfa3))
+
 ## [7.1.7](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.6...v7.1.7) (2021-12-20)
 
 
