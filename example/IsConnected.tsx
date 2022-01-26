@@ -25,23 +25,23 @@ export default class IsConnected extends React.Component<
     isConnected: null,
   };
 
-  componentDidMount() {
+  componentDidMount(): void {
     this._subscription = NetInfo.addEventListener(
       this._handleConnectivityChange,
     );
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this._subscription && this._subscription();
   }
 
-  _handleConnectivityChange = (state: NetInfoState) => {
+  _handleConnectivityChange = (state: NetInfoState): void => {
     this.setState({
       isConnected: state.isConnected,
     });
   };
 
-  render() {
+  render(): JSX.Element {
     return (
       <View>
         <Text style={{color: 'black'}}>

@@ -29,19 +29,19 @@ export default class EmitOnListen extends React.Component<
     };
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this._subscription && this._subscription();
   }
 
-  _onPress = () => {
+  _onPress = (): void => {
     this._subscription = NetInfo.addEventListener(this._handleConnectionChange);
   };
 
-  _handleConnectionChange = () => {
+  _handleConnectionChange = (): void => {
     this.setState({triggered: true});
   };
 
-  render() {
+  render(): JSX.Element {
     const {triggered} = this.state;
 
     return (

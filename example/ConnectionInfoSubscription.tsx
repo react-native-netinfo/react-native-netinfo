@@ -25,23 +25,23 @@ export default class ConnectionInfoSubscription extends React.Component<
     connectionInfoHistory: [],
   };
 
-  componentDidMount() {
+  componentDidMount(): void {
     this._subscription = NetInfo.addEventListener(
       this._handleConnectionInfoChange,
     );
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this._subscription && this._subscription();
   }
 
-  _handleConnectionInfoChange = (connectionInfo: NetInfoState) => {
+  _handleConnectionInfoChange = (connectionInfo: NetInfoState): void => {
     this.setState(({connectionInfoHistory}) => ({
       connectionInfoHistory: [...connectionInfoHistory, connectionInfo],
     }));
   };
 
-  render() {
+  render(): JSX.Element {
     return (
       <View>
         <Text style={{color: 'black'}}>

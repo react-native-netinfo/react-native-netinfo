@@ -27,12 +27,12 @@ export default class Fetch extends React.Component<
     };
   }
 
-  _onPress = async () => {
+  _onPress = async (): Promise<void> => {
     const netInfoState = await NetInfo.fetch();
     this.setState({netInfoState});
   };
 
-  render() {
+  render(): JSX.Element {
     const {netInfoState} = this.state;
 
     return (

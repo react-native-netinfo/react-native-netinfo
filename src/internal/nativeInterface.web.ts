@@ -14,12 +14,9 @@ import {DEVICE_CONNECTIVITY_EVENT} from './privateTypes';
 const nativeEventEmitter = new NativeEventEmitter();
 
 // Listen to connectivity events
-RNCNetInfo.addListener(
-  DEVICE_CONNECTIVITY_EVENT,
-  (event): void => {
-    nativeEventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, event);
-  },
-);
+RNCNetInfo.addListener(DEVICE_CONNECTIVITY_EVENT, (event): void => {
+  nativeEventEmitter.emit(DEVICE_CONNECTIVITY_EVENT, event);
+});
 
 export default {
   ...RNCNetInfo,

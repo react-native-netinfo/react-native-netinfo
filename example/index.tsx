@@ -150,7 +150,7 @@ class ExampleApp extends React.Component<Record<string, unknown>, State> {
   _handleOpenURL = ({url}: {url: string}) => {
     this._handleOpenURLString(url);
   };
-  _handleOpenURLMacOS = (url: any) => {
+  _handleOpenURLMacOS = ({url}: {url: string}) => {
     this._handleOpenURLString(url);
   };
   _handleOpenURLString = (url: string | null) => {

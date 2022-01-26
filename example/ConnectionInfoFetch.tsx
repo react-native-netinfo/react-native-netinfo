@@ -23,18 +23,18 @@ export default class ConnectionInfoCurrent extends React.Component<
     connectionInfo: 'Tap to get current state',
   };
 
-  componentDidMount() {
+  componentDidMount(): void {
     this._fetchState();
   }
 
-  _fetchState = async () => {
+  _fetchState = async (): Promise<void> => {
     const state = await NetInfo.fetch();
     this.setState({
       connectionInfo: JSON.stringify(state),
     });
   };
 
-  render() {
+  render(): JSX.Element {
     return (
       <View>
         <TouchableOpacity onPress={this._fetchState}>
