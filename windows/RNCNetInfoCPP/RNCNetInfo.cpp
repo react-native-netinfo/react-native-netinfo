@@ -105,29 +105,40 @@ namespace winrt::ReactNativeNetInfo::implementation {
         co_return nullptr;
     }
 
-    void RNCNetInfo::Initialize(winrt::Microsoft::ReactNative::ReactContext const& /*reactContext*/) noexcept {
+    IAsyncAction emptyAsync() { co_return; };
+    std::shared_ptr<winrt::IAsyncAction> currentAsyncAction = std::make_shared<winrt::IAsyncAction>(emptyAsync());
 
+    void RNCNetInfo::Initialize(winrt::Microsoft::ReactNative::ReactContext const& /*reactContext*/) noexcept {
+        
         // NetworkStatusChanged callback is captured by value on purpose. The event handler is called asynchronously and thus can fire even
         // after we've already revoked it in our destructor during module teardown. In such a case, a reference
         // to "this" or "this->NetworkStatusChanged" would be invalid.
-        m_networkStatusChangedRevoker = NetworkInformation::NetworkStatusChanged(winrt::auto_revoke, [callback = NetworkStatusChanged](const winrt::IInspectable& /*sender*/) -> winrt::fire_and_forget {
+        
+        m_networkStatusChangedRevoker = NetworkInformation::NetworkStatusChanged(winrt::auto_revoke, [callback = NetworkStatusChanged] (const winrt::IInspectable& /*sender*/) mutable {
             try {
                 // Copy lambda capture into a local so it still exists after the co_await.
                 auto localCallback = callback;
-                localCallback(co_await GetNetworkStatus());
+                currentAsyncAction.swap(std::make_shared<IAsyncAction>(ChainAndNotify(localCallback)));
             }
             catch (...) {}
             });
+    }
+
+    IAsyncAction RNCNetInfo::ChainGetNetworkStatus(std::function<void(NetInfoState)> onComplete) {
+         NetInfoState state{};
+         state = co_await RNCNetInfo::GetNetworkStatus();
+         co_await *currentAsyncAction.get();
+         onComplete(state);
     }
 
     winrt::fire_and_forget RNCNetInfo::getCurrentState(std::string requestedInterface, winrt::Microsoft::ReactNative::ReactPromise<NetInfoState> promise) noexcept {
         // Jump to background to avoid blocking the JS thread while we gather the requested data
         co_await winrt::resume_background();
 
-        promise.Resolve(co_await GetNetworkStatus());
+        promise.Resolve(co_await GetNetworkStatus(requestedInterface));
     }
 
-    /*static*/ std::future<NetInfoState> RNCNetInfo::GetNetworkStatus() {
+    /*static*/ std::future<NetInfoState> RNCNetInfo::GetNetworkStatus(std::string requestedInterface) {
         NetInfoState state{};
 
         // https://docs.microsoft.com/en-us/uwp/api/windows.networking.connectivity.connectionprofile
@@ -150,7 +161,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
                         details.strength = winrt::unbox_value<uint8_t>(signal) * 20; // Signal strength is 0-5 but we want 0-100.
                     }
 
-                    if (profile.IsWlanConnectionProfile()) {
+                    if (profile.IsWlanConnectionProfile() || requestedInterface.find("wifi") != std::string::npos) {
                         auto wlanDetails = profile.WlanConnectionProfileDetails();
                         auto ssid = wlanDetails.GetConnectedSsid();
                         auto network = co_await GetWiFiNetwork(networkAdapter, ssid);
@@ -163,14 +174,14 @@ namespace winrt::ReactNativeNetInfo::implementation {
                             details.wifiGeneration = GetWifiGeneration(network.PhyKind());
                         }
                     }
-                    else if (profile.IsWwanConnectionProfile()) {
+                    else if (profile.IsWwanConnectionProfile() || requestedInterface.find("cellular") != std::string::npos) {
                         auto wwanDetails = profile.WwanConnectionProfileDetails();
                         auto dataClass = wwanDetails.GetCurrentDataClass();
 
                         state.type = CONNECTION_TYPE_CELLULAR;
                         details.cellularGeneration = GetCellularGeneration(dataClass);
                     }
-                    else if (networkAdapter) {
+                    else if (networkAdapter || requestedInterface.find("ethernet") != std::string::npos) {
                         // Possible values: https://docs.microsoft.com/en-us/uwp/api/windows.networking.connectivity.networkadapter.ianainterfacetype
                         if (networkAdapter.IanaInterfaceType() == 6u) {
                             state.type = CONNECTION_TYPE_ETHERNET;
