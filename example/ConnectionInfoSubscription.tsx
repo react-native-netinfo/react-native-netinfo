@@ -45,7 +45,7 @@ export default class ConnectionInfoSubscription extends React.Component<
     return (
       <View>
         <Text style={{color: 'black'}}>
-          {JSON.stringify(this.state.connectionInfoHistory)}
+          {JSON.stringify(this.state.connectionInfoHistory, null, 4)}
         </Text>
       </View>
     );

@@ -74,8 +74,8 @@ namespace winrt::ReactNativeNetInfo::implementation {
         REACT_EVENT(NetworkStatusChanged, L"netInfo.networkStatusDidChange");
         std::function<void(NetInfoState)> NetworkStatusChanged;
 
-        static std::future<NetInfoState> GetNetworkStatus(std::string requestedInterface = "");
-        static IAsyncAction ChainGetNetworkStatus(std::function<void(NetInfoState)> onComplete);
+        static std::future<NetInfoState> GetNetworkStatus(std::string const& requestedInterface = "");
+        static IAsyncAction ChainGetNetworkStatus(IAsyncAction previousRequest, std::future<NetInfoState> currentRequest, std::function<void(NetInfoState)> onComplete);
 
     private:
         winrt::Windows::Networking::Connectivity::NetworkInformation::NetworkStatusChanged_revoker m_networkStatusChangedRevoker{};
