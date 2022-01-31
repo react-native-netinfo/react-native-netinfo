@@ -177,7 +177,7 @@ The `details` value depends on the `type` value.
 | Property                | Platform                          | Type      | Description                                                                                                                |
 | ----------------------- | --------------------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `isConnectionExpensive` | Android, iOS, macOS, Windows, Web | `boolean` | If the network connection is considered "expensive". This could be in either energy or monetary terms.                     |
-| `ssid`                  | Android, iOS (not tvOS), Windows | `string`  | The SSID of the network. May not be present, `null`, or an empty string if it cannot be determined. **On iOS, make sure your app meets at least one of the [following requirements](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo?language=objc#discussion). On Android, you need to have the `ACCESS_FINE_LOCATION` permission in your `AndroidManifest.xml` and accepted by the user**. |
+| `ssid`                  | Android, iOS (not tvOS), Windows | `string`  | The SSID of the network. May not be present, `null`, or an empty string if it cannot be determined. **On iOS, make sure your app meets at least one of the [following requirements](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo?language=objc#discussion) & set the `shouldFetchWiFiSSID` configuration option. On Android, you need to have the `ACCESS_FINE_LOCATION` permission in your `AndroidManifest.xml` and accepted by the user**. |
 | `bssid`                 | Android, iOS (not tvOS), Windows* | `string`  | The BSSID of the network. May not be present, `null`, or an empty string if it cannot be determined. **On iOS, make sure your app meets at least one of the [following requirements](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo?language=objc#discussion). On Android, you need to have the `ACCESS_FINE_LOCATION` permission in your `AndroidManifest.xml` and accepted by the user**. |
 | `strength`              | Android, Windows                 | `number`  | An integer number from `0` to `100` for the signal strength. May not be present if the signal strength cannot be determined. |
 | `ipAddress`             | Android, iOS, macOS               | `string`  | The external IP address. Can be in IPv4 or IPv6 format. May not be present if it cannot be determined.                     |
@@ -240,7 +240,9 @@ The configuration options for the library.
 | `reachabilityShortTimeout`   | `number`                          | 5 seconds | The number of milliseconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively.                                                 |
 | `reachabilityLongTimeout`    | `number`                          | 60 seconds | The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively.                                                     |
 | `reachabilityRequestTimeout` | `number`                          | 15 seconds | The number of milliseconds that a reachability check is allowed to take before failing. Only used on platforms which do not supply internet reachability natively.                                                   |                    
-| `reachabilityShouldRun` | `() => boolean`                          | `() => true` | A function which returns a boolean to determine if checkInternetReachability should be run.
+| `reachabilityShouldRun` | `() => boolean`                          | `() => true` | A function which returns a boolean to determine if checkInternetReachability should be run.                                                   |                    
+| `shouldFetchWiFiSSID` | `boolean`                          | `fale` | A flag to indicate that the one of the requirements on iOS has been met to retrieve the network (B)SSID.  This has no effect on Android.
+
 
 ### Methods
 
@@ -259,6 +261,7 @@ NetInfo.configure({
   reachabilityShortTimeout: 5 * 1000, // 5s
   reachabilityRequestTimeout: 15 * 1000, // 15s
   reachabilityShouldRun: () => true,
+  shouldFetchWiFiSSID: true // met iOS requirements to get SSID
 });
 ```
 
@@ -313,6 +316,7 @@ const YourComponent = () => {
     reachabilityShortTimeout: 5 * 1000, // 5s
     reachabilityRequestTimeout: 15 * 1000, // 15s
     reachabilityShouldRun: () => true,
+    shouldFetchWiFiSSID: true // met iOS requirements to get SSID
   });
 
   // ...
