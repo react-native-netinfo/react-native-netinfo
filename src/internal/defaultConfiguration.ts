@@ -1,4 +1,6 @@
-export default {
+import * as Types from './types';
+
+const DEFAULT_CONFIGURATION: Types.NetInfoConfiguration = {
   reachabilityUrl: 'https://clients3.google.com/generate_204',
   reachabilityTest: (response: Response): Promise<boolean> =>
     Promise.resolve(response.status === 204),
@@ -6,4 +8,7 @@ export default {
   reachabilityLongTimeout: 60 * 1000, // 60s
   reachabilityRequestTimeout: 15 * 1000, // 15s
   reachabilityShouldRun: (): boolean => true,
+  shouldFetchWiFiSSID: false
 };
+
+export default DEFAULT_CONFIGURATION;

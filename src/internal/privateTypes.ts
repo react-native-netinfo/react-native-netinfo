@@ -7,7 +7,7 @@
  * @format
  */
 
-import {NetInfoState} from './types';
+import {NetInfoConfiguration, NetInfoState} from './types';
 
 export const DEVICE_CONNECTIVITY_EVENT = 'netInfo.networkStatusDidChange';
 
@@ -22,6 +22,7 @@ export interface Events {
 }
 
 export interface NetInfoNativeModule {
+  configure: (config: Partial<NetInfoConfiguration>) => void;
   getCurrentState: (
     requestedInterface?: string,
   ) => Promise<NetInfoNativeModuleState>;

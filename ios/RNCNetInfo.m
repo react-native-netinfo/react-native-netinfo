@@ -17,10 +17,6 @@
 #endif
 @import SystemConfiguration.CaptiveNetwork;
 
-#if !TARGET_OS_TV && !TARGET_OS_OSX
-#import <CoreLocation/CoreLocation.h>
-#endif
-
 #import <React/RCTAssert.h>
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
@@ -29,6 +25,7 @@
 
 @property (nonatomic, strong) RNCConnectionStateWatcher *connectionStateWatcher;
 @property (nonatomic) BOOL isObserving;
+@property (nonatomic) NSDictionary *config;
 
 @end
 
@@ -100,6 +97,11 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
   resolve([self currentDictionaryFromUpdateState:state withInterface:requestedInterface]);
 }
 
+RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
+{
+    self.config = config;
+}
+
 #pragma mark - Utilities
 
 // Converts the state into a dictionary to send over the bridge
@@ -128,20 +130,14 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
   } else if ([requestedInterface isEqualToString: RNCConnectionTypeWifi] || [requestedInterface isEqualToString: RNCConnectionTypeEthernet]) {
     details[@"ipAddress"] = [self ipAddress] ?: NSNull.null;
     details[@"subnet"] = [self subnet] ?: NSNull.null;
-    #if !TARGET_OS_TV && !TARGET_OS_OSX
+    #if !TARGET_OS_TV && !TARGET_OS_OSX   
       /*
         Without one of the conditions needed to use CNCopyCurrentNetworkInfo, it will leak.
-        Checking location permissions currently.  See link in README under SSID for more info.
-
-        'locationServicesEnabled' needs to use the non-deprecated function of the same name to
-        handle location permission state change, and reset details when approved.
+        Clients must set the shouldFetchWiFiSSID after ensuring one of these is met to get (B)SSID.
       */
-      if (CLLocationManager.locationServicesEnabled) {
-          CLAuthorizationStatus status = CLLocationManager.authorizationStatus;
-          if (status == kCLAuthorizationStatusAuthorizedAlways || status == kCLAuthorizationStatusAuthorizedWhenInUse) {
-              details[@"ssid"] = [self ssid] ?: NSNull.null;
-              details[@"bssid"] = [self bssid] ?: NSNull.null;
-          }
+      if (self.config && self.config[@"shouldFetchWiFiSSID"]) {
+        details[@"ssid"] = [self ssid] ?: NSNull.null;
+        details[@"bssid"] = [self bssid] ?: NSNull.null;
       }
     #endif
   }

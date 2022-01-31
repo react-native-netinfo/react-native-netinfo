@@ -8,12 +8,14 @@
  */
 
 import {useState, useEffect} from 'react';
+import {Platform} from 'react-native';
 import DEFAULT_CONFIGURATION from './internal/defaultConfiguration';
+import NativeInterface from './internal/nativeInterface';
 import State from './internal/state';
 import * as Types from './internal/types';
 
 // Stores the currently used configuration
-let _configuration: Types.NetInfoConfiguration = DEFAULT_CONFIGURATION;
+let _configuration = DEFAULT_CONFIGURATION;
 
 // Stores the singleton reference to the state manager
 let _state: State | null = null;
@@ -39,6 +41,10 @@ export function configure(
   if (_state) {
     _state.tearDown();
     _state = createState();
+  }
+
+  if (Platform.OS === 'ios') {
+    NativeInterface.configure(configuration);
   }
 }
 
