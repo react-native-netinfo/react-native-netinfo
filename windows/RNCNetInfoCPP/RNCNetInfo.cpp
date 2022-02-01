@@ -152,19 +152,17 @@ namespace winrt::ReactNativeNetInfo::implementation {
                 auto connectivityLevel = profile.GetNetworkConnectivityLevel();
                 auto signal = profile.GetSignalBars();
                 auto costType = profile.GetConnectionCost().NetworkCostType();
+                auto isWifiConnection = profile.IsWlanConnectionProfile() || requestedInterface.find("wifi") != std::string::npos;
+                auto isCellularConnection = profile.IsWwanConnectionProfile() || requestedInterface.find("cellular") != std::string::npos;
+                auto isEthernetConnection = networkAdapter || requestedInterface.find("ethernet") != std::string::npos;
+                auto isConnectionExpensive = costType == NetworkCostType::Fixed || costType == NetworkCostType::Variable;
 
                 state.isConnected = connectivityLevel != NetworkConnectivityLevel::None;
 
                 if (state.isConnected) {
-                    NetInfoDetails details{};
+                    if (isWifiConnection) {
+                        NetInfoWifiDetails details{};
 
-                    state.isInternetReachable = connectivityLevel == NetworkConnectivityLevel::InternetAccess;
-                    details.isConnectionExpensive = costType == NetworkCostType::Fixed || costType == NetworkCostType::Variable;
-                    if (signal) {
-                        details.strength = winrt::unbox_value<uint8_t>(signal) * 20; // Signal strength is 0-5 but we want 0-100.
-                    }
-
-                    if (profile.IsWlanConnectionProfile() || requestedInterface.find("wifi") != std::string::npos) {
                         auto wlanDetails = profile.WlanConnectionProfileDetails();
                         auto ssid = wlanDetails.GetConnectedSsid();
                         auto network = co_await GetWiFiNetwork(networkAdapter, ssid);
@@ -176,15 +174,26 @@ namespace winrt::ReactNativeNetInfo::implementation {
                             details.frequency = network.ChannelCenterFrequencyInKilohertz() / 1000; // Convert to Mhz
                             details.wifiGeneration = GetWifiGeneration(network.PhyKind());
                         }
+                        if (signal) {
+                            details.strength = winrt::unbox_value<uint8_t>(signal) * 20; // Signal strength is 0-5 but we want 0-100.
+                        }
+                        details.isConnectionExpensive = isConnectionExpensive;
+
+                        state.details = std::move(details);
                     }
-                    else if (profile.IsWwanConnectionProfile() || requestedInterface.find("cellular") != std::string::npos) {
+                    else if (isCellularConnection) {
+                        NetInfoCellularDetails details{};
+
                         auto wwanDetails = profile.WwanConnectionProfileDetails();
                         auto dataClass = wwanDetails.GetCurrentDataClass();
 
                         state.type = CONNECTION_TYPE_CELLULAR;
-                        details.cellularGeneration = GetCellularGeneration(dataClass);
+                        details.cellularGeneration = GetCellularGeneration(dataClass);                     
+                        details.isConnectionExpensive = isConnectionExpensive;
+
+                        state.details = std::move(details);
                     }
-                    else if (networkAdapter || requestedInterface.find("ethernet") != std::string::npos) {
+                    else if (isEthernetConnection) {
                         // Possible values: https://docs.microsoft.com/en-us/uwp/api/windows.networking.connectivity.networkadapter.ianainterfacetype
                         if (networkAdapter.IanaInterfaceType() == 6u) {
                             state.type = CONNECTION_TYPE_ETHERNET;
@@ -196,8 +205,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
                     else {
                         state.type = CONNECTION_TYPE_UNKNOWN;
                     }
-
-                    state.details = std::move(details);
+                    state.isInternetReachable = connectivityLevel == NetworkConnectivityLevel::InternetAccess;
                 }
             }
         }

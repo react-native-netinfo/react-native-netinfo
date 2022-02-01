@@ -15,10 +15,16 @@ namespace winrt::ReactNativeNetInfo::implementation {
     struct NetInfoDetails {
         REACT_FIELD(isConnectionExpensive);
         bool isConnectionExpensive;
+    };
 
+    REACT_STRUCT(NetInfoCellularDetails);
+    struct NetInfoCellularDetails : NetInfoDetails {
         REACT_FIELD(cellularGeneration);
         std::optional<std::string> cellularGeneration;
+    };
 
+    REACT_STRUCT(NetInfoWifiDetails);
+    struct NetInfoWifiDetails : NetInfoDetails {
         REACT_FIELD(wifiGeneration);
         std::optional<std::string> wifiGeneration;
 
