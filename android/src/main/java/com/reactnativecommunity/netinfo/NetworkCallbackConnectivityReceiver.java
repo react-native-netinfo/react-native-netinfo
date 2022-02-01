@@ -13,7 +13,6 @@ import android.net.LinkProperties;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
-import android.net.NetworkRequest;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -53,8 +52,6 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     @SuppressLint("MissingPermission")
     public void register() {
         try {
-            NetworkRequest.Builder builder = new NetworkRequest.Builder();
-
             // Similar to BroadcastReceiver implementation, we need to force
             // an initial callback call in order to get the current network state,
             // otherwise, an app started without any network connection will
@@ -62,7 +59,7 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
             mNetwork = getConnectivityManager().getActiveNetwork();
             asyncUpdateAndSend(0);
 
-            getConnectivityManager().registerNetworkCallback(builder.build(), mNetworkCallback);
+            getConnectivityManager().registerDefaultNetworkCallback(mNetworkCallback);
         } catch (SecurityException e) {
             // TODO: Display a yellow box about this
         }
