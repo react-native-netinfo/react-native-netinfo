@@ -105,7 +105,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
         co_return nullptr;
     }
 
-    IAsyncAction RNCNetInfo::ChainGetNetworkStatus(IAsyncAction previousRequest, std::future<NetInfoState> currentRequest, std::function<void(NetInfoState)> onComplete) {
+    IAsyncAction RNCNetInfo::ChainGetNetworkStatus(IAsyncAction previousRequest, std::future<NetInfoState> currentRequest, std::function<void(NetInfoState)> const& onComplete) {
         auto state = co_await currentRequest;
         if (previousRequest) {
             co_await previousRequest;
@@ -162,6 +162,9 @@ namespace winrt::ReactNativeNetInfo::implementation {
                 if (state.isConnected) {
                     if (isWifiConnection) {
                         NetInfoWifiDetails details{};
+                        if (!profile.IsWlanConnectionProfile()) {
+                            throw ("Wifi is not available");
+                        }
 
                         auto wlanDetails = profile.WlanConnectionProfileDetails();
                         auto ssid = wlanDetails.GetConnectedSsid();
@@ -183,6 +186,9 @@ namespace winrt::ReactNativeNetInfo::implementation {
                     }
                     else if (isCellularConnection) {
                         NetInfoCellularDetails details{};
+                        if (!profile.IsWwanConnectionProfile()) {
+                            throw ("Cellular is not available");
+                        }
 
                         auto wwanDetails = profile.WwanConnectionProfileDetails();
                         auto dataClass = wwanDetails.GetCurrentDataClass();
