@@ -15,16 +15,8 @@ namespace winrt::ReactNativeNetInfo::implementation {
     struct NetInfoDetails {
         REACT_FIELD(isConnectionExpensive);
         bool isConnectionExpensive;
-    };
-
-    REACT_STRUCT(NetInfoCellularDetails);
-    struct NetInfoCellularDetails : NetInfoDetails {
         REACT_FIELD(cellularGeneration);
         std::optional<std::string> cellularGeneration;
-    };
-
-    REACT_STRUCT(NetInfoWifiDetails);
-    struct NetInfoWifiDetails : NetInfoDetails {
         REACT_FIELD(wifiGeneration);
         std::optional<std::string> wifiGeneration;
 
@@ -81,7 +73,6 @@ namespace winrt::ReactNativeNetInfo::implementation {
         std::function<void(NetInfoState)> NetworkStatusChanged;
 
         static std::future<NetInfoState> GetNetworkStatus(std::string const& requestedInterface = "");
-        static IAsyncAction ChainGetNetworkStatus(IAsyncAction previousRequest, std::future<NetInfoState> currentRequest, std::function<void(NetInfoState)> const& onComplete);
 
     private:
         winrt::Windows::Networking::Connectivity::NetworkInformation::NetworkStatusChanged_revoker m_networkStatusChangedRevoker{};

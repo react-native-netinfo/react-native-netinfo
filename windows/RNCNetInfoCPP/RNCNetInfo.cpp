@@ -105,7 +105,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
         co_return nullptr;
     }
 
-    IAsyncAction RNCNetInfo::ChainGetNetworkStatus(IAsyncAction previousRequest, std::future<NetInfoState> currentRequest, std::function<void(NetInfoState)> const& onComplete) {
+    IAsyncAction ChainGetNetworkStatus(IAsyncAction previousRequest, std::future<NetInfoState> currentRequest, std::function<void(NetInfoState)> onComplete) {
         auto state = co_await currentRequest;
         if (previousRequest) {
             co_await previousRequest;
@@ -127,7 +127,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
                 // wait on the response, we just store the IAsyncAction object.
                 {
                     std::scoped_lock lock(*mutex);
-                    IAsyncAction previousRequest = ChainGetNetworkStatus(previousRequest, std::move(currentRequest), callback);
+                    previousRequest = ChainGetNetworkStatus(previousRequest, std::move(currentRequest), callback);
                 }
             }
             catch (...) {}
@@ -159,11 +159,14 @@ namespace winrt::ReactNativeNetInfo::implementation {
 
                 state.isConnected = connectivityLevel != NetworkConnectivityLevel::None;
 
+                NetInfoDetails details{};
                 if (state.isConnected) {
+                    if (signal) {
+                        details.strength = winrt::unbox_value<uint8_t>(signal) * 20; // Signal strength is 0-5 but we want 0-100.
+                    }
                     if (isWifiConnection) {
-                        NetInfoWifiDetails details{};
                         if (!profile.IsWlanConnectionProfile()) {
-                            throw ("Wifi is not available");
+                            throw ("Wifi profile is not available");
                         }
 
                         auto wlanDetails = profile.WlanConnectionProfileDetails();
@@ -177,27 +180,17 @@ namespace winrt::ReactNativeNetInfo::implementation {
                             details.frequency = network.ChannelCenterFrequencyInKilohertz() / 1000; // Convert to Mhz
                             details.wifiGeneration = GetWifiGeneration(network.PhyKind());
                         }
-                        if (signal) {
-                            details.strength = winrt::unbox_value<uint8_t>(signal) * 20; // Signal strength is 0-5 but we want 0-100.
-                        }
-                        details.isConnectionExpensive = isConnectionExpensive;
-
-                        state.details = std::move(details);
                     }
                     else if (isCellularConnection) {
-                        NetInfoCellularDetails details{};
                         if (!profile.IsWwanConnectionProfile()) {
-                            throw ("Cellular is not available");
+                            throw ("Cellular profile is not available");
                         }
 
                         auto wwanDetails = profile.WwanConnectionProfileDetails();
                         auto dataClass = wwanDetails.GetCurrentDataClass();
 
                         state.type = CONNECTION_TYPE_CELLULAR;
-                        details.cellularGeneration = GetCellularGeneration(dataClass);                     
-                        details.isConnectionExpensive = isConnectionExpensive;
-
-                        state.details = std::move(details);
+                        details.cellularGeneration = GetCellularGeneration(dataClass);
                     }
                     else if (isEthernetConnection) {
                         // Possible values: https://docs.microsoft.com/en-us/uwp/api/windows.networking.connectivity.networkadapter.ianainterfacetype
@@ -211,7 +204,11 @@ namespace winrt::ReactNativeNetInfo::implementation {
                     else {
                         state.type = CONNECTION_TYPE_UNKNOWN;
                     }
+                    details.isConnectionExpensive = isConnectionExpensive;
+
                     state.isInternetReachable = connectivityLevel == NetworkConnectivityLevel::InternetAccess;
+                    state.details = std::move(details);
+                    
                 }
             }
         }
