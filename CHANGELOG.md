@@ -1,3 +1,10 @@
+## [7.1.10](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.9...v7.1.10) (2022-02-07)
+
+
+### Bug Fixes
+
+* **android:** use registerDefaultNetworkCallback so toggling airplane mode works ([#571](https://github.com/react-native-netinfo/react-native-netinfo/issues/571)) ([e8af2de](https://github.com/react-native-netinfo/react-native-netinfo/commit/e8af2de))
+
 ## [7.1.9](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.8...v7.1.9) (2022-01-26)
 
 
