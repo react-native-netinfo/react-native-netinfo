@@ -166,7 +166,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
                     }
                     if (isWifiConnection) {
                         if (!profile.IsWlanConnectionProfile()) {
-                            throw ("Wifi profile is not available");
+                            throw (std::runtime_error("Wifi profile is not available"));
                         }
 
                         auto wlanDetails = profile.WlanConnectionProfileDetails();
@@ -183,7 +183,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
                     }
                     else if (isCellularConnection) {
                         if (!profile.IsWwanConnectionProfile()) {
-                            throw ("Cellular profile is not available");
+                            throw (std::runtime_error("Cellular profile is not available"));
                         }
 
                         auto wwanDetails = profile.WwanConnectionProfileDetails();
@@ -213,6 +213,8 @@ namespace winrt::ReactNativeNetInfo::implementation {
             }
         }
         catch (...) {
+            // If we throw an error we cannot reliably ensure that the network properties are valid so we will reset all the network info properties
+            state = {};
         }
 
         co_return state;
