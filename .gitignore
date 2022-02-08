@@ -67,3 +67,5 @@ lib/
 
 # npm package lock file
 package-lock.json
+
+msbuild.binlog
