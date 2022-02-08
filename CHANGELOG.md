@@ -1,3 +1,10 @@
+## [7.1.11](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.10...v7.1.11) (2022-02-08)
+
+
+### Bug Fixes
+
+* **windows:** fix race condition in WiFi connection details feature ([#568](https://github.com/react-native-netinfo/react-native-netinfo/issues/568)) ([0cd8132](https://github.com/react-native-netinfo/react-native-netinfo/commit/0cd8132))
+
 ## [7.1.10](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.9...v7.1.10) (2022-02-07)
 
 
