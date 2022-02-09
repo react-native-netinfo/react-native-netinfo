@@ -1,3 +1,10 @@
+## [7.1.12](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.11...v7.1.12) (2022-02-09)
+
+
+### Bug Fixes
+
+* **ios:** avoid memory leak from ssid APIs by adding explicit config ([#560](https://github.com/react-native-netinfo/react-native-netinfo/issues/560)) ([fbf7c15](https://github.com/react-native-netinfo/react-native-netinfo/commit/fbf7c15)), closes [#420](https://github.com/react-native-netinfo/react-native-netinfo/issues/420)
+
 ## [7.1.11](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.10...v7.1.11) (2022-02-08)
 
 
