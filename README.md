@@ -261,7 +261,7 @@ NetInfo.configure({
   reachabilityShortTimeout: 5 * 1000, // 5s
   reachabilityRequestTimeout: 15 * 1000, // 15s
   reachabilityShouldRun: () => true,
-  shouldFetchWiFiSSID: true // met iOS requirements to get SSID
+  shouldFetchWiFiSSID: true // met iOS requirements to get SSID. Will leak memory if set to true without meeting requirements.
 });
 ```
 
