@@ -132,8 +132,8 @@ RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
     details[@"subnet"] = [self subnet] ?: NSNull.null;
     #if !TARGET_OS_TV && !TARGET_OS_OSX   
       /*
-        Without one of the conditions needed to use CNCopyCurrentNetworkInfo, it will leak.
-        Clients must set the shouldFetchWiFiSSID after ensuring one of these is met to get (B)SSID.
+        Without one of the conditions needed to use CNCopyCurrentNetworkInfo, it will leak memory.
+        Clients should only set the shouldFetchWiFiSSID to true after ensuring requirements are met to get (B)SSID.
       */
       if (self.config && self.config[@"shouldFetchWiFiSSID"]) {
         details[@"ssid"] = [self ssid] ?: NSNull.null;
