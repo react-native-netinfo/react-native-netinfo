@@ -241,7 +241,7 @@ The configuration options for the library.
 | `reachabilityLongTimeout`    | `number`                          | 60 seconds | The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively.                                                     |
 | `reachabilityRequestTimeout` | `number`                          | 15 seconds | The number of milliseconds that a reachability check is allowed to take before failing. Only used on platforms which do not supply internet reachability natively.                                                   |                    
 | `reachabilityShouldRun` | `() => boolean`                          | `() => true` | A function which returns a boolean to determine if checkInternetReachability should be run.                                                   |                    
-| `shouldFetchWiFiSSID` | `boolean`                          | `fale` | A flag to indicate that the one of the requirements on iOS has been met to retrieve the network (B)SSID.  This has no effect on Android.
+| `shouldFetchWiFiSSID` | `boolean`                          | `false` | A flag indicating one of the requirements on iOS has been met to retrieve the network (B)SSID, and the native SSID retrieval APIs should be called.  This has no effect on Android.
 
 
 ### Methods
