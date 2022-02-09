@@ -114,4 +114,5 @@ export interface NetInfoConfiguration {
   reachabilityShortTimeout: number;
   reachabilityRequestTimeout: number;
   reachabilityShouldRun: () => boolean;
+  shouldFetchWiFiSSID: boolean;
 }

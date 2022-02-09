@@ -285,6 +285,10 @@ const RNCNetInfo: NetInfoNativeModule = {
   async getCurrentState(requestedInterface): Promise<NetInfoNativeModuleState> {
     return getCurrentState(requestedInterface);
   },
+
+  configure(): void {
+    return;
+  },
 };
 
 export default RNCNetInfo;
