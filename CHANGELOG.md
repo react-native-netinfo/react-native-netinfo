@@ -1,5 +1,6 @@
 ## [7.1.12](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.11...v7.1.12) (2022-02-09)
 
+**BREAKING CHANGE NOTICE** - it's possible this is a breaking change, depending on your app use case. If you relied on iOS SSID information and met [Apple's strict criteria for accessing SSID](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo?language=objc#discussion), you need to set the new config value `shouldFetchWiFiSSID` to true. If you set it to true and do not meet the criteria your app may crash due to a memory leak. All versions prior to 7.1.12 would attempt to fetch the information regardless of permission, leak memory, and possible crash. This change avoids that crash.
 
 ### Bug Fixes
 
