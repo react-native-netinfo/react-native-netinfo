@@ -105,6 +105,30 @@ namespace winrt::ReactNativeNetInfo::implementation {
         co_return nullptr;
     }
 
+    std::string getIpAddressSync() noexcept
+    {
+      auto icp = Windows::Networking::Connectivity::NetworkInformation::GetInternetConnectionProfile();
+      if (!icp || !icp.NetworkAdapter())
+      {
+        return "unknown";
+      } else
+      {
+        auto hostnames = Windows::Networking::Connectivity::NetworkInformation::GetHostNames();
+        for (auto const& hostname : hostnames)
+        {
+          if (
+            hostname.Type() == Windows::Networking::HostNameType::Ipv4 &&
+            hostname.IPInformation() &&
+            hostname.IPInformation().NetworkAdapter() &&
+            hostname.IPInformation().NetworkAdapter().NetworkAdapterId() == icp.NetworkAdapter().NetworkAdapterId())
+          {
+            return winrt::to_string(hostname.CanonicalName());
+          }
+        }
+        return "unknown";
+      }
+    }
+
     IAsyncAction ChainGetNetworkStatus(IAsyncAction previousRequest, std::future<NetInfoState> currentRequest, std::function<void(NetInfoState)> onComplete) {
         auto state = co_await currentRequest;
         if (previousRequest) {
@@ -164,6 +188,7 @@ namespace winrt::ReactNativeNetInfo::implementation {
                     if (signal) {
                         details.strength = winrt::unbox_value<uint8_t>(signal) * 20; // Signal strength is 0-5 but we want 0-100.
                     }
+                    state.ipAddress = getIpAddressSync();
                     if (isWifiConnection) {
                         if (!profile.IsWlanConnectionProfile()) {
                             throw (std::runtime_error("Wifi profile is not available"));

@@ -50,6 +50,13 @@ namespace winrt::ReactNativeNetInfo::implementation {
         bool isConnected;
 
         /// <summary>
+        /// IP Address of the current connection if available
+        /// </summary>
+        /// <param name=""></param>
+        REACT_FIELD(ipAddress);
+        std::string ipAddress;
+
+        /// <summary>
         /// Is the internet reachable with the active network
         /// </summary>
         /// <param name=""></param>
