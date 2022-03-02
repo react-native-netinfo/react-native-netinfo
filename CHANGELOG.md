@@ -1,3 +1,10 @@
+# [8.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v8.0.0...v8.1.0) (2022-03-02)
+
+
+### Features
+
+* **windows, ip-address:** add ipAddress info to windows details ([#581](https://github.com/react-native-netinfo/react-native-netinfo/issues/581)) ([11f3e3b](https://github.com/react-native-netinfo/react-native-netinfo/commit/11f3e3b))
+
 # [8.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.12...v8.0.0) (2022-02-10)
 
 
