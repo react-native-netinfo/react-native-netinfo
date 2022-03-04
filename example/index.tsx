@@ -138,20 +138,11 @@ class ExampleApp extends React.Component<Record<string, unknown>, State> {
   }
 
   componentDidMount() {
-    Linking.getInitialURL().then(this._handleOpenURLString);
-    if (Platform.OS === 'macos') {
-      Linking.addEventListener('url', this._handleOpenURLMacOS);
-    } else {
-      Linking.addEventListener('url', this._handleOpenURL);
-    }
+    Linking.addEventListener('url', this._handleOpenURL);
   }
 
   componentWillUnmount() {
-    if (Platform.OS === 'macos') {
-      Linking.removeEventListener('url', this._handleOpenURLMacOS);
-    } else {
-      Linking.removeEventListener('url', this._handleOpenURL);
-    }
+    Linking.removeEventListener('url', this._handleOpenURL);
   }
 
   // Receives commands from the test runner when it opens the app with a given URL
@@ -159,9 +150,7 @@ class ExampleApp extends React.Component<Record<string, unknown>, State> {
   _handleOpenURL = ({url}: {url: string}) => {
     this._handleOpenURLString(url);
   };
-  _handleOpenURLMacOS = (url: any) => {
-    this._handleOpenURLString(url);
-  };
+
   _handleOpenURLString = (url: string | null) => {
     if (!url) {
       return;

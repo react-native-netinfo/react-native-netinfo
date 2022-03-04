@@ -1,0 +1,45 @@
+{
+  "name": "NetInfoExample",
+  "displayName": "NetInfoExample",
+  "components": [
+    {
+      "appKey": "NetInfoExample",
+      "displayName": "NetInfoExample"
+    }
+  ],
+  "android": {
+    "package": "com.reactnativecommunity.netinfo.example",
+    "signingConfigs": {
+      "debug": {
+        "keyAlias": "androiddebugkey",
+        "keyPassword": "android",
+        "storeFile": "android/app/debug.keystore",
+        "storePassword": "android"
+      },
+      "release": {
+        "keyAlias": "androiddebugkey",
+        "keyPassword": "android",
+        "storeFile": "android/app/release.keystore",
+        "storePassword": "android"
+      }
+    }
+  },
+  "resources": {
+    "android": [
+      "dist/res",
+      "dist/main.android.jsbundle"
+    ],
+    "ios": [
+      "dist/assets",
+      "dist/main.ios.jsbundle"
+    ],
+    "macos": [
+      "dist/assets",
+      "dist/main.macos.jsbundle"
+    ],
+    "windows": [
+      "dist/assets",
+      "dist/main.windows.bundle"
+    ]
+  }
+}
