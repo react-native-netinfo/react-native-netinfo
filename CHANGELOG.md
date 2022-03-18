@@ -1,3 +1,10 @@
+# [8.2.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v8.1.0...v8.2.0) (2022-03-18)
+
+
+### Features
+
+* **android:** add ethernet information ([#584](https://github.com/react-native-netinfo/react-native-netinfo/issues/584)) ([2b3a8e2](https://github.com/react-native-netinfo/react-native-netinfo/commit/2b3a8e2))
+
 # [8.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v8.0.0...v8.1.0) (2022-03-02)
 
 
