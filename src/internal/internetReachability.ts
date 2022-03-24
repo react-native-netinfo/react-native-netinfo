@@ -9,6 +9,7 @@
 
 import * as Types from './types';
 import * as PrivateTypes from './privateTypes';
+import fetch from 'cross-fetch';
 
 interface InternetReachabilityCheckHandler {
   promise: Promise<void>;
