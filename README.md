@@ -299,7 +299,7 @@ const YourComponent = () => {
   return (
     <View>
       <Text>Type: {netInfo.type}</Text>
-      <Text>Is Connected? {netInfo.isConnected.toString()}</Text>
+      <Text>Is Connected? {netInfo.isConnected?.toString()}</Text>
     </View>
   );
 };
