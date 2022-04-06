@@ -131,6 +131,7 @@ export * from './internal/types';
 export default {
   configure,
   fetch,
+  refresh,
   addEventListener,
   useNetInfo,
 };
