@@ -23,6 +23,7 @@ import {
 import ConnectionInfoSubscription from './ConnectionInfoSubscription';
 import ConnectionInfoCurrent from './ConnectionInfoCurrent';
 import ConnectionInfoFetch from './ConnectionInfoFetch';
+import ConnectionInfoRefresh from './ConnectionInfoRefresh';
 import NetInfoHook from './NetInfoHook';
 import IsConnected from './IsConnected';
 
@@ -49,6 +50,14 @@ const EXAMPLES: Example[] = [
     description: 'Fetch the state on tap',
     render() {
       return <ConnectionInfoFetch />;
+    },
+  },
+  {
+    id: 'refresh',
+    title: 'NetInfo.refresh',
+    description: 'Refresh the state on tap',
+    render() {
+      return <ConnectionInfoRefresh />;
     },
   },
   {
