@@ -65,6 +65,18 @@ export function fetch(
 }
 
 /**
+ * Force-refreshes the internal state of the NetInfo library.
+ *
+ * @returns A Promise which contains the updated connection state.
+ */
+export function refresh(): Promise<Types.NetInfoState> {
+  if (!_state) {
+    _state = createState();
+  }
+  return _state._fetchCurrentState();
+}
+
+/**
  * Subscribe to connection information. The callback is called with a parameter of type
  * [`NetInfoState`](README.md#netinfostate) whenever the connection state changes. Your listener
  * will be called with the latest information soon after you subscribe and then with any
