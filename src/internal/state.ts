@@ -65,7 +65,7 @@ export default class State {
     this._subscriptions.forEach((handler): void => handler(nextState));
   };
 
-  private _fetchCurrentState = async (
+  public _fetchCurrentState = async (
     requestedInterface?: string,
   ): Promise<Types.NetInfoState> => {
     const state = await NativeInterface.getCurrentState(requestedInterface);

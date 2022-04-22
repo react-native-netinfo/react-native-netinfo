@@ -148,6 +148,7 @@ NetInfo.fetch().then(state => {
   * [`NetInfoCellularGeneration`](#netinfocellulargeneration)
 * **Methods:**
   * [`fetch()`](#fetch)
+  * [`refresh()`](#refresh)
   * [`addEventListener()`](#addeventlistener)
   * [`useNetInfo()`](#usenetinfo)
 
@@ -344,6 +345,20 @@ NetInfo.fetch("wifi").then(state => {
   console.log("Is connected?", state.isConnected);
 });
 ```
+
+#### `refresh()`
+
+Updates NetInfo's internal state, then returns a `Promise` that resolves to a [`NetInfoState`](#netinfostate) object. This is similar to `fetch()`, but really only useful on platforms that do not supply internet reachability natively. For example, you can use it to immediately re-run an internet reachability test if a network request fails unexpectedly.
+
+**Example:**
+```javascript
+NetInfo.refresh().then(state => {
+    console.log("Connection type", state.type);
+    console.log("Is connected?", state.isConnected);
+});
+```
+
+This will also update subscribers using `addEventListener` and/or `useNetInfo`.
 
 ## Troubleshooting
 
