@@ -269,8 +269,8 @@ const RNCNetInfo: NetInfoNativeModule = {
         if (connection) {
           connection.removeEventListener('change', nativeHandler);
         } else {
-          window.addEventListener('online', nativeHandler);
-          window.addEventListener('offline', nativeHandler);
+          window.removeEventListener('online', nativeHandler);
+          window.removeEventListener('offline', nativeHandler);
         }
 
         // Remove handlers
