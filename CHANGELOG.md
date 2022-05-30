@@ -1,3 +1,10 @@
+## [8.3.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v8.3.0...v8.3.1) (2022-05-30)
+
+
+### Bug Fixes
+
+* **web:** removeListeners should actually remove listeners ([#600](https://github.com/react-native-netinfo/react-native-netinfo/issues/600)) ([60e9e38](https://github.com/react-native-netinfo/react-native-netinfo/commit/60e9e38))
+
 # [8.3.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v8.2.0...v8.3.0) (2022-04-22)
 
 
