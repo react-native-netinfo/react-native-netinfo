@@ -1,3 +1,13 @@
+# [9.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v8.3.1...v9.0.0) (2022-06-03)
+
+
+* fix(windows)!: change WindowsTargetPlatformVersion to 10.0 / drop arm32 / drop rnw < 0.63 (#603) ([16d6568](https://github.com/react-native-netinfo/react-native-netinfo/commit/16d6568)), closes [#603](https://github.com/react-native-netinfo/react-native-netinfo/issues/603)
+
+
+### BREAKING CHANGES
+
+* needs react-native-windows 0.63+ and MSVC build tools v142+ (Visual Studio 2019+), drop arm32
+
 ## [8.3.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v8.3.0...v8.3.1) (2022-05-30)
 
 
