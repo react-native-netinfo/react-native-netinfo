@@ -61,30 +61,14 @@ Linking the package manually is not required anymore with [Autolinking](https://
 
 - **Windows Platform:**
 
-  Autolinking works on RNW >= 0.63. If you need to manually link, see the [Manual linking steps for Windows](#manual-linking-windows) below.
+  Autolinking automatically works on RNW >= 0.63.
 
-<details id='manual-linking-windows'>
-<summary>Manually link the library on Windows</summary>
+## Minimum supported versions for windows
 
-#### Link to your C++ app (RNW >= 0.62)
-* Open the solution in Visual Studio for your Windows apps
-* Right click in the Explorer and click Add > Existing Project...
-* Navigate to `./<app-name>/node_modules/@react-native-community/netinfo/windows/RNCNetInfoCPP/` and add `RNCNetInfoCPP.vcxproj`
-* This time right click on your React Native Windows app under your solutions directory and click Add > Reference...
-* Check the `RNCNetInfoCPP` you just added and press ok
-* Open `pch.h`, add `#include "winrt/ReactNativeNetInfo.h"`
-* Open `App.cpp`, add `PackageProviders().Append(winrt::ReactNativeNetInfo::ReactPackageProvider());` before `InitializeComponent();`
+- react-native-windows 0.63 or newer
+- MSVC build tools v142 (included in Visual Studio 2019) or newer
+- x86, x64, or arm64 are supported, arm (32-bit) is not supported
 
-#### Link C# to your C# app (RNW >= 0.62)
-* Open the solution in Visual Studio for your Windows apps
-* Right click in the Explorer and click Add > Existing Project...
-* Navigate to `./<app-name>/node_modules/@react-native-community/netinfo/windows/RNCNetInfoCPP/` and add `RNCNetInfoCPP.vcxproj`
-* This time right click on your React Native Windows app under your solutions directory and click Add > Reference...
-* Check the `RNCNetInfoCPP` you just added and press ok
-* Open up `App.xaml.cs` for your app and add `using ReactNativeNetInfo;` to the top.
-* Open up `App.xaml.cs` for your app and add `PackageProviders.Add(new ReactNativeNetInfo.ReactPackageProvider());` before `InitializeComponent();`
-
-</details>
 
 ## React Native Compatibility
 To use this library you need to ensure you are using the correct version of React Native.
