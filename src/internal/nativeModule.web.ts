@@ -188,6 +188,9 @@ const getCurrentState = (
         ipAddress: null,
         subnet: null,
         frequency: null,
+        linkSpeed: null,
+        rxLinkSpeed: null,
+        txLinkSpeed: null,
       },
     };
     return state;

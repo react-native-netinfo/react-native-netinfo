@@ -32,7 +32,7 @@ export interface NetInfoConnectedDetails {
 
 interface NetInfoConnectedState<
   T extends NetInfoStateType,
-  D extends Record<string, unknown> = Record<string, unknown>
+  D extends Record<string, unknown> = Record<string, unknown>,
 > {
   type: T;
   isConnected: true;
@@ -55,9 +55,8 @@ export interface NetInfoUnknownState {
   details: null;
 }
 
-export type NetInfoNoConnectionState = NetInfoDisconnectedState<
-  NetInfoStateType.none
->;
+export type NetInfoNoConnectionState =
+  NetInfoDisconnectedState<NetInfoStateType.none>;
 export type NetInfoDisconnectedStates =
   | NetInfoUnknownState
   | NetInfoNoConnectionState;
@@ -78,11 +77,13 @@ export type NetInfoWifiState = NetInfoConnectedState<
     ipAddress: string | null;
     subnet: string | null;
     frequency: number | null;
+    linkSpeed: number | null;
+    rxLinkSpeed: number | null;
+    txLinkSpeed: number | null;
   }
 >;
-export type NetInfoBluetoothState = NetInfoConnectedState<
-  NetInfoStateType.bluetooth
->;
+export type NetInfoBluetoothState =
+  NetInfoConnectedState<NetInfoStateType.bluetooth>;
 export type NetInfoEthernetState = NetInfoConnectedState<
   NetInfoStateType.ethernet,
   {
