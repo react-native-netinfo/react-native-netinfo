@@ -220,13 +220,14 @@ The configuration options for the library.
 
 | Property | Type | Default | Description
 | ---------------------------- | --------------------------------- | ----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | 
-| `reachabilityUrl`            | `string`                          | `https://clients3.google.com/generate_204` | The URL to call to test if the internet is reachable. Only used on platforms which do not supply internet reachability natively.                                                                                                          |
-| `reachabilityTest`           | `(response: Response) => boolean` | `Promise.resolve(response.status === 204)` | A function which is passed the `Response` from calling the reachability URL. It should return `true` if the response indicates that the internet is reachable. Only used on platforms which do not supply internet reachability natively. |
-| `reachabilityShortTimeout`   | `number`                          | 5 seconds | The number of milliseconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively.                                                 |
-| `reachabilityLongTimeout`    | `number`                          | 60 seconds | The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively.                                                     |
-| `reachabilityRequestTimeout` | `number`                          | 15 seconds | The number of milliseconds that a reachability check is allowed to take before failing. Only used on platforms which do not supply internet reachability natively.                                                   |                    
+| `reachabilityUrl`            | `string`                          | `https://clients3.google.com/generate_204` | The URL to call to test if the internet is reachable. Only used on platforms which do not supply internet reachability natively or if `useNativeReachability` is `false`.                                                                                                          |
+| `reachabilityTest`           | `(response: Response) => boolean` | `Promise.resolve(response.status === 204)` | A function which is passed the `Response` from calling the reachability URL. It should return `true` if the response indicates that the internet is reachable. Only used on platforms which do not supply internet reachability natively or if `useNativeReachability` is `false`. |
+| `reachabilityShortTimeout`   | `number`                          | 5 seconds | The number of milliseconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively or if `useNativeReachability` is `false`.                                                 |
+| `reachabilityLongTimeout`    | `number`                          | 60 seconds | The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively or if `useNativeReachability` is `false`.                                                     |
+| `reachabilityRequestTimeout` | `number`                          | 15 seconds | The number of milliseconds that a reachability check is allowed to take before failing. Only used on platforms which do not supply internet reachability natively or if `useNativeReachability` is `false`.                                                   |                    
 | `reachabilityShouldRun` | `() => boolean`                          | `() => true` | A function which returns a boolean to determine if checkInternetReachability should be run.                                                   |                    
 | `shouldFetchWiFiSSID` | `boolean`                          | `false` | A flag indicating one of the requirements on iOS has been met to retrieve the network (B)SSID, and the native SSID retrieval APIs should be called.  This has no effect on Android.
+| `useNativeReachability` | `boolean`                          | `true` | A flag indicating whether or not Netinfo should use native reachability checks, if available. 
 
 
 ### Methods
@@ -246,7 +247,8 @@ NetInfo.configure({
   reachabilityShortTimeout: 5 * 1000, // 5s
   reachabilityRequestTimeout: 15 * 1000, // 15s
   reachabilityShouldRun: () => true,
-  shouldFetchWiFiSSID: true // met iOS requirements to get SSID. Will leak memory if set to true without meeting requirements.
+  shouldFetchWiFiSSID: true, // met iOS requirements to get SSID. Will leak memory if set to true without meeting requirements.
+  useNativeReachability: false
 });
 ```
 
@@ -301,7 +303,8 @@ const YourComponent = () => {
     reachabilityShortTimeout: 5 * 1000, // 5s
     reachabilityRequestTimeout: 15 * 1000, // 15s
     reachabilityShouldRun: () => true,
-    shouldFetchWiFiSSID: true // met iOS requirements to get SSID
+    shouldFetchWiFiSSID: true, // met iOS requirements to get SSID
+    useNativeReachability: false
   });
 
   // ...
