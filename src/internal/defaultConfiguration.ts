@@ -8,7 +8,8 @@ const DEFAULT_CONFIGURATION: Types.NetInfoConfiguration = {
   reachabilityLongTimeout: 60 * 1000, // 60s
   reachabilityRequestTimeout: 15 * 1000, // 15s
   reachabilityShouldRun: (): boolean => true,
-  shouldFetchWiFiSSID: false
+  shouldFetchWiFiSSID: false,
+  useNativeReachability: true
 };
 
 export default DEFAULT_CONFIGURATION;

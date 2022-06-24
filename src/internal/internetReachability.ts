@@ -144,7 +144,10 @@ export default class InternetReachability {
   };
 
   public update = (state: PrivateTypes.NetInfoNativeModuleState): void => {
-    if (typeof state.isInternetReachable === 'boolean') {
+    if (
+      typeof state.isInternetReachable === 'boolean' &&
+      this._configuration.useNativeReachability
+    ) {
       this._setIsInternetReachable(state.isInternetReachable);
     } else {
       this._setExpectsConnection(state.isConnected);
