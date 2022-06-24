@@ -1,3 +1,10 @@
+# [9.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.0.0...v9.1.0) (2022-06-24)
+
+
+### Features
+
+* add parameter useNativeReachability to optionally choose non-native reachability test ([#609](https://github.com/react-native-netinfo/react-native-netinfo/issues/609)) ([9b02cac](https://github.com/react-native-netinfo/react-native-netinfo/commit/9b02cac))
+
 # [9.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v8.3.1...v9.0.0) (2022-06-03)
 
 
