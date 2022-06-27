@@ -7,8 +7,8 @@
  * @format
  */
 
-import * as Types from './types';
 import * as PrivateTypes from './privateTypes';
+import * as Types from './types';
 
 interface InternetReachabilityCheckHandler {
   promise: Promise<void>;
@@ -69,7 +69,7 @@ export default class InternetReachability {
 
   private _checkInternetReachability = (): InternetReachabilityCheckHandler => {
     const responsePromise = fetch(this._configuration.reachabilityUrl, {
-      method: 'HEAD',
+      method: this._configuration.reachabilityMethod,
       cache: 'no-cache',
     });
 

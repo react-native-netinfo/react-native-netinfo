@@ -19,6 +19,8 @@ export enum NetInfoStateType {
   other = 'other',
 }
 
+export type NetInfoMethodType = 'HEAD' | 'GET'
+
 export enum NetInfoCellularGeneration {
   '2g' = '2g',
   '3g' = '3g',
@@ -109,6 +111,7 @@ export type NetInfoSubscription = () => void;
 
 export interface NetInfoConfiguration {
   reachabilityUrl: string;
+  reachabilityMethod: NetInfoMethodType;
   reachabilityTest: (response: Response) => Promise<boolean>;
   reachabilityLongTimeout: number;
   reachabilityShortTimeout: number;
