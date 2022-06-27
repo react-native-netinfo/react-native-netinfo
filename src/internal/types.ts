@@ -111,7 +111,7 @@ export type NetInfoSubscription = () => void;
 
 export interface NetInfoConfiguration {
   reachabilityUrl: string;
-  reachabilityMethod: NetInfoMethodType;
+  reachabilityMethod?: NetInfoMethodType;
   reachabilityTest: (response: Response) => Promise<boolean>;
   reachabilityLongTimeout: number;
   reachabilityShortTimeout: number;
