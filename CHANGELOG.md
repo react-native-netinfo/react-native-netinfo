@@ -1,3 +1,10 @@
+# [9.2.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.1.0...v9.2.0) (2022-06-28)
+
+
+### Features
+
+* add support for reachabilityMethod to specify GET or HEAD ([#610](https://github.com/react-native-netinfo/react-native-netinfo/issues/610)) ([3f5badd](https://github.com/react-native-netinfo/react-native-netinfo/commit/3f5badd))
+
 # [9.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.0.0...v9.1.0) (2022-06-24)
 
 
