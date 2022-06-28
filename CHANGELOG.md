@@ -1,3 +1,10 @@
+# [9.3.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.2.0...v9.3.0) (2022-06-28)
+
+
+### Features
+
+* add linkSpeed, rxLinkSpeed, txLinkSpeed info to wifi on android ([#605](https://github.com/react-native-netinfo/react-native-netinfo/issues/605)) ([8cad8b7](https://github.com/react-native-netinfo/react-native-netinfo/commit/8cad8b7)), closes [#604](https://github.com/react-native-netinfo/react-native-netinfo/issues/604)
+
 # [9.2.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.1.0...v9.2.0) (2022-06-28)
 
 
