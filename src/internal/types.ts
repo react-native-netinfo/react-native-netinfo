@@ -80,6 +80,9 @@ export type NetInfoWifiState = NetInfoConnectedState<
     ipAddress: string | null;
     subnet: string | null;
     frequency: number | null;
+    linkSpeed: number | null;
+    rxLinkSpeed: number | null;
+    txLinkSpeed: number | null;
   }
 >;
 export type NetInfoBluetoothState = NetInfoConnectedState<

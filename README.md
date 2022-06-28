@@ -168,6 +168,10 @@ The `details` value depends on the `type` value.
 | `ipAddress`             | Android, iOS, macOS, Windows      | `string`  | The external IP address. Can be in IPv4 or IPv6 format. May not be present if it cannot be determined.                     |
 | `subnet`                | Android, iOS, macOS               | `string`  | The subnet mask in IPv4 format. May not be present if it cannot be determined.                                             |
 | `frequency`             | Android, Windows*               | `number`  | Network frequency. Example: For 2.4 GHz networks, the method will return 2457. May not be present if it cannot be determined.                                             |
+| `linkSpeed`             | Android                         | `number`  | The link speed in Mbps.                                             |
+| `rxLinkSpeed`           | Android                         | `number`  | The current receive link speed in Mbps. (Android Q / API level 29 and above)                                             |
+| `txLinkSpeed`           | Android                         | `number`  | The current transmit link speed in Mbps. (Android Q / API level 29 and above)                                             |
+
 
 `*` Requires `wiFiControl` capability in appxmanifest. Without it, these values will be null.
 
