@@ -19,7 +19,7 @@ export enum NetInfoStateType {
   other = 'other',
 }
 
-export type NetInfoMethodType = 'HEAD' | 'GET'
+export type NetInfoMethodType = 'HEAD' | 'GET';
 
 export enum NetInfoCellularGeneration {
   '2g' = '2g',
