@@ -38,7 +38,6 @@ Linking the package manually is not required anymore with [Autolinking](https://
       minSdkVersion = xyz
       compileSdkVersion = xyz
       targetSdkVersion = xyz
-      androidXCore = "1.7.0" // <-- Add this. Check versions here: https://developer.android.com/jetpack/androidx/releases/core
     }
   ```
 
