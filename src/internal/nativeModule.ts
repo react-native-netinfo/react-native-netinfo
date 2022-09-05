@@ -7,9 +7,15 @@
  * @format
  */
 
-import {NativeModules} from 'react-native';
-import {NetInfoNativeModule} from './privateTypes';
-
-const RNCNetInfo: NetInfoNativeModule = NativeModules.RNCNetInfo;
-
-export default RNCNetInfo;
+ import {NativeModules} from 'react-native';
+ import {NetInfoNativeModule} from './privateTypes';
+ 
+ // @ts-ignore
+ const isTurboModuleEnabled = global.__turboModuleProxy != null;
+ 
+ const RNCNetInfo: NetInfoNativeModule = isTurboModuleEnabled ?
+     require('./NativeRNCNetInfo').default :
+     NativeModules.RNCNetInfo;
+ 
+ export default RNCNetInfo;
+ 
