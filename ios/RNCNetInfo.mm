@@ -8,6 +8,10 @@
 #import "RNCNetInfo.h"
 #import "RNCConnectionStateWatcher.h"
 
+#ifdef RCT_NEW_ARCH_ENABLED
+#import "RNCNetInfoSpec.h"
+#endif
+
 #include <ifaddrs.h>
 #include <arpa/inet.h>
 
@@ -15,7 +19,8 @@
 #import <CoreTelephony/CTCarrier.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #endif
-@import SystemConfiguration.CaptiveNetwork;
+#import <SystemConfiguration/CaptiveNetwork.h>
+
 
 #import <React/RCTAssert.h>
 #import <React/RCTBridge.h>
@@ -97,6 +102,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
   resolve([self currentDictionaryFromUpdateState:state withInterface:requestedInterface]);
 }
 
+
 RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
 {
     self.config = config;
@@ -130,7 +136,7 @@ RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
   } else if ([requestedInterface isEqualToString: RNCConnectionTypeWifi] || [requestedInterface isEqualToString: RNCConnectionTypeEthernet]) {
     details[@"ipAddress"] = [self ipAddress] ?: NSNull.null;
     details[@"subnet"] = [self subnet] ?: NSNull.null;
-    #if !TARGET_OS_TV && !TARGET_OS_OSX   
+    #if !TARGET_OS_TV && !TARGET_OS_OSX
       /*
         Without one of the conditions needed to use CNCopyCurrentNetworkInfo, it will leak memory.
         Clients should only set the shouldFetchWiFiSSID to true after ensuring requirements are met to get (B)SSID.
@@ -262,6 +268,12 @@ RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
       }
   }
   return BSSID;
+}
+#endif
+
+#ifdef RCT_NEW_ARCH_ENABLED
+- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const facebook::react::ObjCTurboModule::InitParams &)params {
+  return std::make_shared<facebook::react::NativeRNCNetInfoSpecJSI>(params);
 }
 #endif
 
