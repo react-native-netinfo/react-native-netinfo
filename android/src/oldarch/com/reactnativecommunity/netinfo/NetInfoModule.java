@@ -44,7 +44,7 @@ public class NetInfoModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void addListener(String eventName) {
-        // iOS only
+        implementation.addListener(eventName);
     }
 
     @ReactMethod
@@ -54,6 +54,6 @@ public class NetInfoModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void removeListeners(double count) {
-        // iOS only
+        implementation.removeListeners(count);
     }
 }

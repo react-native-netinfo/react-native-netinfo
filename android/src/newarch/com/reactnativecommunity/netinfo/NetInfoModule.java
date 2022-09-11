@@ -31,12 +31,12 @@ public class NetInfoModule extends NativeRNCNetInfoSpec {
 
     @ReactMethod
     public void addListener(String eventName) {
-        // iOS only
+        implementation.addListener(eventName);
     }
 
     @ReactMethod
     public void removeListeners(double count) {
-        // iOS only
+        implementation.removeListeners(count);
     }
     
     @Override

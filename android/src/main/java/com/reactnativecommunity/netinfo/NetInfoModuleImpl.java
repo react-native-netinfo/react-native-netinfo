@@ -56,11 +56,15 @@ public class NetInfoModuleImpl implements AmazonFireDeviceConnectivityPoller.Con
 
 
     public void addListener(String eventName) {
-        // iOS only
+        numberOfListeners++;
+        mConnectivityReceiver.hasListener = true;
     }
 
 
     public void removeListeners(double count) {
-        // iOS only
+        numberOfListeners -= count;
+        if (numberOfListeners == 0) {
+            mConnectivityReceiver.hasListener = false;
+        }
     }
 }
