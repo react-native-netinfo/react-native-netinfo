@@ -26,7 +26,11 @@
 #import <React/RCTBridge.h>
 #import <React/RCTEventDispatcher.h>
 
+#ifdef RCT_NEW_ARCH_ENABLED
+@interface RNCNetInfo () <RNCConnectionStateWatcherDelegate, NativeRNCNetInfoSpec>
+#else
 @interface RNCNetInfo () <RNCConnectionStateWatcherDelegate>
+#endif
 
 @property (nonatomic, strong) RNCConnectionStateWatcher *connectionStateWatcher;
 @property (nonatomic) BOOL isObserving;
