@@ -1,3 +1,10 @@
+## [9.3.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.0...v9.3.1) (2022-09-18)
+
+
+### Bug Fixes
+
+* **tests, mock:** allow mocking netinfostate type for testing ([#619](https://github.com/react-native-netinfo/react-native-netinfo/issues/619)) ([956bceb](https://github.com/react-native-netinfo/react-native-netinfo/commit/956bceb))
+
 # [9.3.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.2.0...v9.3.0) (2022-06-28)
 
 
