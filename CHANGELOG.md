@@ -1,3 +1,10 @@
+## [9.3.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.1...v9.3.2) (2022-09-25)
+
+
+### Bug Fixes
+
+* **android, vpn:** ensure downlink >= 0 for internetReachable to be true on vpn ([#624](https://github.com/react-native-netinfo/react-native-netinfo/issues/624)) ([20c2cd2](https://github.com/react-native-netinfo/react-native-netinfo/commit/20c2cd2))
+
 ## [9.3.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.0...v9.3.1) (2022-09-18)
 
 
