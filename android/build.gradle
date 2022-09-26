@@ -3,13 +3,14 @@ buildscript {
   // This avoids unnecessary downloads and potential conflicts when the library is included as a
   // module dependency in an application project.
   if (project == rootProject) {
-    repositories {
-      google()
-      mavenCentral()
+      repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
     }
 
     dependencies {
-      classpath("com.android.tools.build:gradle:4.2.2")
+      classpath("com.android.tools.build:gradle:7.1.1")
     }
   }
 }
@@ -26,11 +27,16 @@ def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['ReactNativeNetInfo_' + name]).toInteger()
 }
 
+def isNewArchitectureEnabled() {
+  return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
+
+
 apply plugin: 'com.android.library'
+apply plugin: 'com.facebook.react'
 
 android {
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
-
   compileOptions {
       sourceCompatibility JavaVersion.VERSION_1_8
       targetCompatibility JavaVersion.VERSION_1_8
@@ -39,10 +45,21 @@ android {
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault('minSdkVersion')
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
+    buildConfigField("boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString())
+  }
+  sourceSets {
+    main {
+        if (isNewArchitectureEnabled()) {
+            java.srcDirs += ['src/newarch']
+        } else {
+            java.srcDirs += ['src/oldarch']
+        }
+      }
   }
   lintOptions{
     abortOnError false
   }
+
 }
 
 repositories {
@@ -58,5 +75,4 @@ repositories {
 dependencies {
   //noinspection GradleDynamicVersion
   implementation 'com.facebook.react:react-native:+'
-
 }

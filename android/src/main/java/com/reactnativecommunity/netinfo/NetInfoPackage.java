@@ -1,34 +1,45 @@
-/**
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
 package com.reactnativecommunity.netinfo;
 
-import com.facebook.react.ReactPackage;
-import com.facebook.react.bridge.JavaScriptModule;
+import androidx.annotation.Nullable;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.uimanager.ViewManager;
-import java.util.Arrays;
+import com.facebook.react.module.model.ReactModuleInfo;
+import com.facebook.react.module.model.ReactModuleInfoProvider;
+import com.facebook.react.TurboReactPackage;
+
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class NetInfoPackage implements ReactPackage {
-    @Override
-    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        return Arrays.<NativeModule>asList(new NetInfoModule(reactContext));
-    }
+public class NetInfoPackage extends TurboReactPackage {
 
-    // Deprecated from RN 0.47
-    public List<Class<? extends JavaScriptModule>> createJSModules() {
-        return Collections.emptyList();
-    }
+  @Nullable
+  @Override
+  public NativeModule getModule(String name, ReactApplicationContext reactContext) {
+          if (name.equals(NetInfoModuleImpl.NAME)) {
+              return new NetInfoModule(reactContext);
+          } else {
+              return null;
+          }
+  }
 
-    @Override
-    @SuppressWarnings("rawtypes")
-    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Collections.emptyList();
-    }
+  @Override
+  public ReactModuleInfoProvider getReactModuleInfoProvider() {
+           return () -> {
+                    final Map<String, ReactModuleInfo> moduleInfos = new HashMap<>();
+                    moduleInfos.put(
+                                    NetInfoModuleImpl.NAME,
+                                    new ReactModuleInfo(
+                                                    NetInfoModuleImpl.NAME,
+                                                    NetInfoModuleImpl.NAME,
+                                                    false, // canOverrideExistingModule
+                                                    false, // needsEagerInit
+                                                    true, // hasConstants
+                                                    false, // isCxxModule
+                                                    true // isTurboModule
+                                            ));
+                    return moduleInfos;
+                };
+  }
 }

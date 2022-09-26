@@ -122,5 +122,13 @@
       "yarn eslint --fix",
       "git add"
     ]
+  },
+  "codegenConfig": {
+    "name": "RNCNetInfoSpec",
+    "type": "modules",
+    "jsSrcsDir": "src/internal",
+    "android": {
+      "javaPackageName": "com.reactnativecommunity.netinfo"
+    }
   }
 }
