@@ -1,3 +1,10 @@
+## [9.3.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.2...v9.3.3) (2022-10-02)
+
+
+### Bug Fixes
+
+* **macCatalyst:** add compilation conditionals for macCatalyst ([#629](https://github.com/react-native-netinfo/react-native-netinfo/issues/629)) ([8e4cace](https://github.com/react-native-netinfo/react-native-netinfo/commit/8e4cace))
+
 ## [9.3.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.1...v9.3.2) (2022-09-25)
 
 
