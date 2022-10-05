@@ -1,3 +1,10 @@
+## [9.3.4](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.3...v9.3.4) (2022-10-05)
+
+
+### Bug Fixes
+
+* notify subscriptions after state changes ([#630](https://github.com/react-native-netinfo/react-native-netinfo/issues/630)) ([67c88be](https://github.com/react-native-netinfo/react-native-netinfo/commit/67c88be))
+
 ## [9.3.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.2...v9.3.3) (2022-10-02)
 
 
