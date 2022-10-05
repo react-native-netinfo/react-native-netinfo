@@ -76,6 +76,7 @@ export default class State {
     const convertedState = this._convertState(state);
     if (!requestedInterface) {
       this._latestState = convertedState;
+      this._subscriptions.forEach((handler): void => handler(convertedState));
     }
 
     return convertedState;
