@@ -107,24 +107,30 @@ namespace winrt::ReactNativeNetInfo::implementation {
 
     std::string getIpAddressSync() noexcept
     {
-      auto icp = Windows::Networking::Connectivity::NetworkInformation::GetInternetConnectionProfile();
-      if (!icp || !icp.NetworkAdapter())
-      {
-        return "unknown";
-      } else
-      {
-        auto hostnames = Windows::Networking::Connectivity::NetworkInformation::GetHostNames();
-        for (auto const& hostname : hostnames)
+      try {
+        auto icp = Windows::Networking::Connectivity::NetworkInformation::GetInternetConnectionProfile();
+        if (!icp || !icp.NetworkAdapter())
         {
-          if (
-            hostname.Type() == Windows::Networking::HostNameType::Ipv4 &&
-            hostname.IPInformation() &&
-            hostname.IPInformation().NetworkAdapter() &&
-            hostname.IPInformation().NetworkAdapter().NetworkAdapterId() == icp.NetworkAdapter().NetworkAdapterId())
-          {
-            return winrt::to_string(hostname.CanonicalName());
-          }
+          return "unknown";
         }
+        else
+        {
+          auto hostnames = Windows::Networking::Connectivity::NetworkInformation::GetHostNames();
+          for (auto const& hostname : hostnames)
+          {
+            if (
+              hostname.Type() == Windows::Networking::HostNameType::Ipv4 &&
+              hostname.IPInformation() &&
+              hostname.IPInformation().NetworkAdapter() &&
+              hostname.IPInformation().NetworkAdapter().NetworkAdapterId() == icp.NetworkAdapter().NetworkAdapterId())
+            {
+              return winrt::to_string(hostname.CanonicalName());
+            }
+          }
+          return "unknown";
+        }
+      }
+      catch (...) {
         return "unknown";
       }
     }
