@@ -1,3 +1,10 @@
+## [9.3.5](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.4...v9.3.5) (2022-10-15)
+
+
+### Bug Fixes
+
+* **windows:** fix crash in getIpAddressSync ([#631](https://github.com/react-native-netinfo/react-native-netinfo/issues/631)) ([cc3ed0f](https://github.com/react-native-netinfo/react-native-netinfo/commit/cc3ed0f))
+
 ## [9.3.4](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.3...v9.3.4) (2022-10-05)
 
 
