@@ -1,3 +1,10 @@
+## [9.3.6](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.5...v9.3.6) (2022-10-26)
+
+
+### Bug Fixes
+
+* **android:** return netmask of first IPv4 address ([#634](https://github.com/react-native-netinfo/react-native-netinfo/issues/634)) ([f740f45](https://github.com/react-native-netinfo/react-native-netinfo/commit/f740f45)), closes [#633](https://github.com/react-native-netinfo/react-native-netinfo/issues/633)
+
 ## [9.3.5](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.4...v9.3.5) (2022-10-15)
 
 
