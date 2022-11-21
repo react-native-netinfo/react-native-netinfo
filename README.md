@@ -267,7 +267,7 @@ Subscribe to connection information. The callback is called with a parameter of 
 **Example:**
 ```javascript
 // Subscribe
-const unsubscribe = NetInfo.addEventListener(state => {
+const subscribe = NetInfo.addEventListener(state => {
   console.log("Connection type", state.type);
   console.log("Is connected?", state.isConnected);
 });
