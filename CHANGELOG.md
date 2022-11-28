@@ -1,3 +1,10 @@
+## [9.3.7](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.6...v9.3.7) (2022-11-28)
+
+
+### Bug Fixes
+
+* **web:** check `window` is defined before accessing  ([#646](https://github.com/react-native-netinfo/react-native-netinfo/issues/646)) ([ba5c22c](https://github.com/react-native-netinfo/react-native-netinfo/commit/ba5c22c))
+
 ## [9.3.6](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.5...v9.3.6) (2022-10-26)
 
 
