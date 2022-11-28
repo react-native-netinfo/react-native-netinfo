@@ -72,11 +72,10 @@ declare global {
 }
 
 // Check if window exists and if the browser supports the connection API
-const connection = hasWindow
-  ? window?.navigator.connection ||
-    window?.navigator.mozConnection ||
-    window?.navigator.webkitConnection
-  : undefined;
+const connection = 
+  window?.navigator.connection ||
+  window?.navigator.mozConnection ||
+  window?.navigator.webkitConnection;
 
 // Map browser types to native types
 const typeMapping: Record<ConnectionType, NetInfoStateType> = {
