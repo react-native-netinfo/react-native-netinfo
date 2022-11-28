@@ -8,22 +8,22 @@
  */
 
 import {
-  NetInfoNativeModule,
   DEVICE_CONNECTIVITY_EVENT,
+  NetInfoNativeModule,
   NetInfoNativeModuleState,
 } from './privateTypes';
 import {
+  NetInfoBluetoothState,
+  NetInfoCellularGeneration,
+  NetInfoCellularState,
+  NetInfoEthernetState,
+  NetInfoNoConnectionState,
+  NetInfoOtherState,
   NetInfoState,
   NetInfoStateType,
   NetInfoUnknownState,
-  NetInfoNoConnectionState,
-  NetInfoCellularState,
-  NetInfoBluetoothState,
-  NetInfoEthernetState,
   NetInfoWifiState,
   NetInfoWimaxState,
-  NetInfoOtherState,
-  NetInfoCellularGeneration,
 } from './types';
 
 // See https://wicg.github.io/netinfo/#dom-connectiontype
@@ -70,12 +70,14 @@ declare global {
     webkitConnection?: Connection;
   }
 }
+const isWindowPresent = typeof window !== 'undefined';
 
 // Check if window exists and if the browser supports the connection API
-const connection = 
-  window?.navigator.connection ||
-  window?.navigator.mozConnection ||
-  window?.navigator.webkitConnection;
+const connection = isWindowPresent
+  ? window.navigator.connection ||
+    window.navigator.mozConnection ||
+    window.navigator.webkitConnection
+  : undefined;
 
 // Map browser types to native types
 const typeMapping: Record<ConnectionType, NetInfoStateType> = {
@@ -249,8 +251,10 @@ const RNCNetInfo: NetInfoNativeModule = {
         if (connection) {
           connection.addEventListener('change', nativeHandler);
         } else {
-          window?.addEventListener('online', nativeHandler, false);
-          window?.addEventListener('offline', nativeHandler, false);
+          if (isWindowPresent) {
+            window.addEventListener('online', nativeHandler, false);
+            window.addEventListener('offline', nativeHandler, false);
+          }
         }
 
         // Remember handlers
@@ -272,8 +276,10 @@ const RNCNetInfo: NetInfoNativeModule = {
         if (connection) {
           connection.removeEventListener('change', nativeHandler);
         } else {
-          window?.removeEventListener('online', nativeHandler);
-          window?.removeEventListener('offline', nativeHandler);
+          if (isWindowPresent) {
+            window.removeEventListener('online', nativeHandler);
+            window.removeEventListener('offline', nativeHandler);
+          }
         }
 
         // Remove handlers
