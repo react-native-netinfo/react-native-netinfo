@@ -70,6 +70,8 @@ declare global {
     webkitConnection?: Connection;
   }
 }
+// Use a constant test of this form because in SSR on next.js, optional chaining is not sufficient,
+// but this test correctly detects that window is not available and allows for conditionals before access
 const isWindowPresent = typeof window !== 'undefined';
 
 // Check if window exists and if the browser supports the connection API
