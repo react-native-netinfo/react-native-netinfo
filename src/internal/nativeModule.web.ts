@@ -7,7 +7,7 @@
  * @format
  */
 
- import {
+import {
   NetInfoNativeModule,
   DEVICE_CONNECTIVITY_EVENT,
   NetInfoNativeModuleState,
