@@ -71,8 +71,6 @@ declare global {
   }
 }
 
-const hasWindow = typeof window !== 'undefined';
-
 // Check if window exists and if the browser supports the connection API
 const connection = hasWindow
   ? window?.navigator.connection ||
