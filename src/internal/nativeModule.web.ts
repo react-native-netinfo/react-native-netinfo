@@ -71,10 +71,10 @@ declare global {
   }
 }
 
-const isWindowPresent = typeof window !== 'undefined';
+const hasWindow = typeof window !== 'undefined';
 
 // Check if window exists and if the browser supports the connection API
-const connection = isWindowPresent
+const connection = hasWindow
   ? window?.navigator.connection ||
     window?.navigator.mozConnection ||
     window?.navigator.webkitConnection
@@ -252,7 +252,7 @@ const RNCNetInfo: NetInfoNativeModule = {
         if (connection) {
           connection.addEventListener('change', nativeHandler);
         } else {
-          if (isWindowPresent) {
+          if (hasWindow) {
             window.addEventListener('online', nativeHandler, false);
             window.addEventListener('offline', nativeHandler, false);
           }
@@ -277,7 +277,7 @@ const RNCNetInfo: NetInfoNativeModule = {
         if (connection) {
           connection.removeEventListener('change', nativeHandler);
         } else {
-          if (isWindowPresent) {
+          if (hasWindow) {
             window.removeEventListener('online', nativeHandler);
             window.removeEventListener('offline', nativeHandler);
           }
