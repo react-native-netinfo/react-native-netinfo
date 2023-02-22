@@ -28,6 +28,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+ios/.xcode.env.local
 project.xcworkspace
 
 
@@ -38,14 +39,12 @@ build/
 .gradle
 local.properties
 *.iml
-android/.settings/*
-android/.project
-
-# BUCK
-buck-out/
-\.buckd/
+*.hprof
+.cxx/
 *.keystore
 !debug.keystore
+android/.settings/*
+android/.project
 
 # Editor config
 .vscode

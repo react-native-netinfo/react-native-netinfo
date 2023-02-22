@@ -147,11 +147,7 @@ class ExampleApp extends React.Component<Record<string, unknown>, State> {
   }
 
   componentWillUnmount() {
-    if (Platform.OS === 'macos') {
-      Linking.removeEventListener('url', this._handleOpenURLMacOS);
-    } else {
-      Linking.removeEventListener('url', this._handleOpenURL);
-    }
+    Linking.removeAllListeners('url');
   }
 
   // Receives commands from the test runner when it opens the app with a given URL
@@ -172,7 +168,7 @@ class ExampleApp extends React.Component<Record<string, unknown>, State> {
 
     if (command !== 'clear') {
       const foundTestCase = TEST_CASES.find(
-        tc => tc.id.toLowerCase() === command,
+        (tc) => tc.id.toLowerCase() === command,
       );
       if (foundTestCase) {
         this.setState({activeTestCase: foundTestCase});

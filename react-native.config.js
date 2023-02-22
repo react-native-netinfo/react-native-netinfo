@@ -23,7 +23,7 @@ let config = {
   project: {
     ios: {
       // this works but only in combination with `yarn react-native run-ios --project-path `pwd`/ios` - at least it works...
-      project: './example/ios/NetInfoExample.xcodeproj',
+      sourceDir: 'example/ios',
     },
     android:{
       sourceDir: 'example/android',
