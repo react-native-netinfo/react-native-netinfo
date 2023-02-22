@@ -49,6 +49,7 @@
     "network info"
   ],
   "peerDependencies": {
+    "react": "*",
     "react-native": ">=0.59"
   },
   "dependencies": {},
