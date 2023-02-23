@@ -28,6 +28,7 @@ public class NetInfoPackage extends TurboReactPackage {
   public ReactModuleInfoProvider getReactModuleInfoProvider() {
            return () -> {
                     final Map<String, ReactModuleInfo> moduleInfos = new HashMap<>();
+                    boolean turboModulesEnabled = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
                     moduleInfos.put(
                                     NetInfoModuleImpl.NAME,
                                     new ReactModuleInfo(
@@ -37,7 +38,7 @@ public class NetInfoPackage extends TurboReactPackage {
                                                     false, // needsEagerInit
                                                     true, // hasConstants
                                                     false, // isCxxModule
-                                                    true // isTurboModule
+                                                    turboModulesEnabled // isTurboModule
                                             ));
                     return moduleInfos;
                 };

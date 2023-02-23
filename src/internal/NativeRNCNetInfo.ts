@@ -1,5 +1,4 @@
-// @flow
-
+/* eslint-disable @typescript-eslint/ban-types */
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
