@@ -1,3 +1,52 @@
+## [9.3.7](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.6...v9.3.7) (2022-11-28)
+
+
+### Bug Fixes
+
+* **web:** check `window` is defined before accessing  ([#646](https://github.com/react-native-netinfo/react-native-netinfo/issues/646)) ([ba5c22c](https://github.com/react-native-netinfo/react-native-netinfo/commit/ba5c22c))
+
+## [9.3.6](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.5...v9.3.6) (2022-10-26)
+
+
+### Bug Fixes
+
+* **android:** return netmask of first IPv4 address ([#634](https://github.com/react-native-netinfo/react-native-netinfo/issues/634)) ([f740f45](https://github.com/react-native-netinfo/react-native-netinfo/commit/f740f45)), closes [#633](https://github.com/react-native-netinfo/react-native-netinfo/issues/633)
+
+## [9.3.5](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.4...v9.3.5) (2022-10-15)
+
+
+### Bug Fixes
+
+* **windows:** fix crash in getIpAddressSync ([#631](https://github.com/react-native-netinfo/react-native-netinfo/issues/631)) ([cc3ed0f](https://github.com/react-native-netinfo/react-native-netinfo/commit/cc3ed0f))
+
+## [9.3.4](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.3...v9.3.4) (2022-10-05)
+
+
+### Bug Fixes
+
+* notify subscriptions after state changes ([#630](https://github.com/react-native-netinfo/react-native-netinfo/issues/630)) ([67c88be](https://github.com/react-native-netinfo/react-native-netinfo/commit/67c88be))
+
+## [9.3.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.2...v9.3.3) (2022-10-02)
+
+
+### Bug Fixes
+
+* **macCatalyst:** add compilation conditionals for macCatalyst ([#629](https://github.com/react-native-netinfo/react-native-netinfo/issues/629)) ([8e4cace](https://github.com/react-native-netinfo/react-native-netinfo/commit/8e4cace))
+
+## [9.3.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.1...v9.3.2) (2022-09-25)
+
+
+### Bug Fixes
+
+* **android, vpn:** ensure downlink >= 0 for internetReachable to be true on vpn ([#624](https://github.com/react-native-netinfo/react-native-netinfo/issues/624)) ([20c2cd2](https://github.com/react-native-netinfo/react-native-netinfo/commit/20c2cd2))
+
+## [9.3.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.0...v9.3.1) (2022-09-18)
+
+
+### Bug Fixes
+
+* **tests, mock:** allow mocking netinfostate type for testing ([#619](https://github.com/react-native-netinfo/react-native-netinfo/issues/619)) ([956bceb](https://github.com/react-native-netinfo/react-native-netinfo/commit/956bceb))
+
 # [9.3.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.2.0...v9.3.0) (2022-06-28)
 
 
