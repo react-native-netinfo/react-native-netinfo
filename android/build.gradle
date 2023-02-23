@@ -115,7 +115,7 @@ repositories {
 dependencies {
   //noinspection GradleDynamicVersion
   if (isNewArchitectureEnabled() && getReactNativeMinorVersion() < 71) {
-    implementation ':ReactAndroid'
+    implementation project(":ReactAndroid")
   } else {
     implementation 'com.facebook.react:react-native:+'
   }
