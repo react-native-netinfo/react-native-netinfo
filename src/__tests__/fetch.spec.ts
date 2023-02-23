@@ -69,7 +69,7 @@ describe('@react-native-community/netinfo fetch', () => {
         ];
       }
 
-      dataProvider().forEach(testCase => {
+      dataProvider().forEach((testCase) => {
         it(testCase.description, () => {
           mockNativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
@@ -131,7 +131,7 @@ describe('@react-native-community/netinfo fetch', () => {
         ];
       }
 
-      dataProvider().forEach(testCase => {
+      dataProvider().forEach((testCase) => {
         it(testCase.description, () => {
           mockNativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
@@ -193,7 +193,7 @@ describe('@react-native-community/netinfo fetch', () => {
         ];
       }
 
-      dataProvider().forEach(testCase => {
+      dataProvider().forEach((testCase) => {
         it(testCase.description, () => {
           mockNativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
@@ -255,7 +255,7 @@ describe('@react-native-community/netinfo fetch', () => {
         ];
       }
 
-      dataProvider().forEach(testCase => {
+      dataProvider().forEach((testCase) => {
         it(testCase.description, () => {
           mockNativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
@@ -317,7 +317,7 @@ describe('@react-native-community/netinfo fetch', () => {
         ];
       }
 
-      dataProvider().forEach(testCase => {
+      dataProvider().forEach((testCase) => {
         it(testCase.description, () => {
           mockNativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,
@@ -361,7 +361,7 @@ describe('@react-native-community/netinfo fetch', () => {
       ];
     }
 
-    dataProvider().forEach(testCase => {
+    dataProvider().forEach((testCase) => {
       it(testCase.description, () => {
         mockNativeModule.getCurrentState.mockResolvedValue(
           testCase.expectedConnectionInfo,
@@ -455,7 +455,7 @@ describe('@react-native-community/netinfo fetch', () => {
         ];
       }
 
-      dataProvider().forEach(testCase => {
+      dataProvider().forEach((testCase) => {
         it(testCase.description, async () => {
           mockNativeModule.getCurrentState.mockResolvedValue(
             testCase.expectedConnectionInfo,

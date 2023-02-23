@@ -48,5 +48,4 @@ public class NetInfoModule extends NativeRNCNetInfoSpec {
     public void initialize() {
         implementation.initialize();
     }
-
 }
