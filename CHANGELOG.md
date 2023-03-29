@@ -1,3 +1,10 @@
+## [9.3.8](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.7...v9.3.8) (2023-03-29)
+
+
+### Bug Fixes
+
+* **windows:** fix crash in GetCellularGeneration for some LTE network adapters ([#660](https://github.com/react-native-netinfo/react-native-netinfo/issues/660)) ([7e1c7fb](https://github.com/react-native-netinfo/react-native-netinfo/commit/7e1c7fb))
+
 ## [9.3.7](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.6...v9.3.7) (2022-11-28)
 
 
