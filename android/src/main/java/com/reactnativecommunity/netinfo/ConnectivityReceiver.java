@@ -141,7 +141,7 @@ public abstract class ConnectivityReceiver {
         WritableMap event = Arguments.createMap();
 
         // Add if WiFi is ON or OFF
-        if (NetInfoUtils.isAccessWifiStatePermissionGranted(getReactContext())) {
+        if (NetInfoUtils.isAccessWifiStatePermissionGranted(getReactContext()) && mWifiManager != null) {
             boolean isEnabled = mWifiManager.isWifiEnabled();
             event.putBoolean("isWifiEnabled", isEnabled);
         }
@@ -208,7 +208,7 @@ public abstract class ConnectivityReceiver {
                 }
                 break;
             case "wifi":
-                if (NetInfoUtils.isAccessWifiStatePermissionGranted(getReactContext())) {
+                if (NetInfoUtils.isAccessWifiStatePermissionGranted(getReactContext()) && mWifiManager != null) {
                     WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
                     if (wifiInfo != null) {
                         // Get the SSID
