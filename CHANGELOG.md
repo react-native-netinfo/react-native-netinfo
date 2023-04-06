@@ -1,3 +1,10 @@
+## [9.3.9](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.8...v9.3.9) (2023-04-06)
+
+
+### Bug Fixes
+
+* **android:** avoid crash on devices without wifi ([#662](https://github.com/react-native-netinfo/react-native-netinfo/issues/662)) ([a519e59](https://github.com/react-native-netinfo/react-native-netinfo/commit/a519e59))
+
 ## [9.3.8](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.7...v9.3.8) (2023-03-29)
 
 
