@@ -107,7 +107,7 @@ const effectiveTypeMapping: Record<
 const getCurrentState = (
   _requestedInterface?: string,
 ): Pick<NetInfoState, Exclude<keyof NetInfoState, 'isInternetReachable'>> => {
-  const isConnected = navigator.onLine;
+  const isConnected = isWindowPresent ? navigator.onLine : false;
   const baseState = {
     isInternetReachable: null,
   };
