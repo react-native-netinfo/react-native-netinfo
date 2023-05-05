@@ -1,3 +1,10 @@
+## [9.3.10](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.9...v9.3.10) (2023-05-05)
+
+
+### Bug Fixes
+
+* **web:** verify `window` exists before attempting to access navigator ([#666](https://github.com/react-native-netinfo/react-native-netinfo/issues/666)) ([60b99f2](https://github.com/react-native-netinfo/react-native-netinfo/commit/60b99f2))
+
 ## [9.3.9](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.8...v9.3.9) (2023-04-06)
 
 
