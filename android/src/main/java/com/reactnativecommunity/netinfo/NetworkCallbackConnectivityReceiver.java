@@ -104,7 +104,13 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
             if (network != null) {
                 // This may return null per API docs, and is deprecated, but for older APIs (< VERSION_CODES.P)
                 // we need it to test for suspended internet
-                networkInfo = getConnectivityManager().getNetworkInfo(network);
+                try {
+                    networkInfo = getConnectivityManager().getNetworkInfo(network);
+                } catch (SecurityException e) {
+                    // Android 11 may throw a 'package does not belong' security exception here.
+                    // We need to catch this to prevent app crash.
+                    networkInfo = null;
+                }
             }
 
             // Check to see if the network is temporarily unavailable or if airplane mode is toggled on
