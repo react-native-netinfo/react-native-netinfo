@@ -69,6 +69,7 @@ export default class InternetReachability {
 
   private _checkInternetReachability = (): InternetReachabilityCheckHandler => {
     const responsePromise = fetch(this._configuration.reachabilityUrl, {
+      headers: this._configuration.reachabilityHeaders,
       method: this._configuration.reachabilityMethod,
       cache: 'no-cache',
     });
