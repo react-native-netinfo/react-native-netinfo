@@ -29,6 +29,7 @@ def getExtOrIntegerDefault(name) {
 apply plugin: 'com.android.library'
 
 android {
+  namespace = "com.reactnativecommunity.netinfo"
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
 
   compileOptions {
