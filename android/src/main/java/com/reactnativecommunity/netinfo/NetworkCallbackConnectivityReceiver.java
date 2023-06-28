@@ -148,9 +148,13 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
 
     private void asyncUpdateAndSend(int delay) {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            mCapabilities = getConnectivityManager().getNetworkCapabilities(mNetwork);
-            updateAndSend();
-
+            try {
+                mCapabilities = getConnectivityManager().getNetworkCapabilities(mNetwork);
+                updateAndSend();
+            } catch (SecurityException e) {
+                // Android 11 may throw a 'package does not belong' security exception here.
+                // We need to catch this to prevent app crash.
+            }
         }, delay);
     }
 
