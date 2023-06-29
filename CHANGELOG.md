@@ -1,3 +1,10 @@
+# [9.4.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.11...v9.4.0) (2023-06-29)
+
+
+### Features
+
+* **android:** add support for React Native 0.73 ([#675](https://github.com/react-native-netinfo/react-native-netinfo/issues/675)) ([224fdbb](https://github.com/react-native-netinfo/react-native-netinfo/commit/224fdbb))
+
 ## [9.3.11](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.10...v9.3.11) (2023-06-29)
 
 
