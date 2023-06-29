@@ -1,3 +1,10 @@
+## [9.3.11](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.10...v9.3.11) (2023-06-29)
+
+
+### Bug Fixes
+
+* do not crash on android 11 ([#672](https://github.com/react-native-netinfo/react-native-netinfo/issues/672)) ([bb13143](https://github.com/react-native-netinfo/react-native-netinfo/commit/bb13143))
+
 ## [9.3.10](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.9...v9.3.10) (2023-05-05)
 
 
