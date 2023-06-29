@@ -1,3 +1,10 @@
+## [9.4.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.4.0...v9.4.1) (2023-06-29)
+
+
+### Bug Fixes
+
+* **android:** making rn >= 73 support also compatible with rn <= 66 ([#676](https://github.com/react-native-netinfo/react-native-netinfo/issues/676)) ([0c053eb](https://github.com/react-native-netinfo/react-native-netinfo/commit/0c053eb))
+
 # [9.4.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.11...v9.4.0) (2023-06-29)
 
 
