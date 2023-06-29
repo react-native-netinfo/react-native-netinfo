@@ -29,8 +29,13 @@ def getExtOrIntegerDefault(name) {
 apply plugin: 'com.android.library'
 
 android {
-  namespace = "com.reactnativecommunity.netinfo"
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
+
+  def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION
+  // Check AGP version for backward compatibility reasons
+  if (agpVersion.tokenize('.')[0].toInteger() >= 7) {
+    namespace = "com.reactnativecommunity.netinfo"
+  }
 
   compileOptions {
       sourceCompatibility JavaVersion.VERSION_1_8
