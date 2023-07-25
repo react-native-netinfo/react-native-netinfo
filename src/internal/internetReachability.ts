@@ -68,9 +68,12 @@ export default class InternetReachability {
   };
 
   private _checkInternetReachability = (): InternetReachabilityCheckHandler => {
+    const controller = new AbortController();
+
     const responsePromise = fetch(this._configuration.reachabilityUrl, {
       method: this._configuration.reachabilityMethod,
       cache: 'no-cache',
+      signal: controller.signal,
     });
 
     // Create promise that will reject after the request timeout has been reached
@@ -78,7 +81,10 @@ export default class InternetReachability {
     const timeoutPromise = new Promise<Response>(
       (_, reject): void => {
         timeoutHandle = setTimeout(
-          (): void => reject('timedout'),
+          (): void => {
+            controller.abort();
+            reject('timedout');
+          },
           this._configuration.reachabilityRequestTimeout,
         );
       },
@@ -89,7 +95,10 @@ export default class InternetReachability {
     let cancel: () => void = (): void => {};
     const cancelPromise = new Promise<Response>(
       (_, reject): void => {
-        cancel = (): void => reject('canceled');
+        cancel = (): void => {
+          controller.abort();
+          reject('canceled');
+        };
       },
     );
 
