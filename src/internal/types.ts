@@ -55,6 +55,7 @@ export interface NetInfoUnknownState {
   isConnected: boolean | null;
   isInternetReachable: null;
   details: null;
+  isWifiEnabled?: boolean;
 }
 
 export type NetInfoNoConnectionState = NetInfoDisconnectedState<
