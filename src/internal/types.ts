@@ -48,6 +48,7 @@ interface NetInfoDisconnectedState<T extends NetInfoStateType> {
   isConnected: false;
   isInternetReachable: false;
   details: null;
+  isWifiEnabled?: boolean;
 }
 
 export interface NetInfoUnknownState {
