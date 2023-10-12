@@ -96,17 +96,20 @@ import NetInfo from "@react-native-community/netinfo";
 Note that the API was updated after it was extracted from NetInfo to support some new features, however, the previous API is still available and works with no updates to your code.
 
 ## Usage
-Import the library:
 
-```javascript
-import NetInfo from "@react-native-community/netinfo";
-```
+### Global vs isolated instance
+Internally this library has a network state manager class to handle all the functionality and state. This library provides two options for instantiating the class:
+1. you can use global library functions which taps into a global singleton instance of the class
+2. or you can create isolated instances of the class to tap into, each being separately configured
 
+### Global instance functions:
 Subscribe to network state updates:
 
 ```javascript
+import { addEventListener } from "@react-native-community/netinfo";
+
 // Subscribe
-const unsubscribe = NetInfo.addEventListener(state => {
+const unsubscribe = addEventListener(state => {
   console.log("Connection type", state.type);
   console.log("Is connected?", state.isConnected);
 });
@@ -118,10 +121,29 @@ unsubscribe();
 Get the network state once:
 
 ```javascript
-NetInfo.fetch().then(state => {
+import { fetch } from "@react-native-community/netinfo";
+
+fetch().then(state => {
   console.log("Connection type", state.type);
   console.log("Is connected?", state.isConnected);
 });
+```
+
+Get network state updates from the global instance via a react hook:
+
+```javascript
+import { useNetInfo } from "@react-native-community/netinfo";
+
+const { type, isConnected } = useNetInfo();
+```
+
+### Isolated instance:
+Use an isolated instance of the network manager:
+
+```javascript
+import { useNetInfoInstance } from "@react-native-community/netinfo";
+
+const { netInfo: { type, isConnected }, refresh } = useNetInfoInstance();
 ```
 
 ## API
@@ -129,11 +151,13 @@ NetInfo.fetch().then(state => {
   * [`NetInfoState`](#netinfostate)
   * [`NetInfoStateType`](#netinfostatetype)
   * [`NetInfoCellularGeneration`](#netinfocellulargeneration)
-* **Methods:**
+* **Global instance methods:**
   * [`fetch()`](#fetch)
   * [`refresh()`](#refresh)
   * [`addEventListener()`](#addeventlistener)
   * [`useNetInfo()`](#usenetinfo)
+* **Isolated instance:**
+  * [`useNetInfoInstance()`](#usenetinfoinstance)
 
 ### Types
 
@@ -234,7 +258,9 @@ The configuration options for the library.
 | `useNativeReachability` | `boolean`                          | `true` | A flag indicating whether or not Netinfo should use native reachability checks, if available. 
 
 
-### Methods
+### Global instance methods
+
+Please note the difference between global and isolated usage described [here](#global-vs-isolated-instance)
 
 #### `configure()`
 
@@ -278,7 +304,7 @@ unsubscribe();
 
 #### `useNetInfo()`
 
-A [React Hook](https://reactjs.org/docs/hooks-intro.html) which can be used to get access to the latest state. It returns a hook with the [`NetInfoState`](README.md#netinfostate) type.
+A [React Hook](https://reactjs.org/docs/hooks-intro.html) which can be used to get access to the latest state from the global instance. It returns a hook with the [`NetInfoState`](README.md#netinfostate) type.
 
 **Example:**
 ```jsx
@@ -350,6 +376,54 @@ NetInfo.refresh().then(state => {
 ```
 
 This will also update subscribers using `addEventListener` and/or `useNetInfo`.
+
+### Isolated instance
+
+Please note the difference between global and isolated usage described [here](#global-vs-isolated-instance)
+
+#### `useNetInfoInstance()` 
+
+A [React Hook](https://reactjs.org/docs/hooks-intro.html) which can be used to create and manage an isolated instance of a network manager class. It returns a `refresh` function and the current [`NetInfoState`](README.md#netinfostate).
+
+**Example:**
+```jsx
+import { useNetInfoInstance } from "@react-native-community/netinfo";
+
+const YourComponent = () => {
+  const {netInfo, refresh} = useNetInfoInstance();
+
+  return (
+    <View>
+      <Text>Type: {netInfo.type}</Text>
+      <Text>Is Connected? {netInfo.isConnected?.toString()}</Text>
+    </View>
+  );
+};
+```
+
+**isPaused**: You can also pause the hooks internal network checks by passing a boolean value `true` as the first argument.
+
+**configuration**: You can optionally send configuration as the second argument when setting up the hook. Note that configuration is local to the instance managed by this hook and has no relation to the configuration passed to other functions `configure()` or `useNetInfo()`;
+
+```jsx
+import { useNetInfoInstance } from "@react-native-community/netinfo";
+
+const YourComponent = () => {
+  const isPaused = false;
+  const config = {
+    reachabilityUrl: 'https://clients3.google.com/generate_204',
+    reachabilityTest: async (response) => response.status === 204,
+    reachabilityLongTimeout: 60 * 1000, // 60s
+    reachabilityShortTimeout: 5 * 1000, // 5s
+    reachabilityRequestTimeout: 15 * 1000, // 15s
+    reachabilityShouldRun: () => true,
+    shouldFetchWiFiSSID: true, // met iOS requirements to get SSID
+    useNativeReachability: false
+  }
+  
+  const { netInfo } = useNetInfoInstance(isPaused, config);
+  //...
+```
 
 ## Troubleshooting
 
