@@ -80,6 +80,12 @@ but no support will be provided.
 The web implementation heavily depends on the [Network Information API](https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API) which is still an is an experimental technology and thus it's not supported in every browser.
 If this API is not available the library will safely fallback to the old [onLine](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/onLine) property and return basic connection information.
 
+AbortController is used to cancel network requests, and may not be available on Internet Explorer, though it is available on Edge https://caniuse.com/abortcontroller
+
+## Node Compatibility
+
+Node v16 is the minimum required node version - `AbortController` is only present in stable versions of node from v16 on 
+
 ## Migrating from the core `react-native` module
 This module was created when the NetInfo was split out from the core of React Native. To migrate to this module you need to follow the installation instructions above and then change you imports from:
 
