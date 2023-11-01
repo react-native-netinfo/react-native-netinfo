@@ -1,3 +1,10 @@
+## [9.4.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.4.1...v9.4.2) (2023-11-01)
+
+
+### Bug Fixes
+
+* **types:** add optional isWifiEnabled boolean to NetInfoUnknownState + NetInfoDisconnectedState ([#680](https://github.com/react-native-netinfo/react-native-netinfo/issues/680)) ([46c4c71](https://github.com/react-native-netinfo/react-native-netinfo/commit/46c4c71))
+
 ## [9.4.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.4.0...v9.4.1) (2023-06-29)
 
 
