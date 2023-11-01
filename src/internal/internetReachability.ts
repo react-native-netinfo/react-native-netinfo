@@ -80,13 +80,10 @@ export default class InternetReachability {
     let timeoutHandle: ReturnType<typeof setTimeout>;
     const timeoutPromise = new Promise<Response>(
       (_, reject): void => {
-        timeoutHandle = setTimeout(
-          (): void => {
-            controller.abort();
-            reject('timedout');
-          },
-          this._configuration.reachabilityRequestTimeout,
-        );
+        timeoutHandle = setTimeout((): void => {
+          controller.abort();
+          reject('timedout');
+        }, this._configuration.reachabilityRequestTimeout);
       },
     );
 
