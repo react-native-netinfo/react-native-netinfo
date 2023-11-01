@@ -1,3 +1,10 @@
+# [9.5.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.4.2...v9.5.0) (2023-11-01)
+
+
+### Features
+
+* add optional reachabilityHeaders param to NetInfoConfiguration ([#673](https://github.com/react-native-netinfo/react-native-netinfo/issues/673)) ([0cbf067](https://github.com/react-native-netinfo/react-native-netinfo/commit/0cbf067))
+
 ## [9.4.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.4.1...v9.4.2) (2023-11-01)
 
 
