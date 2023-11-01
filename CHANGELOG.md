@@ -1,3 +1,14 @@
+# [10.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.5.0...v10.0.0) (2023-11-01)
+
+
+* fix(cancel)!: cancel _checkInternetReachability request on timeout & cancel via AbortController (#678) ([4bfd3e2](https://github.com/react-native-netinfo/react-native-netinfo/commit/4bfd3e2)), closes [#678](https://github.com/react-native-netinfo/react-native-netinfo/issues/678) [/github.com/react-native-netinfo/react-native-netinfo/issues/439#issue-787487438](https://github.com//github.com/react-native-netinfo/react-native-netinfo/issues/439/issues/issue-787487438)
+
+
+### BREAKING CHANGES
+
+* netinfo now requires AbortController, node v16 / edge required
+it will likely not work on internet explorer from this version onwards
+
 # [9.5.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.4.2...v9.5.0) (2023-11-01)
 
 
