@@ -1,3 +1,14 @@
+# [11.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v10.0.0...v11.0.0) (2023-11-04)
+
+
+* feat(android)!: specify export mode on BroadcastReceivers, requires compileSdk 33+ (#692) ([a5864cc](https://github.com/react-native-netinfo/react-native-netinfo/commit/a5864cc)), closes [#692](https://github.com/react-native-netinfo/react-native-netinfo/issues/692)
+
+
+### BREAKING CHANGES
+
+* - compileSdk minimum is now 33
+- windows SDK minimum bumped to 10.0.17763.0 for current react-native-windows
+
 # [10.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.5.0...v10.0.0) (2023-11-01)
 
 
