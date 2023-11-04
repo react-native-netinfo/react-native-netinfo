@@ -1,21 +1,7 @@
-platform :ios, '11.0'
-require_relative '../../node_modules/react-native/scripts/react_native_pods'
-require_relative '../../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative '../../node_modules/react-native-test-app/test_app'
 
-target 'NetInfoExample' do
-  config = use_native_modules!
+use_flipper! false unless ENV['ENABLE_FLIPPER']
 
-  use_react_native!(
-    # This path to react-native is non-standard, it is a quirk of the example project here.
-    :path => '../../node_modules/react-native',
-    # to enable hermes on iOS, change `false` to `true` and then install pods
-    :hermes_enabled => false
-  )
+workspace 'NetInfoExample.xcworkspace'
 
-  # You should not need to manually link in your Podfile like this, this is a quirk of the example project
-  pod 'react-native-netinfo', :path => '../../'
-
-  post_install do |installer|
-    react_native_post_install(installer)
-  end
-end
+use_test_app!

@@ -105,6 +105,7 @@ const effectiveTypeMapping: Record<
 
 // Determine current state of connection
 const getCurrentState = (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _requestedInterface?: string,
 ): Pick<NetInfoState, Exclude<keyof NetInfoState, 'isInternetReachable'>> => {
   const isConnected = isWindowPresent ? navigator.onLine : false;
