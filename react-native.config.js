@@ -6,7 +6,7 @@ const project = (() => {
   try {
     const {
       androidManifestPath,
-      iosProjectPath,
+      // iosProjectPath,
       windowsProjectPath,
       // eslint-disable-next-line @typescript-eslint/no-var-requires
     } = require('react-native-test-app');
@@ -16,7 +16,7 @@ const project = (() => {
         manifestPath: androidManifestPath(path.join(__dirname, 'example', 'android')),
       },
       ios: {
-        project: iosProjectPath('example/ios'),
+        sourceDir: path.join('example', 'ios'),
       },
       windows: fs.existsSync('example/windows/NetInfoExample.sln') && {
         sourceDir: path.join('example', 'windows'),

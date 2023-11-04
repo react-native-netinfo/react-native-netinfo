@@ -11,8 +11,8 @@
 import * as React from 'react';
 import {
   AppRegistry,
+  EmitterSubscription,
   Linking,
-  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -129,6 +129,9 @@ interface State {
 }
 
 class ExampleApp extends React.Component<Record<string, unknown>, State> {
+
+  listener: EmitterSubscription | undefined = undefined;
+
   constructor(props: Record<string, unknown>) {
     super(props);
 
@@ -138,11 +141,11 @@ class ExampleApp extends React.Component<Record<string, unknown>, State> {
   }
 
   componentDidMount() {
-    Linking.addEventListener('url', this._handleOpenURL);
+    this.listener = Linking.addEventListener('url', this._handleOpenURL);
   }
 
   componentWillUnmount() {
-    Linking.removeEventListener('url', this._handleOpenURL);
+    this.listener?.remove();
   }
 
   // Receives commands from the test runner when it opens the app with a given URL

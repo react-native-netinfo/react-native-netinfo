@@ -9,7 +9,7 @@
 
 module.exports = {
   extends: [
-    '@react-native-community',
+    // '@react-native', // FIXME: 'Environment key "jest/globals" is unknown'
     'plugin:@typescript-eslint/recommended',
     'prettier',
   ],

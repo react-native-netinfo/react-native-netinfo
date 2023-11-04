@@ -56,3 +56,5 @@ lib/
 package-lock.json
 
 msbuild.binlog
+
+.xcode.env
