@@ -1,3 +1,10 @@
+## [11.0.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.0.0...v11.0.1) (2023-11-07)
+
+
+### Bug Fixes
+
+* **types:** fix type error on new headers feature ([#694](https://github.com/react-native-netinfo/react-native-netinfo/issues/694)) ([270be4f](https://github.com/react-native-netinfo/react-native-netinfo/commit/270be4f))
+
 # [11.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v10.0.0...v11.0.0) (2023-11-04)
 
 
