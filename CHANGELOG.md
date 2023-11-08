@@ -1,3 +1,10 @@
+# [11.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.0.1...v11.1.0) (2023-11-08)
+
+
+### Features
+
+* add useNetInfoInstance - a non singleton-state hook to manage configs / events independently ([#687](https://github.com/react-native-netinfo/react-native-netinfo/issues/687)) ([ca4c586](https://github.com/react-native-netinfo/react-native-netinfo/commit/ca4c586))
+
 ## [11.0.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.0.0...v11.0.1) (2023-11-07)
 
 
