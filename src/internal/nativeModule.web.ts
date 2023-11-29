@@ -75,7 +75,7 @@ declare global {
 const isWindowPresent = typeof window !== 'undefined';
 
 // Check if window exists and if the browser supports the connection API
-const connection = (isWindowPresent && !window.tizen && !window.webOS)
+const connection = (isWindowPresent && !window['tizen'] && !window['webOS'])
   ? window.navigator.connection ||
     window.navigator.mozConnection ||
     window.navigator.webkitConnection
