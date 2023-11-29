@@ -1,3 +1,10 @@
+## [11.1.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.1.0...v11.1.1) (2023-11-29)
+
+
+### Bug Fixes
+
+* internetReachability aborts handle cancel correctly ([#700](https://github.com/react-native-netinfo/react-native-netinfo/issues/700)) ([0a36296](https://github.com/react-native-netinfo/react-native-netinfo/commit/0a36296))
+
 # [11.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.0.1...v11.1.0) (2023-11-08)
 
 
