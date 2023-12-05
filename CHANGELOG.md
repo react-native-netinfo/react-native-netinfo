@@ -1,3 +1,10 @@
+# [11.2.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.1.1...v11.2.0) (2023-12-05)
+
+
+### Features
+
+* **web:** add support for Tizen and WebOS ([#703](https://github.com/react-native-netinfo/react-native-netinfo/issues/703)) ([030887e](https://github.com/react-native-netinfo/react-native-netinfo/commit/030887e))
+
 ## [11.1.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.1.0...v11.1.1) (2023-11-29)
 
 
