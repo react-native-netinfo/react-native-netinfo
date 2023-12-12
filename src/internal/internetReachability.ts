@@ -89,8 +89,8 @@ export default class InternetReachability {
     // Create promise that makes it possible to cancel a pending request through a reject
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     let cancel: () => void = (): void => {};
-    const cancelPromise = new Promise<Response>((): void => {
-      cancel = (): void => controller.abort('canceled');
+    const cancelPromise = new Promise<Response>((_, reject): void => {
+      cancel = (): void => reject('canceled');
     });
 
     const promise = Promise.race([
@@ -117,7 +117,9 @@ export default class InternetReachability {
       )
       .catch(
         (error: Error | 'timedout' | 'canceled'): void => {
-          if (error !== 'canceled') {
+          if ('canceled' === error) {
+            controller.abort();
+          } else {
             this._setIsInternetReachable(false);
             this._currentTimeoutHandle = setTimeout(
               this._checkInternetReachability,
