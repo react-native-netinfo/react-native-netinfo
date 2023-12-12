@@ -1,3 +1,10 @@
+## [11.2.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.2.0...v11.2.1) (2023-12-12)
+
+
+### Bug Fixes
+
+* update internetReachability fetch abort ([#706](https://github.com/react-native-netinfo/react-native-netinfo/issues/706)) ([d44d5a8](https://github.com/react-native-netinfo/react-native-netinfo/commit/d44d5a8))
+
 # [11.2.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.1.1...v11.2.0) (2023-12-05)
 
 
