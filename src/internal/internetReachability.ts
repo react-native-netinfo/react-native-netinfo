@@ -79,9 +79,9 @@ export default class InternetReachability {
 
     // Create promise that will reject after the request timeout has been reached
     let timeoutHandle: ReturnType<typeof setTimeout>;
-    const timeoutPromise = new Promise<Response>((): void => {
+    const timeoutPromise = new Promise<Response>((_, reject): void => {
       timeoutHandle = setTimeout(
-        (): void => controller.abort('timedout'),
+        (): void => reject('timedout'),
         this._configuration.reachabilityRequestTimeout,
       );
     });
@@ -120,6 +120,10 @@ export default class InternetReachability {
           if ('canceled' === error) {
             controller.abort();
           } else {
+            if ('timedout' === error) {
+              controller.abort();
+            }
+            
             this._setIsInternetReachable(false);
             this._currentTimeoutHandle = setTimeout(
               this._checkInternetReachability,
