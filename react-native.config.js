@@ -1,55 +1,63 @@
-/**
- * This cli config is needed for the coexistance of react-native and other
- * out-of-tree implementations such react-native-macos.
- * The following issue is tracked by
- * https://github.com/react-native-community/discussions-and-proposals/issues/182
- *
- * The work-around involves having a metro.config.js for each out-of-tree
- * platform, i.e. metro.config.js for react-native and
- * metro.config.macos.js for react-native-macos.
- * This react-native.config.js looks for a --use-react-native-macos
- * switch and when present pushes --config=metro.config.macos.js
- * and specifies reactNativePath: 'node_modules/react-native-macos'.
- * The metro.config.js has to blacklist 'node_modules/react-native-macos',
- * and conversely metro.config.macos.js has to blacklist 'node_modules/react-native'.
- */
-'use strict';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require('path');
+const project = (() => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const fs = require('fs');
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const path = require('path');
+  try {
+    const {
+      androidManifestPath,
+      // iosProjectPath,
+      windowsProjectPath,
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+    } = require('react-native-test-app');
+    return {
+      android: {
+        sourceDir: path.join('example', 'android'),
+        manifestPath: androidManifestPath(path.join(__dirname, 'example', 'android')),
+      },
+      ios: {
+        sourceDir: path.join('example', 'ios'),
+      },
+      windows: fs.existsSync('example/windows/NetInfoExample.sln') && {
+        sourceDir: path.join('example', 'windows'),
+        solutionFile: 'NetInfoExample.sln',
+        project: windowsProjectPath(path.join(__dirname, 'example', 'windows')),
+      },
+    };
+  } catch (_) {
+    return undefined;
+  }
+})();
 
-const macSwitch = '--use-react-native-macos';
-const windowsSwitch = '--use-react-native-windows';
-let config = {
-  project: {
-    ios: {
-      // this works but only in combination with `yarn react-native run-ios --project-path `pwd`/ios` - at least it works...
-      sourceDir: 'example/ios',
+module.exports = {
+  dependencies: {
+    // Suppress warnings about bob not being a proper native module
+    '@react-native-community/bob': {
+      platforms: {
+        android: null,
+        ios: null,
+        macos: null,
+        windows: null,
+      },
     },
-    android:{
-      sourceDir: 'example/android',
+    // Help rn-cli find and autolink this library
+    '@react-native-community/netinfo': {
+      root: __dirname,
     },
-    windows:{
-      sourceDir: path.join('example', 'windows'),
-      solutionFile: 'NetInfoExample.sln',
-      project: {
-          projectFile: path.join('NetInfoExample', 'NetInfoExample.vcxproj'),
+  },
+  dependency: {
+    platforms: {
+      windows: {
+        sourceDir: 'windows',
+        solutionFile: 'RNCNetInfo.sln',
+        projects: [
+          {
+            projectFile: 'RNCNetInfoCPP/RNCNetInfoCPP.vcxproj',
+            directDependency: true,
+          },
+        ],
       },
     },
   },
-}
-if (process.argv.includes(macSwitch)) {
-  process.argv = process.argv.filter(arg => arg !== macSwitch);
-  process.argv.push('--config=metro.config.macos.js');
-  config = {
-    ...config,
-    reactNativePath: 'node_modules/react-native-macos',
-  };
-} else if (process.argv.includes(windowsSwitch)) {
-  process.argv = process.argv.filter(arg => arg !== windowsSwitch);
-  process.argv.push('--config=metro.config.windows.js');
-  config = {
-    ...config,
-    reactNativePath: 'node_modules/react-native-windows',
-  };
-}
-module.exports = config
+  ...(project ? { project } : undefined),
+};

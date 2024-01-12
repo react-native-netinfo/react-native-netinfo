@@ -11,8 +11,8 @@
 import * as React from 'react';
 import {
   AppRegistry,
+  EmitterSubscription,
   Linking,
-  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -129,6 +129,9 @@ interface State {
 }
 
 class ExampleApp extends React.Component<Record<string, unknown>, State> {
+
+  listener: EmitterSubscription | undefined = undefined;
+
   constructor(props: Record<string, unknown>) {
     super(props);
 
@@ -138,16 +141,11 @@ class ExampleApp extends React.Component<Record<string, unknown>, State> {
   }
 
   componentDidMount() {
-    Linking.getInitialURL().then(this._handleOpenURLString);
-    if (Platform.OS === 'macos') {
-      Linking.addEventListener('url', this._handleOpenURLMacOS);
-    } else {
-      Linking.addEventListener('url', this._handleOpenURL);
-    }
+    this.listener = Linking.addEventListener('url', this._handleOpenURL);
   }
 
   componentWillUnmount() {
-    Linking.removeAllListeners('url');
+    this.listener?.remove();
   }
 
   // Receives commands from the test runner when it opens the app with a given URL
@@ -155,9 +153,7 @@ class ExampleApp extends React.Component<Record<string, unknown>, State> {
   _handleOpenURL = ({url}: {url: string}) => {
     this._handleOpenURLString(url);
   };
-  _handleOpenURLMacOS = (url: any) => {
-    this._handleOpenURLString(url);
-  };
+
   _handleOpenURLString = (url: string | null) => {
     if (!url) {
       return;

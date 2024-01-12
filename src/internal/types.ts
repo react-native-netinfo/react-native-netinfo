@@ -48,6 +48,7 @@ interface NetInfoDisconnectedState<T extends NetInfoStateType> {
   isConnected: false;
   isInternetReachable: false;
   details: null;
+  isWifiEnabled?: boolean;
 }
 
 export interface NetInfoUnknownState {
@@ -55,6 +56,7 @@ export interface NetInfoUnknownState {
   isConnected: boolean | null;
   isInternetReachable: null;
   details: null;
+  isWifiEnabled?: boolean;
 }
 
 export type NetInfoNoConnectionState =
@@ -113,6 +115,7 @@ export type NetInfoSubscription = () => void;
 export interface NetInfoConfiguration {
   reachabilityUrl: string;
   reachabilityMethod?: NetInfoMethodType;
+  reachabilityHeaders?: Record<string, string>;
   reachabilityTest: (response: Response) => Promise<boolean>;
   reachabilityLongTimeout: number;
   reachabilityShortTimeout: number;

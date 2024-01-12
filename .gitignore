@@ -30,6 +30,9 @@ DerivedData
 *.xcuserstate
 ios/.xcode.env.local
 project.xcworkspace
+example/*/NetInfoExample.xcworkspace
+example/*/Pods
+example/*/build/
 
 
 # Android/IntelliJ
@@ -53,6 +56,7 @@ android/.project
 coverage
 
 .tmp
+example/dist/
 example/ios/Pods/
 example/android-bundle.js
 example/ios-bundle.js
@@ -68,3 +72,5 @@ lib/
 package-lock.json
 
 msbuild.binlog
+
+.xcode.env

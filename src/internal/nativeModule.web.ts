@@ -75,7 +75,7 @@ declare global {
 const isWindowPresent = typeof window !== 'undefined';
 
 // Check if window exists and if the browser supports the connection API
-const connection = isWindowPresent
+const connection = (isWindowPresent && !window.hasOwnProperty('tizen') && !window.hasOwnProperty('webOS'))
   ? window.navigator.connection ||
     window.navigator.mozConnection ||
     window.navigator.webkitConnection
@@ -105,9 +105,10 @@ const effectiveTypeMapping: Record<
 
 // Determine current state of connection
 const getCurrentState = (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _requestedInterface?: string,
 ): Pick<NetInfoState, Exclude<keyof NetInfoState, 'isInternetReachable'>> => {
-  const isConnected = navigator.onLine;
+  const isConnected = isWindowPresent ? navigator.onLine : false;
   const baseState = {
     isInternetReachable: null,
   };

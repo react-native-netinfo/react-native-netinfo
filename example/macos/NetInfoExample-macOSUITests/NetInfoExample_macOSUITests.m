@@ -22,9 +22,11 @@
 
   _app = [[XCUIApplication alloc] init];
   [_app launch];
-    
-  _window = _app.windows[@"NetInfoExample macOS"];
+
+  _window = _app.windows[@"MainWindow"];
   XCTAssert(_window.exists);
+
+  XCTAssert([_window.staticTexts[@"examplesTitle"] waitForExistenceWithTimeout:5]);
 }
 
 - (void)testEmitOnListen {
@@ -38,11 +40,11 @@
   XCTAssert(result.exists);
 
   // it should start with all failures
-  XCTAssertEqualObjects(result.label, @"fail");
+  XCTAssertEqualObjects(result.value, @"fail");
 
   // it should show all success after being tested
   [testButton click];
-  XCTAssertEqualObjects(result.label, @"pass");
+  XCTAssertEqualObjects(result.value, @"pass");
 }
 
 - (void)testFetch {
@@ -56,11 +58,11 @@
   XCTAssert(result.exists);
 
   // it should start with all failures
-  XCTAssertEqualObjects(result.label, @"fail");
+  XCTAssertEqualObjects(result.value, @"fail");
 
   // it should show all success after being tested
   [testButton click];
-  XCTAssertEqualObjects(result.label, @"pass");
+  XCTAssertEqualObjects(result.value, @"pass");
 }
 
 - (void)testHookInitialValue {
@@ -72,7 +74,7 @@
   XCTAssert(result.exists);
 
   // it should should show a pass
-  XCTAssertEqualObjects(result.label, @"pass");
+  XCTAssertEqualObjects(result.value, @"pass");
 }
 
 - (void)sendTestAppCommand:(NSString *)URLString {

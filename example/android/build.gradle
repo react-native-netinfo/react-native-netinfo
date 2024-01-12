@@ -1,37 +1,26 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
-    ext {
-        buildToolsVersion = "33.0.0"
-        minSdkVersion = 21
-        compileSdkVersion = 33
-        targetSdkVersion = 33
+    def androidTestAppDir = "../../node_modules/react-native-test-app/android"
+    apply(from: "${androidTestAppDir}/dependencies.gradle")
 
-        // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
-        ndkVersion = "23.1.7779620"
-
-        // e2e
-        kotlinVersion = '1.6.10'
-    }
     repositories {
-        google()
         mavenCentral()
+        google()
     }
-    dependencies {
-        classpath("com.android.tools.build:gradle:7.3.1")
-        classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+    dependencies {
+        classpath "com.android.tools.build:gradle:$androidPluginVersion"
+        classpath("com.facebook.react:react-native-gradle-plugin")
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
 
 allprojects {
-    project.pluginManager.withPlugin("com.facebook.react") {
-        react {
-            reactNativeDir = rootProject.file("../../node_modules/react-native/")
-            codegenDir = rootProject.file("../../node_modules/react-native-codegen/")
+    repositories {
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url("${rootDir}/../../node_modules/react-native/android")
         }
+        mavenCentral()
+        google()
     }
 }

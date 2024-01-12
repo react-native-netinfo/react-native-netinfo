@@ -26,8 +26,8 @@ namespace winrt::ReactNativeNetInfo::implementation {
     static constexpr auto CELLULAR_GENERATION_2G = "2g";
     static constexpr auto CELLULAR_GENERATION_3G = "3g";
     static constexpr auto CELLULAR_GENERATION_4G = "4g";
-    static constexpr auto CELLULAR_GENERATION_NONE = nullptr;
-    static constexpr auto CELLULAR_GENERATION_UNKNOWN = nullptr;
+    static constexpr auto CELLULAR_GENERATION_NONE = std::nullopt;
+    static constexpr auto CELLULAR_GENERATION_UNKNOWN = std::nullopt;
 
     static constexpr auto WIFI_GENERATION_1 = "WiFi 1";
     static constexpr auto WIFI_GENERATION_2 = "WiFi 2";
@@ -35,32 +35,23 @@ namespace winrt::ReactNativeNetInfo::implementation {
     static constexpr auto WIFI_GENERATION_4 = "WiFi 4";
     static constexpr auto WIFI_GENERATION_5 = "WiFi 5";
     static constexpr auto WIFI_GENERATION_6 = "WiFi 6";
-    static constexpr auto WIFI_GENERATION_UNKNOWN = nullptr;
+    static constexpr auto WIFI_GENERATION_UNKNOWN = std::nullopt;
 
     std::optional<std::string> GetCellularGeneration(winrt::WwanDataClass dataClass) {
-        switch (dataClass) {
-        case WwanDataClass::None:
+        if (dataClass == WwanDataClass::None) {
             return CELLULAR_GENERATION_NONE;
-        case WwanDataClass::Edge:
-        case WwanDataClass::Gprs:
+        } else if ((uint32_t)(dataClass & (WwanDataClass::Edge | WwanDataClass::Gprs)) != 0) {
             return CELLULAR_GENERATION_2G;
-        case WwanDataClass::Cdma1xEvdo:
-        case WwanDataClass::Cdma1xEvdoRevA:
-        case WwanDataClass::Cdma1xEvdoRevB:
-        case WwanDataClass::Cdma1xEvdv:
-        case WwanDataClass::Cdma1xRtt:
-        case WwanDataClass::Cdma3xRtt:
-        case WwanDataClass::Hsdpa:
-        case WwanDataClass::Hsupa:
-        case WwanDataClass::Umts:
+        } else if ((uint32_t)(dataClass &
+                   ((WwanDataClass::Cdma1xEvdo | WwanDataClass::Cdma1xEvdoRevA | WwanDataClass::Cdma1xEvdoRevB |
+                     WwanDataClass::Cdma1xEvdv | WwanDataClass::Cdma1xRtt | WwanDataClass::Cdma3xRtt | WwanDataClass::Hsdpa |
+                                            WwanDataClass::Hsupa | WwanDataClass::Umts))) != 0) {
             return CELLULAR_GENERATION_3G;
-        case WwanDataClass::CdmaUmb:
-        case WwanDataClass::LteAdvanced:
+        } else if ((uint32_t)(dataClass & (WwanDataClass::CdmaUmb | WwanDataClass::LteAdvanced)) != 0) {
             return CELLULAR_GENERATION_4G;
-        case WwanDataClass::Custom:
-        default:
-            return CELLULAR_GENERATION_UNKNOWN;
         }
+
+        return CELLULAR_GENERATION_UNKNOWN;
     }
 
     std::optional<std::string> GetWifiGeneration(winrt::WiFiPhyKind kind) {
