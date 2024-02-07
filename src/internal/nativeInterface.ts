@@ -28,8 +28,12 @@ If none of these fix the issue, please open an issue on the Github repository: h
  * JavaScript code and the tests
  */
 let nativeEventEmitter: NativeEventEmitter | null = null;
+
 export default {
-  ...RNCNetInfo,
+  configure: RNCNetInfo.configure,
+  addListener: RNCNetInfo.addListener,
+  removeListeners: RNCNetInfo.removeListeners,
+  getCurrentState: RNCNetInfo.getCurrentState,
   get eventEmitter(): NativeEventEmitter {
     if (!nativeEventEmitter) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

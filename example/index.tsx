@@ -164,7 +164,7 @@ class ExampleApp extends React.Component<Record<string, unknown>, State> {
 
     if (command !== 'clear') {
       const foundTestCase = TEST_CASES.find(
-        tc => tc.id.toLowerCase() === command,
+        (tc) => tc.id.toLowerCase() === command,
       );
       if (foundTestCase) {
         this.setState({activeTestCase: foundTestCase});
