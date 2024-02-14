@@ -1,3 +1,10 @@
+# [11.3.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.2.1...v11.3.0) (2024-02-14)
+
+
+### Features
+
+* add visionOS support ([#714](https://github.com/react-native-netinfo/react-native-netinfo/issues/714)) ([65ffc48](https://github.com/react-native-netinfo/react-native-netinfo/commit/65ffc48))
+
 ## [11.2.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.2.0...v11.2.1) (2023-12-12)
 
 
