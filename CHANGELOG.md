@@ -1,3 +1,10 @@
+## [11.3.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.0...v11.3.1) (2024-02-27)
+
+
+### Bug Fixes
+
+* update nativeInterface default export to support bridgeless mode ([#717](https://github.com/react-native-netinfo/react-native-netinfo/issues/717)) ([950410b](https://github.com/react-native-netinfo/react-native-netinfo/commit/950410b))
+
 # [11.3.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.2.1...v11.3.0) (2024-02-14)
 
 
