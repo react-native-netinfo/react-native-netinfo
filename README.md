@@ -87,7 +87,7 @@ AbortController is used to cancel network requests, and may not be available on 
 Node v16 is the minimum required node version - `AbortController` is only present in stable versions of node from v16 on 
 
 ## Migrating from the core `react-native` module
-This module was created when the NetInfo was split out from the core of React Native. To migrate to this module you need to follow the installation instructions above and then change you imports from:
+This module was created when the NetInfo was split out from the core of React Native. To migrate to this module you need to follow the installation instructions above and then change your imports from:
 
 ```javascript
 import { NetInfo } from "react-native";
