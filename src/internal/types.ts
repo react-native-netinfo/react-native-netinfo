@@ -37,7 +37,7 @@ interface NetInfoConnectedState<
   D extends Record<string, unknown> = Record<string, unknown>
 > {
   type: T;
-  isConnected: true;
+  isConnected: boolean;
   isInternetReachable: boolean | null;
   details: D & NetInfoConnectedDetails;
   isWifiEnabled?: boolean;
@@ -45,8 +45,8 @@ interface NetInfoConnectedState<
 
 interface NetInfoDisconnectedState<T extends NetInfoStateType> {
   type: T;
-  isConnected: false;
-  isInternetReachable: false;
+  isConnected: boolean;
+  isInternetReachable: boolean;
   details: null;
   isWifiEnabled?: boolean;
 }
