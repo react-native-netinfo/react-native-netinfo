@@ -1,3 +1,10 @@
+## [11.3.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.1...v11.3.2) (2024-05-11)
+
+
+### Bug Fixes
+
+* **types:** isConnected / isInternetReachable should be boolean not true ([#721](https://github.com/react-native-netinfo/react-native-netinfo/issues/721)) ([6e2c422](https://github.com/react-native-netinfo/react-native-netinfo/commit/6e2c422))
+
 ## [11.3.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.0...v11.3.1) (2024-02-27)
 
 
