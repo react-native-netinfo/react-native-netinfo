@@ -1,3 +1,10 @@
+## [11.3.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.2...v11.3.3) (2024-09-12)
+
+
+### Bug Fixes
+
+* **android:** add invalidate method for rn74+, onCatalystInstanceDestroy delegates ([#737](https://github.com/react-native-netinfo/react-native-netinfo/issues/737)) ([538623e](https://github.com/react-native-netinfo/react-native-netinfo/commit/538623e))
+
 ## [11.3.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.1...v11.3.2) (2024-05-11)
 
 
