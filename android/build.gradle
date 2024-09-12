@@ -54,7 +54,16 @@ android {
 repositories {
   maven {
     // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-    url "$rootDir/../node_modules/react-native/android"
+
+    // Use node resolver to locate react-native package
+    def reactNativePackage = file(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim())
+    if (reactNativePackage.exists()) {
+      url "$reactNativePackage.parentFile/android"
+    }
+    // Fallback to react-native package colocated in node_modules
+    else {
+      url "$rootDir/../node_modules/react-native/android"
+    }
   }
   google()
   mavenLocal()
