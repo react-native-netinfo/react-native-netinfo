@@ -1,3 +1,10 @@
+# [11.4.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.3...v11.4.0) (2024-09-12)
+
+
+### Features
+
+* **android:** use node resolver to find react native package in monorepos ([#735](https://github.com/react-native-netinfo/react-native-netinfo/issues/735)) ([ef79980](https://github.com/react-native-netinfo/react-native-netinfo/commit/ef79980))
+
 ## [11.3.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.2...v11.3.3) (2024-09-12)
 
 
