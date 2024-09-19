@@ -25,6 +25,7 @@ const createState = (): State => {
 
 // Track ongoing requests
 let isRequestInProgress = false;
+let requestQueue: ((state: Types.NetInfoState) => void)[] = [];
 
 /**
  * Configures the library with the given configuration. Note that calling this will stop all
@@ -78,13 +79,20 @@ export function refresh(): Promise<Types.NetInfoState> {
     _state = createState();
   }
 
+ // If a request is already in progress, return a promise that will resolve when the current request finishes
   if (isRequestInProgress) {
-    return _state.latest(); // Return the latest state if a request is already in progress
+    return new Promise((resolve) => {
+      requestQueue.push(resolve);
+    });
   }
 
   isRequestInProgress = true;
 
-  return _state._fetchCurrentState().finally(() => {
+  return _state._fetchCurrentState().then((result) => {
+    requestQueue.forEach((resolve) => resolve(result));
+    requestQueue = [];
+    return result;
+  }).finally(() => {
     isRequestInProgress = false;
   });
 }
