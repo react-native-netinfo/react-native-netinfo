@@ -23,6 +23,10 @@ const createState = (): State => {
   return new State(_configuration);
 };
 
+// Track ongoing requests
+let isRequestInProgress = false;
+let requestQueue: ((state: Types.NetInfoState) => void)[] = [];
+
 /**
  * Configures the library with the given configuration. Note that calling this will stop all
  * previously added listeners from being called again. It is best to call this right when your
@@ -74,7 +78,23 @@ export function refresh(): Promise<Types.NetInfoState> {
   if (!_state) {
     _state = createState();
   }
-  return _state._fetchCurrentState();
+
+ // If a request is already in progress, return a promise that will resolve when the current request finishes
+  if (isRequestInProgress) {
+    return new Promise((resolve) => {
+      requestQueue.push(resolve);
+    });
+  }
+
+  isRequestInProgress = true;
+
+  return _state._fetchCurrentState().then((result) => {
+    requestQueue.forEach((resolve) => resolve(result));
+    requestQueue = [];
+    return result;
+  }).finally(() => {
+    isRequestInProgress = false;
+  });
 }
 
 /**
@@ -123,7 +143,8 @@ export function useNetInfo(
   });
 
   useEffect((): (() => void) => {
-    return addEventListener(setNetInfo);
+    const unsubscribe = addEventListener(setNetInfo);
+    return () => unsubscribe();
   }, []);
 
   return netInfo;
@@ -165,7 +186,12 @@ export function useNetInfoInstance(
   }, [isPaused, configuration]);
 
   const refresh = useCallback(() => {
-    networkInfoManager && networkInfoManager._fetchCurrentState();
+    if (networkInfoManager && !isRequestInProgress) {
+      isRequestInProgress = true;
+      networkInfoManager._fetchCurrentState().finally(() => {
+        isRequestInProgress = false;
+      });
+    }
   }, [networkInfoManager]);
 
   return {

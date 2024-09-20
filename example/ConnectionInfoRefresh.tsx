@@ -34,12 +34,21 @@ export default class ConnectionInfoCurrent extends React.Component<
     });
   };
 
+  _triggerMultipleRefreshes = (): void => {
+    // Trigger multiple refreshes in quick succession
+    this._refreshState();
+    this._refreshState();
+    this._refreshState();
+    this._refreshState();
+  };
+
   render() {
     return (
       <View>
-        <TouchableOpacity onPress={this._refreshState}>
-          <Text style={{color: 'black'}}>{this.state.connectionInfo}</Text>
+        <TouchableOpacity onPress={this._triggerMultipleRefreshes}>
+          <Text>Tap to trigger multiple refreshes</Text>
         </TouchableOpacity>
+        <Text style={{color: 'black'}}>{this.state.connectionInfo}</Text>
       </View>
     );
   }
