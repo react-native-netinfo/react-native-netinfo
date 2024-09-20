@@ -1,3 +1,10 @@
+## [11.4.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.4.0...v11.4.1) (2024-09-20)
+
+
+### Bug Fixes
+
+* ensure one reachability check in-flight at once / proper useEffect listener cleanup ([#732](https://github.com/react-native-netinfo/react-native-netinfo/issues/732)) ([eaed080](https://github.com/react-native-netinfo/react-native-netinfo/commit/eaed080))
+
 # [11.4.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.3...v11.4.0) (2024-09-12)
 
 
