@@ -1,3 +1,45 @@
+## [11.4.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.4.0...v11.4.1) (2024-09-20)
+
+
+### Bug Fixes
+
+* ensure one reachability check in-flight at once / proper useEffect listener cleanup ([#732](https://github.com/react-native-netinfo/react-native-netinfo/issues/732)) ([eaed080](https://github.com/react-native-netinfo/react-native-netinfo/commit/eaed080))
+
+# [11.4.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.3...v11.4.0) (2024-09-12)
+
+
+### Features
+
+* **android:** use node resolver to find react native package in monorepos ([#735](https://github.com/react-native-netinfo/react-native-netinfo/issues/735)) ([ef79980](https://github.com/react-native-netinfo/react-native-netinfo/commit/ef79980))
+
+## [11.3.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.2...v11.3.3) (2024-09-12)
+
+
+### Bug Fixes
+
+* **android:** add invalidate method for rn74+, onCatalystInstanceDestroy delegates ([#737](https://github.com/react-native-netinfo/react-native-netinfo/issues/737)) ([538623e](https://github.com/react-native-netinfo/react-native-netinfo/commit/538623e))
+
+## [11.3.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.1...v11.3.2) (2024-05-11)
+
+
+### Bug Fixes
+
+* **types:** isConnected / isInternetReachable should be boolean not true ([#721](https://github.com/react-native-netinfo/react-native-netinfo/issues/721)) ([6e2c422](https://github.com/react-native-netinfo/react-native-netinfo/commit/6e2c422))
+
+## [11.3.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.0...v11.3.1) (2024-02-27)
+
+
+### Bug Fixes
+
+* update nativeInterface default export to support bridgeless mode ([#717](https://github.com/react-native-netinfo/react-native-netinfo/issues/717)) ([950410b](https://github.com/react-native-netinfo/react-native-netinfo/commit/950410b))
+
+# [11.3.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.2.1...v11.3.0) (2024-02-14)
+
+
+### Features
+
+* add visionOS support ([#714](https://github.com/react-native-netinfo/react-native-netinfo/issues/714)) ([65ffc48](https://github.com/react-native-netinfo/react-native-netinfo/commit/65ffc48))
+
 ## [11.2.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.2.0...v11.2.1) (2023-12-12)
 
 
