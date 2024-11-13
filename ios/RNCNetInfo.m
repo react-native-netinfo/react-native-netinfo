@@ -15,7 +15,7 @@
 #import <CoreTelephony/CTCarrier.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #endif
-@import SystemConfiguration.CaptiveNetwork;
+#import <SystemConfiguration/CaptiveNetwork.h>
 
 #import <React/RCTAssert.h>
 #import <React/RCTBridge.h>
