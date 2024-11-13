@@ -14,7 +14,10 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => "https://github.com/react-native-community/react-native-netinfo.git", :tag => "v#{s.version}" }
   s.source_files = "ios/**/*.{h,m}"
-  s.framework    = ["SystemConfiguration"]
+
+  s.ios.framework      = ["SystemConfiguration", "CoreTelephony"]
+  s.visionos.framework = ["SystemConfiguration"]
+  s.osx.framework      = ["SystemConfiguration"]
 
 
   s.dependency 'React-Core'
