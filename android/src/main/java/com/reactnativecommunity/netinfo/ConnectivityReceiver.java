@@ -12,11 +12,12 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 
+import com.facebook.common.internal.Supplier;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.reactnativecommunity.netinfo.types.CellularGeneration;
 import com.reactnativecommunity.netinfo.types.ConnectionType;
 
@@ -29,6 +30,7 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,7 +41,7 @@ public abstract class ConnectivityReceiver {
     private final WifiManager mWifiManager;
     private final TelephonyManager mTelephonyManager;
     private final ReactApplicationContext mReactContext;
-    public boolean hasListener = false;
+    public final AtomicInteger mNumberOfReactListeners = new AtomicInteger(0);
 
     @Nonnull
     private ConnectionType mConnectionType = ConnectionType.UNKNOWN;
@@ -125,16 +127,16 @@ public abstract class ConnectivityReceiver {
             mConnectionType = connectionType;
             mCellularGeneration = cellularGeneration;
             mIsInternetReachable = isInternetReachable;
-            if (hasListener) {
+            if (mNumberOfReactListeners.get() > 0) {
                 sendConnectivityChangedEvent();
             }
         }
     }
 
     protected void sendConnectivityChangedEvent() {
-        getReactContext()
-                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit("netInfo.networkStatusDidChange", createConnectivityEventMap(null));
+        final String eventName = "netInfo.networkStatusDidChange";
+        final Supplier<ReadableMap> data = () -> createConnectivityEventMap(null);
+        NetInfoModule.sendConnectivityChangedEvent(eventName, data);
     }
 
     protected WritableMap createConnectivityEventMap(@Nullable final String requestedInterface) {
