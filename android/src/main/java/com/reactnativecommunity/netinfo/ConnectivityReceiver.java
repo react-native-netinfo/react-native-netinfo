@@ -18,7 +18,6 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.reactnativecommunity.netinfo.types.CellularGeneration;
 import com.reactnativecommunity.netinfo.types.ConnectionType;
 
@@ -50,9 +49,6 @@ public abstract class ConnectivityReceiver {
     private CellularGeneration mCellularGeneration = null;
     private boolean mIsInternetReachable = false;
     private Boolean mIsInternetReachableOverride;
-
-    @Nullable
-    private IConnectivityReceiverDelegate mReceiverDelegate = null;
 
     private static String getSubnet(InetAddress inetAddress) throws SocketException {
         NetworkInterface netAddress = NetworkInterface.getByInetAddress(inetAddress);
@@ -113,10 +109,6 @@ public abstract class ConnectivityReceiver {
         return mConnectivityManager;
     }
 
-    void setReceiverDelegate(IConnectivityReceiverDelegate delegate) {
-        mReceiverDelegate = delegate;
-    }
-
     void updateConnectivity(
             @Nonnull ConnectionType connectionType,
             @Nullable CellularGeneration cellularGeneration,
@@ -144,13 +136,7 @@ public abstract class ConnectivityReceiver {
     protected void sendConnectivityChangedEvent() {
         final String eventName = "netInfo.networkStatusDidChange";
         final Supplier<ReadableMap> data = () -> createConnectivityEventMap(null);
-        if (mReceiverDelegate == null) {
-            getReactContext()
-                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                    .emit(eventName, data.get());
-        } else {
-            mReceiverDelegate.sendConnectivityChangedEvent(eventName, data);
-        }
+        NetInfoModule.sendConnectivityChangedEvent(eventName, data);
     }
 
     protected WritableMap createConnectivityEventMap(@Nullable final String requestedInterface) {
