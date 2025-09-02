@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 buildscript {
   // The Android Gradle plugin is only required when opening the android folder stand-alone.
   // This avoids unnecessary downloads and potential conflicts when the library is included as a
@@ -13,6 +15,21 @@ buildscript {
     }
   }
 }
+
+def readRnVersion() {
+  def f = new File(rootProject.projectDir, "../node_modules/react-native/package.json")
+  return f.exists() ? new JsonSlurper().parseText(f.text).version as String : "0.0.0"
+}
+
+def rnVersion = readRnVersion()
+
+boolean isRNV74OrNewer(String v) {
+  def m = (v =~ /(\d+)\.(\d+)\.(\d+)/); if (!m.matches()) return false
+  def (maj, min, pat) = [m[0][1], m[0][2], m[0][3]].collect { it as int }
+  return (maj > 0) || (maj == 0 && (min > 74 || (min == 74 && pat >= 0)))
+}
+
+def rn74plus = isRNV74OrNewer(rnVersion)
 
 def getExtOrInitialValue(name, initialValue) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : initialValue
@@ -45,7 +62,10 @@ android {
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault('minSdkVersion')
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
+
+    buildConfigField "boolean", "IS_RN_74_OR_NEWER", rn74plus.toString()
   }
+
   lintOptions{
     abortOnError false
   }
