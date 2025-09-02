@@ -23,7 +23,7 @@ def readRnVersion() {
 
 def rnVersion = readRnVersion()
 
-boolean isRNV74OrNewer(String v) {
+static boolean isRNV74OrNewer(String v) {
   def m = (v =~ /(\d+)\.(\d+)\.(\d+)/); if (!m.matches()) return false
   def (maj, min, pat) = [m[0][1], m[0][2], m[0][3]].collect { it as int }
   return (maj > 0) || (maj == 0 && (min > 74 || (min == 74 && pat >= 0)))
