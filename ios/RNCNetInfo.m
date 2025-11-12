@@ -84,11 +84,11 @@ RCT_EXPORT_MODULE()
 - (void)connectionStateWatcher:(RNCConnectionStateWatcher *)connectionStateWatcher didUpdateState:(RNCConnectionState *)state
 {
   if (self.isObserving) {
-    [self currentDictionaryFromUpdateState:state
-                              withInterface:NULL
-                                completion:^(NSDictionary *dictionary) {
-      [self sendEventWithName:@"netInfo.networkStatusDidChange" body:dictionary];
-    }];
+      [self currentDictionaryFromUpdateState:state
+                               withInterface:NULL
+                                  completion:^(NSDictionary *dictionary) {
+        [self sendEventWithName:@"netInfo.networkStatusDidChange" body:dictionary];
+      }];
   }
 }
 
@@ -120,18 +120,18 @@ RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
   NSString *selectedInterface = requestedInterface ?: state.type;
   bool connected = [state.type isEqualToString:selectedInterface] && state.connected;
   [self detailsFromInterface:selectedInterface withState:state completion:^(NSMutableDictionary *details) {
-    if (connected) {
-      details[@"isConnectionExpensive"] = @(state.expensive);
-    }
-    
-    NSDictionary *result = @{
-      @"type": selectedInterface,
-      @"isConnected": @(connected),
-      @"details": details ?: NSNull.null
-    };
-    
-    completion(result);
-  }];
+      if (connected) {
+        details[@"isConnectionExpensive"] = @(state.expensive);
+      }
+      
+      NSDictionary *result = @{
+        @"type": selectedInterface,
+        @"isConnected": @(connected),
+        @"details": details ?: NSNull.null
+      };
+      
+      completion(result);
+    }];
 }
 
 - (void)detailsFromInterface:(nonnull NSString *)requestedInterface
@@ -151,15 +151,23 @@ RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
         Clients should only set the shouldFetchWiFiSSID to true after ensuring requirements are met to get (B)SSID.
       */
       if (self.config && self.config[@"shouldFetchWiFiSSID"]) {
-          [self ssid:^(NSString * _Nullable ssid) {
-              details[@"ssid"] = ssid ?: NSNull.null;
-              
-              [self bssid:^(NSString * _Nullable bssid) {
-                details[@"bssid"] = bssid ?: NSNull.null;
-                completion(details);
-              }];
+        __weak typeof(self) weakSelf = self;
+        
+        [self ssid:^(NSString * _Nullable ssid) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (strongSelf == nil) {
+              completion(details);
+              return;
+            }
+            
+            details[@"ssid"] = ssid ?: NSNull.null;
+            
+            [self bssid:^(NSString * _Nullable bssid) {
+              details[@"bssid"] = bssid ?: NSNull.null;
+              completion(details);
             }];
-          return;
+          }];
+        return;
       }
     #endif
   }
@@ -252,7 +260,15 @@ RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
 #if !TARGET_OS_TV && !TARGET_OS_OSX && !TARGET_OS_MACCATALYST
 - (void)ssid:(void (^)(NSString * _Nullable))completion
 {
-  [NEHotspotNetwork fetchCurrentWithCompletionHandler:^(NEHotspotNetwork * _Nullable currentNetwork) {
+    __weak typeof(self) weakSelf = self;
+    
+    [NEHotspotNetwork fetchCurrentWithCompletionHandler:^(NEHotspotNetwork * _Nullable currentNetwork) {
+      __strong typeof(weakSelf) strongSelf = weakSelf;
+      if(strongSelf == nil){
+          completion(nil);
+          return;
+      }
+      
       NSString *SSID = nil;
       if (currentNetwork != nil) {
         NSString *networkSSID = currentNetwork.SSID;
@@ -268,13 +284,21 @@ RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
 
 - (void)bssid:(void (^)(NSString * _Nullable))completion
 {
-  [NEHotspotNetwork fetchCurrentWithCompletionHandler:^(NEHotspotNetwork * _Nullable currentNetwork) {
-      NSString *BSSID = nil;
-      if (currentNetwork != nil) {
-        BSSID = currentNetwork.BSSID;
-      }
-      completion(BSSID);
-    }];
+    __weak typeof(self) weakSelf = self;
+    
+    [NEHotspotNetwork fetchCurrentWithCompletionHandler:^(NEHotspotNetwork * _Nullable currentNetwork) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if(strongSelf == nil){
+            completion(nil);
+            return;
+        }
+        
+        NSString *BSSID = nil;
+        if (currentNetwork != nil) {
+          BSSID = currentNetwork.BSSID;
+        }
+        completion(BSSID);
+      }];
 }
 #endif
 
