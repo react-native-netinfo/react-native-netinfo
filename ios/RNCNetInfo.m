@@ -14,6 +14,7 @@
 #if !TARGET_OS_TV && !TARGET_OS_MACCATALYST && !TARGET_OS_VISION
 #import <CoreTelephony/CTCarrier.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <NetworkExtension/NetworkExtension.h>
 #endif
 @import SystemConfiguration.CaptiveNetwork;
 
@@ -83,8 +84,11 @@ RCT_EXPORT_MODULE()
 - (void)connectionStateWatcher:(RNCConnectionStateWatcher *)connectionStateWatcher didUpdateState:(RNCConnectionState *)state
 {
   if (self.isObserving) {
-    NSDictionary *dictionary = [self currentDictionaryFromUpdateState:state withInterface:NULL];
-    [self sendEventWithName:@"netInfo.networkStatusDidChange" body:dictionary];
+      [self currentDictionaryFromUpdateState:state
+                               withInterface:NULL
+                                  completion:^(NSDictionary *dictionary) {
+        [self sendEventWithName:@"netInfo.networkStatusDidChange" body:dictionary];
+      }];
   }
 }
 
@@ -94,7 +98,11 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
                   reject:(__unused RCTPromiseRejectBlock)reject)
 {
   RNCConnectionState *state = [self.connectionStateWatcher currentState];
-  resolve([self currentDictionaryFromUpdateState:state withInterface:requestedInterface]);
+  [self currentDictionaryFromUpdateState:state
+                               withInterface:requestedInterface
+                                  completion:^(NSDictionary *dictionary) {
+    resolve(dictionary);
+  }];
 }
 
 RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
@@ -105,23 +113,30 @@ RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
 #pragma mark - Utilities
 
 // Converts the state into a dictionary to send over the bridge
-- (NSDictionary *)currentDictionaryFromUpdateState:(RNCConnectionState *)state withInterface:(nullable NSString *)requestedInterface
+- (void)currentDictionaryFromUpdateState:(RNCConnectionState *)state
+                           withInterface:(nullable NSString *)requestedInterface
+                              completion:(void (^)(NSDictionary *dictionary))completion
 {
   NSString *selectedInterface = requestedInterface ?: state.type;
-  NSMutableDictionary *details = [self detailsFromInterface:selectedInterface withState:state];
   bool connected = [state.type isEqualToString:selectedInterface] && state.connected;
-  if (connected) {
-    details[@"isConnectionExpensive"] = @(state.expensive);
-  }
-
-  return @{
-    @"type": selectedInterface,
-    @"isConnected": @(connected),
-    @"details": details ?: NSNull.null
-  };
+  [self detailsFromInterface:selectedInterface withState:state completion:^(NSMutableDictionary *details) {
+      if (connected) {
+        details[@"isConnectionExpensive"] = @(state.expensive);
+      }
+      
+      NSDictionary *result = @{
+        @"type": selectedInterface,
+        @"isConnected": @(connected),
+        @"details": details ?: NSNull.null
+      };
+      
+      completion(result);
+    }];
 }
 
-- (NSMutableDictionary *)detailsFromInterface:(nonnull NSString *)requestedInterface withState:(RNCConnectionState *)state
+- (void)detailsFromInterface:(nonnull NSString *)requestedInterface
+                                    withState:(RNCConnectionState *)state
+                                   completion:(void (^)(NSMutableDictionary *details))completion
 {
   NSMutableDictionary *details = [NSMutableDictionary new];
   if ([requestedInterface isEqualToString: RNCConnectionTypeCellular]) {
@@ -136,12 +151,27 @@ RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
         Clients should only set the shouldFetchWiFiSSID to true after ensuring requirements are met to get (B)SSID.
       */
       if (self.config && self.config[@"shouldFetchWiFiSSID"]) {
-        details[@"ssid"] = [self ssid] ?: NSNull.null;
-        details[@"bssid"] = [self bssid] ?: NSNull.null;
+        __weak typeof(self) weakSelf = self;
+        
+        [self ssid:^(NSString * _Nullable ssid) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (strongSelf == nil) {
+              completion(details);
+              return;
+            }
+            
+            details[@"ssid"] = ssid ?: NSNull.null;
+            
+            [self bssid:^(NSString * _Nullable bssid) {
+              details[@"bssid"] = bssid ?: NSNull.null;
+              completion(details);
+            }];
+          }];
+        return;
       }
     #endif
   }
-  return details;
+  completion(details);
 }
 
 - (NSString *)carrier
@@ -228,40 +258,47 @@ RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
 }
 
 #if !TARGET_OS_TV && !TARGET_OS_OSX && !TARGET_OS_MACCATALYST
-- (NSString *)ssid
+- (void)ssid:(void (^)(NSString * _Nullable))completion
 {
-  NSArray *interfaceNames = CFBridgingRelease(CNCopySupportedInterfaces());
-  NSDictionary *SSIDInfo;
-  NSString *SSID = NULL;
-  for (NSString *interfaceName in interfaceNames) {
-    // CNCopyCurrentNetworkInfo is deprecated for iOS 13+, need to override & use fetchCurrentWithCompletionHandler
-    SSIDInfo = CFBridgingRelease(CNCopyCurrentNetworkInfo((__bridge CFStringRef)interfaceName));
-    if (SSIDInfo.count > 0) {
-        SSID = SSIDInfo[@"SSID"];
-        if ([SSID isEqualToString:@"Wi-Fi"] || [SSID isEqualToString:@"WLAN"]){
-          SSID = NULL;
+    __weak typeof(self) weakSelf = self;
+    
+    [NEHotspotNetwork fetchCurrentWithCompletionHandler:^(NEHotspotNetwork * _Nullable currentNetwork) {
+      __strong typeof(weakSelf) strongSelf = weakSelf;
+      if(strongSelf == nil){
+          completion(nil);
+          return;
+      }
+      
+      NSString *SSID = nil;
+      if (currentNetwork != nil) {
+        NSString *networkSSID = currentNetwork.SSID;
+        if (networkSSID != nil &&
+            ![networkSSID isEqualToString:@"Wi-Fi"] &&
+            ![networkSSID isEqualToString:@"WLAN"]) {
+          SSID = networkSSID;
         }
-        break;
-    }
-  }
-  return SSID;
+      }
+      completion(SSID);
+    }];
 }
 
-- (NSString *)bssid
+- (void)bssid:(void (^)(NSString * _Nullable))completion
 {
-  NSArray *interfaceNames = CFBridgingRelease(CNCopySupportedInterfaces());
-  NSDictionary *networkDetails;
-  NSString *BSSID = NULL;
-  for (NSString *interfaceName in interfaceNames) {
-        // CNCopyCurrentNetworkInfo is deprecated for iOS 13+, need to override & use fetchCurrentWithCompletionHandler
-      networkDetails = CFBridgingRelease(CNCopyCurrentNetworkInfo((__bridge CFStringRef)interfaceName));
-      if (networkDetails.count > 0)
-      {
-          BSSID = networkDetails[(NSString *) kCNNetworkInfoKeyBSSID];
-          break;
-      }
-  }
-  return BSSID;
+    __weak typeof(self) weakSelf = self;
+    
+    [NEHotspotNetwork fetchCurrentWithCompletionHandler:^(NEHotspotNetwork * _Nullable currentNetwork) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if(strongSelf == nil){
+            completion(nil);
+            return;
+        }
+        
+        NSString *BSSID = nil;
+        if (currentNetwork != nil) {
+          BSSID = currentNetwork.BSSID;
+        }
+        completion(BSSID);
+      }];
 }
 #endif
 
