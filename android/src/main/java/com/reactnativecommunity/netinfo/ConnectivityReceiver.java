@@ -6,16 +6,11 @@
  */
 package com.reactnativecommunity.netinfo;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
-
-import androidx.core.content.ContextCompat;
-import androidx.core.net.ConnectivityManagerCompat;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -26,19 +21,25 @@ import com.reactnativecommunity.netinfo.types.CellularGeneration;
 import com.reactnativecommunity.netinfo.types.ConnectionType;
 
 import java.math.BigInteger;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-abstract class ConnectivityReceiver {
+public abstract class ConnectivityReceiver {
 
     private final ConnectivityManager mConnectivityManager;
     private final WifiManager mWifiManager;
     private final TelephonyManager mTelephonyManager;
     private final ReactApplicationContext mReactContext;
+    public boolean hasListener = false;
 
     @Nonnull
     private ConnectionType mConnectionType = ConnectionType.UNKNOWN;
@@ -46,6 +47,29 @@ abstract class ConnectivityReceiver {
     private CellularGeneration mCellularGeneration = null;
     private boolean mIsInternetReachable = false;
     private Boolean mIsInternetReachableOverride;
+
+    private static String getSubnet(InetAddress inetAddress) throws SocketException {
+        NetworkInterface netAddress = NetworkInterface.getByInetAddress(inetAddress);
+        List<InterfaceAddress> addresses = netAddress.getInterfaceAddresses();
+
+        short networkPrefixLength = 0;
+        for (InterfaceAddress address : addresses) {
+            boolean isIpV4 = address.getAddress().getAddress().length == 4;
+            if (isIpV4) {
+                networkPrefixLength = address.getNetworkPrefixLength();
+                break;
+            }
+        }
+
+        int mask = 0xffffffff << (32 - networkPrefixLength);
+        return String.format(
+                Locale.US,
+                "%d.%d.%d.%d",
+                (mask >> 24 & 0xff),
+                (mask >> 16 & 0xff),
+                (mask >> 8 & 0xff),
+                (mask & 0xff));
+    }
 
     ConnectivityReceiver(ReactApplicationContext reactContext) {
         mReactContext = reactContext;
@@ -58,9 +82,9 @@ abstract class ConnectivityReceiver {
                 (TelephonyManager) reactContext.getSystemService(Context.TELEPHONY_SERVICE);
     }
 
-    abstract void register();
+    public abstract void register();
 
-    abstract void unregister();
+    public abstract void unregister();
 
     public void getCurrentState(@Nullable final String requestedInterface, final Promise promise) {
         promise.resolve(createConnectivityEventMap(requestedInterface));
@@ -101,22 +125,29 @@ abstract class ConnectivityReceiver {
             mConnectionType = connectionType;
             mCellularGeneration = cellularGeneration;
             mIsInternetReachable = isInternetReachable;
-            sendConnectivityChangedEvent();
+            if (hasListener) {
+                sendConnectivityChangedEvent();
+            }
         }
     }
 
-    private void sendConnectivityChangedEvent() {
+    protected void sendConnectivityChangedEvent() {
         getReactContext()
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit("netInfo.networkStatusDidChange", createConnectivityEventMap(null));
     }
 
-    private WritableMap createConnectivityEventMap(@Nullable final String requestedInterface) {
+    protected WritableMap createConnectivityEventMap(@Nullable final String requestedInterface) {
         WritableMap event = Arguments.createMap();
 
         // Add if WiFi is ON or OFF
-        boolean isEnabled = mWifiManager.isWifiEnabled();
-        event.putBoolean("isWifiEnabled", isEnabled);
+        if (NetInfoUtils.isAccessWifiStatePermissionGranted(getReactContext())) {
+            boolean isEnabled = false;
+            if (mWifiManager != null) {
+              isEnabled = mWifiManager.isWifiEnabled();
+            }
+            event.putBoolean("isWifiEnabled", isEnabled);
+        }
 
         // Add the connection type information
         event.putString("type", requestedInterface != null ? requestedInterface : mConnectionType.label);
@@ -124,7 +155,7 @@ abstract class ConnectivityReceiver {
         // Add the connection state information
         boolean isConnected =
                 !mConnectionType.equals(ConnectionType.NONE)
-                        && !mConnectionType.equals(ConnectionType.UNKNOWN);
+                && !mConnectionType.equals(ConnectionType.UNKNOWN);
         event.putBoolean("isConnected", isConnected);
 
         // Add the internet reachable information
@@ -137,7 +168,7 @@ abstract class ConnectivityReceiver {
         WritableMap details = createDetailsMap(detailsInterface);
         if (isConnected) {
             boolean isConnectionExpensive =
-                    ConnectivityManagerCompat.isActiveNetworkMetered(getConnectivityManager());
+                    getConnectivityManager() == null ? true : getConnectivityManager().isActiveNetworkMetered();
             details.putBoolean("isConnectionExpensive", isConnectionExpensive);
         }
         event.putMap("details", details);
@@ -160,9 +191,27 @@ abstract class ConnectivityReceiver {
                     details.putString("carrier", carrier);
                 }
                 break;
+            case "ethernet":
+                try {
+                    for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+                        NetworkInterface netInterface = en.nextElement();
+
+                        for (Enumeration<InetAddress> ea = netInterface.getInetAddresses(); ea.hasMoreElements(); ) {
+                            InetAddress inetAddress = ea.nextElement();
+                            if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
+                                String ipAddress = inetAddress.getHostAddress();
+                                details.putString("ipAddress", ipAddress);
+                                details.putString("subnet", getSubnet(inetAddress));
+                                return details;
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
             case "wifi":
-                if (ContextCompat.checkSelfPermission(getReactContext(),
-                        Manifest.permission.ACCESS_WIFI_STATE) == PackageManager.PERMISSION_GRANTED) {
+                if (NetInfoUtils.isAccessWifiStatePermissionGranted(getReactContext()) && mWifiManager != null) {
                     WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
                     if (wifiInfo != null) {
                         // Get the SSID
@@ -225,24 +274,38 @@ abstract class ConnectivityReceiver {
                                     BigInteger.valueOf(wifiInfo.getIpAddress()).toByteArray();
                             NetInfoUtils.reverseByteArray(ipAddressByteArray);
                             InetAddress inetAddress = InetAddress.getByAddress(ipAddressByteArray);
-                            NetworkInterface netAddress =
-                                    NetworkInterface.getByInetAddress(inetAddress);
-                            int mask =
-                                    0xffffffff
-                                            << (32
-                                            - netAddress
-                                            .getInterfaceAddresses()
-                                            .get(1)
-                                            .getNetworkPrefixLength());
-                            String subnet =
-                                    String.format(
-                                            Locale.US,
-                                            "%d.%d.%d.%d",
-                                            (mask >> 24 & 0xff),
-                                            (mask >> 16 & 0xff),
-                                            (mask >> 8 & 0xff),
-                                            (mask & 0xff));
-                            details.putString("subnet", subnet);
+                            details.putString("subnet", getSubnet(inetAddress));
+                        } catch (Exception e) {
+                            // Ignore errors
+                        }
+
+                        // Get the link speed
+                        try {
+                            int linkSpeed =
+                                    wifiInfo.getLinkSpeed();
+                            details.putInt("linkSpeed", linkSpeed);
+                        } catch (Exception e) {
+                            // Ignore errors
+                        }
+
+                        // Get the current receive link speed in Mbps
+                        try {
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                int rxLinkSpeed =
+                                        wifiInfo.getRxLinkSpeedMbps();
+                                details.putInt("rxLinkSpeed", rxLinkSpeed);
+                            }
+                        } catch (Exception e) {
+                            // Ignore errors
+                        }
+
+                        // Get the current transmit link speed in Mbps
+                        try {
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                int txLinkSpeed =
+                                        wifiInfo.getTxLinkSpeedMbps();
+                                details.putInt("txLinkSpeed", txLinkSpeed);
+                            }
                         } catch (Exception e) {
                             // Ignore errors
                         }

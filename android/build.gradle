@@ -5,11 +5,11 @@ buildscript {
   if (project == rootProject) {
     repositories {
       google()
-      jcenter()
+      mavenCentral()
     }
 
     dependencies {
-      classpath("com.android.tools.build:gradle:3.6.3")
+      classpath("com.android.tools.build:gradle:7.4.2")
     }
   }
 }
@@ -31,6 +31,17 @@ apply plugin: 'com.android.library'
 android {
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
 
+  def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION
+  // Check AGP version for backward compatibility reasons
+  if (agpVersion.tokenize('.')[0].toInteger() >= 7) {
+    namespace = "com.reactnativecommunity.netinfo"
+  }
+
+  compileOptions {
+      sourceCompatibility JavaVersion.VERSION_1_8
+      targetCompatibility JavaVersion.VERSION_1_8
+  }
+
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault('minSdkVersion')
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
@@ -43,10 +54,19 @@ android {
 repositories {
   maven {
     // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-    url "$rootDir/../node_modules/react-native/android"
+
+    // Use node resolver to locate react-native package
+    def reactNativePackage = file(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim())
+    if (reactNativePackage.exists()) {
+      url "$reactNativePackage.parentFile/android"
+    }
+    // Fallback to react-native package colocated in node_modules
+    else {
+      url "$rootDir/../node_modules/react-native/android"
+    }
   }
   google()
-  jcenter()
+  mavenLocal()
   mavenCentral()
 }
 
@@ -54,16 +74,4 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation 'com.facebook.react:react-native:+'
 
-  def supportLibVersion = getExtOrInitialValue('supportLibVersion', getExtOrInitialValue('supportVersion', null))
-  def androidXVersion = getExtOrInitialValue('androidXVersion', null)
-  def androidXCore = getExtOrInitialValue('androidXCore', null)
-  if (supportLibVersion && androidXVersion == null && androidXCore == null) {
-    implementation "com.android.support:appcompat-v7:$supportLibVersion"
-  } else {
-    def defaultAndroidXVersion = "1.+"
-    if (androidXCore == null) {
-      androidXCore = androidXVersion == null ? defaultAndroidXVersion : androidXVersion
-    }
-    implementation "androidx.core:core:$androidXCore"
-  }
 }

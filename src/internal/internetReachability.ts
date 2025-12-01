@@ -7,8 +7,8 @@
  * @format
  */
 
-import * as Types from './types';
 import * as PrivateTypes from './privateTypes';
+import * as Types from './types';
 
 interface InternetReachabilityCheckHandler {
   promise: Promise<void>;
@@ -31,7 +31,7 @@ export default class InternetReachability {
   }
 
   private _setIsInternetReachable = (
-    isInternetReachable: boolean | null | undefined,
+    isInternetReachable: boolean | null,
   ): void => {
     if (this._isInternetReachable === isInternetReachable) {
       return;
@@ -41,7 +41,7 @@ export default class InternetReachability {
     this._listener(this._isInternetReachable);
   };
 
-  private _setExpectsConnection = (expectsConnection: boolean): void => {
+  private _setExpectsConnection = (expectsConnection: boolean | null): void => {
     // Cancel any pending check
     if (this._currentInternetReachabilityCheckHandler !== null) {
       this._currentInternetReachabilityCheckHandler.cancel();
@@ -53,7 +53,7 @@ export default class InternetReachability {
       this._currentTimeoutHandle = null;
     }
 
-    if (expectsConnection) {
+    if (expectsConnection && this._configuration.reachabilityShouldRun()) {
       // If we expect a connection, start the process for finding if we have one
       // Set the state to "null" if it was previously false
       if (!this._isInternetReachable) {
@@ -62,35 +62,36 @@ export default class InternetReachability {
       // Start a network request to check for internet
       this._currentInternetReachabilityCheckHandler = this._checkInternetReachability();
     } else {
-      // If we don't expect a connection, just change the state to "false"
+      // If we don't expect a connection or don't run reachability check, just change the state to "false"
       this._setIsInternetReachable(false);
     }
   };
 
   private _checkInternetReachability = (): InternetReachabilityCheckHandler => {
+    const controller = new AbortController();
+
     const responsePromise = fetch(this._configuration.reachabilityUrl, {
-      method: 'HEAD',
+      headers: this._configuration.reachabilityHeaders,
+      method: this._configuration.reachabilityMethod,
       cache: 'no-cache',
+      signal: controller.signal,
     });
 
     // Create promise that will reject after the request timeout has been reached
     let timeoutHandle: ReturnType<typeof setTimeout>;
-    const timeoutPromise = new Promise<Response>(
-      (_, reject): void => {
-        timeoutHandle = setTimeout(
-          (): void => reject('timedout'),
-          this._configuration.reachabilityRequestTimeout,
-        );
-      },
-    );
+    const timeoutPromise = new Promise<Response>((_, reject): void => {
+      timeoutHandle = setTimeout(
+        (): void => reject('timedout'),
+        this._configuration.reachabilityRequestTimeout,
+      );
+    });
 
     // Create promise that makes it possible to cancel a pending request through a reject
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     let cancel: () => void = (): void => {};
-    const cancelPromise = new Promise<Response>(
-      (_, reject): void => {
-        cancel = (): void => reject('canceled');
-      },
-    );
+    const cancelPromise = new Promise<Response>((_, reject): void => {
+      cancel = (): void => reject('canceled');
+    });
 
     const promise = Promise.race([
       responsePromise,
@@ -116,7 +117,13 @@ export default class InternetReachability {
       )
       .catch(
         (error: Error | 'timedout' | 'canceled'): void => {
-          if (error !== 'canceled') {
+          if ('canceled' === error) {
+            controller.abort();
+          } else {
+            if ('timedout' === error) {
+              controller.abort();
+            }
+            
             this._setIsInternetReachable(false);
             this._currentTimeoutHandle = setTimeout(
               this._checkInternetReachability,
@@ -163,7 +170,10 @@ export default class InternetReachability {
   };
 
   public update = (state: PrivateTypes.NetInfoNativeModuleState): void => {
-    if (typeof state.isInternetReachable === 'boolean') {
+    if (
+      typeof state.isInternetReachable === 'boolean' &&
+      this._configuration.useNativeReachability
+    ) {
       this._setIsInternetReachable(state.isInternetReachable);
     } else {
       this._setExpectsConnection(state.isConnected);

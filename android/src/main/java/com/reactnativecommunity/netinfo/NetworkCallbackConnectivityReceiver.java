@@ -14,6 +14,8 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.reactnativecommunity.netinfo.types.CellularGeneration;
@@ -25,10 +27,21 @@ import com.reactnativecommunity.netinfo.types.ConnectionType;
  * it.
  */
 @TargetApi(Build.VERSION_CODES.N)
-class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
+public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
+    private static final int DELAY_MS = 250;
     private final ConnectivityNetworkCallback mNetworkCallback;
-    Network mNetwork = null;
-    NetworkCapabilities mNetworkCapabilities = null;
+
+    // from the docs:
+    // "Do NOT call ConnectivityManager.getNetworkCapabilities(android.net.Network)
+    // or ConnectivityManager.getLinkProperties(android.net.Network) or other
+    // synchronous ConnectivityManager methods in this callback as this is
+    // prone to race conditions ; calling these methods while in a callback
+    // may return an outdated or even a null object."
+    // https://developer.android.com/reference/android/net/ConnectivityManager.NetworkCallback
+    // For this reason, we will fetch these values when not provided by the callback
+    // on an asynchronous thread.
+    private Network mNetwork = null;
+    private NetworkCapabilities mCapabilities = null;
 
     public NetworkCallbackConnectivityReceiver(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -37,8 +50,15 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
 
     @Override
     @SuppressLint("MissingPermission")
-    void register() {
+    public void register() {
         try {
+            // Similar to BroadcastReceiver implementation, we need to force
+            // an initial callback call in order to get the current network state,
+            // otherwise, an app started without any network connection will
+            // always be reported as "unknown".
+            mNetwork = getConnectivityManager().getActiveNetwork();
+            asyncUpdateAndSend(0);
+
             getConnectivityManager().registerDefaultNetworkCallback(mNetworkCallback);
         } catch (SecurityException e) {
             // TODO: Display a yellow box about this
@@ -46,7 +66,7 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
     }
 
     @Override
-    void unregister() {
+    public void unregister() {
         try {
             getConnectivityManager().unregisterNetworkCallback(mNetworkCallback);
         } catch (SecurityException e) {
@@ -64,31 +84,42 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
         boolean isInternetReachable = false;
         boolean isInternetSuspended = false;
 
-        if (mNetworkCapabilities != null) {
+        final Network network = mNetwork;
+        final NetworkCapabilities capabilities = mCapabilities;
+
+        if (capabilities != null) {
             // Get the connection type
-            if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) {
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) {
                 connectionType = ConnectionType.BLUETOOTH;
-            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
                 connectionType = ConnectionType.CELLULAR;
-            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
                 connectionType = ConnectionType.ETHERNET;
-            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
                 connectionType = ConnectionType.WIFI;
-            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
                 connectionType = ConnectionType.VPN;
             }
 
-            if (mNetwork != null) {
+            if (network != null) {
                 // This may return null per API docs, and is deprecated, but for older APIs (< VERSION_CODES.P)
                 // we need it to test for suspended internet
-                networkInfo = getConnectivityManager().getNetworkInfo(mNetwork);
+                try {
+                    networkInfo = getConnectivityManager().getNetworkInfo(network);
+                } catch (SecurityException e) {
+                // Android 11 may throw a 'package does not belong' security exception here.
+                // Google fixed Android 14, 13 and 12 with the issue where Chaland Jean patched those versions.
+                // Android 11 is too old, so that's why we have to catch this exception here to be safe.
+               //  https://android.googlesource.com/platform/frameworks/base/+/249be21013e389837f5b2beb7d36890b25ecfaaf%5E%21/
+                    networkInfo = null;
+                }
             }
 
             // Check to see if the network is temporarily unavailable or if airplane mode is toggled on
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                isInternetSuspended = !mNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_SUSPENDED);
+                isInternetSuspended = !capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_SUSPENDED);
             } else {
-                if (mNetwork != null && networkInfo != null) {
+                if (network != null && networkInfo != null) {
                     NetworkInfo.DetailedState detailedConnectionState = networkInfo.getDetailedState();
                     if (!detailedConnectionState.equals(NetworkInfo.DetailedState.CONNECTED)) {
                         isInternetSuspended = true;
@@ -97,13 +128,17 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
             }
 
             isInternetReachable =
-                    mNetworkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                            && mNetworkCapabilities.hasCapability(
+                    capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                            && capabilities.hasCapability(
                             NetworkCapabilities.NET_CAPABILITY_VALIDATED)
                             && !isInternetSuspended;
 
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                isInternetReachable = isInternetReachable && capabilities.getLinkDownstreamBandwidthKbps() != 0;
+            }
+
             // Get the cellular network type
-            if (mNetwork != null && connectionType == ConnectionType.CELLULAR && isInternetReachable) {
+            if (network != null && connectionType == ConnectionType.CELLULAR && isInternetReachable) {
                 cellularGeneration = CellularGeneration.fromNetworkInfo(networkInfo);
             }
         } else {
@@ -113,32 +148,45 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
         updateConnectivity(connectionType, cellularGeneration, isInternetReachable);
     }
 
+    private void asyncUpdateAndSend(int delay) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            try {
+                mCapabilities = getConnectivityManager().getNetworkCapabilities(mNetwork);
+                updateAndSend();
+            } catch (SecurityException e) {
+                // Android 11 may throw a 'package does not belong' security exception here.
+                // Google fixed Android 14, 13 and 12 with the issue where Chaland Jean patched those versions.
+                // Android 11 is too old, so that's why we have to catch this exception here to be safe.
+               //  https://android.googlesource.com/platform/frameworks/base/+/249be21013e389837f5b2beb7d36890b25ecfaaf%5E%21/
+                // We need to catch this to prevent app crash.
+            }
+        }, delay);
+    }
+
     private class ConnectivityNetworkCallback extends ConnectivityManager.NetworkCallback {
         @Override
         public void onAvailable(Network network) {
             mNetwork = network;
-            mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
-            updateAndSend();
+            asyncUpdateAndSend(DELAY_MS);
         }
 
         @Override
         public void onLosing(Network network, int maxMsToLive) {
             mNetwork = network;
-            mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
             updateAndSend();
         }
 
         @Override
         public void onLost(Network network) {
             mNetwork = null;
-            mNetworkCapabilities = null;
+            mCapabilities = null;
             updateAndSend();
         }
 
         @Override
         public void onUnavailable() {
             mNetwork = null;
-            mNetworkCapabilities = null;
+            mCapabilities = null;
             updateAndSend();
         }
 
@@ -146,21 +194,16 @@ class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
         public void onCapabilitiesChanged(
                 Network network, NetworkCapabilities networkCapabilities) {
             mNetwork = network;
-            mNetworkCapabilities = networkCapabilities;
+            mCapabilities = networkCapabilities;
             updateAndSend();
         }
 
         @Override
         public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
-            // as a work-around for Android 10 Network callback for onLinkPropertiesChanged being triggered after the network is already lost.
-            // the onLost and onUnavailable handlers above set mNetwork to null
-            // if this handler is triggered after either of those, e.g., after the network is lost,
-            // this will send accurate details in the event.
             if (mNetwork != null) {
                 mNetwork = network;
-                mNetworkCapabilities = getConnectivityManager().getNetworkCapabilities(network);
             }
-            updateAndSend();
+            asyncUpdateAndSend(DELAY_MS);
         }
     }
 }

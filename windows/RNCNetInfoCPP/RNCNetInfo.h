@@ -2,56 +2,86 @@
 // Licensed under the MIT License.
 #pragma once
 
-#include "pch.h"
 #include <functional>
+#include <future>
+#include <winrt/Microsoft.ReactNative.h>
+#include <winrt/Windows.Foundation.h>
+#include <winrt/Windows.Networking.Connectivity.h>
 #include "NativeModules.h"
-#include "NetworkInfo.h"
 
 namespace winrt::ReactNativeNetInfo::implementation {
 
+    REACT_STRUCT(NetInfoDetails);
+    struct NetInfoDetails {
+        REACT_FIELD(isConnectionExpensive);
+        bool isConnectionExpensive;
+        REACT_FIELD(cellularGeneration);
+        std::optional<std::string> cellularGeneration;
+        REACT_FIELD(wifiGeneration);
+        std::optional<std::string> wifiGeneration;
+
+        REACT_FIELD(ssid);
+        std::optional<std::string> ssid;
+
+        REACT_FIELD(bssid);
+        std::optional<std::string> bssid;
+
+        REACT_FIELD(strength);
+        std::optional<int> strength;
+
+        REACT_FIELD(frequency);
+        std::optional<int> frequency;
+    };
+
+    REACT_STRUCT(NetInfoState);
+    struct NetInfoState {
+        /// <summary>
+        /// The type of the active network connection
+        /// </summary>
+        /// <param name=""></param>
+        REACT_FIELD(type);
+        std::string type;
+
+        /// <summary>
+        /// Is there an active network connection
+        /// </summary>
+        /// <param name=""></param>
+        REACT_FIELD(isConnected);
+        bool isConnected;
+
+        /// <summary>
+        /// IP Address of the current connection if available
+        /// </summary>
+        /// <param name=""></param>
+        REACT_FIELD(ipAddress);
+        std::string ipAddress;
+
+        /// <summary>
+        /// Is the internet reachable with the active network
+        /// </summary>
+        /// <param name=""></param>
+        REACT_FIELD(isInternetReachable);
+        std::optional<bool> isInternetReachable;
+
+        REACT_FIELD(details);
+        std::optional<NetInfoDetails> details;
+    };
+
     REACT_MODULE(RNCNetInfo);
     struct RNCNetInfo {
-        NetworkInfo networkInfo;
-
-        RNCNetInfo() {
-            networkInfo.StatusChanged([&](const auto& /*sender*/) {
-                NetworkStatusChanged(CreateNetInfoStateObject());
-                });
-        }
-
-        REACT_EVENT(NetworkStatusChanged, L"netInfo.networkStatusDidChange");
-        std::function<void(JSValue)> NetworkStatusChanged;
+    public:
+        REACT_INIT(Initialize);
+        void Initialize(winrt::Microsoft::ReactNative::ReactContext const& reactContext) noexcept;
 
         REACT_METHOD(getCurrentState);
-        void getCurrentState(std::string requestedInterface,
-            ReactPromise<JSValue> const& promise) noexcept {
-            promise.Resolve(CreateNetInfoStateObject());
-        }
+        winrt::fire_and_forget getCurrentState(std::string requestedInterface, winrt::Microsoft::ReactNative::ReactPromise<NetInfoState> promise) noexcept;
 
-        JSValue CreateNetInfoStateObject()
-        {
-            auto isConnected = networkInfo.IsConnected();
-            auto type = networkInfo.ConnectivityType();
-            auto detailsWriter = MakeJSValueTreeWriter();
-            if (isConnected) {
-                detailsWriter.WriteObjectBegin();
-                WriteProperty(detailsWriter, L"isConnectionExpensive", networkInfo.IsConnectionExpensive());
-                if (type == NetworkInfo::CONNECTION_TYPE_CELLULAR)
-                {
-                    WriteProperty(detailsWriter, L"cellularGeneration", networkInfo.CellularGeneration());
-                }
-                detailsWriter.WriteObjectEnd();
-            }
+        REACT_EVENT(NetworkStatusChanged, L"netInfo.networkStatusDidChange");
+        std::function<void(NetInfoState)> NetworkStatusChanged;
 
-            auto writer = winrt::Microsoft::ReactNative::MakeJSValueTreeWriter();
-            writer.WriteObjectBegin();
-            WriteProperty(writer, L"type", type);
-            WriteProperty(writer, L"isConnected", isConnected);
-            if (isConnected) {
-                WriteProperty(writer, L"details", TakeJSValue(detailsWriter));
-            }
-            writer.WriteObjectEnd();
-            return TakeJSValue(writer);
-        }
+        static std::future<NetInfoState> GetNetworkStatus(std::string const& requestedInterface = "");
+
+    private:
+        winrt::Windows::Networking::Connectivity::NetworkInformation::NetworkStatusChanged_revoker m_networkStatusChangedRevoker{};
     };
 }

@@ -11,8 +11,8 @@
 import * as React from 'react';
 import {
   AppRegistry,
+  EmitterSubscription,
   Linking,
-  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -23,6 +23,7 @@ import {
 import ConnectionInfoSubscription from './ConnectionInfoSubscription';
 import ConnectionInfoCurrent from './ConnectionInfoCurrent';
 import ConnectionInfoFetch from './ConnectionInfoFetch';
+import ConnectionInfoRefresh from './ConnectionInfoRefresh';
 import NetInfoHook from './NetInfoHook';
 import IsConnected from './IsConnected';
 
@@ -49,6 +50,14 @@ const EXAMPLES: Example[] = [
     description: 'Fetch the state on tap',
     render() {
       return <ConnectionInfoFetch />;
+    },
+  },
+  {
+    id: 'refresh',
+    title: 'NetInfo.refresh',
+    description: 'Refresh the state on tap',
+    render() {
+      return <ConnectionInfoRefresh />;
     },
   },
   {
@@ -84,6 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   sectionTitle: {
+    color: 'black',
     fontSize: 24,
     marginHorizontal: 8,
     marginTop: 24,
@@ -97,6 +107,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   exampleTitle: {
+    color: 'black',
     fontSize: 18,
   },
   exampleDescription: {
@@ -117,8 +128,11 @@ interface State {
   activeTestCase: Example | null;
 }
 
-class ExampleApp extends React.Component<{}, State> {
-  constructor(props: {}) {
+class ExampleApp extends React.Component<Record<string, unknown>, State> {
+
+  listener: EmitterSubscription | undefined = undefined;
+
+  constructor(props: Record<string, unknown>) {
     super(props);
 
     this.state = {
@@ -127,20 +141,11 @@ class ExampleApp extends React.Component<{}, State> {
   }
 
   componentDidMount() {
-    Linking.getInitialURL().then(this._handleOpenURLString);
-    if (Platform.OS === 'macos') {
-      Linking.addEventListener('url', this._handleOpenURLMacOS);
-    } else {
-      Linking.addEventListener('url', this._handleOpenURL);
-    }
+    this.listener = Linking.addEventListener('url', this._handleOpenURL);
   }
 
   componentWillUnmount() {
-    if (Platform.OS === 'macos') {
-      Linking.removeEventListener('url', this._handleOpenURLMacOS);
-    } else {
-      Linking.removeEventListener('url', this._handleOpenURL);
-    }
+    this.listener?.remove();
   }
 
   // Receives commands from the test runner when it opens the app with a given URL
@@ -148,9 +153,7 @@ class ExampleApp extends React.Component<{}, State> {
   _handleOpenURL = ({url}: {url: string}) => {
     this._handleOpenURLString(url);
   };
-  _handleOpenURLMacOS = (url: any) => {
-    this._handleOpenURLString(url);
-  };
+
   _handleOpenURLString = (url: string | null) => {
     if (!url) {
       return;
@@ -175,8 +178,8 @@ class ExampleApp extends React.Component<{}, State> {
   render() {
     const {activeTestCase} = this.state;
     return (
-      <ScrollView testID="scrollView" style={styles.container}>
-        <SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        <ScrollView testID="scrollView">
           {activeTestCase ? (
             <>
               <Text testID="testCasesTitle" style={styles.sectionTitle}>
@@ -192,8 +195,8 @@ class ExampleApp extends React.Component<{}, State> {
               {EXAMPLES.map(this._renderExample)}
             </>
           )}
-        </SafeAreaView>
-      </ScrollView>
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 

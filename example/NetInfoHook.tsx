@@ -16,7 +16,7 @@ const Hook: React.FunctionComponent = () => {
 
   return (
     <View>
-      <Text>{JSON.stringify(netInfo)}</Text>
+      <Text style={{color: 'black'}}>{JSON.stringify(netInfo)}</Text>
     </View>
   );
 };

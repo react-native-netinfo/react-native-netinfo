@@ -11,8 +11,9 @@
 #include <ifaddrs.h>
 #include <arpa/inet.h>
 
-#if !TARGET_OS_TV
-@import CoreTelephony;
+#if !TARGET_OS_TV && !TARGET_OS_MACCATALYST && !TARGET_OS_VISION
+#import <CoreTelephony/CTCarrier.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #endif
 @import SystemConfiguration.CaptiveNetwork;
 
@@ -24,6 +25,7 @@
 
 @property (nonatomic, strong) RNCConnectionStateWatcher *connectionStateWatcher;
 @property (nonatomic) BOOL isObserving;
+@property (nonatomic) NSDictionary *config;
 
 @end
 
@@ -95,6 +97,11 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
   resolve([self currentDictionaryFromUpdateState:state withInterface:requestedInterface]);
 }
 
+RCT_EXPORT_METHOD(configure:(NSDictionary *)config)
+{
+    self.config = config;
+}
+
 #pragma mark - Utilities
 
 // Converts the state into a dictionary to send over the bridge
@@ -123,9 +130,15 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
   } else if ([requestedInterface isEqualToString: RNCConnectionTypeWifi] || [requestedInterface isEqualToString: RNCConnectionTypeEthernet]) {
     details[@"ipAddress"] = [self ipAddress] ?: NSNull.null;
     details[@"subnet"] = [self subnet] ?: NSNull.null;
-    #if !TARGET_OS_TV && !TARGET_OS_OSX
-    details[@"ssid"] = [self ssid] ?: NSNull.null;
-    details[@"bssid"] = [self bssid] ?: NSNull.null;
+    #if !TARGET_OS_TV && !TARGET_OS_OSX && !TARGET_OS_MACCATALYST && !TARGET_OS_VISION
+      /*
+        Without one of the conditions needed to use CNCopyCurrentNetworkInfo, it will leak memory.
+        Clients should only set the shouldFetchWiFiSSID to true after ensuring requirements are met to get (B)SSID.
+      */
+      if (self.config && self.config[@"shouldFetchWiFiSSID"]) {
+        details[@"ssid"] = [self ssid] ?: NSNull.null;
+        details[@"bssid"] = [self bssid] ?: NSNull.null;
+      }
     #endif
   }
   return details;
@@ -133,7 +146,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
 
 - (NSString *)carrier
 {
-#if (TARGET_OS_TV || TARGET_OS_OSX)
+#if (TARGET_OS_TV || TARGET_OS_OSX || TARGET_OS_MACCATALYST || TARGET_OS_VISION)
   return nil;
 #else
   CTTelephonyNetworkInfo *netinfo = [[CTTelephonyNetworkInfo alloc] init];
@@ -164,7 +177,9 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
           [ifname isEqualToString:@"en1"]
         ) {
           // Get NSString from C String
-          address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+          char str[INET_ADDRSTRLEN];
+          inet_ntop(AF_INET, &((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr, str, INET_ADDRSTRLEN);
+          address = [NSString stringWithUTF8String:str];
         }
       }
 
@@ -198,7 +213,9 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
           [ifname isEqualToString:@"en1"]
         ) {
           // Get NSString from C String
-          subnet = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_netmask)->sin_addr)];
+          char str[INET_ADDRSTRLEN];
+          inet_ntop(AF_INET, &((struct sockaddr_in *)temp_addr->ifa_netmask)->sin_addr, str, INET_ADDRSTRLEN);
+          subnet = [NSString stringWithUTF8String:str];
         }
       }
 
@@ -210,13 +227,14 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
   return subnet;
 }
 
-#if !TARGET_OS_TV && !TARGET_OS_OSX
+#if !TARGET_OS_TV && !TARGET_OS_OSX && !TARGET_OS_MACCATALYST
 - (NSString *)ssid
 {
   NSArray *interfaceNames = CFBridgingRelease(CNCopySupportedInterfaces());
   NSDictionary *SSIDInfo;
   NSString *SSID = NULL;
   for (NSString *interfaceName in interfaceNames) {
+    // CNCopyCurrentNetworkInfo is deprecated for iOS 13+, need to override & use fetchCurrentWithCompletionHandler
     SSIDInfo = CFBridgingRelease(CNCopyCurrentNetworkInfo((__bridge CFStringRef)interfaceName));
     if (SSIDInfo.count > 0) {
         SSID = SSIDInfo[@"SSID"];
@@ -235,6 +253,7 @@ RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolv
   NSDictionary *networkDetails;
   NSString *BSSID = NULL;
   for (NSString *interfaceName in interfaceNames) {
+        // CNCopyCurrentNetworkInfo is deprecated for iOS 13+, need to override & use fetchCurrentWithCompletionHandler
       networkDetails = CFBridgingRelease(CNCopyCurrentNetworkInfo((__bridge CFStringRef)interfaceName));
       if (networkDetails.count > 0)
       {

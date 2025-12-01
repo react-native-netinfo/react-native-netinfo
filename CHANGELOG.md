@@ -1,3 +1,510 @@
+## [11.4.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.4.0...v11.4.1) (2024-09-20)
+
+
+### Bug Fixes
+
+* ensure one reachability check in-flight at once / proper useEffect listener cleanup ([#732](https://github.com/react-native-netinfo/react-native-netinfo/issues/732)) ([eaed080](https://github.com/react-native-netinfo/react-native-netinfo/commit/eaed080))
+
+# [11.4.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.3...v11.4.0) (2024-09-12)
+
+
+### Features
+
+* **android:** use node resolver to find react native package in monorepos ([#735](https://github.com/react-native-netinfo/react-native-netinfo/issues/735)) ([ef79980](https://github.com/react-native-netinfo/react-native-netinfo/commit/ef79980))
+
+## [11.3.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.2...v11.3.3) (2024-09-12)
+
+
+### Bug Fixes
+
+* **android:** add invalidate method for rn74+, onCatalystInstanceDestroy delegates ([#737](https://github.com/react-native-netinfo/react-native-netinfo/issues/737)) ([538623e](https://github.com/react-native-netinfo/react-native-netinfo/commit/538623e))
+
+## [11.3.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.1...v11.3.2) (2024-05-11)
+
+
+### Bug Fixes
+
+* **types:** isConnected / isInternetReachable should be boolean not true ([#721](https://github.com/react-native-netinfo/react-native-netinfo/issues/721)) ([6e2c422](https://github.com/react-native-netinfo/react-native-netinfo/commit/6e2c422))
+
+## [11.3.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.3.0...v11.3.1) (2024-02-27)
+
+
+### Bug Fixes
+
+* update nativeInterface default export to support bridgeless mode ([#717](https://github.com/react-native-netinfo/react-native-netinfo/issues/717)) ([950410b](https://github.com/react-native-netinfo/react-native-netinfo/commit/950410b))
+
+# [11.3.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.2.1...v11.3.0) (2024-02-14)
+
+
+### Features
+
+* add visionOS support ([#714](https://github.com/react-native-netinfo/react-native-netinfo/issues/714)) ([65ffc48](https://github.com/react-native-netinfo/react-native-netinfo/commit/65ffc48))
+
+## [11.2.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.2.0...v11.2.1) (2023-12-12)
+
+
+### Bug Fixes
+
+* update internetReachability fetch abort ([#706](https://github.com/react-native-netinfo/react-native-netinfo/issues/706)) ([d44d5a8](https://github.com/react-native-netinfo/react-native-netinfo/commit/d44d5a8))
+
+# [11.2.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.1.1...v11.2.0) (2023-12-05)
+
+
+### Features
+
+* **web:** add support for Tizen and WebOS ([#703](https://github.com/react-native-netinfo/react-native-netinfo/issues/703)) ([030887e](https://github.com/react-native-netinfo/react-native-netinfo/commit/030887e))
+
+## [11.1.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.1.0...v11.1.1) (2023-11-29)
+
+
+### Bug Fixes
+
+* internetReachability aborts handle cancel correctly ([#700](https://github.com/react-native-netinfo/react-native-netinfo/issues/700)) ([0a36296](https://github.com/react-native-netinfo/react-native-netinfo/commit/0a36296))
+
+# [11.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.0.1...v11.1.0) (2023-11-08)
+
+
+### Features
+
+* add useNetInfoInstance - a non singleton-state hook to manage configs / events independently ([#687](https://github.com/react-native-netinfo/react-native-netinfo/issues/687)) ([ca4c586](https://github.com/react-native-netinfo/react-native-netinfo/commit/ca4c586))
+
+## [11.0.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.0.0...v11.0.1) (2023-11-07)
+
+
+### Bug Fixes
+
+* **types:** fix type error on new headers feature ([#694](https://github.com/react-native-netinfo/react-native-netinfo/issues/694)) ([270be4f](https://github.com/react-native-netinfo/react-native-netinfo/commit/270be4f))
+
+# [11.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v10.0.0...v11.0.0) (2023-11-04)
+
+
+* feat(android)!: specify export mode on BroadcastReceivers, requires compileSdk 33+ (#692) ([a5864cc](https://github.com/react-native-netinfo/react-native-netinfo/commit/a5864cc)), closes [#692](https://github.com/react-native-netinfo/react-native-netinfo/issues/692)
+
+
+### BREAKING CHANGES
+
+* - compileSdk minimum is now 33
+- windows SDK minimum bumped to 10.0.17763.0 for current react-native-windows
+
+# [10.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.5.0...v10.0.0) (2023-11-01)
+
+
+* fix(cancel)!: cancel _checkInternetReachability request on timeout & cancel via AbortController (#678) ([4bfd3e2](https://github.com/react-native-netinfo/react-native-netinfo/commit/4bfd3e2)), closes [#678](https://github.com/react-native-netinfo/react-native-netinfo/issues/678) [/github.com/react-native-netinfo/react-native-netinfo/issues/439#issue-787487438](https://github.com//github.com/react-native-netinfo/react-native-netinfo/issues/439/issues/issue-787487438)
+
+
+### BREAKING CHANGES
+
+* netinfo now requires AbortController, node v16 / edge required
+it will likely not work on internet explorer from this version onwards
+
+# [9.5.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.4.2...v9.5.0) (2023-11-01)
+
+
+### Features
+
+* add optional reachabilityHeaders param to NetInfoConfiguration ([#673](https://github.com/react-native-netinfo/react-native-netinfo/issues/673)) ([0cbf067](https://github.com/react-native-netinfo/react-native-netinfo/commit/0cbf067))
+
+## [9.4.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.4.1...v9.4.2) (2023-11-01)
+
+
+### Bug Fixes
+
+* **types:** add optional isWifiEnabled boolean to NetInfoUnknownState + NetInfoDisconnectedState ([#680](https://github.com/react-native-netinfo/react-native-netinfo/issues/680)) ([46c4c71](https://github.com/react-native-netinfo/react-native-netinfo/commit/46c4c71))
+
+## [9.4.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.4.0...v9.4.1) (2023-06-29)
+
+
+### Bug Fixes
+
+* **android:** making rn >= 73 support also compatible with rn <= 66 ([#676](https://github.com/react-native-netinfo/react-native-netinfo/issues/676)) ([0c053eb](https://github.com/react-native-netinfo/react-native-netinfo/commit/0c053eb))
+
+# [9.4.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.11...v9.4.0) (2023-06-29)
+
+
+### Features
+
+* **android:** add support for React Native 0.73 ([#675](https://github.com/react-native-netinfo/react-native-netinfo/issues/675)) ([224fdbb](https://github.com/react-native-netinfo/react-native-netinfo/commit/224fdbb))
+
+## [9.3.11](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.10...v9.3.11) (2023-06-29)
+
+
+### Bug Fixes
+
+* do not crash on android 11 ([#672](https://github.com/react-native-netinfo/react-native-netinfo/issues/672)) ([bb13143](https://github.com/react-native-netinfo/react-native-netinfo/commit/bb13143))
+
+## [9.3.10](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.9...v9.3.10) (2023-05-05)
+
+
+### Bug Fixes
+
+* **web:** verify `window` exists before attempting to access navigator ([#666](https://github.com/react-native-netinfo/react-native-netinfo/issues/666)) ([60b99f2](https://github.com/react-native-netinfo/react-native-netinfo/commit/60b99f2))
+
+## [9.3.9](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.8...v9.3.9) (2023-04-06)
+
+
+### Bug Fixes
+
+* **android:** avoid crash on devices without wifi ([#662](https://github.com/react-native-netinfo/react-native-netinfo/issues/662)) ([a519e59](https://github.com/react-native-netinfo/react-native-netinfo/commit/a519e59))
+
+## [9.3.8](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.7...v9.3.8) (2023-03-29)
+
+
+### Bug Fixes
+
+* **windows:** fix crash in GetCellularGeneration for some LTE network adapters ([#660](https://github.com/react-native-netinfo/react-native-netinfo/issues/660)) ([7e1c7fb](https://github.com/react-native-netinfo/react-native-netinfo/commit/7e1c7fb))
+
+## [9.3.7](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.6...v9.3.7) (2022-11-28)
+
+
+### Bug Fixes
+
+* **web:** check `window` is defined before accessing  ([#646](https://github.com/react-native-netinfo/react-native-netinfo/issues/646)) ([ba5c22c](https://github.com/react-native-netinfo/react-native-netinfo/commit/ba5c22c))
+
+## [9.3.6](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.5...v9.3.6) (2022-10-26)
+
+
+### Bug Fixes
+
+* **android:** return netmask of first IPv4 address ([#634](https://github.com/react-native-netinfo/react-native-netinfo/issues/634)) ([f740f45](https://github.com/react-native-netinfo/react-native-netinfo/commit/f740f45)), closes [#633](https://github.com/react-native-netinfo/react-native-netinfo/issues/633)
+
+## [9.3.5](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.4...v9.3.5) (2022-10-15)
+
+
+### Bug Fixes
+
+* **windows:** fix crash in getIpAddressSync ([#631](https://github.com/react-native-netinfo/react-native-netinfo/issues/631)) ([cc3ed0f](https://github.com/react-native-netinfo/react-native-netinfo/commit/cc3ed0f))
+
+## [9.3.4](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.3...v9.3.4) (2022-10-05)
+
+
+### Bug Fixes
+
+* notify subscriptions after state changes ([#630](https://github.com/react-native-netinfo/react-native-netinfo/issues/630)) ([67c88be](https://github.com/react-native-netinfo/react-native-netinfo/commit/67c88be))
+
+## [9.3.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.2...v9.3.3) (2022-10-02)
+
+
+### Bug Fixes
+
+* **macCatalyst:** add compilation conditionals for macCatalyst ([#629](https://github.com/react-native-netinfo/react-native-netinfo/issues/629)) ([8e4cace](https://github.com/react-native-netinfo/react-native-netinfo/commit/8e4cace))
+
+## [9.3.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.1...v9.3.2) (2022-09-25)
+
+
+### Bug Fixes
+
+* **android, vpn:** ensure downlink >= 0 for internetReachable to be true on vpn ([#624](https://github.com/react-native-netinfo/react-native-netinfo/issues/624)) ([20c2cd2](https://github.com/react-native-netinfo/react-native-netinfo/commit/20c2cd2))
+
+## [9.3.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.3.0...v9.3.1) (2022-09-18)
+
+
+### Bug Fixes
+
+* **tests, mock:** allow mocking netinfostate type for testing ([#619](https://github.com/react-native-netinfo/react-native-netinfo/issues/619)) ([956bceb](https://github.com/react-native-netinfo/react-native-netinfo/commit/956bceb))
+
+# [9.3.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.2.0...v9.3.0) (2022-06-28)
+
+
+### Features
+
+* add linkSpeed, rxLinkSpeed, txLinkSpeed info to wifi on android ([#605](https://github.com/react-native-netinfo/react-native-netinfo/issues/605)) ([8cad8b7](https://github.com/react-native-netinfo/react-native-netinfo/commit/8cad8b7)), closes [#604](https://github.com/react-native-netinfo/react-native-netinfo/issues/604)
+
+# [9.2.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.1.0...v9.2.0) (2022-06-28)
+
+
+### Features
+
+* add support for reachabilityMethod to specify GET or HEAD ([#610](https://github.com/react-native-netinfo/react-native-netinfo/issues/610)) ([3f5badd](https://github.com/react-native-netinfo/react-native-netinfo/commit/3f5badd))
+
+# [9.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v9.0.0...v9.1.0) (2022-06-24)
+
+
+### Features
+
+* add parameter useNativeReachability to optionally choose non-native reachability test ([#609](https://github.com/react-native-netinfo/react-native-netinfo/issues/609)) ([9b02cac](https://github.com/react-native-netinfo/react-native-netinfo/commit/9b02cac))
+
+# [9.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v8.3.1...v9.0.0) (2022-06-03)
+
+
+* fix(windows)!: change WindowsTargetPlatformVersion to 10.0 / drop arm32 / drop rnw < 0.63 (#603) ([16d6568](https://github.com/react-native-netinfo/react-native-netinfo/commit/16d6568)), closes [#603](https://github.com/react-native-netinfo/react-native-netinfo/issues/603)
+
+
+### BREAKING CHANGES
+
+* needs react-native-windows 0.63+ and MSVC build tools v142+ (Visual Studio 2019+), drop arm32
+
+## [8.3.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v8.3.0...v8.3.1) (2022-05-30)
+
+
+### Bug Fixes
+
+* **web:** removeListeners should actually remove listeners ([#600](https://github.com/react-native-netinfo/react-native-netinfo/issues/600)) ([60e9e38](https://github.com/react-native-netinfo/react-native-netinfo/commit/60e9e38))
+
+# [8.3.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v8.2.0...v8.3.0) (2022-04-22)
+
+
+### Features
+
+* add imperative api to refresh state ([#594](https://github.com/react-native-netinfo/react-native-netinfo/issues/594)) ([1d7b751](https://github.com/react-native-netinfo/react-native-netinfo/commit/1d7b751))
+
+# [8.2.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v8.1.0...v8.2.0) (2022-03-18)
+
+
+### Features
+
+* **android:** add ethernet information ([#584](https://github.com/react-native-netinfo/react-native-netinfo/issues/584)) ([2b3a8e2](https://github.com/react-native-netinfo/react-native-netinfo/commit/2b3a8e2))
+
+# [8.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v8.0.0...v8.1.0) (2022-03-02)
+
+
+### Features
+
+* **windows, ip-address:** add ipAddress info to windows details ([#581](https://github.com/react-native-netinfo/react-native-netinfo/issues/581)) ([11f3e3b](https://github.com/react-native-netinfo/react-native-netinfo/commit/11f3e3b))
+
+# [8.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.12...v8.0.0) (2022-02-10)
+
+
+* fix(CHANGELOG)!: note that v7.1.12 is breaking if you have wifi SSID permission (#574) ([99072e0](https://github.com/react-native-netinfo/react-native-netinfo/commit/99072e0)), closes [#574](https://github.com/react-native-netinfo/react-native-netinfo/issues/574)
+
+
+### BREAKING CHANGES
+
+* it's possible this is a breaking change, depending on your app use case. If you relied on iOS SSID information and met [Apple's strict criteria for accessing SSID](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo?language=objc#discussion), you need to set the new config value `shouldFetchWiFiSSID` to true. If you set it to true and do not meet the criteria your app may crash due to a memory leak. All versions prior to 7.1.12 would attempt to fetch the information regardless of permission, leak memory, and possibly crash. This change avoids that crash.
+
+## [7.1.12](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.11...v7.1.12) (2022-02-09)
+
+**BREAKING CHANGE NOTICE** - it's possible this is a breaking change, depending on your app use case. If you relied on iOS SSID information and met [Apple's strict criteria for accessing SSID](https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo?language=objc#discussion), you need to set the new config value `shouldFetchWiFiSSID` to true. If you set it to true and do not meet the criteria your app may crash due to a memory leak. All versions prior to 7.1.12 would attempt to fetch the information regardless of permission, leak memory, and possible crash. This change avoids that crash.
+
+### Bug Fixes
+
+* **ios:** avoid memory leak from ssid APIs by adding explicit config ([#560](https://github.com/react-native-netinfo/react-native-netinfo/issues/560)) ([fbf7c15](https://github.com/react-native-netinfo/react-native-netinfo/commit/fbf7c15)), closes [#420](https://github.com/react-native-netinfo/react-native-netinfo/issues/420)
+
+## [7.1.11](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.10...v7.1.11) (2022-02-08)
+
+
+### Bug Fixes
+
+* **windows:** fix race condition in WiFi connection details feature ([#568](https://github.com/react-native-netinfo/react-native-netinfo/issues/568)) ([0cd8132](https://github.com/react-native-netinfo/react-native-netinfo/commit/0cd8132))
+
+## [7.1.10](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.9...v7.1.10) (2022-02-07)
+
+
+### Bug Fixes
+
+* **android:** use registerDefaultNetworkCallback so toggling airplane mode works ([#571](https://github.com/react-native-netinfo/react-native-netinfo/issues/571)) ([e8af2de](https://github.com/react-native-netinfo/react-native-netinfo/commit/e8af2de))
+
+## [7.1.9](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.8...v7.1.9) (2022-01-26)
+
+
+### Bug Fixes
+
+* **android:** count native listeners / correctly disable listener if count == 0 ([#569](https://github.com/react-native-netinfo/react-native-netinfo/issues/569)) ([5ae16f6](https://github.com/react-native-netinfo/react-native-netinfo/commit/5ae16f6))
+
+## [7.1.8](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.7...v7.1.8) (2022-01-25)
+
+
+### Bug Fixes
+
+* **windows:** refactor implementation to avoid crashes ([#564](https://github.com/react-native-netinfo/react-native-netinfo/issues/564)) ([cc4bfa3](https://github.com/react-native-netinfo/react-native-netinfo/commit/cc4bfa3))
+
+## [7.1.7](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.6...v7.1.7) (2021-12-20)
+
+
+### Bug Fixes
+
+* **android:** populate network value during initial module startup  ([#553](https://github.com/react-native-netinfo/react-native-netinfo/issues/553)) ([c05080f](https://github.com/react-native-netinfo/react-native-netinfo/commit/c05080f))
+
+## [7.1.6](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.5...v7.1.6) (2021-12-13)
+
+
+### Bug Fixes
+
+* **android:** avoid send event when has no listener ([#548](https://github.com/react-native-netinfo/react-native-netinfo/issues/548)) ([cad47d8](https://github.com/react-native-netinfo/react-native-netinfo/commit/cad47d8))
+
+## [7.1.5](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.4...v7.1.5) (2021-12-09)
+
+
+### Bug Fixes
+
+* **android:** use method-local ref to instance var for multi-thread safety [#549](https://github.com/react-native-netinfo/react-native-netinfo/issues/549) ([#550](https://github.com/react-native-netinfo/react-native-netinfo/issues/550)) ([81bbc87](https://github.com/react-native-netinfo/react-native-netinfo/commit/81bbc87))
+
+## [7.1.4](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.3...v7.1.4) (2021-12-07)
+
+
+### Bug Fixes
+
+* **android:** try async state fetch as stale state workaround ([#547](https://github.com/react-native-netinfo/react-native-netinfo/issues/547)) ([937cf48](https://github.com/react-native-netinfo/react-native-netinfo/commit/937cf48)), closes [#542](https://github.com/react-native-netinfo/react-native-netinfo/issues/542)
+
+## [7.1.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.2...v7.1.3) (2021-11-29)
+
+
+### Bug Fixes
+
+* **web, isConnected:** Return actual connection state even if network type is 'unknown' ([#544](https://github.com/react-native-netinfo/react-native-netinfo/issues/544)) ([36d6dc9](https://github.com/react-native-netinfo/react-native-netinfo/commit/36d6dc9))
+
+## [7.1.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.1...v7.1.2) (2021-11-17)
+
+
+### Bug Fixes
+
+* **jest, mock:** addEventListener returns a function to match API ([#529](https://github.com/react-native-netinfo/react-native-netinfo/issues/529)) ([82ca2ad](https://github.com/react-native-netinfo/react-native-netinfo/commit/82ca2ad))
+
+## [7.1.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.1.0...v7.1.1) (2021-11-17)
+
+
+### Bug Fixes
+
+* **ios, 5g:** do not use 5g symbols until iOS14.1 ([#525](https://github.com/react-native-netinfo/react-native-netinfo/issues/525)) ([932cd83](https://github.com/react-native-netinfo/react-native-netinfo/commit/932cd83))
+
+# [7.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v7.0.0...v7.1.0) (2021-11-17)
+
+
+### Features
+
+* **android, native:** make native API public for mixed-native use ([#524](https://github.com/react-native-netinfo/react-native-netinfo/issues/524)) ([96b8d2f](https://github.com/react-native-netinfo/react-native-netinfo/commit/96b8d2f))
+
+# [7.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.2.1...v7.0.0) (2021-11-16)
+
+
+* fix(windows)!: Fix autolinking and remove legacy projects (#521) ([45628d8](https://github.com/react-native-netinfo/react-native-netinfo/commit/45628d8)), closes [#521](https://github.com/react-native-netinfo/react-native-netinfo/issues/521)
+
+
+### BREAKING CHANGES
+
+* Drop support for react-native-windows 0.61 and lower. Update to RNW 0.62 or higher
+
+## [6.2.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.2.0...v6.2.1) (2021-11-15)
+
+
+### Bug Fixes
+
+* **android:** fix for outdated network states ([#510](https://github.com/react-native-netinfo/react-native-netinfo/issues/510)) ([d5f06ba](https://github.com/react-native-netinfo/react-native-netinfo/commit/d5f06ba))
+
+# [6.2.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.1.1...v6.2.0) (2021-11-13)
+
+
+### Features
+
+* Add 5g cellular type ([#436](https://github.com/react-native-netinfo/react-native-netinfo/issues/436)) ([6ba68e9](https://github.com/react-native-netinfo/react-native-netinfo/commit/6ba68e9))
+
+## [6.1.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.1.0...v6.1.1) (2021-11-13)
+
+
+### Bug Fixes
+
+* **android:** declare java 1.8 feature usage so assembleInstrumentedTest builds work ([#466](https://github.com/react-native-netinfo/react-native-netinfo/issues/466)) ([48d4364](https://github.com/react-native-netinfo/react-native-netinfo/commit/48d4364))
+
+# [6.1.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.6...v6.1.0) (2021-11-07)
+
+
+### Features
+
+* reachability test may be enabled/disabled via user-supplied function ([#513](https://github.com/react-native-netinfo/react-native-netinfo/issues/513)) ([83c1e0d](https://github.com/react-native-netinfo/react-native-netinfo/commit/83c1e0d))
+
+## [6.0.6](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.5...v6.0.6) (2021-11-04)
+
+
+### Bug Fixes
+
+* **windows, crash:** try/catch fetching network profile, new windows example app ([#511](https://github.com/react-native-netinfo/react-native-netinfo/issues/511)) ([ef3ac76](https://github.com/react-native-netinfo/react-native-netinfo/commit/ef3ac76)), closes [#454](https://github.com/react-native-netinfo/react-native-netinfo/issues/454)
+
+## [6.0.5](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.4...v6.0.5) (2021-11-03)
+
+
+### Bug Fixes
+
+* **jest:** mock return value not resolve value for useNetInfo mock ([#515](https://github.com/react-native-netinfo/react-native-netinfo/issues/515)) ([cfde0aa](https://github.com/react-native-netinfo/react-native-netinfo/commit/cfde0aa))
+
+## [6.0.4](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.3...v6.0.4) (2021-10-22)
+
+
+### Bug Fixes
+
+* **android:** use ConnectivityManager directly, drop androidx dependency ([#509](https://github.com/react-native-netinfo/react-native-netinfo/issues/509)) ([2569f56](https://github.com/react-native-netinfo/react-native-netinfo/commit/2569f56))
+
+## [6.0.3](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.2...v6.0.3) (2021-10-22)
+
+
+### Bug Fixes
+
+* **android, jcenter:** remove jcenter dependency / update example ([#500](https://github.com/react-native-netinfo/react-native-netinfo/issues/500)) ([94c5398](https://github.com/react-native-netinfo/react-native-netinfo/commit/94c5398))
+
+## [6.0.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.1...v6.0.2) (2021-09-03)
+
+
+### Bug Fixes
+
+* **ios:** remove iOS listener stubs added for RN0.65 compat, they caused a regression ([#493](https://github.com/react-native-netinfo/react-native-netinfo/issues/493)) ([a52b0a5](https://github.com/react-native-netinfo/react-native-netinfo/commit/a52b0a5))
+
+## [6.0.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v6.0.0...v6.0.1) (2021-08-24)
+
+
+### Bug Fixes
+
+* Ensure warnings are not shown on React Native 0.65 ([#487](https://github.com/react-native-netinfo/react-native-netinfo/issues/487) by [@lubomyr](https://github.com/lubomyr)) ([ac0ed65](https://github.com/react-native-netinfo/react-native-netinfo/commit/ac0ed65))
+* **android:** isConnected is incorrect for wifi networks only the app has access to ([#443](https://github.com/react-native-netinfo/react-native-netinfo/issues/443) by [@eliaslecomte](https://github.com/eliaslecomte)) ([7084771](https://github.com/react-native-netinfo/react-native-netinfo/commit/7084771))
+
+# [6.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v5.9.10...v6.0.0) (2021-02-19)
+
+
+### feature
+
+* **useNetinfo:** return null for initial unknown connection state ([#444](https://github.com/react-native-netinfo/react-native-netinfo/issues/444) by [@lisabaut](https://github.com/lisabaut)) ([4d84f14](https://github.com/react-native-netinfo/react-native-netinfo/commit/4d84f14)), closes [#295](https://github.com/react-native-netinfo/react-native-netinfo/issues/295)
+
+
+### BREAKING CHANGES
+
+* **useNetinfo:** When the connection state is unknown, the `isConnected` and `isInternetReachable` properties are now set to `null` rather than `false`. This allow you to easily detect the initial "unknown" state before the state is detected and set to a `boolean`.
+
+## [5.9.10](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.9...v5.9.10) (2021-01-06)
+
+
+### Bug Fixes
+
+* **ios,tvos:** Remove IPv4-only paths to prevent App Store warnings ([#431](https://github.com/react-native-community/react-native-netinfo/issues/431) by @ greenantdotcom ) ([1db98cb](https://github.com/react-native-community/react-native-netinfo/commit/1db98cb))
+
+## [5.9.9](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.8...v5.9.9) (2020-11-23)
+
+
+### Bug Fixes
+
+* **ios:** Support Mac Catalyst ([#415](https://github.com/react-native-community/react-native-netinfo/issues/415) by [@kyle-ssg](https://github.com/kyle-ssg)) ([5771efb](https://github.com/react-native-community/react-native-netinfo/commit/5771efb))
+
+## [5.9.8](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.7...v5.9.8) (2020-11-23)
+
+
+### Bug Fixes
+
+* **windows:** Resolve Missing Deploy Target ([#426](https://github.com/react-native-community/react-native-netinfo/issues/426) by [@chiaramooney](https://github.com/chiaramooney)) ([b43a3e4](https://github.com/react-native-community/react-native-netinfo/commit/b43a3e4))
+
+## [5.9.7](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.6...v5.9.7) (2020-09-18)
+
+
+### Bug Fixes
+
+* **ios:** depend directly on React-Core in podspec for Xcode 12 compatibility ([#409](https://github.com/react-native-community/react-native-netinfo/issues/409)) ([bcf8bf9](https://github.com/react-native-community/react-native-netinfo/commit/bcf8bf9))
+
+## [5.9.6](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.5...v5.9.6) (2020-08-10)
+
+
+### Bug Fixes
+
+* **android:** Add missing isWifiEnabled type definition ([#396](https://github.com/react-native-community/react-native-netinfo/issues/396) by @TimRobinson1) ([76d8db5](https://github.com/react-native-community/react-native-netinfo/commit/76d8db5))
+
+## [5.9.5](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.4...v5.9.5) (2020-07-16)
+
+
+### Bug Fixes
+
+* Added missing bssid type definition to Typescript ([#370](https://github.com/react-native-community/react-native-netinfo/issues/370) by [@organom](https://github.com/organom)) ([72ef6cd](https://github.com/react-native-community/react-native-netinfo/commit/72ef6cd))
+
+## [5.9.4](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.3...v5.9.4) (2020-06-25)
+
+
+### Bug Fixes
+
+* **android:** Add another check in ConnectivityReciever to make sure we have ACCESS_WIFI_STATE permission ([#379](https://github.com/react-native-community/react-native-netinfo/issues/379) by [@sweggersen](https://github.com/sweggersen)) ([b0ff1ff](https://github.com/react-native-community/react-native-netinfo/commit/b0ff1ff))
+
 ## [5.9.3](https://github.com/react-native-community/react-native-netinfo/compare/v5.9.2...v5.9.3) (2020-06-19)
 
 

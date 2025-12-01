@@ -20,26 +20,35 @@ export default class ConnectionInfoCurrent extends React.Component<
   State
 > {
   state = {
-    connectionInfo: 'Tap to get current state',
+    connectionInfo: 'Tap to refresh state',
   };
 
-  componentDidMount() {
-    this._fetchState();
+  componentDidMount(): void {
+    this._refreshState();
   }
 
-  _fetchState = async () => {
-    const state = await NetInfo.fetch();
+  _refreshState = async (): Promise<void> => {
+    const state = await NetInfo.refresh();
     this.setState({
       connectionInfo: JSON.stringify(state),
     });
   };
 
+  _triggerMultipleRefreshes = (): void => {
+    // Trigger multiple refreshes in quick succession
+    this._refreshState();
+    this._refreshState();
+    this._refreshState();
+    this._refreshState();
+  };
+
   render() {
     return (
       <View>
-        <TouchableOpacity onPress={this._fetchState}>
-          <Text style={{color: 'black'}}>{this.state.connectionInfo}</Text>
+        <TouchableOpacity onPress={this._triggerMultipleRefreshes}>
+          <Text>Tap to trigger multiple refreshes</Text>
         </TouchableOpacity>
+        <Text style={{color: 'black'}}>{this.state.connectionInfo}</Text>
       </View>
     );
   }

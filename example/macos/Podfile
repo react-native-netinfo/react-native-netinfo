@@ -1,0 +1,9 @@
+require_relative '../../node_modules/react-native-test-app/macos/test_app'
+
+workspace 'NetInfoExample.xcworkspace'
+
+use_test_app! :hermes_enabled => false do |target|
+  target.ui_tests do
+    pod 'NetInfo-UITests', :path => '..'
+  end
+end

@@ -7,22 +7,19 @@
  * @format
  */
 
-const typescriptEslintRecommended = require('@typescript-eslint/eslint-plugin/dist/configs/recommended.json');
-const typescriptEslintPrettier = require('eslint-config-prettier/@typescript-eslint');
-
 module.exports = {
-  extends: ['@react-native-community'],
+  extends: [
+    // '@react-native', // FIXME: 'Environment key "jest/globals" is unknown'
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+  ],
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
       // Apply the recommended Typescript defaults and the prettier overrides to all Typescript files
-      rules: Object.assign(
-        typescriptEslintRecommended.rules,
-        typescriptEslintPrettier.rules,
-        {
-          '@typescript-eslint/explicit-member-accessibility': 'off',
-        },
-      ),
+      rules: {
+        '@typescript-eslint/explicit-member-accessibility': 'off',
+      },
     },
     {
       files: ['example/**/*.ts', 'example/**/*.tsx'],

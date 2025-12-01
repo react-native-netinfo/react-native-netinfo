@@ -21,6 +21,8 @@ public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonF
     private final ConnectivityReceiver mConnectivityReceiver;
     private final AmazonFireDeviceConnectivityPoller mAmazonConnectivityChecker;
 
+    private int numberOfListeners = 0;
+
     public NetInfoModule(ReactApplicationContext reactContext) {
         super(reactContext);
         // Create the connectivity receiver based on the API level we are running on
@@ -39,10 +41,20 @@ public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonF
         mAmazonConnectivityChecker.register();
     }
 
-    @Override
+    // the upstream method was removed in react-native 0.74
+    // this stub remains for backwards compatibility so that react-native < 0.74
+    // (which will still call onCatalystInstanceDestroy) will continue to function
     public void onCatalystInstanceDestroy() {
+        invalidate();
+    }
+
+    // This should have an `@Override` tag, but the method does not exist until
+    // react-native >= 0.74, which would cause linting errors across versions
+    // once minimum supported react-native here is 0.74+, add the tag
+    public void invalidate() {
         mAmazonConnectivityChecker.unregister();
         mConnectivityReceiver.unregister();
+        mConnectivityReceiver.hasListener = false;
     }
 
     @Override
@@ -58,5 +70,19 @@ public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonF
     @Override
     public void onAmazonFireDeviceConnectivityChanged(boolean isConnected) {
         mConnectivityReceiver.setIsInternetReachableOverride(isConnected);
+    }
+
+    @ReactMethod
+    public void addListener(String eventName) {
+        numberOfListeners++;
+        mConnectivityReceiver.hasListener = true;
+    }
+
+    @ReactMethod
+    public void removeListeners(Integer count) {
+        numberOfListeners -= count;
+        if (numberOfListeners == 0) {
+            mConnectivityReceiver.hasListener = false;
+        }
     }
 }

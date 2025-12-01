@@ -19,10 +19,13 @@ export enum NetInfoStateType {
   other = 'other',
 }
 
+export type NetInfoMethodType = 'HEAD' | 'GET';
+
 export enum NetInfoCellularGeneration {
   '2g' = '2g',
   '3g' = '3g',
   '4g' = '4g',
+  '5g' = '5g',
 }
 
 export interface NetInfoConnectedDetails {
@@ -31,24 +34,31 @@ export interface NetInfoConnectedDetails {
 
 interface NetInfoConnectedState<
   T extends NetInfoStateType,
-  D extends object = {}
+  D extends Record<string, unknown> = Record<string, unknown>
 > {
   type: T;
-  isConnected: true;
-  isInternetReachable: boolean | null | undefined;
+  isConnected: boolean;
+  isInternetReachable: boolean | null;
   details: D & NetInfoConnectedDetails;
+  isWifiEnabled?: boolean;
 }
 
 interface NetInfoDisconnectedState<T extends NetInfoStateType> {
   type: T;
-  isConnected: false;
-  isInternetReachable: false;
+  isConnected: boolean;
+  isInternetReachable: boolean;
   details: null;
+  isWifiEnabled?: boolean;
 }
 
-export type NetInfoUnknownState = NetInfoDisconnectedState<
-  NetInfoStateType.unknown
->;
+export interface NetInfoUnknownState {
+  type: NetInfoStateType.unknown;
+  isConnected: boolean | null;
+  isInternetReachable: null;
+  details: null;
+  isWifiEnabled?: boolean;
+}
+
 export type NetInfoNoConnectionState = NetInfoDisconnectedState<
   NetInfoStateType.none
 >;
@@ -67,10 +77,14 @@ export type NetInfoWifiState = NetInfoConnectedState<
   NetInfoStateType.wifi,
   {
     ssid: string | null;
+    bssid: string | null;
     strength: number | null;
     ipAddress: string | null;
     subnet: string | null;
     frequency: number | null;
+    linkSpeed: number | null;
+    rxLinkSpeed: number | null;
+    txLinkSpeed: number | null;
   }
 >;
 export type NetInfoBluetoothState = NetInfoConnectedState<
@@ -102,8 +116,13 @@ export type NetInfoSubscription = () => void;
 
 export interface NetInfoConfiguration {
   reachabilityUrl: string;
+  reachabilityMethod?: NetInfoMethodType;
+  reachabilityHeaders?: Record<string, string>;
   reachabilityTest: (response: Response) => Promise<boolean>;
   reachabilityLongTimeout: number;
   reachabilityShortTimeout: number;
   reachabilityRequestTimeout: number;
+  reachabilityShouldRun: () => boolean;
+  shouldFetchWiFiSSID: boolean;
+  useNativeReachability: boolean;
 }
