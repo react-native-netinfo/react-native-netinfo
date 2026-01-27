@@ -9,13 +9,11 @@ package com.reactnativecommunity.netinfo;
 import android.os.Build;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.module.annotations.ReactModule;
 
 /** Module that monitors and provides information about the connectivity state of the device. */
-@ReactModule(name = NetInfoModule.NAME)
-public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonFireDeviceConnectivityPoller.ConnectivityChangedCallback {
+public class NetInfoModuleImpl implements AmazonFireDeviceConnectivityPoller.ConnectivityChangedCallback {
     public static final String NAME = "RNCNetInfo";
 
     private final ConnectivityReceiver mConnectivityReceiver;
@@ -23,8 +21,7 @@ public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonF
 
     private int numberOfListeners = 0;
 
-    public NetInfoModule(ReactApplicationContext reactContext) {
-        super(reactContext);
+    public NetInfoModuleImpl(ReactApplicationContext reactContext) {
         // Create the connectivity receiver based on the API level we are running on
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             mConnectivityReceiver = new NetworkCallbackConnectivityReceiver(reactContext);
@@ -35,7 +32,7 @@ public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonF
         mAmazonConnectivityChecker = new AmazonFireDeviceConnectivityPoller(reactContext, this);
     }
 
-    @Override
+
     public void initialize() {
         mConnectivityReceiver.register();
         mAmazonConnectivityChecker.register();
@@ -57,10 +54,6 @@ public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonF
         mConnectivityReceiver.hasListener = false;
     }
 
-    @Override
-    public String getName() {
-        return NAME;
-    }
 
     @ReactMethod
     public void getCurrentState(final String requestedInterface, final Promise promise) {
@@ -72,14 +65,14 @@ public class NetInfoModule extends ReactContextBaseJavaModule implements AmazonF
         mConnectivityReceiver.setIsInternetReachableOverride(isConnected);
     }
 
-    @ReactMethod
+
     public void addListener(String eventName) {
         numberOfListeners++;
         mConnectivityReceiver.hasListener = true;
     }
 
-    @ReactMethod
-    public void removeListeners(Integer count) {
+
+    public void removeListeners(double count) {
         numberOfListeners -= count;
         if (numberOfListeners == 0) {
             mConnectivityReceiver.hasListener = false;

@@ -14,17 +14,16 @@ const defaultState = {
 };
 
 const NetInfoStateType = {
-  unknown: "unknown",
-  none: "none",
-  cellular: "cellular",
-  wifi: "wifi",
-  bluetooth: "bluetooth",
-  ethernet: "ethernet",
-  wimax: "wimax",
-  vpn: "vpn",
-  other: "other",
+  unknown: 'unknown',
+  none: 'none',
+  cellular: 'cellular',
+  wifi: 'wifi',
+  bluetooth: 'bluetooth',
+  ethernet: 'ethernet',
+  wimax: 'wimax',
+  vpn: 'vpn',
+  other: 'other',
 };
-
 
 const RNCNetInfoMock = {
   NetInfoStateType,

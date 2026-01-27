@@ -32,7 +32,7 @@ beforeAll(() => {
 
 describe('@react-native-community/netinfo listener', () => {
   describe('Event listener callbacks', () => {
-    it('should call the listener on listening', done => {
+    it('should call the listener on listening', (done) => {
       const listener = jest.fn();
       NetInfo.addEventListener(listener);
 
@@ -42,7 +42,7 @@ describe('@react-native-community/netinfo listener', () => {
       }, 0);
     });
 
-    it('should call the listener on listening with multiple listeners', done => {
+    it('should call the listener on listening with multiple listeners', (done) => {
       const listener1 = jest.fn();
       const listener2 = jest.fn();
       NetInfo.addEventListener(listener1);
@@ -303,7 +303,7 @@ describe('@react-native-community/netinfo listener', () => {
           ];
         }
 
-        dataProvider().forEach(testCase => {
+        dataProvider().forEach((testCase) => {
           it(testCase.description, () => {
             NetInfo.configure(testCase.configuration);
 

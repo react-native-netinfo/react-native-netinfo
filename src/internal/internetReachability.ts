@@ -19,7 +19,8 @@ export default class InternetReachability {
   private _configuration: Types.NetInfoConfiguration;
   private _listener: PrivateTypes.NetInfoInternetReachabilityChangeListener;
   private _isInternetReachable: boolean | null | undefined = undefined;
-  private _currentInternetReachabilityCheckHandler: InternetReachabilityCheckHandler | null = null;
+  private _currentInternetReachabilityCheckHandler: InternetReachabilityCheckHandler | null =
+    null;
   private _currentTimeoutHandle: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
@@ -60,7 +61,8 @@ export default class InternetReachability {
         this._setIsInternetReachable(null);
       }
       // Start a network request to check for internet
-      this._currentInternetReachabilityCheckHandler = this._checkInternetReachability();
+      this._currentInternetReachabilityCheckHandler =
+        this._checkInternetReachability();
     } else {
       // If we don't expect a connection or don't run reachability check, just change the state to "false"
       this._setIsInternetReachable(false);
@@ -98,40 +100,34 @@ export default class InternetReachability {
       timeoutPromise,
       cancelPromise,
     ])
-      .then(
-        (response): Promise<boolean> => {
-          return this._configuration.reachabilityTest(response);
-        },
-      )
-      .then(
-        (result): void => {
-          this._setIsInternetReachable(result);
-          const nextTimeoutInterval = this._isInternetReachable
-            ? this._configuration.reachabilityLongTimeout
-            : this._configuration.reachabilityShortTimeout;
+      .then((response): Promise<boolean> => {
+        return this._configuration.reachabilityTest(response);
+      })
+      .then((result): void => {
+        this._setIsInternetReachable(result);
+        const nextTimeoutInterval = this._isInternetReachable
+          ? this._configuration.reachabilityLongTimeout
+          : this._configuration.reachabilityShortTimeout;
+        this._currentTimeoutHandle = setTimeout(
+          this._checkInternetReachability,
+          nextTimeoutInterval,
+        );
+      })
+      .catch((error: Error | 'timedout' | 'canceled'): void => {
+        if ('canceled' === error) {
+          controller.abort();
+        } else {
+          if ('timedout' === error) {
+            controller.abort();
+          }
+
+          this._setIsInternetReachable(false);
           this._currentTimeoutHandle = setTimeout(
             this._checkInternetReachability,
-            nextTimeoutInterval,
+            this._configuration.reachabilityShortTimeout,
           );
-        },
-      )
-      .catch(
-        (error: Error | 'timedout' | 'canceled'): void => {
-          if ('canceled' === error) {
-            controller.abort();
-          } else {
-            if ('timedout' === error) {
-              controller.abort();
-            }
-            
-            this._setIsInternetReachable(false);
-            this._currentTimeoutHandle = setTimeout(
-              this._checkInternetReachability,
-              this._configuration.reachabilityShortTimeout,
-            );
-          }
-        },
-      )
+        }
+      })
       // Clear request timeout and propagate any errors
       .then(
         (): void => {
