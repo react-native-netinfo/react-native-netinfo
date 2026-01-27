@@ -114,7 +114,13 @@ export default class InternetReachability {
         );
       })
       .catch((error: Error | 'timedout' | 'canceled'): void => {
-        if (error !== 'canceled') {
+        if ('canceled' === error) {
+          controller.abort();
+        } else {
+          if ('timedout' === error) {
+            controller.abort();
+          }
+
           this._setIsInternetReachable(false);
           this._currentTimeoutHandle = setTimeout(
             this._checkInternetReachability,
@@ -122,23 +128,6 @@ export default class InternetReachability {
           );
         }
       })
-      .catch(
-        (error: Error | 'timedout' | 'canceled'): void => {
-          if ('canceled' === error) {
-            controller.abort();
-          } else {
-            if ('timedout' === error) {
-              controller.abort();
-            }
-            
-            this._setIsInternetReachable(false);
-            this._currentTimeoutHandle = setTimeout(
-              this._checkInternetReachability,
-              this._configuration.reachabilityShortTimeout,
-            );
-          }
-        },
-      )
       // Clear request timeout and propagate any errors
       .then(
         (): void => {

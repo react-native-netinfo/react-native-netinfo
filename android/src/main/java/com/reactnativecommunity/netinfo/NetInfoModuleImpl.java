@@ -51,6 +51,7 @@ public class NetInfoModuleImpl implements AmazonFireDeviceConnectivityPoller.Con
     public void invalidate() {
         mAmazonConnectivityChecker.unregister();
         mConnectivityReceiver.unregister();
+        mConnectivityReceiver.hasListener = false;
     }
 
 
