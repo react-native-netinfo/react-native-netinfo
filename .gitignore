@@ -74,3 +74,5 @@ package-lock.json
 msbuild.binlog
 
 .xcode.env
+
+.yarn/

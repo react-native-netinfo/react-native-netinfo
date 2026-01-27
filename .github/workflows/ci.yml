@@ -11,11 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: corepack enable
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'yarn'
-      - run: yarn install --frozen-lockfile
+      - run: yarn install
       - run: yarn test
   deploy:
     if: github.repository == 'react-native-netinfo/react-native-netinfo' && github.ref == 'refs/heads/master'
@@ -23,11 +24,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: corepack enable
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'yarn'
-      - run: yarn install --frozen-lockfile
+      - run: yarn install
       - run: yarn ci:publish
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
