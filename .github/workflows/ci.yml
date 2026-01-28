@@ -32,6 +32,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      - run: corepack enable
       - name: git config
         run: |
           git config --global user.name 'Semantic Release Bot'
