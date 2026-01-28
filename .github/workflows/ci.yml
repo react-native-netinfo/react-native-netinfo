@@ -19,18 +19,35 @@ jobs:
       - run: yarn install
       - run: yarn test
   deploy:
-    if: github.repository == 'react-native-netinfo/react-native-netinfo' && github.ref == 'refs/heads/master'
+    permissions:
+      contents: write # For git operations
+      id-token: write # < REQUIRED FOR OIDC
+    if: github.event.repository.fork == false && github.ref == 'refs/heads/master'
     needs: test
+    name: Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: corepack enable
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v5
         with:
-          node-version: '20'
-          cache: 'yarn'
-      - run: yarn install
-      - run: yarn ci:publish
+          fetch-depth: 0
+          persist-credentials: false
+      - name: git config
+        run: |
+          git config --global user.name 'Semantic Release Bot'
+          git config --global user.email 'semantic-release-bot@martynus.net'
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 'lts/*'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install dependencies
+        run: yarn install
+      - name: Release
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          #npm install -g npm@latest
+          #npm_config_yes=true npx release-it --ci
+          yarn ci:publish
