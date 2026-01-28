@@ -72,7 +72,7 @@ Linking the package manually is not required anymore with [Autolinking](https://
 ## React Native Compatibility
 To use this library you need to ensure you are using the correct version of React Native.
 We support react-native 0.60+ with auto-linking.
-  
+
 If you are using a version of React Native that is lower than 0.60 check older versions of this README for details,
 but no support will be provided.
 
@@ -84,7 +84,7 @@ AbortController is used to cancel network requests, and may not be available on 
 
 ## Node Compatibility
 
-Node v16 is the minimum required node version - `AbortController` is only present in stable versions of node from v16 on 
+Node v16 is the minimum required node version - `AbortController` is only present in stable versions of node from v16 on
 
 ## Migrating from the core `react-native` module
 This module was created when the NetInfo was split out from the core of React Native. To migrate to this module you need to follow the installation instructions above and then change your imports from:
@@ -160,6 +160,7 @@ const { netInfo: { type, isConnected }, refresh } = useNetInfoInstance();
 * **Global instance methods:**
   * [`fetch()`](#fetch)
   * [`refresh()`](#refresh)
+  * [`reportConnected()`](#reportConnected)
   * [`addEventListener()`](#addeventlistener)
   * [`useNetInfo()`](#usenetinfo)
 * **Isolated instance:**
@@ -247,22 +248,22 @@ Describes the current generation of the `cellular` connection. It is an enum wit
 | `3g`      | Currently connected to a 3G cellular network. Includes EHRPD, EVDO, HSPA, HSUPA, HSDPA, and UTMS type connections |
 | `4g`      | Currently connected to a 4G cellular network. Includes HSPAP and LTE type connections                             |
 | `5g`      | Currently connected to a 5G cellular network. Includes NRNSA (iOS only) and NR type connections                   |
-  
+
 #### `NetInfoConfiguration`
 The configuration options for the library.
 
 | Property | Type | Default | Description
-| ---------------------------- | --------------------------------- | ----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | 
-| `reachabilityUrl`            | `string`                          | `https://clients3.google.com/generate_204` | The URL to call to test if the internet is reachable. Only used on platforms which do not supply internet reachability natively or if `useNativeReachability` is `false`.           
+| ---------------------------- | --------------------------------- | ----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `reachabilityUrl`            | `string`                          | `https://clients3.google.com/generate_204` | The URL to call to test if the internet is reachable. Only used on platforms which do not supply internet reachability natively or if `useNativeReachability` is `false`.
 | `reachabilityHeaders`            | `object`                          | `{}` | A HTTP headers object, an object literal, or an array of two-item arrays to set request's headers, to use during the reachabilityUrl URL call to test if the internet is reachable. Defaults to `{}`.                                                                                               |
 | `reachabilityMethod`            | `NetInfoMethodType`                          | `HEAD` | The HTTP request method to use to call reachabilityUrl URL to call to test if the internet is reachable. Defaults to `HEAD`. `GET` is also available                                                                                               |
 | `reachabilityTest`           | `(response: Response) => boolean` | `Promise.resolve(response.status === 204)` | A function which is passed the `Response` from calling the reachability URL. It should return `true` if the response indicates that the internet is reachable. Only used on platforms which do not supply internet reachability natively or if `useNativeReachability` is `false`. |
 | `reachabilityShortTimeout`   | `number`                          | 5 seconds | The number of milliseconds between internet reachability checks when the internet was not previously detected. Only used on platforms which do not supply internet reachability natively or if `useNativeReachability` is `false`.                                                 |
 | `reachabilityLongTimeout`    | `number`                          | 60 seconds | The number of milliseconds between internet reachability checks when the internet was previously detected. Only used on platforms which do not supply internet reachability natively or if `useNativeReachability` is `false`.                                                     |
-| `reachabilityRequestTimeout` | `number`                          | 15 seconds | The number of milliseconds that a reachability check is allowed to take before failing. Only used on platforms which do not supply internet reachability natively or if `useNativeReachability` is `false`.                                                   |                    
-| `reachabilityShouldRun` | `() => boolean`                          | `() => true` | A function which returns a boolean to determine if checkInternetReachability should be run.                                                   |                    
+| `reachabilityRequestTimeout` | `number`                          | 15 seconds | The number of milliseconds that a reachability check is allowed to take before failing. Only used on platforms which do not supply internet reachability natively or if `useNativeReachability` is `false`.                                                   |
+| `reachabilityShouldRun` | `() => boolean`                          | `() => true` | A function which returns a boolean to determine if checkInternetReachability should be run.                                                   |
 | `shouldFetchWiFiSSID` | `boolean`                          | `false` | A flag indicating one of the requirements on iOS has been met to retrieve the network (B)SSID, and the native SSID retrieval APIs should be called.  This has no effect on Android.
-| `useNativeReachability` | `boolean`                          | `true` | A flag indicating whether or not Netinfo should use native reachability checks, if available. 
+| `useNativeReachability` | `boolean`                          | `true` | A flag indicating whether or not Netinfo should use native reachability checks, if available.
 
 
 ### Global instance methods
@@ -384,11 +385,15 @@ NetInfo.refresh().then(state => {
 
 This will also update subscribers using `addEventListener` and/or `useNetInfo`.
 
+#### `reportConnected()`
+
+Tell `NetInfo` that you are currently connected, i.e. that you have just successfully made a network call, so `NetInfo` can postpone its internal periodic connectivity check (if applicable). Use this to cut down on extraneous network traffic.
+
 ### Isolated instance
 
 Please note the difference between global and isolated usage described [here](#global-vs-isolated-instance)
 
-#### `useNetInfoInstance()` 
+#### `useNetInfoInstance()`
 
 A [React Hook](https://reactjs.org/docs/hooks-intro.html) which can be used to create and manage an isolated instance of a network manager class. It returns a `refresh` function and the current [`NetInfoState`](README.md#netinfostate).
 
@@ -427,7 +432,7 @@ const YourComponent = () => {
     shouldFetchWiFiSSID: true, // met iOS requirements to get SSID
     useNativeReachability: false
   }
-  
+
   const { netInfo } = useNetInfoInstance(isPaused, config);
   //...
 ```
@@ -465,7 +470,7 @@ The SCNetworkReachability API used in iOS does not send events to the app in the
     const subAppState = AppState.addEventListener("change", async (nextAppState) => {
       if (IS_IOS_DEVICE && nextAppState=='active') {
         let newNetInfo = await NativeModules.RNCNetInfo.getCurrentState('wifi');
-        //your code here 
+        //your code here
       }
     });
     const unsubNetState = NetInfo.addEventListener(state => {
@@ -485,7 +490,7 @@ The SCNetworkReachability API used in iOS does not send events to the app in the
 * [Mike Hardy](https://github.com/mikehardy)
 
 ### Maintainers Emeritus
-  
+
 * [Matt Oakes](https://github.com/matt-oakes) - [Freelance React Native Developer](http://mattoakes.net)
 * [Mike Diarmid](https://github.com/salakar) - [Invertase](https://invertase.io)
 
