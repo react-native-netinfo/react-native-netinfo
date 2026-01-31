@@ -1,3 +1,16 @@
+# [11.5.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.4.1...v11.5.0) (2026-01-31)
+
+
+### Bug Fixes
+
+* **release:** enable corepack for modern yarn during release ([f8ada1f](https://github.com/react-native-netinfo/react-native-netinfo/commit/f8ada1f8da3c616104bcf8081055f38ddaf6b99f))
+* **release:** update publish workflow and related dependencies ([#786](https://github.com/react-native-netinfo/react-native-netinfo/issues/786)) ([b1ef935](https://github.com/react-native-netinfo/react-native-netinfo/commit/b1ef935c3afc8e8248d4d2e8546d31e962e4710a))
+
+
+### Features
+
+* New architecture support for Android and iOS ([#655](https://github.com/react-native-netinfo/react-native-netinfo/issues/655)) ([4e6dd8c](https://github.com/react-native-netinfo/react-native-netinfo/commit/4e6dd8c54fa2c4dc7e2146f9839aa3fb356f889e))
+
 ## [11.4.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.4.0...v11.4.1) (2024-09-20)
 
 
