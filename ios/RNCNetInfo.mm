@@ -99,7 +99,7 @@ RCT_EXPORT_MODULE()
 
 #pragma mark - Public API
 
-RCT_EXPORT_METHOD(getCurrentState:(nullable NSString *)requestedInterface resolve:(RCTPromiseResolveBlock)resolve
+RCT_EXPORT_METHOD(getCurrentState:(NSString *)requestedInterface resolve:(RCTPromiseResolveBlock)resolve
                   reject:(__unused RCTPromiseRejectBlock)reject)
 {
   RNCConnectionState *state = [self.connectionStateWatcher currentState];
