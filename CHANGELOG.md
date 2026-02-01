@@ -1,3 +1,10 @@
+## [11.5.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.5.0...v11.5.1) (2026-02-01)
+
+
+### Bug Fixes
+
+* **ios:** remove requestedInterface param nullability specifier for new arch compat ([#788](https://github.com/react-native-netinfo/react-native-netinfo/issues/788)) ([a41dc30](https://github.com/react-native-netinfo/react-native-netinfo/commit/a41dc306153584c1d7eed804311d4d09fe0a37d7))
+
 # [11.5.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.4.1...v11.5.0) (2026-01-31)
 
 
