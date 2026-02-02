@@ -70,6 +70,19 @@ export function fetch(
 }
 
 /**
+ * Update the connectivity status, postponing the automatic connectivity check
+ * (if applicable). Use this to cut down on extraneous network traffick, if you
+ * are already making requests that indicate connectivity.
+ */
+export function reportConnected(): void {
+  if (!_state) {
+    _state = createState();
+  }
+  _state.reportConnected();
+}
+
+/**
+ * Subscribe to connection information. The callback is called with a parameter of type
  * Force-refreshes the internal state of the global singleton managed by this library.
  *
  * @returns A Promise which contains the updated connection state.
