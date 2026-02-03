@@ -1,3 +1,10 @@
+## [11.5.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.5.1...v11.5.2) (2026-02-03)
+
+
+### Bug Fixes
+
+* **android:** use node resolver to find react-native / helps monorepo builds ([#789](https://github.com/react-native-netinfo/react-native-netinfo/issues/789)) ([9a42efe](https://github.com/react-native-netinfo/react-native-netinfo/commit/9a42efe0065432eab8d9e7e794ca101afac5b683))
+
 ## [11.5.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.5.0...v11.5.1) (2026-02-01)
 
 
