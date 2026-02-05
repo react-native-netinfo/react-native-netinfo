@@ -10,14 +10,15 @@
 import {NativeModules} from 'react-native';
 import {NetInfoNativeModule} from './privateTypes';
 
-// React Native sets `__turboModuleProxy` on global when TurboModules are enabled.
-// Currently, this is the recommended way to detect TurboModules.
-// https://reactnative.dev/docs/the-new-architecture/backward-compatibility-turbomodules#unify-the-javascript-specs
+// React Native sets `__turboModuleProxy` on global when TurboModules are enabled for
+// react-native versions < 0.77. After that, they unified access and no longer set
+// `__turboModuleProxy` so it fails as a test. However, our native module name
+// stays the same, so we can just blindly load using unified loading in RN >= 77
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-const isTurboModuleEnabled = global.__turboModuleProxy != null;
+const legacyTurboModuleAccess = global.__turboModuleProxy != null;
 
-const RNCNetInfo: NetInfoNativeModule = isTurboModuleEnabled
+const RNCNetInfo: NetInfoNativeModule = legacyTurboModuleAccess
   ? // eslint-disable-next-line @typescript-eslint/no-var-requires
     require('./NativeRNCNetInfo').default
   : NativeModules.RNCNetInfo;
