@@ -1,3 +1,16 @@
+# [12.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.5.2...v12.0.0) (2026-02-14)
+
+
+* fix(ios)!: use NEHotspotNetwork vs deprecated CNCopyCurrentNetworkInfo for wifi info, iOS14+ required ([#791](https://github.com/react-native-netinfo/react-native-netinfo/issues/791)) ([dd7a88f](https://github.com/react-native-netinfo/react-native-netinfo/commit/dd7a88fd64c978cc04cf10e9703326d98163e234))
+
+
+### BREAKING CHANGES
+
+* iOS 14+ is new minimum, that's react-native 0.76+
+
+The first react-native version to require iOS 14+ was react-native 0.76 so that is
+pretty old but this still may be a breaking change for some people so we are noting it.
+
 ## [11.5.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.5.1...v11.5.2) (2026-02-03)
 
 
