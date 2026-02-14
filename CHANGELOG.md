@@ -18,6 +18,12 @@
 The first react-native version to require iOS 14+ was react-native 0.76 so that is
 pretty old but this still may be a breaking change for some people so we are noting it.
 
+Note from Apple Developer Documentation:
+
+"This method also requires the app to have the Access Wi-Fi Information Entitlement, and produces nil if the app lacks this entitlement."
+
+See: https://developer.apple.com/documentation/networkextension/nehotspotnetwork/fetchcurrent(completionhandler:)
+
 ## [11.5.2](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.5.1...v11.5.2) (2026-02-03)
 
 
