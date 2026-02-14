@@ -1,3 +1,10 @@
+## [12.0.1](https://github.com/react-native-netinfo/react-native-netinfo/compare/v12.0.0...v12.0.1) (2026-02-14)
+
+
+### Bug Fixes
+
+* **ios:** new wifi config API usage requires NetworkExtension framework ([#793](https://github.com/react-native-netinfo/react-native-netinfo/issues/793)) ([5b1f9b0](https://github.com/react-native-netinfo/react-native-netinfo/commit/5b1f9b074e1d0fd0fe9767a7486df7d94f7218dd))
+
 # [12.0.0](https://github.com/react-native-netinfo/react-native-netinfo/compare/v11.5.2...v12.0.0) (2026-02-14)
 
 
