@@ -1,3 +1,5 @@
+import java.nio.file.Paths
+
 buildscript {
   // The Android Gradle plugin is only required when opening the android folder stand-alone.
   // This avoids unnecessary downloads and potential conflicts when the library is included as a
@@ -31,21 +33,29 @@ def isNewArchitectureEnabled() {
   return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
 }
 
+static def findNodeModulePath(baseDir, packageName) {
+  def basePath = baseDir.toPath().normalize()
+  // Node's module resolution algorithm searches up to the root directory,
+  // after which the base path will be null
+  while (basePath) {
+    def candidatePath = Paths.get(basePath.toString(), "node_modules", packageName)
+    if (candidatePath.toFile().exists()) {
+      return candidatePath.toString()
+    }
+    basePath = basePath.getParent()
+  }
+  return null
+}
+
 def resolveReactNativeDirectory() {
   def reactNativeLocation = getExtOrInitialValue("REACT_NATIVE_NODE_MODULES_DIR", null)
   if (reactNativeLocation != null) {
     return file(reactNativeLocation)
   }
 
-  // Fallback to node resolver for custom directory structures like monorepos.
-  def reactNativePackage = file(
-          providers.exec {
-              workingDir(rootDir)
-              commandLine("node", "--print", "require.resolve('react-native/package.json')")
-          }.standardOutput.asText.get().trim()
-  )
-  if (reactNativePackage.exists()) {
-    return reactNativePackage.parentFile
+  def reactNativePackagePath = findNodeModulePath(projectDir, "react-native")
+  if (reactNativePackagePath != null) {
+    return file(reactNativePackagePath)
   }
 
   def reactNativeFromNodeModulesWithRNCNetInfo = file("${projectDir}/../../react-native")
