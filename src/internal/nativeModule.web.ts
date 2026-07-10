@@ -52,15 +52,26 @@ interface Connection {
   type: ConnectionType;
   effectiveType: ConnectionEffectiveType;
   saveData: ConnectionSaveData;
-  addEventListener<K extends keyof Events>(
+  addEventListener?<K extends keyof Events>(
     type: K,
     listener: (event: Events[K]) => void,
   ): void;
-  removeEventListener<K extends keyof Events>(
+  removeEventListener?<K extends keyof Events>(
     type: K,
     listener: (event: Events[K]) => void,
   ): void;
 }
+
+type ConnectionWithEventListeners = Connection & {
+  addEventListener: NonNullable<Connection['addEventListener']>;
+  removeEventListener: NonNullable<Connection['removeEventListener']>;
+};
+
+const supportsConnectionEvents = (
+  value: Connection | undefined,
+): value is ConnectionWithEventListeners =>
+  typeof value?.addEventListener === 'function' &&
+  typeof value?.removeEventListener === 'function';
 
 // Create (optional) connection APIs on navigator
 declare global {
@@ -79,6 +90,11 @@ const connection = (isWindowPresent && !window.hasOwnProperty('tizen') && !windo
   ? window.navigator.connection ||
     window.navigator.mozConnection ||
     window.navigator.webkitConnection
+  : undefined;
+
+// Some WebViews expose connection details without implementing EventTarget.
+const connectionEventTarget = supportsConnectionEvents(connection)
+  ? connection
   : undefined;
 
 // Map browser types to native types
@@ -251,8 +267,8 @@ const RNCNetInfo: NetInfoNativeModule = {
           handler(getCurrentState());
         };
 
-        if (connection) {
-          connection.addEventListener('change', nativeHandler);
+        if (connectionEventTarget) {
+          connectionEventTarget.addEventListener('change', nativeHandler);
         } else {
           if (isWindowPresent) {
             window.addEventListener('online', nativeHandler, false);
@@ -276,8 +292,8 @@ const RNCNetInfo: NetInfoNativeModule = {
         const index = handlers.indexOf(handler);
         const nativeHandler = nativeHandlers[index];
 
-        if (connection) {
-          connection.removeEventListener('change', nativeHandler);
+        if (connectionEventTarget) {
+          connectionEventTarget.removeEventListener('change', nativeHandler);
         } else {
           if (isWindowPresent) {
             window.removeEventListener('online', nativeHandler);
