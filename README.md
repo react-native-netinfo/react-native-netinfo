@@ -479,6 +479,64 @@ The SCNetworkReachability API used in iOS does not send events to the app in the
     };
   },[]);
 ```
+### Common Pitfalls
+
+#### `isInternetReachable` returns `null` on first fetch (iOS)
+
+On iOS, `isInternetReachable` will return `null` on the first call to
+`NetInfo.fetch()` or on the first event from `addEventListener`. This is
+expected behaviour — the library needs time to determine reachability
+asynchronously after the initial connection state is received from the OS.
+
+**Do not** treat `null` as "not reachable":
+
+```js
+// ❌ Wrong — null is falsy, so this won't run on first fetch 
+// on iOS even with a valid connection
+const state = await NetInfo.fetch();
+if (state.isConnected && state.isInternetReachable) {
+  // May not run on first fetch on iOS
+}
+```
+
+**Instead**, explicitly handle the `null` case:
+
+```js
+// Correct — treats null as "not yet determined", not "unreachable"
+const state = await NetInfo.fetch();
+const isConnected =
+  state.isConnected === true &&
+  state.isInternetReachable !== false;
+
+if (isConnected) {
+  // Safe — handles null correctly
+}
+```
+
+**For reliable reachability on iOS**, configure a custom reachability URL
+so the library can actively verify internet access:
+
+```js
+// Call this in your app entry point before any NetInfo usage
+NetInfo.configure({
+  reachabilityUrl: 'https://clients3.google.com/generate_204',
+  reachabilityTest: async (response) => response.status === 204,
+  reachabilityLongTimeout: 60 * 1000,   // 60s
+  reachabilityShortTimeout: 5 * 1000,   // 5s
+  reachabilityRequestTimeout: 15 * 1000, // 15s
+});
+```
+
+This is especially important for apps that:
+- Check connectivity immediately on launch
+- Implement offline-first sync where incorrect initial state causes premature sync triggers
+- Show offline banners based on reachability state
+
+> Related issues: [#572](https://github.com/react-native-netinfo/react-native-netinfo/issues/572),
+> [#352](https://github.com/react-native-netinfo/react-native-netinfo/issues/352),
+> [#155](https://github.com/react-native-netinfo/react-native-netinfo/issues/155),
+> [#615](https://github.com/react-native-netinfo/react-native-netinfo/issues/615)
+
 
 ## Maintainers
 
