@@ -49,10 +49,10 @@ module.exports = {
     platforms: {
       windows: {
         sourceDir: 'windows',
-        solutionFile: 'RNCNetInfo.sln',
+        solutionFile: 'ReactNativeNetInfo.sln',
         projects: [
           {
-            projectFile: 'RNCNetInfoCPP/RNCNetInfoCPP.vcxproj',
+            projectFile: 'ReactNativeNetInfo/ReactNativeNetInfo.vcxproj',
             directDependency: true,
           },
         ],

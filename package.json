@@ -15,7 +15,8 @@
     "/src",
     "/lib",
     "/*.podspec",
-    "/jest"
+    "/jest",
+    "windows"
   ],
   "author": "Matt Oakes <hello@mattoakes.net>",
   "contributors": [
@@ -38,7 +39,8 @@
     "test:e2e:macos": "scripts/run_macos_e2e.sh 'test'",
     "ci:publish": "yarn semantic-release",
     "semantic-release": "semantic-release",
-    "prepare": "bob build"
+    "prepare": "bob build",
+    "prepack": "bob build"
   },
   "keywords": [
     "react-native",
@@ -49,7 +51,13 @@
   ],
   "peerDependencies": {
     "react": "*",
-    "react-native": ">=0.59"
+    "react-native": ">=0.59",
+    "react-native-windows": "*"
+  },
+  "peerDependenciesMeta": {
+    "react-native-windows": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -85,7 +93,7 @@
     "react-native-macos": "^0.72.5",
     "react-native-test-app": "^2.5.32",
     "react-native-web": "^0.17.7",
-    "react-native-windows": "^0.72.18",
+    "react-native-windows": "^0.84.0",
     "react-test-renderer": "18.2.0",
     "rimraf": "^2.6.3",
     "semantic-release": "^25.0.2",
@@ -128,7 +136,22 @@
     "jsSrcsDir": "src/internal",
     "android": {
       "javaPackageName": "com.reactnativecommunity.netinfo"
+    },
+    "windows": {
+      "namespace": "ReactNativeNetInfoCodegen",
+      "generators": [
+        "modulesWindows"
+      ],
+      "outputDirectory": "windows/ReactNativeNetInfo/codegen",
+      "separateDataTypes": true
     }
   },
-  "packageManager": "yarn@4.12.0"
+  "packageManager": "yarn@4.12.0",
+  "react-native-windows": {
+    "init-windows": {
+      "name": "ReactNativeNetInfo",
+      "namespace": "ReactNativeNetInfo",
+      "template": "cpp-lib"
+    }
+  }
 }
