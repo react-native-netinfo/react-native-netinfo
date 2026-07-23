@@ -62,6 +62,10 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
             getConnectivityManager().registerDefaultNetworkCallback(mNetworkCallback);
         } catch (SecurityException e) {
             // TODO: Display a yellow box about this
+        } catch (RuntimeException e) {
+            // e.g. ConnectivityManager.TooManyRequestsException when the per-uid
+            // NetworkCallback quota is exhausted. Degrade to "unknown" instead of
+            // crashing during NetInfoModule.initialize().
         }
     }
 
