@@ -56,8 +56,20 @@ public class NetworkCallbackConnectivityReceiver extends ConnectivityReceiver {
             // an initial callback call in order to get the current network state,
             // otherwise, an app started without any network connection will
             // always be reported as "unknown".
-            mNetwork = getConnectivityManager().getActiveNetwork();
-            asyncUpdateAndSend(0);
+            //
+            // This has to happen synchronously: the module is created lazily on the first
+            // call from JS, so getCurrentState() can run before a Runnable posted here has
+            // had a chance to execute, and would then resolve the default "unknown" state.
+            // The NetworkCallback warning quoted above is about calling ConnectivityManager
+            // from inside a callback; register() is not a callback, so it does not apply.
+            try {
+                mNetwork = getConnectivityManager().getActiveNetwork();
+                mCapabilities = getConnectivityManager().getNetworkCapabilities(mNetwork);
+                updateAndSend();
+            } catch (SecurityException e) {
+                // Android 11 may throw a 'package does not belong' security exception here.
+                // Keep going: registering the callback below still lets the state recover.
+            }
 
             getConnectivityManager().registerDefaultNetworkCallback(mNetworkCallback);
         } catch (SecurityException e) {
