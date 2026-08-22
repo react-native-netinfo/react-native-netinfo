@@ -80,13 +80,23 @@ export default class InternetReachability {
     });
 
     // Create promise that will reject after the request timeout has been reached
-    let timeoutHandle: ReturnType<typeof setTimeout>;
+    let timeoutHandle: ReturnType<typeof setTimeout> | null = null;
     const timeoutPromise = new Promise<Response>((_, reject): void => {
       timeoutHandle = setTimeout(
-        (): void => reject('timedout'),
+        (): void => {
+          timeoutHandle = null;
+          reject('timedout');
+        },
         this._configuration.reachabilityRequestTimeout,
       );
     });
+
+    const clearRequestTimeout = (): void => {
+      if (timeoutHandle !== null) {
+        clearTimeout(timeoutHandle);
+        timeoutHandle = null;
+      }
+    };
 
     // Create promise that makes it possible to cancel a pending request through a reject
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -131,10 +141,10 @@ export default class InternetReachability {
       // Clear request timeout and propagate any errors
       .then(
         (): void => {
-          clearTimeout(timeoutHandle);
+          clearRequestTimeout();
         },
         (error: Error): void => {
-          clearTimeout(timeoutHandle);
+          clearRequestTimeout();
           throw error;
         },
       );
