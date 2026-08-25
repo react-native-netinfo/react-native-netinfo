@@ -7,7 +7,7 @@
  * @format
  */
 
-import {NativeEventEmitter} from 'react-native';
+import {NativeEventEmitter, Platform} from 'react-native';
 import RNCNetInfo from './nativeModule';
 
 // Produce an error if we don't have the native module
@@ -38,7 +38,11 @@ export default {
     if (!nativeEventEmitter) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       /// @ts-ignore
-      nativeEventEmitter = new NativeEventEmitter(RNCNetInfo);
+      // Android/new-arch: passing a non-null module without full RCTEventEmitter
+      // methods warns; iOS still needs the native module for subscription.
+      nativeEventEmitter = new NativeEventEmitter(
+        Platform.OS === 'ios' ? RNCNetInfo : undefined,
+      );
     }
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     /// @ts-ignore
