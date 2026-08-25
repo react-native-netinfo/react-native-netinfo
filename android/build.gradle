@@ -115,17 +115,11 @@ android {
 
 repositories {
   maven {
-    // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-
-    // Use node resolver to locate react-native package
-    def reactNativePackage = file(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim())
-    if (reactNativePackage.exists()) {
-      url "$reactNativePackage.parentFile/android"
-    }
-    // Fallback to react-native package colocated in node_modules
-    else {
-      url "$rootDir/../node_modules/react-native/android"
-    }
+    // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm.
+    // Reuses resolveReactNativeDirectory(), which is configuration-cache safe
+    // (providers.exec) — a raw `.execute()` here is a config-time external process
+    // and makes Gradle refuse to store the configuration cache entry.
+    url "${resolveReactNativeDirectory()}/android"
   }
   google()
   mavenLocal()
