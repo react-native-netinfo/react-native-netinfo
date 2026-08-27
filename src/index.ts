@@ -23,9 +23,18 @@ const createState = (): State => {
   return new State(_configuration);
 };
 
-// Track ongoing requests
-let isRequestInProgress = false;
-let requestQueue: ((state: Types.NetInfoState) => void)[] = [];
+// Share a pending refresh only with callers of the same state manager.
+const refreshRequests = new WeakMap<State, Promise<Types.NetInfoState>>();
+const refreshState = (state: State): Promise<Types.NetInfoState> => {
+  let request = refreshRequests.get(state);
+  if (!request) {
+    request = state._fetchCurrentState().finally(() => {
+      refreshRequests.delete(state);
+    });
+    refreshRequests.set(state, request);
+  }
+  return request;
+};
 
 /**
  * Configures the library with the given configuration. Note that calling this will stop all
@@ -79,22 +88,7 @@ export function refresh(): Promise<Types.NetInfoState> {
     _state = createState();
   }
 
- // If a request is already in progress, return a promise that will resolve when the current request finishes
-  if (isRequestInProgress) {
-    return new Promise((resolve) => {
-      requestQueue.push(resolve);
-    });
-  }
-
-  isRequestInProgress = true;
-
-  return _state._fetchCurrentState().then((result) => {
-    requestQueue.forEach((resolve) => resolve(result));
-    requestQueue = [];
-    return result;
-  }).finally(() => {
-    isRequestInProgress = false;
-  });
+  return refreshState(_state);
 }
 
 /**
@@ -186,11 +180,8 @@ export function useNetInfoInstance(
   }, [isPaused, configuration]);
 
   const refresh = useCallback(() => {
-    if (networkInfoManager && !isRequestInProgress) {
-      isRequestInProgress = true;
-      networkInfoManager._fetchCurrentState().finally(() => {
-        isRequestInProgress = false;
-      });
+    if (networkInfoManager) {
+      refreshState(networkInfoManager);
     }
   }, [networkInfoManager]);
 
