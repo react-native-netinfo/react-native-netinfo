@@ -61,8 +61,7 @@ export default class InternetReachability {
         this._setIsInternetReachable(null);
       }
       // Start a network request to check for internet
-      this._currentInternetReachabilityCheckHandler =
-        this._checkInternetReachability();
+      this._checkInternetReachability();
     } else {
       // If we don't expect a connection or don't run reachability check, just change the state to "false"
       this._setIsInternetReachable(false);
@@ -71,17 +70,20 @@ export default class InternetReachability {
 
   private _checkInternetReachability = (): InternetReachabilityCheckHandler => {
     const controller = new AbortController();
+    let canceled = false;
 
     const responsePromise = fetch(this._configuration.reachabilityUrl, {
       headers: this._configuration.reachabilityHeaders,
       method: this._configuration.reachabilityMethod,
       cache: 'no-cache',
       signal: controller.signal,
+    }).then((response): Promise<boolean> => {
+      return this._configuration.reachabilityTest(response);
     });
 
     // Create promise that will reject after the request timeout has been reached
     let timeoutHandle: ReturnType<typeof setTimeout>;
-    const timeoutPromise = new Promise<Response>((_, reject): void => {
+    const timeoutPromise = new Promise<boolean>((_, reject): void => {
       timeoutHandle = setTimeout(
         (): void => reject('timedout'),
         this._configuration.reachabilityRequestTimeout,
@@ -91,8 +93,12 @@ export default class InternetReachability {
     // Create promise that makes it possible to cancel a pending request through a reject
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     let cancel: () => void = (): void => {};
-    const cancelPromise = new Promise<Response>((_, reject): void => {
-      cancel = (): void => reject('canceled');
+    const cancelPromise = new Promise<boolean>((_, reject): void => {
+      cancel = (): void => {
+        canceled = true;
+        controller.abort();
+        reject('canceled');
+      };
     });
 
     const promise = Promise.race([
@@ -100,11 +106,14 @@ export default class InternetReachability {
       timeoutPromise,
       cancelPromise,
     ])
-      .then((response): Promise<boolean> => {
-        return this._configuration.reachabilityTest(response);
-      })
       .then((result): void => {
+        if (canceled) {
+          return;
+        }
         this._setIsInternetReachable(result);
+        if (canceled) {
+          return;
+        }
         const nextTimeoutInterval = this._isInternetReachable
           ? this._configuration.reachabilityLongTimeout
           : this._configuration.reachabilityShortTimeout;
@@ -114,14 +123,15 @@ export default class InternetReachability {
         );
       })
       .catch((error: Error | 'timedout' | 'canceled'): void => {
-        if ('canceled' === error) {
-          controller.abort();
-        } else {
+        if (!canceled) {
           if ('timedout' === error) {
             controller.abort();
           }
 
           this._setIsInternetReachable(false);
+          if (canceled) {
+            return;
+          }
           this._currentTimeoutHandle = setTimeout(
             this._checkInternetReachability,
             this._configuration.reachabilityShortTimeout,
@@ -139,10 +149,11 @@ export default class InternetReachability {
         },
       );
 
-    return {
+    this._currentInternetReachabilityCheckHandler = {
       promise,
       cancel,
     };
+    return this._currentInternetReachabilityCheckHandler;
   };
 
   public update = (state: PrivateTypes.NetInfoNativeModuleState): void => {
@@ -150,6 +161,7 @@ export default class InternetReachability {
       typeof state.isInternetReachable === 'boolean' &&
       this._configuration.useNativeReachability
     ) {
+      this.tearDown();
       this._setIsInternetReachable(state.isInternetReachable);
     } else {
       this._setExpectsConnection(state.isConnected);
