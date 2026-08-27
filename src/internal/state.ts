@@ -18,6 +18,7 @@ export default class State {
   private _subscriptions = new Set<Types.NetInfoChangeHandler>();
   private _latestState: Types.NetInfoState | null = null;
   private _internetReachability: InternetReachability;
+  private _isDisposed = false;
 
   constructor(configuration: Types.NetInfoConfiguration) {
     // Add the listener to the internet connectivity events
@@ -39,6 +40,9 @@ export default class State {
   private _handleNativeStateUpdate = (
     state: PrivateTypes.NetInfoNativeModuleState,
   ): void => {
+    if (this._isDisposed) {
+      return;
+    }
     // Update the internet reachability module
     this._internetReachability.update(state);
 
@@ -53,7 +57,7 @@ export default class State {
   private _handleInternetReachabilityUpdate = (
     isInternetReachable: boolean | null | undefined,
   ): void => {
-    if (!this._latestState) {
+    if (this._isDisposed || !this._latestState) {
       return;
     }
 
@@ -69,6 +73,10 @@ export default class State {
     requestedInterface?: string,
   ): Promise<Types.NetInfoState> => {
     const state = await NativeInterface.getCurrentState(requestedInterface);
+
+    if (this._isDisposed) {
+      return this._convertState(state);
+    }
 
     // Update the internet reachability module
     this._internetReachability.update(state);
@@ -115,7 +123,11 @@ export default class State {
     if (this._latestState) {
       handler(this._latestState);
     } else {
-      this.latest().then(handler);
+      this.latest().then((state): void => {
+        if (this._subscriptions.has(handler)) {
+          handler(state);
+        }
+      });
     }
   };
 
@@ -124,6 +136,7 @@ export default class State {
   };
 
   public tearDown = (): void => {
+    this._isDisposed = true;
     if (this._internetReachability) {
       this._internetReachability.tearDown();
     }
