@@ -56,12 +56,12 @@ export default class InternetReachability {
 
     if (expectsConnection && this._configuration.reachabilityShouldRun()) {
       // If we expect a connection, start the process for finding if we have one
+      // Register the request before notifying listeners, which may tear us down.
+      this._checkInternetReachability();
       // Set the state to "null" if it was previously false
       if (!this._isInternetReachable) {
         this._setIsInternetReachable(null);
       }
-      // Start a network request to check for internet
-      this._checkInternetReachability();
     } else {
       // If we don't expect a connection or don't run reachability check, just change the state to "false"
       this._setIsInternetReachable(false);
