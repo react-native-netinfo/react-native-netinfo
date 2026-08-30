@@ -16,13 +16,21 @@ import android.os.Build;
 
 import androidx.core.content.ContextCompat;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class NetInfoUtils {
-    public static void reverseByteArray(byte[] array) {
-        for (int i = 0; i < array.length / 2; i++) {
-            byte temp = array[i];
-            array[i] = array[array.length - i - 1];
-            array[array.length - i - 1] = temp;
+    static InetAddress getWifiInetAddress(int ipAddress) throws UnknownHostException {
+        if (ipAddress == 0) {
+            throw new UnknownHostException("Wi-Fi IPv4 address is unavailable");
         }
+
+        return InetAddress.getByAddress(new byte[] {
+                (byte) ipAddress,
+                (byte) (ipAddress >>> 8),
+                (byte) (ipAddress >>> 16),
+                (byte) (ipAddress >>> 24),
+        });
     }
 
     public static boolean isAccessWifiStatePermissionGranted(Context context) {

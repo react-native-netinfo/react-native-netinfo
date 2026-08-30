@@ -133,6 +133,8 @@ repositories {
 }
 
 dependencies {
+  testImplementation 'junit:junit:4.13.2'
+
   //noinspection GradleDynamicVersion
   if (isNewArchitectureEnabled() && getReactNativeMinorVersion() < 71) {
     implementation project(":ReactAndroid")

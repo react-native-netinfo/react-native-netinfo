@@ -20,7 +20,6 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.reactnativecommunity.netinfo.types.CellularGeneration;
 import com.reactnativecommunity.netinfo.types.ConnectionType;
 
-import java.math.BigInteger;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
@@ -258,10 +257,8 @@ public abstract class ConnectivityReceiver {
 
                         // Get the IP address
                         try {
-                            byte[] ipAddressByteArray =
-                                    BigInteger.valueOf(wifiInfo.getIpAddress()).toByteArray();
-                            NetInfoUtils.reverseByteArray(ipAddressByteArray);
-                            InetAddress inetAddress = InetAddress.getByAddress(ipAddressByteArray);
+                            InetAddress inetAddress =
+                                    NetInfoUtils.getWifiInetAddress(wifiInfo.getIpAddress());
                             String ipAddress = inetAddress.getHostAddress();
                             details.putString("ipAddress", ipAddress);
                         } catch (Exception e) {
@@ -270,10 +267,8 @@ public abstract class ConnectivityReceiver {
 
                         // Get the subnet mask
                         try {
-                            byte[] ipAddressByteArray =
-                                    BigInteger.valueOf(wifiInfo.getIpAddress()).toByteArray();
-                            NetInfoUtils.reverseByteArray(ipAddressByteArray);
-                            InetAddress inetAddress = InetAddress.getByAddress(ipAddressByteArray);
+                            InetAddress inetAddress =
+                                    NetInfoUtils.getWifiInetAddress(wifiInfo.getIpAddress());
                             details.putString("subnet", getSubnet(inetAddress));
                         } catch (Exception e) {
                             // Ignore errors
