@@ -245,6 +245,10 @@ const nativeHandlers: (() => void)[] = [];
 
 const RNCNetInfo: NetInfoNativeModule = {
   addListener(type, handler): void {
+    if (!handler) {
+      return;
+    }
+
     switch (type) {
       case DEVICE_CONNECTIVITY_EVENT: {
         const nativeHandler = (): void => {
@@ -270,6 +274,10 @@ const RNCNetInfo: NetInfoNativeModule = {
   },
 
   removeListeners(type, handler): void {
+    if (!handler) {
+      return;
+    }
+
     switch (type) {
       case DEVICE_CONNECTIVITY_EVENT: {
         // Get native handler
