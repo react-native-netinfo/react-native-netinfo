@@ -17,22 +17,18 @@ export type NetInfoNativeModuleState = Pick<
   Exclude<keyof NetInfoState, 'isInternetReachable'>
 > & {isInternetReachable?: boolean};
 
-export interface Events {
-  [DEVICE_CONNECTIVITY_EVENT]: NetInfoNativeModuleState;
-}
-
 export interface NetInfoNativeModule {
   configure: (config: Partial<NetInfoConfiguration>) => void;
   getCurrentState: (
     requestedInterface?: string,
   ) => Promise<NetInfoNativeModuleState>;
-  addListener<K extends keyof Events>(
-    type: K,
-    listener: (event: Events[K]) => void,
+  addListener(
+    eventName: string,
+    listener?: (event: NetInfoNativeModuleState) => void,
   ): void;
-  removeListeners<K extends keyof Events>(
-    type: K,
-    listener: (event: Events[K]) => void,
+  removeListeners(
+    countOrEventName: number | string,
+    listener?: (event: NetInfoNativeModuleState) => void,
   ): void;
 }
 
