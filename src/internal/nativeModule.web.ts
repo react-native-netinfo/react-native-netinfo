@@ -253,11 +253,11 @@ const RNCNetInfo: NetInfoNativeModule = {
 
         if (connection) {
           connection.addEventListener('change', nativeHandler);
-        } else {
-          if (isWindowPresent) {
-            window.addEventListener('online', nativeHandler, false);
-            window.addEventListener('offline', nativeHandler, false);
-          }
+        }
+        // Connection changes can arrive before navigator.onLine is updated.
+        if (isWindowPresent) {
+          window.addEventListener('online', nativeHandler, false);
+          window.addEventListener('offline', nativeHandler, false);
         }
 
         // Remember handlers
@@ -278,11 +278,10 @@ const RNCNetInfo: NetInfoNativeModule = {
 
         if (connection) {
           connection.removeEventListener('change', nativeHandler);
-        } else {
-          if (isWindowPresent) {
-            window.removeEventListener('online', nativeHandler);
-            window.removeEventListener('offline', nativeHandler);
-          }
+        }
+        if (isWindowPresent) {
+          window.removeEventListener('online', nativeHandler);
+          window.removeEventListener('offline', nativeHandler);
         }
 
         // Remove handlers
