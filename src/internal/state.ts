@@ -85,14 +85,12 @@ export default class State {
   private _convertState = (
     input: PrivateTypes.NetInfoNativeModuleState,
   ): Types.NetInfoState => {
-    if (typeof input.isInternetReachable === 'boolean') {
-      return input as Types.NetInfoState;
-    } else {
-      return {
-        ...input,
-        isInternetReachable: this._internetReachability.currentState(),
-      } as Types.NetInfoState;
-    }
+    // InternetReachability already selects the native or custom result according
+    // to useNativeReachability. Do not overwrite that choice with the native value.
+    return {
+      ...input,
+      isInternetReachable: this._internetReachability.currentState(),
+    } as Types.NetInfoState;
   };
 
   public latest = (
