@@ -40,8 +40,8 @@ public class NetInfoModule extends NativeRNCNetInfoSpec {
     }
     
     @Override
-    public void onCatalystInstanceDestroy() {
-        implementation.onCatalystInstanceDestroy();
+    public void invalidate() {
+        implementation.invalidate();
     }
 
     @Override
