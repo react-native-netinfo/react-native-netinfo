@@ -15,6 +15,9 @@
     "/src",
     "/lib",
     "/*.podspec",
+    "/Package.swift",
+    "/include",
+    "/spm-headers",
     "/jest"
   ],
   "author": "Matt Oakes <hello@mattoakes.net>",
@@ -130,5 +133,8 @@
       "javaPackageName": "com.reactnativecommunity.netinfo"
     }
   },
-  "packageManager": "yarn@4.12.0"
+  "packageManager": "yarn@4.12.0",
+  "swiftpmConfig": {
+    "name": "react-native-netinfo"
+  }
 }
