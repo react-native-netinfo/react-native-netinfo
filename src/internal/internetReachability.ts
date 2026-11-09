@@ -10,6 +10,13 @@
 import * as PrivateTypes from './privateTypes';
 import * as Types from './types';
 
+// A check whose outcome arrives later than its request timeout plus this
+// margin was interrupted: the app was suspended, or its JS thread blocked,
+// while the request ran. Overdue timers fire as soon as the app resumes, so a
+// check pending at a suspension times out at once, whatever the network is by
+// then. Such an outcome is dropped and the check is repeated at once.
+const INTERRUPTED_CHECK_MARGIN_MS = 2000;
+
 interface InternetReachabilityCheckHandler {
   promise: Promise<void>;
   cancel: () => void;
@@ -71,6 +78,16 @@ export default class InternetReachability {
 
   private _checkInternetReachability = (): InternetReachabilityCheckHandler => {
     const controller = new AbortController();
+    const startedAt = Date.now();
+    const isInterrupted = (): boolean =>
+      Date.now() - startedAt >
+      this._configuration.reachabilityRequestTimeout +
+        INTERRUPTED_CHECK_MARGIN_MS;
+    const repeatAtOnce = (): void => {
+      controller.abort();
+      this._currentInternetReachabilityCheckHandler =
+        this._checkInternetReachability();
+    };
 
     const responsePromise = fetch(this._configuration.reachabilityUrl, {
       headers: this._configuration.reachabilityHeaders,
@@ -104,6 +121,10 @@ export default class InternetReachability {
         return this._configuration.reachabilityTest(response);
       })
       .then((result): void => {
+        if (isInterrupted()) {
+          repeatAtOnce();
+          return;
+        }
         this._setIsInternetReachable(result);
         const nextTimeoutInterval = this._isInternetReachable
           ? this._configuration.reachabilityLongTimeout
@@ -116,6 +137,8 @@ export default class InternetReachability {
       .catch((error: Error | 'timedout' | 'canceled'): void => {
         if ('canceled' === error) {
           controller.abort();
+        } else if (isInterrupted()) {
+          repeatAtOnce();
         } else {
           if ('timedout' === error) {
             controller.abort();
